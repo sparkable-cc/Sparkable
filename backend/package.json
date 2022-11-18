@@ -6,7 +6,8 @@
     "build": "npx tsc",
     "start": "node dist/server.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server.js\"",
-    "test": "jest"
+    "unit": "jest --testPathPattern=src/domain",
+    "e2e": "jest --testPathPattern=src/tests"
   },
   "keywords": [],
   "author": "Tony Morellá Llácer <hynnot@gmail.com>",
