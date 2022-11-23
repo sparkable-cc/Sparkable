@@ -14,7 +14,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "incremental": true
   },
-  "include": ["src", "tests/react-app-env.d.ts", "tests/App.tsx"]
+  "include": ["src", "tests/react-app-env.d.ts", "tests/App.tsx", "components"],
+  "exclude": ["node_modules"]
 }
