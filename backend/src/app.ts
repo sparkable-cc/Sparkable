@@ -1,9 +1,10 @@
 import express, { Express, Request, Response } from 'express';
-import CreateUserAction from './domain/users/actions/CreateUserAction';
-import { EmailExistsException } from './domain/users/exceptions/EmailExistsException';
-import { MandatoryFieldEmptyException } from './domain/users/exceptions/MandatoryFieldEmptyException';
-import { UsernameExistsException } from './domain/users/exceptions/UsernameExistsException';
-import InMemoryUserRepository from './domain/users/repositories/InMemoryUserRepository';
+
+import CreateUserAction from './contexts/users/actions/CreateUserAction';
+import { EmailExistsException } from './contexts/users/domain/exceptions/EmailExistsException';
+import { MandatoryFieldEmptyException } from './contexts/users/domain/exceptions/MandatoryFieldEmptyException';
+import { UsernameExistsException } from './contexts/users/domain/exceptions/UsernameExistsException';
+import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
 
 const app: Express = express();
 
@@ -16,7 +17,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.post('/user', (req: Request, res: Response) => {
   try {
-    const createUserAction = new CreateUserAction(new InMemoryUserRepository());
+    const createUserAction = new CreateUserAction(new UserRepositoryPG());
     createUserAction.execute(req.body.email, req.body.username, req.body.password);
     res.status(201);
     res.send('User created');

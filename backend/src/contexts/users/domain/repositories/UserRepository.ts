@@ -1,4 +1,4 @@
-import User from '../entities/User'
+import User from '../models/User'
 
 interface UserRepository {
     storeUser: (user:User) => void,

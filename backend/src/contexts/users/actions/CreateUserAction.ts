@@ -1,8 +1,8 @@
-import { MandatoryFieldEmptyException } from '../exceptions/MandatoryFieldEmptyException';
-import UserRepository from '../repositories/UserRepository';
-import User from '../entities/User'
-import { UsernameExistsException } from '../exceptions/UsernameExistsException';
-import { EmailExistsException } from '../exceptions/EmailExistsException';
+import { MandatoryFieldEmptyException } from '../domain/exceptions/MandatoryFieldEmptyException';
+import UserRepository from '../domain/repositories/UserRepository';
+import User from '../domain/models/User'
+import { UsernameExistsException } from '../domain/exceptions/UsernameExistsException';
+import { EmailExistsException } from '../domain/exceptions/EmailExistsException';
 
 class CreateUserAction {
     userRepository:UserRepository;

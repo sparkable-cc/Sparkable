@@ -1,7 +1,7 @@
-import User from '../entities/User';
-import UserRepository from './UserRepository';
+import User from '../../../domain/models/User';
+import UserRepository from '../../../domain/repositories/UserRepository';
 
-class InMemoryUserRepository implements UserRepository {
+export class UserRepositoryInMemory implements UserRepository {
 
     users: User[];
 
@@ -33,5 +33,3 @@ class InMemoryUserRepository implements UserRepository {
     }
 
 }
-
-export default InMemoryUserRepository;
