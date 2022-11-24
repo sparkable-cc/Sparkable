@@ -1,9 +1,7 @@
-import User from '../models/User'
+import { User } from '../models/User'
+import { UserDto } from '../models/UserDto';
 
-interface UserRepository {
+export interface UserRepository {
     storeUser: (user:User) => void,
-    existUsername: (username:string) => boolean
-    existEmail: (email:string) => boolean
+    findUser: (field:string, value:string) => Promise<UserDto | null>
 }
-
-export default UserRepository;

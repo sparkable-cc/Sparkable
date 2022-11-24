@@ -1,4 +1,6 @@
-class User  {
+import { UserDto } from "./UserDto";
+
+export class User implements UserDto {
     email:string;
     username:string;
     password:string;
@@ -8,6 +10,13 @@ class User  {
        this.username = username;
        this.password = password;
     }
-}
 
-export default User;
+    public static factory(userDto:UserDto): User {
+        return new User(
+            userDto.email,
+            userDto.username,
+            userDto.password
+        );
+    }
+
+}

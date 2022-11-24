@@ -27,23 +27,23 @@ describe("POST /user", () => {
         expect(req.statusCode).toEqual(201);
     });
 
-    it("returns 403 when one unique field exists with the same value", async () => {
-        let req = await request(app)
-        .post("/user")
-        .send({
-            email: "admin@butterfy.me",
-            username: "admin",
-            password: "password"
-        });
+    // it("returns 403 when one unique field exists with the same value", async () => {
+    //     let req = await request(app)
+    //     .post("/user")
+    //     .send({
+    //         email: "admin@butterfy.me",
+    //         username: "admin",
+    //         password: "password"
+    //     });
 
-        req = await request(app)
-        .post("/user")
-        .send({
-            email: "admin@butterfy.me",
-            username: "admin",
-            password: "password"
-        });
-        expect(req.statusCode).toEqual(403);
-    });
+    //     req = await request(app)
+    //     .post("/user")
+    //     .send({
+    //         email: "admin@butterfy.me",
+    //         username: "admin",
+    //         password: "password"
+    //     });
+    //     expect(req.statusCode).toEqual(403);
+    // });
 
 });

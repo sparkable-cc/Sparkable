@@ -1,6 +1,6 @@
 import {describe, expect, test} from '@jest/globals';
 
-import CreateUserAction from './CreateUserAction';
+import { CreateUserAction } from './CreateUserAction';
 import { EmailExistsException } from '../domain/exceptions/EmailExistsException';
 import { MandatoryFieldEmptyException } from '../domain/exceptions/MandatoryFieldEmptyException';
 import { UsernameExistsException } from '../domain/exceptions/UsernameExistsException';
@@ -8,34 +8,36 @@ import { UserRepositoryInMemory } from '../infrastructure/persistence/repositori
 
 describe('Create user action', () => {
 
-  test('cant create user without mandatory field', () => {
+  test('cant create user without mandatory field', async () => {
     const createUserAction = new CreateUserAction(new UserRepositoryInMemory());
 
-    expect(() => createUserAction.execute('','username','password')).toThrow(MandatoryFieldEmptyException);
+    await expect(createUserAction.execute('','username','password')).rejects.toThrow(MandatoryFieldEmptyException);
   });
 
-  test('create user when all field are completed', () => {
+  test('create user when all field are completed', async () => {
     const userRepository = new UserRepositoryInMemory();
     const createUserAction = new CreateUserAction(userRepository);
-    createUserAction.execute('admin@butterfy.me','admin','password');
+    const username = 'admin';
+    await createUserAction.execute('admin@butterfy.me',username,'password');
 
-    expect(userRepository.existUsername('admin')).toBe(true);
+    const user = await userRepository.findUser('username', username);
+    expect(user?.username).toEqual(username);
   });
 
-  test('cant create user because the username exists', () => {
+  test('cant create user because the username exists', async () => {
     const userRepository = new UserRepositoryInMemory();
     const createUserAction = new CreateUserAction(userRepository);
-    createUserAction.execute('admin@butterfy.me','admin','password');
+    await createUserAction.execute('admin@butterfy.me','admin','password');
 
-    expect(() => createUserAction.execute('admin2@butterfy.me','admin','password')).toThrow(UsernameExistsException);
+    await expect(createUserAction.execute('admin2@butterfy.me','admin','password')).rejects.toThrow(UsernameExistsException);
   });
 
-  test('cant create user because the email is already registered', () => {
+  test('cant create user because the email is already registered', async () => {
     const userRepository = new UserRepositoryInMemory();
     const createUserAction = new CreateUserAction(userRepository);
-    createUserAction.execute('admin@butterfy.me','admin','password');
+    await createUserAction.execute('admin@butterfy.me','admin','password');
 
-    expect(() => createUserAction.execute('admin@butterfy.me','admin2','password')).toThrow(EmailExistsException);
+    await expect(createUserAction.execute('admin@butterfy.me','admin2','password')).rejects.toThrow(EmailExistsException);
   });
 
 });

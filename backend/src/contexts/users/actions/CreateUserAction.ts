@@ -1,32 +1,40 @@
 import { MandatoryFieldEmptyException } from '../domain/exceptions/MandatoryFieldEmptyException';
-import UserRepository from '../domain/repositories/UserRepository';
-import User from '../domain/models/User'
+import { UserRepository } from '../domain/repositories/UserRepository';
+import { User } from '../domain/models/User'
 import { UsernameExistsException } from '../domain/exceptions/UsernameExistsException';
 import { EmailExistsException } from '../domain/exceptions/EmailExistsException';
 
-class CreateUserAction {
+export class CreateUserAction {
     userRepository:UserRepository;
 
     constructor(userRepository:UserRepository) {
         this.userRepository = userRepository;
     }
 
-    execute(email:string, username:string, password:string) {
-        if (!email || !username || !password) {
-            throw new MandatoryFieldEmptyException;
-        }
-
-        if (this.userRepository.existUsername(username)) {
-            throw new UsernameExistsException;
-        }
-
-        if (this.userRepository.existEmail(email)) {
-            throw new EmailExistsException;
-        }
+    async execute(email:string, username:string, password:string) {
+        this.checkParametersAreNotEmpty(email, username, password);
+        await this.checkUsernameIsNotUsed(username);
+        await this.checkEmailIsNotUsed(email);
 
         const user = new User(email, username, password);
         this.userRepository.storeUser(user);
     }
-}
 
-export default CreateUserAction;
+    private checkParametersAreNotEmpty(email: string, username: string, password: string) {
+        if (!email || !username || !password) {
+            throw new MandatoryFieldEmptyException;
+        }
+    }
+
+    private async checkUsernameIsNotUsed(username: string) {
+        const user = await this.userRepository.findUser('username', username);
+        if (user)
+            throw new UsernameExistsException;
+    }
+
+    private async checkEmailIsNotUsed(email: string) {
+        const user = await this.userRepository.findUser('email', email);
+        if (user)
+            throw new EmailExistsException;
+    }
+}
