@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "npx tsc",
+    "clean": "rm -r dist",
+    "build": "npm run clean; npx tsc",
     "start": "node dist/server.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server.js\"",
     "unit": "jest --testPathPattern=src/contexts",

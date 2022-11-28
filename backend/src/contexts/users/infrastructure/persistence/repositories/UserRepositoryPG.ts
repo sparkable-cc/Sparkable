@@ -1,6 +1,6 @@
 import { UserDto } from '../../../domain/models/UserDto';
 import { UserRepository } from '../../../domain/repositories/UserRepository';
-import { AppDataSource } from "../../../../../../data-source"
+import { AppDataSource } from "../../../../../data-source"
 import { UserEntity } from '../entities/UserEntity'
 
 export class UserRepositoryPG implements UserRepository {
