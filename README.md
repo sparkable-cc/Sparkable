@@ -8,6 +8,7 @@ The backend can be launched by running in ``/``:
 $ docker-compose up
 ```
 This runs the backend server on http://localhost:5000.
+Also the PgAdmin server on http://localhost:8080.
 
 ### Development - Frontend
 The frontend can be launched by running in ``/frontend``:
