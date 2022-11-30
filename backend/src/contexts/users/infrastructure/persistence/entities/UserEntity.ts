@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
 import { UserDto } from "../../../domain/models/UserDto";
 
-@Entity('user')
+@Entity('users')
 export class UserEntity implements UserDto {
     @PrimaryGeneratedColumn()
     id: number;
