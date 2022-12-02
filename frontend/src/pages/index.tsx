@@ -8,11 +8,12 @@ function App() {
         <p>Header</p>
       </header>
       <main>
-        <h1>Butterfly</h1>
+        <h1>Butterfy</h1>
         <p>
           <Link href="/signup">Sign up</Link>
           <br />
-          <Link href="/content">Content</Link>
+          <br />
+          <Link href="/signin">Sign in</Link>
         </p>
       </main>
     </div>
