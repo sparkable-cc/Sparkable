@@ -14,6 +14,12 @@ function App() {
           <br />
           <br />
           <Link href="/signin">Sign in</Link>
+          <br />
+          <br />
+          <Link href="/passwordResetForm">Password reset</Link>
+          <br />
+          <br />
+          <Link href="/passwordRecoveryForm">Password recovery</Link>
         </p>
       </main>
     </div>
