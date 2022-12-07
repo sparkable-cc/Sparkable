@@ -12,6 +12,7 @@
 /build
 
 # misc
+.eslintrc.cjs
 .vscode
 .next
 .DS_Store
