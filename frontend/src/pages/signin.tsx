@@ -68,6 +68,13 @@ export default function SignIn() {
             />
             <br />
             <br />
+            <div>
+              <Link href="/passwordRecoveryForm">
+                <p>Forgot password?</p>
+              </Link>
+            </div>
+            <br />
+            <br />
             <button type="submit">Sign in</button>
             {errors.map((error) => (
               <div key={`error-${error.message}`}>{error.message}</div>
