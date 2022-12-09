@@ -1,4 +1,3 @@
-import { MandatoryFieldEmptyException } from '../domain/exceptions/MandatoryFieldEmptyException';
 import { UserRepository } from '../domain/repositories/UserRepository';
 import { User } from '../domain/models/User'
 import { UsernameExistsException } from '../domain/exceptions/UsernameExistsException';
@@ -12,18 +11,12 @@ export class CreateUserAction {
     }
 
     async execute(email:string, username:string, password:string) {
-        this.checkParametersAreNotEmpty(email, username, password);
+        const user = new User(email, username, password);
+
         await this.checkUsernameIsNotUsed(username);
         await this.checkEmailIsNotUsed(email);
 
-        const user = new User(email, username, password);
         this.userRepository.storeUser(user);
-    }
-
-    private checkParametersAreNotEmpty(email: string, username: string, password: string) {
-        if (!email || !username || !password) {
-            throw new MandatoryFieldEmptyException;
-        }
     }
 
     private async checkUsernameIsNotUsed(username: string) {

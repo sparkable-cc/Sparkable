@@ -1,4 +1,5 @@
 import {describe, expect, test} from '@jest/globals';
+import bcrypt from 'bcrypt';
 
 import { CreateUserAction } from './CreateUserAction';
 import { EmailExistsException } from '../domain/exceptions/EmailExistsException';
@@ -39,5 +40,18 @@ describe('Create user action', () => {
 
     await expect(createUserAction.execute('admin@butterfy.me','admin2','password')).rejects.toThrow(EmailExistsException);
   });
+
+  test('password is encrypted when create user', async () => {
+    const userRepository = new UserRepositoryInMemory();
+    const createUserAction = new CreateUserAction(userRepository);
+    const username = 'admin';
+    const password = 'password';
+    await createUserAction.execute('admin@butterfy.me',username,password);
+
+    const user = await userRepository.findUser('username', username);
+    expect(await bcrypt.compare(password, user?.password as string)).toBe(true);
+  });
+
+    // //REFACTORING USER CLASS PRIVATE PROPERTIES!
 
 });
