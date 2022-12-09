@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function SignIn() {
   const [username, setUsername] = useState('');
@@ -15,7 +15,7 @@ export default function SignIn() {
   async function handleSignin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const response = await fetch('/api/user/signin', {
+    const response = await fetch('/user/signin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
@@ -66,6 +66,13 @@ export default function SignIn() {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
             />
+            <br />
+            <br />
+            <div>
+              <Link href="/passwordRecoveryForm">
+                <p>Forgot password?</p>
+              </Link>
+            </div>
             <br />
             <br />
             <button type="submit">Sign in</button>
