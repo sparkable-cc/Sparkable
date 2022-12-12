@@ -22,7 +22,7 @@ export class UserRepositoryInMemory implements UserRepository {
             return user[property] === value;
         })
 
-        if (user) return new Promise((resolve, rejects) => resolve(user));
+        if (user) return new Promise((resolve, rejects) => resolve(user.toDto()));
         else return new Promise((resolve, rejects) => resolve(null));
     }
 }

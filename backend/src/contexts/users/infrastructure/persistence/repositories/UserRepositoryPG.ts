@@ -2,6 +2,7 @@ import { UserDto } from '../../../domain/models/UserDto';
 import { UserRepository } from '../../../domain/repositories/UserRepository';
 import { UserEntity } from '../entities/UserEntity';
 import { DataSource } from 'typeorm';
+import { User } from '../../../domain/models/User';
 
 export class UserRepositoryPG implements UserRepository {
     private userRepository;
@@ -10,8 +11,8 @@ export class UserRepositoryPG implements UserRepository {
         this.userRepository = dataSource.getRepository(UserEntity);
     }
 
-    storeUser(user:UserDto) {
-        this.userRepository.save(user);
+    storeUser(user:User) {
+        this.userRepository.save(user.toDto());
     }
 
     async findUser(field:string, value:string):Promise<UserDto | null> {

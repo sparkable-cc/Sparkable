@@ -6,10 +6,10 @@ export class UserEntity implements UserDto {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ unique: true})
     email: string;
 
-    @Column({length: 120})
+    @Column({ unique: true})
     username: string;
 
     @Column()

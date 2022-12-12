@@ -16,7 +16,7 @@ app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Butterfy Server');
+  res.send('Butterfy API');
 });
 
 app.post('/user', async (req: Request, res: Response) => {
