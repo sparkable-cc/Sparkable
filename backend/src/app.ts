@@ -9,6 +9,9 @@ import { MandatoryFieldEmptyException } from './contexts/users/domain/exceptions
 import { UsernameExistsException } from './contexts/users/domain/exceptions/UsernameExistsException';
 import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
 
+import { GetAllLinksAction } from './contexts/links/actions/GetAllLinksAction';
+import { LinkRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/LinkRepositoryPG';
+
 let dataSource = AppDataSource;
 if (process.env.NODE_ENV === 'test') dataSource = TestDataSource;
 
@@ -47,5 +50,19 @@ app.post('/user', async (req: Request, res: Response) => {
     }
   });
 });
+
+app.get('/links', async (req: Request, res: Response) => {
+  const getAllLinksAction = new GetAllLinksAction(new LinkRepositoryPG(dataSource));
+  getAllLinksAction.execute()
+  .then((result) => {
+    res.status(200);
+    res.send({links:result[0], total:result[1]});
+  })
+  .catch((error) => {
+      console.log('Failed to do something async with an unspecified error: ', error);
+      return res.send(500);
+  });
+});
+
 
 export default app;

@@ -10,7 +10,7 @@ export const AppDataSource = new DataSource({
     database: "db",
     synchronize: true,
     logging: true,
-    entities: [__dirname + '/contexts/users/infrastructure/persistence/entities/*.{ts,js}'],
+    entities: [__dirname + '/contexts/**/infrastructure/persistence/entities/*.{ts,js}'],
     subscribers: [],
     migrations: []
 })
@@ -25,7 +25,8 @@ export const TestDataSource = new DataSource({
     synchronize: true,
     dropSchema: true,
     logging: false,
-    entities: [__dirname + '/contexts/users/infrastructure/persistence/entities/*.{ts,js}'],
+    entities: [__dirname + '/contexts/**/infrastructure/persistence/entities/*.{ts,js}'],
     subscribers: [],
     migrations: [],
+    migrationsRun: true
 })

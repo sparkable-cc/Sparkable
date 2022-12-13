@@ -8,6 +8,10 @@ describe("POST /user", () => {
         await TestDataSource.initialize();
     });
 
+    afterAll(async () => {
+        await TestDataSource.destroy();
+    });
+
     it("returns 400 when the mandatory field is empty", async () => {
         const req = await request(app)
         .post("/user")
