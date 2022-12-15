@@ -9,6 +9,10 @@ describe("POST /user", () => {
         await dataSource.initialize();
     });
 
+    afterAll(async () => {
+        await dataSource.destroy();
+    });
+
     afterEach(async () => {
         const repository = dataSource.getRepository(UserEntity);
         await repository.clear();

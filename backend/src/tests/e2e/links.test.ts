@@ -10,6 +10,10 @@ describe("GET /links", () => {
         await dataSource.initialize();
     });
 
+    afterAll(async () => {
+        await dataSource.destroy();
+    });
+
     afterEach(async () => {
         const repository = dataSource.getRepository(LinkEntity);
         await repository.clear();
