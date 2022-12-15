@@ -2,16 +2,9 @@ import app from "../../app";
 import request from "supertest";
 import dataSource from "../../data-source"
 import { LinkEntity } from "../../contexts/links/infrastructure/persistence/entities/LinkEntity";
+import { LinkDtoFactory } from "../../factories/linkDtoFactory"
 
 describe("GET /links", () => {
-
-    const linkDto = {
-        title: 'title',
-        username: 'admin',
-        link: 'https://www.butterfy.me/',
-        image: 'https://uploads-ssl.webflow.com/5fe2721ea6fb441f47d88866/5fe2726881e6e52053a0217c_Butterfy_Logo-p-500.png',
-        categories: 'environment'
-    }
 
     beforeAll(async () => {
         await dataSource.initialize();
@@ -30,7 +23,7 @@ describe("GET /links", () => {
 
     it("returns 200 with link when exists one", async () => {
         const repository = dataSource.getRepository(LinkEntity);
-
+        const linkDto = LinkDtoFactory.create();
         repository.save(linkDto);
 
         const res = await request(app).get("/links");
@@ -44,6 +37,7 @@ describe("GET /links", () => {
 
     it("returns 200 with multipe links when exist two", async () => {
         const repository = dataSource.getRepository(LinkEntity);
+        const linkDto = LinkDtoFactory.create();
         repository.save(linkDto);
         repository.save(linkDto);
 

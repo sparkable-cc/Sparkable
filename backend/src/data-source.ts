@@ -13,7 +13,7 @@ const AppDataSource = new DataSource({
     logging: true,
     entities: [__dirname + '/contexts/**/infrastructure/persistence/entities/*.{ts,js}'],
     subscribers: [],
-    migrations: []
+    migrations: [__dirname + '/db/migrations/*.{ts,js}']
 })
 
 const TestDataSource = new DataSource({
@@ -26,8 +26,7 @@ const TestDataSource = new DataSource({
     synchronize: true,
     logging: false,
     entities: [__dirname + '/contexts/**/infrastructure/persistence/entities/*.{ts,js}'],
-    subscribers: [],
-    migrations: []
+    subscribers: []
 })
 
 dotenv.config();
