@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Generated } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, Generated, CreateDateColumn } from "typeorm"
 import { LinkDto } from "../../../domain/models/LinkDto";
 
 @Entity('links')
@@ -19,7 +19,7 @@ export class LinkEntity implements LinkDto {
     @Column()
     image:string;
 
-    @Column()
+    @CreateDateColumn({ type: 'timestamptz' })
     date: Date;
 
     @Column()

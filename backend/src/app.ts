@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from 'express';
-import { AppDataSource, TestDataSource } from './data-source';
+import dataSource from "./data-source"
 import dotenv from 'dotenv';
 import cors from 'cors';
 
@@ -11,9 +11,6 @@ import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/re
 
 import { GetAllLinksAction } from './contexts/links/actions/GetAllLinksAction';
 import { LinkRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/LinkRepositoryPG';
-
-let dataSource = AppDataSource;
-if (process.env.NODE_ENV === 'test') dataSource = TestDataSource;
 
 const app: Express = express();
 
