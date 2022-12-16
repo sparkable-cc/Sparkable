@@ -11,7 +11,7 @@ import { UsernameExistsException } from './contexts/users/domain/exceptions/User
 import { UserNotFoundException } from './contexts/users/domain/exceptions/UserNotFoundException';
 import { WrongPasswordException } from './contexts/users/domain/exceptions/WrongPasswordException';
 import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
-import { AppDataSource, TestDataSource } from './data-source';
+import dataSource from './data-source';
 
 const app: Express = express();
 

@@ -1,19 +1,19 @@
 import request from 'supertest';
 import app from '../../app';
 import { UserEntity } from '../../contexts/users/infrastructure/persistence/entities/UserEntity';
-import { TestDataSource } from '../../data-source';
+import dataSource from '../../data-source';
 
 describe('POST /signin', () => {
   beforeAll(async () => {
-    await TestDataSource.initialize();
+    await dataSource.initialize();
   });
 
   afterAll(async () => {
-    await TestDataSource.destroy();
+    await dataSource.destroy();
   });
 
   afterEach(async () => {
-    const repository = TestDataSource.getRepository(UserEntity);
+    const repository = dataSource.getRepository(UserEntity);
     await repository.clear();
   });
 
