@@ -1,11 +1,21 @@
 import app from "../../app";
 import request from "supertest";
-import { TestDataSource } from "../../data-source"
+import dataSource from "../../data-source"
+import { UserEntity } from "../../contexts/users/infrastructure/persistence/entities/UserEntity";
 
 describe("POST /user", () => {
 
     beforeAll(async () => {
-        await TestDataSource.initialize();
+        await dataSource.initialize();
+    });
+
+    afterAll(async () => {
+        await dataSource.destroy();
+    });
+
+    afterEach(async () => {
+        const repository = dataSource.getRepository(UserEntity);
+        await repository.clear();
     });
 
     it("returns 400 when the mandatory field is empty", async () => {
