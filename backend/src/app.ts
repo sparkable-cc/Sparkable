@@ -41,7 +41,8 @@ app.post('/user', async (req: Request, res: Response) => {
           res.status(400);
           res.send({ message: 'Bad request' });
           break;
-        case UsernameExistsException || EmailExistsException:
+        case UsernameExistsException:
+        case EmailExistsException:
           res.status(403);
           res.send({ message: 'User exist!' });
           break;
