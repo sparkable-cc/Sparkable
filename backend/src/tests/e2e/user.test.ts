@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../../app';
 import { UserEntity } from '../../contexts/users/infrastructure/persistence/entities/UserEntity';
-import { TestDataSource } from '../../data-source';
+import TestDataSource from '../../data-source';
 
 describe('POST /user', () => {
   beforeAll(async () => {
