@@ -12,10 +12,11 @@ export default function Signup(props: Props) {
   const [error, setError] = useState<Error | null>(null);
 
   const router = useRouter();
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const response = await fetch('http://localhost:5000/user', {
+    const response = await fetch(`${baseUrl}/user`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, username, password }),
