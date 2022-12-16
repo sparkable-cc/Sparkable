@@ -1,6 +1,5 @@
 import express, { Express, Request, Response } from 'express';
 import { auth } from 'express-oauth2-jwt-bearer';
-import jwksClient from 'jwks-rsa';
 import { CreateUserAction } from './contexts/users/actions/CreateUserAction';
 import { EmailExistsException } from './contexts/users/domain/exceptions/EmailExistsException';
 import { MandatoryFieldEmptyException } from './contexts/users/domain/exceptions/MandatoryFieldEmptyException';
@@ -23,15 +22,16 @@ app.get('/', (req: Request, res: Response) => {
 const checkJwt = auth({
   issuerBaseURL: 'https://localhost:5000',
   audience: 'butterfy',
+  algorithms: ['RS256'],
 });
 
 // This route doesn't need authentication
-app.get('/public', function (req, res) {
-  res.json({
-    message:
-      "Hello from a public endpoint! You don't need to be authenticated to see this.",
-  });
-});
+// app.get('/public', function (req, res) {
+//   res.json({
+//     message:
+//       "Hello from a public endpoint! You don't need to be authenticated to see this.",
+//   });
+// });
 
 // This route needs authentication
 app.get('/private', checkJwt, function (req, res) {
@@ -40,8 +40,6 @@ app.get('/private', checkJwt, function (req, res) {
       'Hello from a private endpoint! You need to be authenticated to see this.',
   });
 });
-
-app.listen(3000, () => console.log('listening at http://localhost:3000'));
 
 app.post('/user', async (req: Request, res: Response) => {
   const createUserAction = new CreateUserAction(
