@@ -1,13 +1,12 @@
 import dotenv from 'dotenv';
-import jwksClient from 'jwks-rsa';
-import app from './app';
-import { AppDataSource } from './data-source';
+import dataSource from "./data-source"
 
 dotenv.config();
 
 const port = process.env.PORT;
 
-AppDataSource.initialize()
+dataSource
+  .initialize()
   .then(() => {
     console.log('Data Source has been initialized!');
   })
