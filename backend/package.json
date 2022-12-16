@@ -8,7 +8,7 @@
     "start": "node dist/server.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server.js\"",
     "unit": "jest --testPathPattern=src/contexts",
-    "e2e": "NODE_ENV=test jest --testPathPattern=src/tests",
+    "e2e": "NODE_ENV=test jest --testPathPattern=src/tests --runInBand",
     "typeorm": "./node_modules/typeorm/cli.js"
   },
   "keywords": [],
