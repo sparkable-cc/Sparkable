@@ -12,7 +12,7 @@ export default function Signup(props: Props) {
   const [error, setError] = useState<Error | null>(null);
 
   const router = useRouter();
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const baseUrl = process.env.BASE_URL;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
