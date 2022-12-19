@@ -11,7 +11,7 @@ export default function SignIn() {
     }[]
   >([]);
   const router = useRouter();
-  const baseUrl = process.env.BASE_URL;
+  const baseUrl = process.env.BASE_URL_API;
 
   async function handleSignin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
