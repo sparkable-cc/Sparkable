@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
-import dataSource from "./data-source"
+import app from './app';
+import dataSource from './data-source';
 
 dotenv.config();
 
