@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import styles from '../styles/Home.module.css';
-import { RiExternalLinkLine } from "react-icons/ri";
 
 export default function About() {
 

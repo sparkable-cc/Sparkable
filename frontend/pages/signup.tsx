@@ -1,49 +1,32 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-type Props = {
-  onSuccess: () => void;
-};
-
-export default function Signup(props: Props) {
+export default function Signup() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<Error | null>(null);
+  const [message, setMessage] = useState('');
 
   const router = useRouter();
-  const baseUrl = process.env.BASE_URL_API;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault()
+
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_API;
+
     const response = await fetch(`${baseUrl}/user`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, username, password }),
     });
 
-    if (password !== '' && password.length < 8) {
-      setError(new Error('Password must be at least 8 characters'));
-    }
-    if (response.ok) {
-      props.onSuccess();
-    } else {
-      setError(await response.json());
-    }
-    const returnTo = router.query.returnTo;
+    const result = await response.json();
+    setMessage(result.message);
 
-    if (
-      returnTo &&
-      typeof returnTo === 'string' &&
-      !returnTo.startsWith('http')
-    ) {
-      props.onSuccess();
-      await router.push(returnTo);
-    } else {
-      props.onSuccess();
-      await router.push('/');
+    if (response.ok) {
+      router.push('/')
     }
-  };
+  }
 
   return (
     <div>
@@ -77,15 +60,17 @@ export default function Signup(props: Props) {
             type="password"
             id="password"
             value={password}
+            pattern=".{8,}"
             onChange={(event) => setPassword(event.target.value)}
             placeholder="Your password"
+            title="Password must be at least 8 characters"
           />
-          {error && <p>{error.message}</p>}
           <br />
           <br />
           <button type="submit" disabled={!email || !username || !password}>
             Sign up
           </button>
+          {message && <p id="error">{message}</p>}
         </form>
       </main>
     </div>

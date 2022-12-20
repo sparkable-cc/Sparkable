@@ -5,7 +5,7 @@ import { RiExternalLinkLine } from "react-icons/ri";
 
 
 export async function getStaticProps() {
-  const baseUrl = process.env.BASE_URL_API;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_API;
   const res = await fetch(`${baseUrl}/links/`);
   const links = await res.json();
   return {
