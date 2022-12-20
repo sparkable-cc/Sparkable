@@ -1,10 +1,6 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-type Props = {
-  onSuccess: () => void;
-};
-
 export default function Signup(props: Props) {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
@@ -12,7 +8,7 @@ export default function Signup(props: Props) {
   const [error, setError] = useState<Error | null>(null);
 
   const router = useRouter();
-  const baseUrl = process.env.BASE_URL_API;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_API;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -20,16 +16,17 @@ export default function Signup(props: Props) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, username, password }),
+      redirect: 'manual',
     });
 
     if (password !== '' && password.length < 8) {
       setError(new Error('Password must be at least 8 characters'));
-    }
-    if (response.ok) {
-      props.onSuccess();
+    } else if (response.ok) {
+      router.push('/');
     } else {
       setError(await response.json());
     }
+
     const returnTo = router.query.returnTo;
 
     if (
@@ -37,10 +34,8 @@ export default function Signup(props: Props) {
       typeof returnTo === 'string' &&
       !returnTo.startsWith('http')
     ) {
-      props.onSuccess();
-      await router.push(returnTo);
+      await router.push('/');
     } else {
-      props.onSuccess();
       await router.push('/');
     }
   };

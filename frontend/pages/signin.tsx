@@ -11,9 +11,12 @@ export default function SignIn() {
     }[]
   >([]);
   const router = useRouter();
-  const baseUrl = process.env.BASE_URL_API;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_API;
 
-  async function handleSignin(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSignin(
+    props: Props,
+    event: React.FormEvent<HTMLFormElement>,
+  ) {
     event.preventDefault();
 
     const response = await fetch(`${baseUrl}/user/signin`, {
@@ -21,7 +24,7 @@ export default function SignIn() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
     });
-
+    console.log(response);
     if (errors.length > 0) {
       setErrors([]);
     } else if (response.ok) {
@@ -37,7 +40,7 @@ export default function SignIn() {
       typeof returnTo === 'string' &&
       !returnTo.startsWith('http')
     ) {
-      await router.push(returnTo);
+      await router.push('/');
     } else {
       await router.push('/');
     }
@@ -76,12 +79,16 @@ export default function SignIn() {
             </div>
             <br />
             <br />
-            <button type="submit">Sign in</button>
+            <button type="submit" disabled={!username || !password}>
+              Sign in
+            </button>
             {errors.map((error) => (
               <div key={`error-${error.message}`}>{error.message}</div>
             ))}
           </form>
         </div>
+        <br />
+        <br />
         <p>Don't have an account yet?</p>
         <div>
           <Link href="/signup">
