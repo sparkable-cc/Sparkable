@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test'
 test('should should show a list of 10 links', async ({ page }) => {
     await page.goto('/')
 
-    await expect(page.locator('.card')).toContainText('10 results')
+    await expect(page.locator('#results')).toContainText('10 results')
 })
 
 test('should navigate to the login page', async ({ page }) => {
