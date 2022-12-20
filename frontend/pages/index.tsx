@@ -42,7 +42,7 @@ export default function Home({ links }) {
 
         <div className="break"><hr/></div>
 
-        <div>{links.total} results</div>
+        <div id="results">{links.total} results</div>
 
         <div className={styles.grid}>
         {
