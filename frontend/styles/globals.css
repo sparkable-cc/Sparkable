@@ -11,6 +11,10 @@ body {
   background: conic-gradient(from 270deg at 50% 100%, #4D9FFF 0deg, #D0FFF1 101.49deg, #FFFEF2 180.94deg, #4D9FFF 360deg);
 }
 
+.container {
+  padding: 0 1rem;
+}
+
 a {
   color: inherit;
   color: #264F80;
