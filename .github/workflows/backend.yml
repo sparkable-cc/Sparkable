@@ -25,3 +25,6 @@ jobs:
 
     - name: Run backend E2E tests
       run: docker-compose exec -T backend npm run e2e
+
+    # - name: Run frontend E2E tests
+    #   run: docker-compose exec -T frontend npm run e2e

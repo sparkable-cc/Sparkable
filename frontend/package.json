@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "export": "next export",
-    "test:e2e": "playwright test"
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@types/node": "18.11.15",
