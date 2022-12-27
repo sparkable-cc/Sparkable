@@ -5,7 +5,8 @@ const config: PlaywrightTestConfig = {
     viewport: { width: 1280, height: 720 },
     ignoreHTTPSErrors: true,
     video: 'on-first-retry',
-    baseURL: "http://localhost:3000"
+    baseURL: "http://localhost:3000",
   },
+  testDir: './tests/e2e'
 };
 export default config;

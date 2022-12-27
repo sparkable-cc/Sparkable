@@ -12,7 +12,6 @@ test('should navigate to the login page', async ({ page }) => {
     await page.click('text=Login')
 
     await expect(page).toHaveURL('/signin')
-    await expect(page.locator('h1')).toContainText('Sign in')
 })
 
 test('should navigate to the about page', async ({ page }) => {
@@ -21,5 +20,4 @@ test('should navigate to the about page', async ({ page }) => {
   await page.click('text=Read more')
 
   await expect(page).toHaveURL('/about')
-  await expect(page.locator('#exploring')).toContainText('Start Exploring')
 })
