@@ -27,12 +27,22 @@ a {
 header {
   display: flex;
   align-items: center;
+  margin-bottom: 20px;
+}
+
+#burger {
+  display: none;
+}
+
+header svg {
+  font-size: 34px;
+  margin: auto;
 }
 
 header h1 {
   font-style: normal;
   font-weight: 400;
-  font-size: 40px;
+  font-size: 28px;
   line-height: 100%;
 }
 
@@ -51,7 +61,18 @@ header .button {
 }
 
 .break {
+  margin-top: 20px;
   width: 100%;
+}
+
+@media screen and (max-width: 600px) {
+  #burger {
+    background-color: rgba(0, 108, 123, 0.2);
+    height: 40px;
+    display: flex;
+    width: 50px;
+    margin-right: 10px;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
