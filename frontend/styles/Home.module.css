@@ -50,7 +50,7 @@
 }
 
 .cardText svg {
-  top: .125em;
+  top: 0.125em;
   position: relative;
 }
 
@@ -68,16 +68,13 @@
 
 .card p {
   margin: 0;
-  margin-top:0.5rem;
+  margin-top: 0.5rem;
   font-family: Work Sans;
   font-style: normal;
   font-weight: 400;
   font-size: 13px;
   line-height: 130%;
 }
-
-
-
 
 /* .main {
   min-height: 100vh;
@@ -190,6 +187,19 @@
     width: 100%;
     flex-direction: column;
   }
+  .expand {
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+  }
+  .break {
+    /* Inside auto layout */
+
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -203,4 +213,210 @@
   .logo img {
     filter: invert(1);
   }
+}
+
+.sparkable {
+  width: 253px;
+  height: 65px;
+  left: 16px;
+  top: 133px;
+  /* font-family: 'Graphik'; */
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  margin-left: -100px;
+  line-height: 120%;
+  color: #000000;
+  /* identical to box height, or 65px */
+}
+
+.sparkableText {
+  width: 343px;
+  height: 69px;
+  left: 16px;
+  top: 214px;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 130%;
+}
+
+.break {
+  width: 343px;
+  height: 0px;
+
+  /* dark */
+
+  border: 1px solid #000000;
+}
+
+.expand {
+  width: 252px;
+  height: 30px;
+  /* font-family: 'Graphik'; */
+  font-style: normal;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 130%;
+  color: #000000;
+  display: block;
+  margin-left: 80px;
+  margin-bottom: -10px;
+}
+
+.expandText {
+  width: 252px;
+  height: 46px;
+
+  /* font-family: 'Graphik'; */
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 130%;
+  margin-left: 80px;
+  /* margin-right: 40px; */
+  margin-bottom: 40px;
+}
+
+.contact {
+  /* width: 61px;
+  height: 19px; */
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 120%;
+  display: flex;
+  gap: 20px;
+  margin-left: -160px;
+}
+
+.address {
+  width: 343px;
+  height: 42px;
+  margin-top: 0px;
+  /* font-family: 'Graphik'; */
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 130%;
+}
+
+.expandContainer {
+  display: flex;
+}
+
+.svg {
+  margin-right: -28px;
+}
+
+.svg1 {
+  left: 60%;
+  right: 20%;
+  top: 87.5%;
+  bottom: -7.5%;
+  border-radius: 50%;
+  margin-right: -25px;
+
+  background: #000000;
+  transform: matrix(0, -1, -1, 0, 0, 0);
+}
+
+.svg2 {
+  /* margin-right: 60px; */
+  border-radius: 50%;
+  left: 70%;
+  right: -10%;
+  top: 87.5%;
+  bottom: -27.5%;
+  box-sizing: border-box;
+  border: 1px solid #000000;
+  transform: matrix(0, -1, -1, 0, 0, 0);
+  margin-right: -40px;
+}
+
+.svg3 {
+  left: 80%;
+  right: -40%;
+  /* top: 87.5%; */
+  margin-top: 50px;
+  bottom: -47.5%;
+  border-radius: 50%;
+  border: 1px solid #000000;
+  transform: matrix(0, -1, -1, 0, 0, 0);
+  margin-right: -55px;
+}
+
+.svg4 {
+  box-sizing: border-box;
+  /* margin-right: -150px; */
+  left: 87.5%;
+  right: -62.5%;
+  top: 87.5%;
+  bottom: -62.5%;
+  border-radius: 50%;
+  border: 1px solid #000000;
+  transform: matrix(0, -1, -1, 0, 0, 0);
+}
+
+.svg5 {
+  left: 32%;
+  right: 51%;
+  top: 48%;
+  bottom: 35%;
+  position: relative;
+}
+
+.svg6 {
+  left: 232%;
+  right: 51%;
+  top: 38%;
+  bottom: 75%;
+  position: relative;
+}
+
+.svg7 {
+  left: 82%;
+  right: 51%;
+  top: 38%;
+  bottom: 115%;
+  position: relative;
+}
+
+.svg8 {
+  left: 350%;
+  right: 51%;
+  top: -10%;
+  bottom: 155%;
+  position: relative;
+}
+
+.svg9 {
+  left: 400%;
+  right: 51%;
+  top: 0%;
+  bottom: 0%;
+  position: relative;
+}
+
+.svg10 {
+  left: -44%;
+  right: 51%;
+  top: 40%;
+  bottom: 0%;
+  position: relative;
+}
+
+.svg11 {
+  left: 0%;
+  right: -62.5%;
+  top: 65.7%;
+  bottom: -62.5%;
+  position: absolute;
+}
+
+.svg12 {
+  left: 40%;
+  right: 51%;
+  top: 38%;
+  bottom: 47%;
+  position: relative;
 }

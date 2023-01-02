@@ -1,10 +1,9 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import { RiExternalLinkLine } from 'react-icons/ri';
 import styles from '../styles/Home.module.css';
-import { RiExternalLinkLine } from "react-icons/ri";
 
 export default function About() {
-
   return (
     <div className={styles.container}>
       <Head>
@@ -14,7 +13,7 @@ export default function About() {
       </Head>
 
       <header>
-        <h1>Butterfy</h1>
+        <h1>Sparkable</h1>
         <div className="button">
           <Link href="/signin">
             <button>Login</button>
@@ -23,19 +22,220 @@ export default function About() {
       </header>
 
       <main className={styles.main}>
+        <div className={styles.sparkable}>
+          <h1>Sparkable</h1>
+        </div>
+        <br />
+        <div className={styles.sparkableText}>
+          Sparkable is a collection of insightful content, sourced and curated
+          by the people.
+        </div>
+        <br />
+
+        <div className={styles.break}></div>
+        <div className={styles.expandContainer}>
+          <div className={styles.svg}>
+            <svg
+              className={styles.svg1}
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <ellipse
+                rx="8"
+                ry="8"
+                transform="matrix(-4.37114e-08 -1 -1 4.37114e-08 8 8)"
+                fill="black"
+              />
+            </svg>
+            <svg
+              className={styles.svg2}
+              width="32"
+              height="32"
+              viewBox="0 0 32 32"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16 0.500001C7.43959 0.500001 0.500001 7.43959 0.500001 16C0.500002 24.5604 7.43959 31.5 16 31.5C24.5604 31.5 31.5 24.5604 31.5 16C31.5 7.43959 24.5604 0.5 16 0.500001Z"
+                stroke="black"
+              />
+            </svg>
+            <svg
+              className={styles.svg3}
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M24 0.499997C11.0213 0.499998 0.500002 11.0213 0.500003 24C0.500003 36.9787 11.0213 47.5 24 47.5C36.9787 47.5 47.5 36.9787 47.5 24C47.5 11.0213 36.9787 0.499997 24 0.499997Z"
+                stroke="black"
+              />
+            </svg>
+            <svg
+              className={styles.svg4}
+              width="60"
+              height="60"
+              viewBox="0 0 60 60"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M30 0.499982C13.7076 0.499983 0.500002 13.7076 0.500003 30C0.500003 46.2924 13.7076 59.5 30 59.5C46.2924 59.5 59.5 46.2924 59.5 30C59.5 13.7076 46.2924 0.499982 30 0.499982Z"
+                stroke="black"
+              />
+            </svg>
+          </div>
+          <div>
+            <h2 className={styles.expand}>Expand your mind</h2>
+            <p className={styles.expandText}>
+              Discover content that <br /> moved others.
+            </p>
+          </div>
+        </div>
+        <div className={styles.expandContainer}>
+          <div>
+            <svg
+              className={styles.svg5}
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7 0.499999C3.41015 0.5 0.5 3.41015 0.500001 7C0.500001 10.5899 3.41015 13.5 7 13.5C10.5899 13.5 13.5 10.5899 13.5 7C13.5 3.41015 10.5899 0.499999 7 0.499999Z"
+                stroke="black"
+              />
+            </svg>
+            <svg
+              className={styles.svg6}
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <ellipse
+                rx="7"
+                ry="7"
+                transform="matrix(-4.37114e-08 -1 -1 4.37114e-08 7 7)"
+                fill="black"
+              />
+            </svg>
+            <svg
+              className={styles.svg7}
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7 0.499999C3.41015 0.5 0.5 3.41015 0.500001 7C0.500001 10.5899 3.41015 13.5 7 13.5C10.5899 13.5 13.5 10.5899 13.5 7C13.5 3.41015 10.5899 0.499999 7 0.499999Z"
+                stroke="black"
+              />
+            </svg>
+            <svg
+              className={styles.svg8}
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7 0.499999C3.41015 0.5 0.5 3.41015 0.500001 7C0.500001 10.5899 3.41015 13.5 7 13.5C10.5899 13.5 13.5 10.5899 13.5 7C13.5 3.41015 10.5899 0.499999 7 0.499999Z"
+                stroke="black"
+              />
+            </svg>
+            <svg
+              className={styles.svg9}
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7 0.499999C3.41015 0.5 0.5 3.41015 0.500001 7C0.500001 10.5899 3.41015 13.5 7 13.5C10.5899 13.5 13.5 10.5899 13.5 7C13.5 3.41015 10.5899 0.499999 7 0.499999Z"
+                stroke="black"
+              />
+            </svg>
+          </div>
+          <div>
+            <h2 className={styles.expand}>Less but better</h2>
+            <p className={styles.expandText}>
+              Select the most insightful content in a monthly voting process.
+            </p>
+          </div>
+        </div>
+        <div className={styles.expandContainer}>
+          <div>
+            <svg
+              className={styles.svg10}
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <ellipse
+                rx="7"
+                ry="7"
+                transform="matrix(-4.37114e-08 -1 -1 4.37114e-08 7 7)"
+                fill="black"
+              />
+            </svg>
+            <svg
+              className={styles.svg11}
+              width="60"
+              height="60"
+              viewBox="0 0 60 60"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M30 0.499997C13.7076 0.499998 0.500002 13.7076 0.500003 30C0.500003 46.2924 13.7076 59.5 30 59.5C46.2924 59.5 59.5 46.2924 59.5 30C59.5 13.7076 46.2924 0.499997 30 0.499997Z"
+                stroke="black"
+              />
+            </svg>
+            <svg
+              className={styles.svg12}
+              width="22"
+              height="22"
+              viewBox="0 0 22 22"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M11 0.499999C5.20101 0.499999 0.500001 5.20101 0.500001 11C0.500002 16.799 5.20101 21.5 11 21.5C16.799 21.5 21.5 16.799 21.5 11C21.5 5.20101 16.799 0.499998 11 0.499999Z"
+                stroke="black"
+              />
+            </svg>
+          </div>
+          <div>
+            <h2 className={styles.expand}>Rewards for insight</h2>
+            <p className={styles.expandText}>
+              Take part in a new reward system designed to replace paywalls.
+            </p>
+          </div>
+        </div>
+        <div className={styles.break}></div>
+        <div className={styles.contact}>
+          <p>Contact </p>
+          <p>Privacy Policy</p>
+        </div>
         <div>
-          Butterfy is a collection of insightful content, sourced and curated by the people. Here, you choose in a 4-staged voting process what is really transformational content.
+          <p className={styles.address}>
+            Butterfy (Association) <br /> CH-8000 Zurich, Switzerland
+          </p>
         </div>
-
-        <div className="button">
-          <Link href="/">
-            <button id="exploring">Start Exploring</button>
-          </Link>
-        </div>
-
-        <div className="break"><hr/></div>
       </main>
-
     </div>
   );
 }
