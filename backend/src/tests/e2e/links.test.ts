@@ -52,17 +52,21 @@ describe("GET /links", () => {
         expect(res.body.total).toEqual(2);
     });
 
-    // it("returns 200 sorted randomly by default", async () => {
-    //     const repository = dataSource.getRepository(LinkEntity);
-    //     const linkDto = LinkDtoFactory.create();
-    //     repository.save(linkDto);
-    //     repository.save(linkDto);
+    it("returns 200 sorted randomly by default", async () => {
+        const repository = dataSource.getRepository(LinkEntity);
+        const totalLinks = 20;
+        const linkDtoCollection = LinkDtoFactory.createX(totalLinks);
+        for (let index = 0; index < totalLinks; index++) {
+            await repository.save(linkDtoCollection[index]);
+        }
 
-    //     const res = await request(app).get("/links");
+        const res = await request(app).get("/links");
 
-    //     expect(res.statusCode).toEqual(200);
-    //     expect(res.body.total).toEqual(2);
-    // });
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.total).toEqual(totalLinks);
+        const maxId = Math.max(...res.body.links.map((links: { id: any; }) => links.id));
+        expect(res.body.links[0].id).toBeLessThanOrEqual(maxId);
+    });
 
     it("returns 200 sorted by newest first", async () => {
         const repository = dataSource.getRepository(LinkEntity);
