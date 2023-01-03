@@ -12,6 +12,6 @@ export class LinkRepositoryPG implements LinkRepository {
     }
 
     async getAllLinks(): Promise<[LinkDto[], number]> {
-        return await this.repository.findAndCount();
+        return await this.repository.findAndCount({order:{date:"DESC"}});
     }
 }
