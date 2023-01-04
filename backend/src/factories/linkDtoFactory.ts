@@ -9,8 +9,10 @@ export class LinkDtoFactory {
         categories: 'environment'
     };
 
-    public static create() {
-        return LinkDtoFactory.linkDto;
+    public static create(title?:string) {
+        let link = { ...this.linkDto };
+        if (title) link.title = title;
+        return link;
     }
 
     public static createX(x:number) {

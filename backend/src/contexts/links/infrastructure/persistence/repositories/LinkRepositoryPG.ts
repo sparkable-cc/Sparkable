@@ -11,7 +11,12 @@ export class LinkRepositoryPG implements LinkRepository {
         this.repository = dataSource.getRepository(LinkEntity);
     }
 
-    async getAllLinks(): Promise<[LinkDto[], number]> {
-        return await this.repository.findAndCount();
+    async getAllLinks(sort?:string): Promise<[LinkDto[], number]> {
+        if (sort) {
+            return await this.repository.findAndCount({order:{date:"DESC"}});
+        } else {
+            const result = await this.repository.createQueryBuilder('links').select().orderBy('RANDOM()').take(20).getMany();
+            return new Promise((resolve) => resolve([result, result.length]));
+        }
     }
 }

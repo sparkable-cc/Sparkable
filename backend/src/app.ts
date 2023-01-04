@@ -85,8 +85,9 @@ app.get('/links', async (req: Request, res: Response) => {
   const getAllLinksAction = new GetAllLinksAction(
     new LinkRepositoryPG(dataSource),
   );
+
   getAllLinksAction
-    .execute()
+    .execute(req.query.sort as string)
     .then((result) => {
       res.status(200);
       res.send({ links: result[0], total: result[1] });
