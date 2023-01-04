@@ -249,6 +249,7 @@
 .break {
   width: 343px;
   height: 0px;
+  color: #000000;
 
   /* dark */
 
@@ -403,7 +404,7 @@
 .svg10 {
   left: 20%;
   right: 51%;
-  top: 22%;
+  top: 26%;
   bottom: 0%;
   box-sizing: border-box;
   position: relative;
@@ -413,7 +414,7 @@
 .svg11 {
   left: 4%;
   right: -62.5%;
-  top: 84%;
+  top: 79%;
   bottom: -62.5%;
   position: absolute;
   box-sizing: border-box;
@@ -424,7 +425,7 @@
 .svg12 {
   left: 100%;
   right: 51%;
-  top: 20%;
+  top: 22%;
   bottom: 47%;
   box-sizing: border-box;
   position: relative;
@@ -445,9 +446,9 @@
   }
 }
 
-/* .header h1 {
+.header {
   font-style: normal;
   font-weight: 400;
   font-size: 28px;
   line-height: 100%;
-} */
+}

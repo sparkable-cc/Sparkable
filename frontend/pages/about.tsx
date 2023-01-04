@@ -18,7 +18,9 @@ export default function About() {
         <i className={styles.burger}>
           <IoMdMenu />
         </i>
-        <h1 id="h1">Sparkable</h1>
+        <h1 id="h1" className={styles.header}>
+          Sparkable
+        </h1>
         <div className="button">
           <Link href="/signin">
             <button>Login</button>
@@ -39,9 +41,7 @@ export default function About() {
         </div>
         <br />
 
-        <div className="break">
-          <hr />
-        </div>
+        <div className={styles.break}></div>
         <div className={styles.expandContainer}>
           <div className={styles.svg}>
             <svg
@@ -234,9 +234,7 @@ export default function About() {
             </p>
           </div>
         </div>
-        <div className="break">
-          <hr />
-        </div>
+        <div className={styles.break}></div>
         <div className={styles.contact}>
           <p>Contact </p>
           <p>Privacy Policy</p>
