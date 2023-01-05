@@ -2,7 +2,9 @@ import app from "../../app";
 import request from "supertest";
 import dataSource from "../../data-source"
 import { LinkEntity } from "../../contexts/links/infrastructure/persistence/entities/LinkEntity";
-import { LinkDtoFactory } from "../../factories/linkDtoFactory"
+import LinkFactory from "../../factories/LinkFactory"
+import CategoryFactory from "../../factories/CategoryFactory"
+import { CategoryEntity } from "../../contexts/links/infrastructure/persistence/entities/CategoryEntity";
 
 describe("GET /links", () => {
 
@@ -15,8 +17,11 @@ describe("GET /links", () => {
     });
 
     afterEach(async () => {
-        const repository = dataSource.getRepository(LinkEntity);
-        await repository.clear();
+        const linkRepository = dataSource.getRepository(LinkEntity);
+        await linkRepository.delete({});
+
+        const categoryRepository = dataSource.getRepository(CategoryEntity);
+        await categoryRepository.delete({});
     });
 
     it("returns 200 and empty response when does not exist links", async () => {
@@ -26,9 +31,7 @@ describe("GET /links", () => {
     });
 
     it("returns 200 with link when exists one", async () => {
-        const repository = dataSource.getRepository(LinkEntity);
-        const linkDto = LinkDtoFactory.create();
-        repository.save(linkDto);
+        const linkDto = await LinkFactory.create();
 
         const res = await request(app).get("/links");
 
@@ -40,11 +43,8 @@ describe("GET /links", () => {
     });
 
     it("returns 200 with multipe links when exist two", async () => {
-        const repository = dataSource.getRepository(LinkEntity);
-        const linkDto = LinkDtoFactory.create('First link');
-        await repository.save(linkDto);
-        const linkDto2 = LinkDtoFactory.create('Second link');
-        await repository.save(linkDto2);
+        await LinkFactory.create();
+        await LinkFactory.create();
 
         const res = await request(app).get("/links");
 
@@ -53,12 +53,8 @@ describe("GET /links", () => {
     });
 
     it("returns 200 sorted randomly by default", async () => {
-        const repository = dataSource.getRepository(LinkEntity);
         const totalLinks = 20;
-        const linkDtoCollection = LinkDtoFactory.createX(totalLinks);
-        for (let index = 0; index < totalLinks; index++) {
-            await repository.save(linkDtoCollection[index]);
-        }
+        await LinkFactory.createX(totalLinks);
 
         const res = await request(app).get("/links");
 
@@ -69,21 +65,74 @@ describe("GET /links", () => {
     });
 
     it("returns 200 sorted by newest first", async () => {
-        const repository = dataSource.getRepository(LinkEntity);
-
-        const titleFirstLink = 'First link';
-        const linkDto = LinkDtoFactory.create(titleFirstLink);
-        await repository.save(linkDto);
-
-        const titleSecondLink = 'Second link';
-        const linkDto2 = LinkDtoFactory.create(titleSecondLink);
-        await repository.save(linkDto2);
+        await LinkFactory.create();
+        await LinkFactory.create();
 
         const res = await request(app).get("/links?sort=-date");
 
         expect(res.statusCode).toEqual(200);
-        expect(res.body.links[0].title).toEqual(titleSecondLink);
-        expect(res.body.links[1].title).toEqual(titleFirstLink);
+        expect(res.body.links[0].id).toBeGreaterThan(res.body.links[1].id);
     });
 
+    it("returns 200 returns empty filtering for something does not exist", async () => {
+        const category = await CategoryFactory.create('Environment');
+        await LinkFactory.createWithCategories([category]);
+
+        const res = await request(app).get("/links?categories=Technology");
+
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.total).toEqual(0);
+    });
+
+    it("returns 200 filtering for something does exist", async () => {
+        const category = await CategoryFactory.create('Environment');
+        await LinkFactory.createWithCategories([category]);
+
+        const res = await request(app).get("/links?categories=" + category.name);
+
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.total).toEqual(1);
+        expect(res.body.links[0].categories[0].name).toEqual(category.name);
+    });
+
+    it("returns 200 sorting by date and filtering by multiple categories", async () => {
+        const category1 = await CategoryFactory.create('Environment');
+        await LinkFactory.createWithCategories([category1]);
+
+        const category2 = await CategoryFactory.create('Environment2');
+        await LinkFactory.createWithCategories([category2]);
+
+        const category3 = await CategoryFactory.create('Environment3');
+        await LinkFactory.createWithCategories([category3]);
+
+        const filter = category1.name + ',' + category3.name;
+        const res = await request(app).get("/links?categories=" + filter + "&sort=-date");
+
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.total).toEqual(2);
+        expect(res.body.links[0].categories[0].name).toEqual(category3.name);
+        expect(res.body.links[1].categories[0].name).toEqual(category1.name);
+    });
+
+    it("returns 200 sorting randomly and filtering by multiple categories", async () => {
+        const category1 = await CategoryFactory.create('Environment');
+        const category2 = await CategoryFactory.create('Environment2');
+        const category3 = await CategoryFactory.create('Environment3');
+
+        await LinkFactory.createXWithCategories(5, [category1]);
+        await LinkFactory.createXWithCategories(5, [category2]);
+        await LinkFactory.createXWithCategories(5, [category3]);
+
+        const filter = category1.name + ',' + category3.name;
+        const res = await request(app).get("/links?categories=" + filter);
+
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.total).toEqual(10);
+        const maxId = Math.max(...res.body.links.map((links: { id: any; }) => links.id));
+        expect(res.body.links[0].id).toBeLessThanOrEqual(maxId);
+    });
+
+    it("returns 200 filtering for contents with multiples categories", async () => {
+        //AQUI!
+    });
 });

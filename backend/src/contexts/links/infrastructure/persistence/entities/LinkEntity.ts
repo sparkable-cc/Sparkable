@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, Generated, CreateDateColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, Generated, CreateDateColumn, ManyToMany, JoinTable} from "typeorm"
 import { LinkDto } from "../../../domain/models/LinkDto";
+import { CategoryEntity } from "./CategoryEntity"
 
 @Entity('links')
 export class LinkEntity implements LinkDto {
@@ -25,6 +26,8 @@ export class LinkEntity implements LinkDto {
     @Column()
     username:string;
 
-    @Column()
-    categories:string;
+    //@ManyToMany(() => CategoryEntity, {cascade: true, onDelete: 'CASCADE'})
+    @ManyToMany(() => CategoryEntity)
+    @JoinTable()
+    categories: CategoryEntity[]
 }

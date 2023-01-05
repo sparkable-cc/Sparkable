@@ -87,7 +87,7 @@ app.get('/links', async (req: Request, res: Response) => {
   );
 
   getAllLinksAction
-    .execute(req.query.sort as string)
+    .execute(req.query.sort as string, req.query.categories as string)
     .then((result) => {
       res.status(200);
       res.send({ links: result[0], total: result[1] });
