@@ -16,6 +16,13 @@ export async function getStaticProps() {
   };
 }
 
+const newestFirst = async (sort: string) => {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_API;
+  const res = await fetch(`${baseUrl}/links/?sort=-date`);
+  const links = await res.json();
+  return links;
+};
+
 export default function Home({ links }: any) {
   return (
     <div className="container">
@@ -49,7 +56,11 @@ export default function Home({ links }: any) {
               <option className="dropdown-content" value="random">
                 Random
               </option>
-              <option className="dropdown-content" value="newest first">
+              <option
+                className="dropdown-content"
+                value="newest first"
+                onSelect={() => newestFirst('newest first')}
+              >
                 Newest First
               </option>
             </select>
