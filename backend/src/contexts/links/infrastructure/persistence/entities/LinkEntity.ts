@@ -26,8 +26,7 @@ export class LinkEntity implements LinkDto {
     @Column()
     username:string;
 
-    //@ManyToMany(() => CategoryEntity, {cascade: true, onDelete: 'CASCADE'})
-    @ManyToMany(() => CategoryEntity)
+    @ManyToMany((type) => CategoryEntity, (category) => category.links, { eager: true })
     @JoinTable()
     categories: CategoryEntity[]
 }

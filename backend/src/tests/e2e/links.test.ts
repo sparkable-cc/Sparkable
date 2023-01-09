@@ -76,7 +76,7 @@ describe("GET /links", () => {
 
     it("returns 200 returns empty filtering for something does not exist", async () => {
         const category = await CategoryFactory.create('Environment');
-        await LinkFactory.createWithCategories([category]);
+        await LinkFactory.create([category]);
 
         const res = await request(app).get("/links?categories=Technology");
 
@@ -86,7 +86,7 @@ describe("GET /links", () => {
 
     it("returns 200 filtering for something does exist", async () => {
         const category = await CategoryFactory.create('Environment');
-        await LinkFactory.createWithCategories([category]);
+        await LinkFactory.create([category]);
 
         const res = await request(app).get("/links?categories=" + category.name);
 
@@ -97,13 +97,13 @@ describe("GET /links", () => {
 
     it("returns 200 sorting by date and filtering by multiple categories", async () => {
         const category1 = await CategoryFactory.create('Environment');
-        await LinkFactory.createWithCategories([category1]);
+        await LinkFactory.create([category1]);
 
         const category2 = await CategoryFactory.create('Environment2');
-        await LinkFactory.createWithCategories([category2]);
+        await LinkFactory.create([category2]);
 
         const category3 = await CategoryFactory.create('Environment3');
-        await LinkFactory.createWithCategories([category3]);
+        await LinkFactory.create([category3]);
 
         const filter = category1.name + ',' + category3.name;
         const res = await request(app).get("/links?categories=" + filter + "&sort=-date");
@@ -119,9 +119,9 @@ describe("GET /links", () => {
         const category2 = await CategoryFactory.create('Environment2');
         const category3 = await CategoryFactory.create('Environment3');
 
-        await LinkFactory.createXWithCategories(5, [category1]);
-        await LinkFactory.createXWithCategories(5, [category2]);
-        await LinkFactory.createXWithCategories(5, [category3]);
+        await LinkFactory.createX(5, [category1]);
+        await LinkFactory.createX(5, [category2]);
+        await LinkFactory.createX(5, [category3]);
 
         const filter = category1.name + ',' + category3.name;
         const res = await request(app).get("/links?categories=" + filter);
@@ -132,7 +132,4 @@ describe("GET /links", () => {
         expect(res.body.links[0].id).toBeLessThanOrEqual(maxId);
     });
 
-    it("returns 200 filtering for contents with multiples categories", async () => {
-        //AQUI!
-    });
 });

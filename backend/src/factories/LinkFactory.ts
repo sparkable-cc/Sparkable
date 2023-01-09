@@ -12,50 +12,19 @@ export default class LinkFactory {
         categories: []
     };
 
-    // REFACTOR BY PARAMS
-    public static async create() {
+    public static async create(categories?:Array<CategoryEntity>) {
         const linkRepository = dataSource.getRepository(LinkEntity);
         const link = linkRepository.create({ ...this.linkDto });
+        if (categories) {
+            link.categories = categories;
+        }
         return await linkRepository.manager.save(link);
     }
 
-    // REFACTOR BY PARAMS
-    public static async createWithCategories(categories:Array<CategoryEntity>) {
-        const linkRepository = dataSource.getRepository(LinkEntity);
-        const link = linkRepository.create({ ...this.linkDto });
-        link.categories = categories;
-        await linkRepository.manager.save(link);
-    }
-
-    public static async createX(x:number) {
+    public static async createX(x:number, categories?:Array<CategoryEntity>) {
         for (let index = 0; index < x; index++) {
-            await LinkFactory.create();
+            await LinkFactory.create(categories);
         }
     }
-
-    public static async createXWithCategories(x:number, categories:Array<CategoryEntity>) {
-        for (let index = 0; index < x; index++) {
-            await LinkFactory.createWithCategories(categories);
-        }
-    }
-
-    /////////////////////7
-
-    // public static create(title?:string) {
-    //     let link = { ...this.linkDto };
-    //     if (title) link.title = title;
-    //     return link;
-    // }
-
-    // public static createX(x:number) {
-    //     const links = [];
-    //     for (let index = 0; index < x; index++) {
-    //         let newLink = { ...this.linkDto };
-    //         newLink.title = newLink.title + index;
-    //         links.push(newLink);
-    //     }
-
-    //     return links;
-    // }
 
 }
