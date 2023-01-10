@@ -13,7 +13,7 @@ Also the PgAdmin server on http://localhost:8080.
 ### Development - Frontend
 The frontend can be launched by running in ``/frontend``:
 ```bash
-$ npm run start
+$ npm run dev
 ```
 This runs the frontend server on http://localhost:3000. All requests will be proxied to the backend.
 
