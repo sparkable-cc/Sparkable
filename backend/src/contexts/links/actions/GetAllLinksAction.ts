@@ -7,8 +7,8 @@ export class GetAllLinksAction {
         this.linkRepository = linkRepository;
     }
 
-    execute(sort?:string) {
-        return this.linkRepository.getAllLinks(sort);
+    execute(sort?:string, categories?:string) {
+        return this.linkRepository.getAllLinks(sort, categories);
     }
 
 }
