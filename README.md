@@ -10,6 +10,11 @@ $ docker-compose up
 This runs the backend server on http://localhost:5000.
 Also the PgAdmin server on http://localhost:8080.
 
+To execute migration:
+```bash
+docker-compose exec backend npm run typeorm migration:run
+```
+
 ### Development - Frontend
 The frontend can be launched by running in ``/frontend``:
 ```bash
@@ -24,5 +29,8 @@ $ docker-compose -f docker-compose-prod.yml up
 ```
 This runs the deployed website on http://localhost:8000.
 
+### Doc
+In **doc folder**:
+- endpoints
 
 *Boilerplate inspired in https://github.com/V-Wong/pern-stack-template*
