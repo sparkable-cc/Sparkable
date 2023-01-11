@@ -10,9 +10,9 @@ $ docker-compose up
 This runs the backend server on http://localhost:5000.
 Also the PgAdmin server on http://localhost:8080.
 
-To execute migration:
+To execute the migrations:
 ```bash
-docker-compose exec backend npm run typeorm migration:run
+docker-compose exec backend npm run typeorm migration:run -- -d ./dist/data-source.js
 ```
 
 ### Development - Frontend
