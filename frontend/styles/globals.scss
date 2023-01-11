@@ -1,19 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@100;400&display=swap');
+@import "./reset.scss";
+@import "./variables.scss";
+@import "./common.scss";
 
 html,
 body {
-  padding: 0;
-  margin: 0;
+  font-size: 1em;
+  font-family: sans-serif;
+  font-weight: 400;
+  color: $colorBlack;
+  background: $colorBlue;
+
   font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
     Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background: conic-gradient(
-    from 270deg at 50% 100%,
-    #4d9fff 0deg,
-    #d0fff1 101.49deg,
-    #fffef2 180.94deg,
-    #4d9fff 360deg
-  );
 }
 
 .container {
@@ -23,10 +23,6 @@ body {
 a {
   color: inherit;
   color: #264f80;
-}
-
-* {
-  box-sizing: border-box;
 }
 
 header {
