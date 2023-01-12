@@ -1,79 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@100;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@500&display=swap');
 @import "./reset.scss";
 @import "./variables.scss";
 @import "./common.scss";
 
 html,
 body {
-  font-size: 1em;
-  font-family: sans-serif;
-  font-weight: 400;
   color: $colorBlack;
   background: $colorBlue;
-
-  font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
-
-.container {
-  padding: 0 1rem;
-}
-
-a {
-  color: inherit;
-  color: #264f80;
-}
-
-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-#burger {
-  display: none;
-}
-
-header svg {
-  font-size: 34px;
-  margin: auto;
-}
-
-header h1 {
-  font-style: normal;
+  font-family: $mainFont, sans-serif;
+  font-size: 1em;
   font-weight: 400;
-  font-size: 28px;
-  line-height: 100%;
-}
-
-header .button {
-  margin-left: auto;
-}
-
-.button button {
-  font-family: Work Sans;
-  font-size: 18px;
-  line-height: 100%;
-  background: rgba(77, 159, 255, 0.7);
-  border: 0;
-  padding: 11px 24px;
-  font-weight: bold;
-}
-
-.break {
-  margin-top: 20px;
-  width: 100%;
-}
-
-@media screen and (max-width: 600px) {
-  #burger {
-    background-color: rgba(0, 108, 123, 0.2);
-    height: 40px;
-    display: flex;
-    width: 50px;
-    margin-right: 10px;
-  }
 }
 
 /* @media (prefers-color-scheme: dark) {
