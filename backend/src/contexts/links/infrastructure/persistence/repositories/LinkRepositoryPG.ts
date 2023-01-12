@@ -7,7 +7,7 @@ import { LinkDto } from '../../../domain/models/LinkDto';
 export class LinkRepositoryPG implements LinkRepository {
     private repository;
 
-    readonly LIMIT = 20;
+    readonly LIMIT = 6;
 
     constructor(dataSource: DataSource) {
         this.repository = dataSource.getRepository(LinkEntity);
@@ -48,21 +48,11 @@ export class LinkRepositoryPG implements LinkRepository {
     }
 
     private async findSortingRandom(query: Record<string, any>): Promise<[LinkDto[], number]> {
-        const isFilteringByCategories = query.relations;
-        if (isFilteringByCategories) {
-            //improve this in the future... poor performance with lots of data
-            const result = await this.repository.findAndCount(query);
-            this.shuffle(result[0]);
-            result[0] = result[0].slice(0, this.LIMIT);
-            return result;
-        } else {
-            const result = await this.repository.createQueryBuilder('links')
-                .select()
-                .orderBy('RANDOM()')
-                .take(this.LIMIT)
-                .getMany();
-            return new Promise((resolve) => resolve([result, result.length]));
-        }
+        const result = await this.repository.findAndCount(query);
+        //improve this in the future... poor performance with lots of data
+        this.shuffle(result[0]);
+        result[0] = result[0].slice(0, this.LIMIT);
+        return result;
     }
 
     private shuffle(array:any) {
