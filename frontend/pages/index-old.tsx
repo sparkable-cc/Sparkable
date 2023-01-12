@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { AiOutlineMenu } from 'react-icons/ai';
 import { IoMdMenu } from 'react-icons/io';
 import { RiExternalLinkLine } from 'react-icons/ri';
-import styles from '../styles/Home.module.scss';
+import styles from '../styles/HomeOld.module.scss';
 
 export async function getStaticProps() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_API;
