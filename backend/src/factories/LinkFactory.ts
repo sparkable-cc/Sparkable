@@ -12,9 +12,12 @@ export default class LinkFactory {
         categories: []
     };
 
-    public static async create(categories?:Array<CategoryEntity>) {
+    public static async create(categories?:Array<CategoryEntity>, title?:string) {
         const linkRepository = dataSource.getRepository(LinkEntity);
         const link = linkRepository.create({ ...this.linkDto });
+        if (title) {
+            link.title = title;
+        }
         if (categories) {
             link.categories = categories;
         }
@@ -23,7 +26,7 @@ export default class LinkFactory {
 
     public static async createX(x:number, categories?:Array<CategoryEntity>) {
         for (let index = 0; index < x; index++) {
-            await LinkFactory.create(categories);
+            await LinkFactory.create(categories, this.linkDto.title + index);
         }
     }
 
