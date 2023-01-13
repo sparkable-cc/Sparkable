@@ -3,15 +3,15 @@
 .sidebarWrapper {
   width: 260px;
   height: 100vh;
-  position: static;
+  position: sticky;
   top: 0;
   left: 0;
   background: $colorWhite;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 20px 32px;
   align-items: flex-start;
+  padding: 20px 32px;
   box-shadow: 0px 2px 25px rgba(0, 48, 75, 0.2);
   border-radius: 0px 2px 2px 0px;
   line-height: 1;

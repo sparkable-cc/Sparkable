@@ -1,3 +1,5 @@
+@import "./functions.scss";
+
 // COLORS
 $colorBlack: #000000;
 $colorWhiteBlue: #D2E7FF;
@@ -11,6 +13,14 @@ $size13: 0.8125rem;
 $size18: 1.125rem;
 $size24: 1.5rem;
 
+// PADDINGS GAPS
+$gapXxs: pxToRem(8);
+$gapMxs: pxToRem(10);
+$gapXs: pxToRem(12);
+$gapS: pxToRem(16);
+$gapM: pxToRem(20);
+$gapL: pxToRem(26);
+$gapXL: pxToRem(32);
 
 // BREAKPOINTS
 $desktop: 1700px;
