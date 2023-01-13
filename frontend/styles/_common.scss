@@ -8,21 +8,31 @@
 
 .container {
   width: calc(100% - 260px);
+  padding-left: 40px;
 }
 
 // BUTTONS
 .buttonPrimary {
+  display: inline-flex;
+  align-items: center;
   font-family: $secondaryFont;
   background: $colorBlue;
   font-weight: 500;
-  padding: 8px 16px;
+  padding: 0 16px;
+  height: 32px;
   border-radius: 2px;
   color: $colorWhite;
   transition: 0.2s;
+  font-size: 1rem;
   cursor: pointer;
 
   &:hover {
     background: #3461d4;
+  }
+
+  &.sizeXl {
+    font-size: $size18;
+    height: 40px;
   }
 }
 

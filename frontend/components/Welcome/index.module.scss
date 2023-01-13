@@ -1,0 +1,65 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.welcomeWrapper {
+  margin-top: 80px;
+}
+
+.title {
+  font-size: 5.25rem;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.subtitle {
+  font-size: $size24;
+  max-width: 540px;
+  margin-top: 16px;
+}
+
+.buttonsWrapper {
+  margin-top: 24px;
+  display: flex;
+}
+
+.startButton {
+  @extend .buttonPrimary;
+
+  margin-right: 20px;
+
+  &:after {
+    margin-left: 10px;
+    position: relative;
+    top: 2px;
+    content: url("../../public/svg/arrow-down.svg");
+  }
+}
+
+.benefitsWrapper {
+  margin-top: 90px;
+  display: flex;
+  padding-bottom: 115px;
+}
+
+.benefit {
+  width: 300px;
+  margin-right: 24px;
+  padding: 100px 30px 0 0;
+  position: relative;
+}
+
+.benefitIcon {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.benefitTitle {
+  font-size: $size18;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.benefitDescription {
+  font-size: $size18;
+}
