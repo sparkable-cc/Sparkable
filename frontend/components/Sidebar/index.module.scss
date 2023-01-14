@@ -41,4 +41,8 @@
  font-size: $size13;
  text-decoration: underline;
  color: $colorBlack;
+
+ &:hover {
+  text-decoration: none;
+ }
 }

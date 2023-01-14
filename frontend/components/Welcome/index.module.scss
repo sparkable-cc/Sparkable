@@ -2,7 +2,11 @@
 @import "../../styles/common";
 
 .welcomeWrapper {
-  margin-top: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: calc(100vh - 50px);
+  min-height: 600px;
 }
 
 .title {
@@ -38,7 +42,6 @@
 .benefitsWrapper {
   margin-top: 90px;
   display: flex;
-  padding-bottom: 115px;
 }
 
 .benefit {

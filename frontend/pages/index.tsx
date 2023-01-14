@@ -11,9 +11,7 @@ const HomePage: NextPage = () => {
     <main className={styles.mainWrapper}>
       <Sidebar />
       <section className={styles.container}>
-        <header className={styles.header}>
-          <AuthButtons />
-        </header>
+        <AuthButtons />
         <Welcome />
         <div className={styles.contentWrapper}>
           <section className={styles.articlesWrapper}>

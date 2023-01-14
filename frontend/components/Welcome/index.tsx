@@ -6,11 +6,13 @@ export const Welcome = () => {
 
   return (
     <div className={styles.welcomeWrapper}>
-      <h1 className={styles.title}>Spark new insight.</h1>
-      <p className={styles.subtitle}>Find insightful content. Crowd-curated and powered by a new reward system.</p>
-      <div className={styles.buttonsWrapper}>
-        <button className={classNames(styles.startButton, styles.sizeXl)}>Start Exploring</button>
-        <button className={classNames(styles.buttonTransparent, styles.sizeXl)}>Learn More</button>
+      <div className={styles.titleWrapper}>
+        <h1 className={styles.title}>Spark new insight.</h1>
+        <p className={styles.subtitle}>Find insightful content. Crowd-curated and powered by a new reward system.</p>
+        <div className={styles.buttonsWrapper}>
+          <button className={classNames(styles.startButton, styles.sizeXl)}>Start Exploring</button>
+          <button className={classNames(styles.buttonTransparent, styles.sizeXl)}>Learn More</button>
+        </div>
       </div>
       <div className={styles.benefitsWrapper}>
         <div className={styles.benefit}>
