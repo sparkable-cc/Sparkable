@@ -9,6 +9,9 @@
   margin-bottom: $gapS;
   display: flex;
   flex-direction: column;
+  -webkit-column-break-inside: avoid;
+          page-break-inside: avoid;
+               break-inside: avoid;
 }
 
 .articleCover {

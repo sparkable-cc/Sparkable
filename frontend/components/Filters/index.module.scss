@@ -1,0 +1,68 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.filtersSidebar {
+  padding: 50px 40px 0px 40px;
+  font-size: $size14;
+  font-family: $secondaryFont;
+  font-weight: 400;
+  width: 290px;
+  top: 0px;
+  position: sticky;
+}
+
+.filtersSection {
+  margin-top: $gapL;
+}
+
+.filtersTitle {
+  font-weight: 400;
+  margin-bottom: $gapXxs;
+}
+
+.filterButton {
+  @extend .buttonWhite;
+  
+  padding: 0 12px;
+  margin-bottom: $gapXxs;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba(0, 108, 123, 0.05);
+  }
+
+  &:after {
+    margin-left: 4px;
+    position: relative;
+    top: 2px;
+    content: url("../../public/svg/plus-black.svg");
+  }
+
+  &.active {
+    background: rgba(0, 108, 123, 0.4);
+
+    &:after {
+      content: url("../../public/svg/cros.svg");
+    }
+  }
+}
+
+.textWrapper {
+  margin-top: 100px;
+  position: relative;
+  
+  &:before {
+    width: 45px;
+    height: 1px;
+    background: $colorBlack;
+    display: block;
+    content: "";
+  }
+}
+
+.text {
+  font-family: $mainFont;
+  font-size: 1rem;
+  line-height: 1.2;
+  padding: $gapS 0 $gapXL;
+}

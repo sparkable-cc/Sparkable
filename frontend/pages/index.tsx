@@ -3,6 +3,7 @@ import { Sidebar } from '../components/Sidebar';
 import { AuthButtons } from '../components/AuthButtons';
 import { Welcome } from '../components/Welcome';
 import { ArticleItem } from '../components/ArticleItem';
+import { Filters } from '../components/Filters';
 import styles from '../styles/Home.module.scss';
 
 const HomePage: NextPage = () => {
@@ -14,17 +15,26 @@ const HomePage: NextPage = () => {
           <AuthButtons />
         </header>
         <Welcome />
-        <section className={styles.articlesWrapper}>
-          <div className={styles.exploreTitleWrapper}>
-            <div className={styles.exploreButton} />
-            <h2 className={styles.exploreTitle}>
-              <span>Explore</span> what others have submitted</h2>
-          </div>
-          <section className={styles.articlesList}>
-            <ArticleItem />
-            <ArticleItem />
+        <div className={styles.contentWrapper}>
+          <section className={styles.articlesWrapper}>
+            <div className={styles.exploreTitleWrapper}>
+              <div className={styles.exploreButton} />
+              <h2 className={styles.exploreTitle}>
+                <span>Explore</span> what others have submitted</h2>
+            </div>
+            <section className={styles.articlesList}>
+              <ArticleItem />
+              <ArticleItem />
+              <ArticleItem />
+              <ArticleItem />
+              <ArticleItem />
+            </section>
+            <div className={styles.loadMoreWrapper}>
+              <button className={styles.loadMoreButton}>Load more</button>
+            </div>
           </section>
-        </section>
+          <Filters />
+        </div>
       </section>
     </main>
   )

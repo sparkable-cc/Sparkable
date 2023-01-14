@@ -37,8 +37,35 @@
   }
 }
 
+.articlesWrapper {
+  width: 640px;
+  padding-bottom: $gapXL;
+}
+
 .articlesList {
   columns: 2;
   column-gap: $gapS;
-  width: 640px;
+}
+
+.loadMoreWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: $gapS;
+}
+
+.loadMoreButton {
+  @extend .buttonPrimary;
+
+  &:before {
+    margin-right: 10px;
+    position: relative;
+    top: 2px;
+    content: url("../public/svg/plus-white.svg");
+  }
+}
+
+.contentWrapper {
+  display: flex;
+  align-items: flex-start;
+  align-content: flex-start;
 }
