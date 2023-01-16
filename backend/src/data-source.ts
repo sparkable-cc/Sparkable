@@ -15,7 +15,11 @@ const AppDataSource = new DataSource({
     logging: true,
     entities: [__dirname + '/contexts/**/infrastructure/persistence/entities/*.{ts,js}'],
     subscribers: [],
-    migrations: [__dirname + '/db/migrations/*.{ts,js}']
+    migrations: [__dirname + '/db/migrations/*.{ts,js}'],
+    ssl: {
+        ca: process.env.SSL_CERT,
+    },
+    dropSchema: false
 })
 
 const TestDataSource = new DataSource({
