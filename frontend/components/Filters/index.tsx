@@ -16,7 +16,7 @@ export const Filters = () => {
         <button className={styles.filterButton}>Business & Economy</button>
         <button className={styles.filterButton}>Environment</button>
         <button className={styles.filterButton}>Mind & Body</button>
-        <button className={classNames(styles.filterButton, styles.active)}>Society</button>
+        <button className={styles.filterButton}>Society</button>
         <button className={styles.filterButton}>Technology</button>
         <button className={styles.filterButton}>Other</button>
       </section>
@@ -24,7 +24,7 @@ export const Filters = () => {
         <p className={styles.text}>
           What is the most insightful piece of content you have encountered recently?
         </p>
-        <button className={classNames(styles.buttonPrimary, styles.sizeXl)}>Submit a link</button>
+        <button className={classNames(styles.buttonPrimary, styles.sizeXl, styles.disable)}>Submit a link</button>
       </div>
     </aside>
   )

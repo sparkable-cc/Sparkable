@@ -1,6 +1,7 @@
 import styles from './index.module.scss';
 import classNames from 'classnames';
 import { ReactSVG } from 'react-svg';
+import Link from "next/link";
 
 export const Welcome = () => {
 
@@ -10,8 +11,8 @@ export const Welcome = () => {
         <h1 className={styles.title}>Spark new insight.</h1>
         <p className={styles.subtitle}>Find insightful content. Crowd-curated and powered by a new reward system.</p>
         <div className={styles.buttonsWrapper}>
-          <button className={classNames(styles.startButton, styles.sizeXl)}>Start Exploring</button>
-          <button className={classNames(styles.buttonTransparent, styles.sizeXl)}>Learn More</button>
+          <Link scroll={false} href="/#explore" className={classNames(styles.startButton, styles.sizeXl)}>Start Exploring</Link>
+          <Link href="/about" className={classNames(styles.buttonTransparent, styles.sizeXl)}>Learn More</Link>
         </div>
       </div>
       <div className={styles.benefitsWrapper}>

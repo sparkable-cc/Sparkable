@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { IoMdMenu } from 'react-icons/io';
 import { RiExternalLinkLine } from 'react-icons/ri';
-import styles from '../styles/Home.module.css';
+import styles from '../styles/Home.module.scss';
 
 export default function About() {
   return (

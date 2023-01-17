@@ -2,6 +2,7 @@ import styles from "./index.module.scss";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "../../public/svg/logo.svg";
+import classNames from "classnames";
 
 export const Sidebar = () => {
   return (
@@ -14,17 +15,18 @@ export const Sidebar = () => {
       </Link>
       <nav className={styles.menuWrapper}>
         <Link
-          href=""
+          href="/#explore"
+          scroll={false}
           className={styles.menuItem}>
           Explore
         </Link>
         <Link
           href=""
-          className={styles.menuItem}>
+          className={classNames(styles.menuItem, styles.disable)}>
           Submit
         </Link>
         <Link
-          href=""
+          href="/about"
           className={styles.menuItem}>
           About
         </Link>
@@ -32,12 +34,12 @@ export const Sidebar = () => {
       <footer className={styles.sidebarFooter}>
         <Link 
           href=""
-          className={styles.sidebarFooterLink}>
+          className={classNames(styles.sidebarFooterLink, styles.disable)}>
           Contact 
         </Link>
         <Link 
           href=""
-          className={styles.sidebarFooterLink}>
+          className={classNames(styles.sidebarFooterLink, styles.disable)}>
           Privacy Policy
         </Link>
       </footer>

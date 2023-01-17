@@ -8,6 +8,8 @@ import { Filters } from '../components/Filters';
 import styles from '../styles/Home.module.scss';
 import { useLazyGetLinksQuery } from '../store/api/articles';
 import { v4 as uuidv4 } from 'uuid';
+import { Spiner } from '../components/Spiner';
+import classNames from 'classnames';
 
 const HomePage: NextPage = () => {
   const [triggerGetLinks, { isLoading, data }] = useLazyGetLinksQuery();
@@ -29,17 +31,22 @@ const HomePage: NextPage = () => {
         <AuthButtons />
         <Welcome />
         <div className={styles.contentWrapper}>
-          <section className={styles.articlesWrapper}>
+          <section className={styles.articlesWrapper} id="explore">
             <div className={styles.exploreTitleWrapper}>
               <div className={styles.exploreButton} />
               <h2 className={styles.exploreTitle}>
                 <span>Explore</span> what others have submitted</h2>
             </div>
             <section className={styles.articlesList}>
-              {data?.links?.length && data.links.map(item => <ArticleItem {...item} key={uuidv4()} />)}
+              {data?.links?.length &&
+                data.links.map(item => <ArticleItem
+                  {...item}
+                  key={uuidv4()}
+                />)}
             </section>
+            {isLoading && <Spiner wrapperClassName={styles.spinnerWrapper}/>}
             <div className={styles.loadMoreWrapper}>
-              <button className={styles.loadMoreButton}>Load more</button>
+              <button className={classNames(styles.loadMoreButton, styles.disable)}>Load more</button>
             </div>
           </section>
           <Filters />
