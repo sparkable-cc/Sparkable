@@ -1,17 +1,35 @@
 import styles from './index.module.scss';
+import { ApiTypes } from '../../types';
 
-export const ArticleItem = () => {
+interface Props extends ApiTypes.Model.Link { }
 
+export const ArticleItem = ({
+  id,
+  uuid,
+  title,
+  link,
+  image,
+  date,
+  username
+}: Props) => {
   return (
     <article className={styles.articleItem}>
-      <div
+      {image && <div
         className={styles.articleCover}
         style={{
-          backgroundImage: `url("https://picsum.photos/id/82/600/500")`
-        }} />
+          backgroundImage: `url(${image})`
+        }} />}
       <div className={styles.articleInfoWrapper}>
-        <a href="" className={styles.articleLink}>site.com</a>
-        <span className={styles.articleTitle}>Opinion | Why Women Had Better Sex Under Socialism (Published 2017)</span>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href={link}
+          className={styles.articleLink}>
+          {link}
+        </a>
+        <span className={styles.articleTitle}>
+          {title}
+        </span>
       </div>
     </article>
   )
