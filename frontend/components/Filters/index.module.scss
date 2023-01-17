@@ -24,9 +24,9 @@
 }
 
 .filterButton {
-  @extend .buttonWhite;
+  @extend .buttonWhite; 
   
-  padding: 0 12px;
+  padding: 0 $gapXs;
   margin-bottom: $gapXxs;
   white-space: nowrap;
 
