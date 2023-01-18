@@ -5,10 +5,22 @@
   display: flex;
   align-items: center;
   margin-bottom: $gapS;
+
+  @media only screen and (max-width: $laptop) {
+    margin-top: 80px;
+  }
+
+  @media only screen and (max-width: $tablet) {
+    margin-top: 0;
+  }
 }
 
 .exploreTitle {
   font-size: $size24;
+
+  @media only screen and (max-width: $tablet) {
+    font-size: $size20;
+  }
 
   span {
     font-weight: 500;
@@ -30,16 +42,32 @@
     top: 2px;
     content: url('../../public/svg/explore-arrow.svg');
   }
+
+  @media only screen and (max-width: $tablet) {
+    display: none;
+  }
 }
 
 .articlesWrapper {
-  width: 640px;
+  width: calc(100% - 290px);
   padding-bottom: $gapXL;
+
+  @media only screen and (max-width: $tablet) {
+    width: 100%;   
+  }
 }
 
 .articlesList {
   columns: 2;
   column-gap: $gapS;
+
+  @media only screen and (min-width: $desktop) {
+    columns: 3;
+  }
+
+  @media only screen and (max-width: $mobile) {
+    columns: 1;
+  }
 }
 
 .loadMoreWrapper {

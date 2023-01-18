@@ -3,6 +3,7 @@ import { ArticleItem } from '../ArticleItem';
 import { useLazyGetLinksQuery } from '../../store/api/articles';
 import { v4 as uuidv4 } from 'uuid';
 import { Spiner } from '../Spiner';
+import { MobileFilters } from '../MobileFilters';
 import classNames from 'classnames';
 import styles from './index.module.scss';
 
@@ -26,6 +27,7 @@ export const ArticlesList = () => {
         <h2 className={styles.exploreTitle}>
           <span>Explore</span> what others have submitted</h2>
       </div>
+      <MobileFilters />
       <section className={styles.articlesList}>
         {data?.links?.length &&
           data.links.map(item => <ArticleItem

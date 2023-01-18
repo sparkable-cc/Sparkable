@@ -8,7 +8,7 @@ export const Welcome = () => {
   return (
     <div className={styles.welcomeWrapper}>
       <div className={styles.titleWrapper}>
-        <h1 className={styles.title}>Spark new insight.</h1>
+        <h1 className={styles.title}>Spark <br />new insight.</h1>
         <p className={styles.subtitle}>Find insightful content. Crowd-curated and powered by a new reward system.</p>
         <div className={styles.buttonsWrapper}>
           <Link scroll={false} href="/#explore" className={classNames(styles.startButton, styles.sizeXl)}>Start Exploring</Link>

@@ -9,6 +9,14 @@
 .container {
   width: calc(100% - 260px);
   padding-left: 40px;
+
+  @media only screen and (max-width: $laptop) {
+    width: 100%;
+  }
+
+  @media only screen and (max-width: $tablet) {
+    padding: 0 $gapS $gapS;
+  }
 }
 
 // BUTTONS
@@ -59,22 +67,4 @@
 .disable {
   cursor: not-allowed;
   opacity: 0.5;
-}
-
-
-// RESPONSIVENES
-@media only screen and (max-width: $desktop) {
-
-}
-
-@media only screen and (max-width: $laptop) {
-
-}
-
-@media only screen and (max-width: $tablet) {
-
-}
-
-@media only screen and (max-width: $mobile) {
-
 }

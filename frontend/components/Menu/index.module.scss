@@ -2,7 +2,7 @@
 @import "../../styles/common";
 
 
-.sidebarWrapper {
+.menuWrapper {
   width: 260px;
   height: 100vh;
   position: sticky;
@@ -17,6 +17,12 @@
   box-shadow: 0px 2px 25px rgba(0, 48, 75, 0.2);
   border-radius: 0px 2px 2px 0px;
   line-height: 1;
+
+  @media only screen and (max-width: $laptop) {
+    position: fixed;
+    z-index: 500;
+    display: none;
+  }
 }
 
 .logo {
@@ -36,7 +42,7 @@
   }
 }
 
-.sidebarFooterLink {
+.menuFooterLink {
  display: block;
  padding: 4px 0;
  margin-bottom: 4px; 

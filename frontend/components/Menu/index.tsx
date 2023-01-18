@@ -4,16 +4,16 @@ import Image from "next/image";
 import logo from "../../public/svg/logo.svg";
 import classNames from "classnames";
 
-export const Sidebar = () => {
+export const Menu = () => {
   return (
-    <aside className={styles.sidebarWrapper}>
+    <aside className={styles.menuWrapper}>
       <Link href="/" className={styles.logo}>
         <Image
           src={logo}
           alt="Sparkable logo"
         />
       </Link>
-      <nav className={styles.menuWrapper}>
+      <nav className={""}>
         <Link
           href="/#explore"
           scroll={false}
@@ -31,15 +31,15 @@ export const Sidebar = () => {
           About
         </Link>
       </nav>
-      <footer className={styles.sidebarFooter}>
+      <footer className={styles.menuFooter}>
         <Link 
           href=""
-          className={classNames(styles.sidebarFooterLink, styles.disable)}>
+          className={classNames(styles.menuFooterLink, styles.disable)}>
           Contact 
         </Link>
         <Link 
           href=""
-          className={classNames(styles.sidebarFooterLink, styles.disable)}>
+          className={classNames(styles.menuFooterLink, styles.disable)}>
           Privacy Policy
         </Link>
       </footer>

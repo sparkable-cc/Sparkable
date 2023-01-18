@@ -12,6 +12,14 @@
   position: sticky;
   display: flex;
   flex-direction: column;
+
+  @media only screen and (max-width: $laptop) {
+    padding-top: 80px;
+  }
+
+  @media only screen and (max-width: $tablet){
+    display: none;
+  }
 }
 
 .filtersSection {

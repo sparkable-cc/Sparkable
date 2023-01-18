@@ -1,0 +1,45 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.mobileHeaderWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 72px;
+  padding: 0 $gapS;
+  background: $colorWhiteBlue;
+
+  @media only screen and (min-width: $laptop) {
+    display: none;
+  }
+}
+
+.hamburger {
+  width: 50px;
+  height: 40px;
+  background: url("../../public/svg/hamburger.svg");
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.logoWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.logoLink {
+  display: inline-flex;
+  width: 133px;
+  height: 28px;
+}
+
+.logo {
+  max-width: 100%;
+  position: relative;
+  top: 1px;
+}

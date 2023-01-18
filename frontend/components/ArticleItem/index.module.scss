@@ -10,8 +10,13 @@
   display: flex;
   flex-direction: column;
   -webkit-column-break-inside: avoid;
-          page-break-inside: avoid;
-               break-inside: avoid;
+  page-break-inside: avoid;
+  break-inside: avoid;
+
+  @media only screen and (max-width: $mobile) {
+    height: 175px;
+    flex-direction: row-reverse;
+  }
 }
 
 .articleCover {
@@ -19,6 +24,10 @@
   width: 100%;
   background-size: cover;
   background-position: center;
+
+  @media only screen and (max-width: $mobile) {
+    width: 50%;
+  }
 }
 
 .articleInfoWrapper {
@@ -29,6 +38,10 @@
   align-items: flex-start;
   height: auto;
   flex-grow: 1;
+
+  @media only screen and (max-width: $mobile) {
+    width: 50%;
+  }
 }
 
 .articleLink {
@@ -56,6 +69,7 @@
 }
 
 .articleTitle {
+  max-width: 100%;
   font-weight: 500;
   line-height: 1.2;
   height: 57px;
@@ -64,4 +78,5 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  word-wrap: break-word;
 }
