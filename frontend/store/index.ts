@@ -1,9 +1,11 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import { articles } from "./api/articles";
+import UIReducer from "./UIslice";
 
 export const store = configureStore({
   reducer: {
     [articles.reducerPath]: articles.reducer,
+    UI: UIReducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({

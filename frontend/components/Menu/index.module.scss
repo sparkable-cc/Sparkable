@@ -17,17 +17,47 @@
   box-shadow: 0px 2px 25px rgba(0, 48, 75, 0.2);
   border-radius: 0px 2px 2px 0px;
   line-height: 1;
+  transition: opacity 400ms;
 
   @media only screen and (max-width: $laptop) {
+    left: -100%;
     position: fixed;
-    z-index: 500;
-    display: none;
+    z-index: 1001;
+    opacity: 0;
+
+    &.enterActive {
+      left: 0;
+    }
+    
+    &.enterDone {
+      left: 0;
+      opacity: 1;
+    }
+
+    &.exitActive {
+      left: 0;
+      opacity: 0;
+    }
+
+    &.exitDone {
+      left: -100%;
+    }
   }
 }
 
 .logo {
   position: relative;
   left: -16px;
+
+  img {
+    max-width: 100%;
+  }
+
+  @media only screen and (max-width: $laptop) {
+    left: 0;
+    width: 133px;
+    height: 28px;
+  }
 }
 
 .menuItem {
@@ -53,4 +83,34 @@
  &:hover {
   text-decoration: none;
  }
+}
+
+.closeButton {
+  width: 50px;
+  height: 40px;
+  margin-right: 8px;
+  position: relative;
+  top: -1px;
+  background: url("../../public/svg/close.svg");
+  cursor: pointer;
+
+  @media only screen and (min-width: $laptop){
+    display: none;
+  }
+}
+
+.logoWrapper {
+  @media only screen and (max-width: $laptop) {
+    display: flex;
+    align-items: center;
+    position: relative;
+    left: -16px;
+    top: -3px;
+  }
+}
+
+.signin {
+  @media only screen and (min-width: $laptop) {
+    display: none;
+  }
 }
