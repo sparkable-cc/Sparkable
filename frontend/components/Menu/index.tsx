@@ -6,25 +6,23 @@ import classNames from "classnames";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { selectIsMenuVisible, setMenuVisible } from '../../store/UIslice';
 import { CSSTransition } from 'react-transition-group';
-import { useRef } from 'react';
 
 export const Menu = () => {
   const isVisible = useAppSelector(selectIsMenuVisible);
   const dispatch = useAppDispatch();
-  const asideRef = useRef(null);
 
   const onMenuHide = () => {
     dispatch(setMenuVisible(false));
   }
 
   return (
-    <CSSTransition nodeRef={asideRef} in={isVisible} timeout={400} classNames={{
+    <CSSTransition in={isVisible} timeout={400} classNames={{
       enterActive: styles.enterActive,
       enterDone: styles.enterDone,
       exitActive: styles.exitActive,
       exitDone: styles.exitDone,
     }}>
-      <aside ref={asideRef} className={classNames(styles.menuWrapper)}>
+      <aside className={classNames(styles.menuWrapper)}>
         <div className={styles.logoWrapper}>
           <button className={styles.closeButton} onClick={onMenuHide}></button>
           <Link href="/" className={styles.logo}>

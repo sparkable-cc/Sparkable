@@ -6,6 +6,7 @@
   width: 260px;
   height: 100vh;
   position: sticky;
+  z-index: 1001;
   top: 0;
   left: 0;
   background: $colorWhite;
@@ -22,7 +23,6 @@
   @media only screen and (max-width: $laptop) {
     left: -100%;
     position: fixed;
-    z-index: 1001;
     opacity: 0;
 
     &.enterActive {
