@@ -1,0 +1,50 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.mobileFiltersWrapper {
+  padding: $gapXxs 0;
+
+  @media only screen and (min-width: $tablet) {
+    display: none;
+  }
+}
+
+.buttonsWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $gapXxs 0;
+  border-bottom: 1px solid $colorBlack;
+  margin-bottom: $gapXxs;
+}
+
+.counter {
+  display: inline-flex;
+  font-size: $size14;
+}
+
+.selectedFiltersList {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.selectedFilterItem {
+  @extend .buttonWhite; 
+  
+  padding: 0 $gapXs;
+  margin-bottom: $gapXxs;
+  white-space: nowrap;
+  background: rgba(0, 108, 123, 0.4);
+  margin-right: $gapXxs;
+
+  &:after {
+    content: url("../../public/svg/cros.svg");
+    margin-left: 4px;
+    position: relative;
+    top: 2px;
+  }
+
+  &:hover {
+    background: rgba(0, 108, 123, 0.4);
+  }
+}

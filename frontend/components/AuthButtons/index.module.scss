@@ -1,0 +1,19 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.authButtons {
+  position: fixed;
+  z-index: 500;
+  top: 20px;
+  right: $gapXL;
+
+  @media only screen and (max-width: $laptop) {
+    display: none;
+  }
+}
+
+.logInButton {
+  @extend .buttonTransparent;
+
+  margin-right: 16px;
+}

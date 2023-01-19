@@ -1,21 +1,70 @@
+@import "./variables.scss";
+
+// CONTAINERS
+.mainWrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
 .container {
-  max-width: 1296px;
-  width: 100%;
-  margin: 0 auto;
+  width: calc(100% - 260px);
+  padding-left: 40px;
+
+  @media only screen and (max-width: $laptop) {
+    width: 100%;
+  }
+
+  @media only screen and (max-width: $tablet) {
+    padding: 0 $gapS $gapS;
+  }
 }
 
-@media only screen and (max-width: $desktop) {
+// BUTTONS
+.buttonPrimary {
+  display: inline-flex;
+  align-items: center;
+  font-family: $secondaryFont;
+  background: $colorBlue;
+  font-weight: 500;
+  padding: 0 $gapS;
+  height: 32px;
+  border-radius: 2px;
+  color: $colorWhite;
+  transition: 0.2s;
+  font-size: 1rem;
+  cursor: pointer;
 
+  &:hover {
+    background: #3461d4;
+  }
+
+  &.sizeXl {
+    font-size: $size18;
+    height: 40px;
+  }
 }
 
-@media only screen and (max-width: $laptop) {
+.buttonTransparent {
+  @extend .buttonPrimary;
+  
+  background: $colorWhiteBlue;
+  color: $colorBlack;
+  text-decoration: underline;
 
+  &:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
 }
 
-@media only screen and (max-width: $tablet) {
-
+.buttonWhite {
+  @extend .buttonPrimary;
+  
+  background: $colorWhite;
+  color: $colorBlack;
+  font-weight: 400;
 }
 
-@media only screen and (max-width: $mobile) {
-
+.disable {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
