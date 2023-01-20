@@ -101,4 +101,35 @@ app.get('/links', async (req: Request, res: Response) => {
     });
 });
 
+app.post('/links', async (req: Request, res: Response) => {
+  const createLinkAction = new CreateLinkAction(
+    new LinkRepositoryPG(dataSource),
+  );
+  createLinkAction
+    .execute(req.body.url, req.body.title, req.body.categories)
+    .then(() => {
+      res.status(201);
+      res.send({ message: 'Link created!' });
+    })
+    .catch((error) => {
+      switch (error.constructor) {
+        case MandatoryFieldEmptyException:
+          res.status(400);
+          res.send({ message: 'Bad request' });
+          break;
+        case LinkAlreadyExistsException:
+          res.status(403);
+          res.send({ message: 'Link already exists!' });
+          break;
+        default:
+          console.log(
+            'Failed to do something async with an unspecified error: ',
+            error,
+          );
+          return res.send(500);
+      }\
+
+    });
+});
+
 export default app;
