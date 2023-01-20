@@ -1,12 +1,13 @@
-import { CategoryDto } from "./CategoryDto";
+import { CategoryDto } from './CategoryDto';
 
-export interface LinkDto  {
-    id:number;
-    uuid:string;
-    title:string;
-    username:string;
-    link:string;
-    image:string;
-    date: Date;
-    categories:Array<CategoryDto>;
+export interface LinkDto {
+  id: number;
+  uuid: string;
+  title: string;
+  username: string;
+  link: string;
+  image: string;
+  description: string;
+  date: Date;
+  categories: Array<CategoryDto>;
 }

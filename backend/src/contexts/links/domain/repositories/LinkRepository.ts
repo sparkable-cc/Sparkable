@@ -1,3 +1,4 @@
+import { Link } from '../models/Link';
 import { LinkDto } from '../models/LinkDto';
 
 export interface LinkRepository {

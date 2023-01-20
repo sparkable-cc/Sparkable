@@ -3,8 +3,18 @@ import { CategoryDto } from './CategoryDto';
 import { LinkDto } from './LinkDto';
 
 export class Link {
+  // title: string;
+  // link: string;
+  // categories: string[];
+
+  id: number;
+  uuid: string;
   title: string;
+  username: string;
   link: string;
+  image: string;
+  description: string;
+  date: Date;
   categories: string[];
 
   constructor(link: LinkDto) {
@@ -17,6 +27,10 @@ export class Link {
     this.categories = this.categories;
   }
 
+  public static factory(linkDto: LinkDto): Link {
+    return new Link(linkDto);
+  }
+
   public toDto(): LinkDto {
     return {
       id: 0,
@@ -24,9 +38,10 @@ export class Link {
       title: this.title,
       username: '',
       link: this.link,
-      image: '',
+      image: 'http://test.com/test.jpg',
+      description: '',
       date: new Date(),
-      categories:Array<CategoryDto>;
+      categories: [{ id: 0, name: 'Environment' }],
     };
   }
 }
