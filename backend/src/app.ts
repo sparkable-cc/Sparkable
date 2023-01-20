@@ -1,7 +1,9 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Express, Request, Response } from 'express';
+import { CreateLinkAction } from './contexts/links/actions/CreateLinkAction';
 import { GetAllLinksAction } from './contexts/links/actions/GetAllLinksAction';
+import { LinkExistsException } from './contexts/links/domain/exceptions/LinkExistsException';
 import { LinkRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/LinkRepositoryPG';
 import { CreateUserAction } from './contexts/users/actions/CreateUserAction';
 import { SignInAction } from './contexts/users/actions/SignInAction';
@@ -106,7 +108,7 @@ app.post('/links', async (req: Request, res: Response) => {
     new LinkRepositoryPG(dataSource),
   );
   createLinkAction
-    .execute(req.body.url, req.body.title, req.body.categories)
+    .execute(req.body)
     .then(() => {
       res.status(201);
       res.send({ message: 'Link created!' });
@@ -117,7 +119,7 @@ app.post('/links', async (req: Request, res: Response) => {
           res.status(400);
           res.send({ message: 'Bad request' });
           break;
-        case LinkAlreadyExistsException:
+        case LinkExistsException:
           res.status(403);
           res.send({ message: 'Link already exists!' });
           break;
@@ -127,8 +129,7 @@ app.post('/links', async (req: Request, res: Response) => {
             error,
           );
           return res.send(500);
-      }\
-
+      }
     });
 });
 

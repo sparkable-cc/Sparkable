@@ -7,4 +7,6 @@ export interface LinkRepository {
     categories?: string,
   ) => Promise<[LinkDto[], number]>;
   storeLink: (link: Link) => void;
+
+  findLink: (field: string, value: string) => Promise<LinkDto>;
 }
