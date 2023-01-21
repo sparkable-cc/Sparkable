@@ -1,17 +1,17 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
-import { articles } from "./api/articles";
+import { api } from "./api";
 import UIReducer from "./UIslice";
 
 export const store = configureStore({
   reducer: {
-    [articles.reducerPath]: articles.reducer,
+    [api.reducerPath]: api.reducer,
     UI: UIReducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
       serializableCheck: false,
     })
-      .concat(articles.middleware)
+      .concat(api.middleware)
   },
 });
 

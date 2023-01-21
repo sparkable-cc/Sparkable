@@ -10,9 +10,23 @@ export declare namespace ApiTypes.Model {
     date: Date
     username: string
   }
+
+  type CategorySlug = "Art+&+Culture" | "Business+&+Economy" | "Environment" | "Technology"
+
+  interface Filter {
+    name: string,
+    slug: CategorySlug
+ }
 }
 
-export declare namespace ApiTypes.Req {}
+export declare namespace ApiTypes.Req {
+
+
+  interface LinksQueryParams {
+    sort?: "-date",
+    categories?: ApiTypes.Model.CategorySlug[]
+  }
+}
 
 export declare namespace ApiTypes.Res {
   interface Links {
