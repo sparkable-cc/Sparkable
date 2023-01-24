@@ -6,6 +6,7 @@ import { getLinks } from '../../store/api';
 import { setFilter, resetFilter, selectSelectedFilters } from '../../store/UIslice';
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { v4 as uuidv4 } from 'uuid';
+import { CSSTransition } from 'react-transition-group';
 
 // TO-DO: fetch real filters data
 const tempData: ApiTypes.Model.Filter[] = [
@@ -83,11 +84,16 @@ export const MobileFilters = () => {
         }
         <span className={styles.counter}>{data?.total || 0} Results</span>
       </aside>
-      {isModalOpen &&
+      <CSSTransition in={isModalOpen} timeout={400} classNames={{
+        enterActive: styles.enterActive,
+        enterDone: styles.enterDone,
+        exitActive: styles.exitActive,
+        exitDone: styles.exitDone,
+      }}>
         <div className={styles.filtersViewport}>
           <header className={styles.filtersHeader}>
             <h3 className={styles.filtersTitle}>Filter</h3>
-            <span className={styles.cancelButton} onClick={()=>setModalOpen(false)}>Close</span>
+            <span className={styles.cancelButton} onClick={() => setModalOpen(false)}>Close</span>
           </header>
           <section className={styles.filtersListWrapper}>
             <h4 className={styles.filtersSubtitle}>Filter by category</h4>
@@ -114,7 +120,7 @@ export const MobileFilters = () => {
             Reset filters
           </button>
         </div>
-      }
+      </CSSTransition>
     </>
   )
 }

@@ -52,7 +52,7 @@
 .filtersViewport {
   position: fixed;
   z-index: 1000;
-  left: 0;
+  right: -100%;
   top: 0;
   height: 100vh;
   width: 100%;
@@ -60,6 +60,26 @@
   padding: $gapS;
   display: flex;
   flex-direction: column;
+  opacity: 0;
+  transition: 0.3s;
+
+  &.enterActive {
+    right: 0;
+  }
+
+  &.enterDone {
+    right: 0;
+    opacity: 1;
+  }
+
+  &.exitActive {
+    right: 0;
+    opacity: 0;
+  }
+
+  &.exitDone {
+    right: -100%;
+  }
 }
 
 .filtersTitle {
