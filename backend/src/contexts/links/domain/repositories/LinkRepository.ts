@@ -8,5 +8,5 @@ export interface LinkRepository {
   ) => Promise<[LinkDto[], number]>;
   storeLink: (link: Link) => void;
 
-  findLink: (field: string, value: string) => Promise<LinkDto>;
+  findLink: (field: string, value: string) => Promise<LinkDto | undefined>;
 }

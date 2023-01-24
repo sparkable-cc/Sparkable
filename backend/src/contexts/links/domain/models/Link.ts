@@ -1,12 +1,9 @@
 import { MandatoryFieldEmptyException } from '../../../users/domain/exceptions/MandatoryFieldEmptyException';
+import { CategoryRestrictionException } from '../exceptions/CategoryRestrictionException';
 import { CategoryDto } from './CategoryDto';
 import { LinkDto } from './LinkDto';
 
 export class Link {
-  // title: string;
-  // link: string;
-  // categories: string[];
-
   id: number;
   uuid: string;
   title: string;
@@ -15,16 +12,24 @@ export class Link {
   image: string;
   description: string;
   date: Date;
-  categories: string[];
+  categories: CategoryDto[];
 
   constructor(link: LinkDto) {
     if (Object.keys(link).length === 0) {
       throw new MandatoryFieldEmptyException();
     }
 
+    if (!link.title || !link.link || !link.categories) {
+      throw new MandatoryFieldEmptyException();
+    }
+
+    if (link.categories.length > 2) {
+      throw new CategoryRestrictionException();
+    }
+
     this.title = link.title;
     this.link = link.link;
-    this.categories = this.categories;
+    this.categories = link.categories;
   }
 
   public static factory(linkDto: LinkDto): Link {
@@ -38,10 +43,10 @@ export class Link {
       title: this.title,
       username: '',
       link: this.link,
-      image: 'http://test.com/test.jpg',
+      image: 'http://image',
       description: '',
       date: new Date(),
-      categories: [{ id: 0, name: 'Environment' }],
+      categories: this.categories,
     };
   }
 }

@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
 import { MandatoryFieldEmptyException } from '../../users/domain/exceptions/MandatoryFieldEmptyException';
+import { CategoryRestrictionException } from '../domain/exceptions/CategoryRestrictionException';
 import { LinkExistsException } from '../domain/exceptions/LinkExistsException';
-import { Link } from '../domain/models/Link';
 import { LinkRepositoryInMemory } from '../infrastructure/persistence/repositories/LinkRepositoryInMemory';
 import { CreateLinkAction } from './CreateLinkAction';
 
@@ -14,88 +14,104 @@ describe('Create link action', () => {
     );
   });
 
-  // test('create link with only mandatory fields', async () => {
-  //   const linkRepository = new LinkRepositoryInMemory();
-  //   const createLinkAction = new CreateLinkAction(linkRepository);
-  //   const title = 'title';
-  //   const url = 'http://test.com/test';
-  //   const categories = ['Environment'];
-  //   const link = {
-  //     title: title,
-  //     link: url,
-  //     categories: categories,
-  //   };
+  test('cant create link with only title', async () => {
+    const createLinkAction = new CreateLinkAction(new LinkRepositoryInMemory());
+    await expect(createLinkAction.execute({ title: 'title' })).rejects.toThrow(
+      MandatoryFieldEmptyException,
+    );
+  });
 
-  //   createLinkAction.execute(link);
+  test('cant create link with only title and url', async () => {
+    const createLinkAction = new CreateLinkAction(new LinkRepositoryInMemory());
 
-  //   const [links, total] = await linkRepository.getAllLinks();
-  //   expect(total).toEqual(1);
-  //   expect(links[0].title).toEqual(title);
-  //   expect(links[0].link).toEqual(url);
-  //   expect(links[0].categories).toEqual(categories);
-  // });
+    await expect(
+      createLinkAction.execute({ title: 'title', link: 'http://example' }),
+    ).rejects.toThrow(MandatoryFieldEmptyException);
+  });
 
-  // test('create link with all fields', async () => {
-  //   const linkRepository = new LinkRepositoryInMemory();
-  //   const createLinkAction = new CreateLinkAction(linkRepository);
-  //   const title = 'title';
-  //   const url = 'http://test.com/test';
-  //   const image = 'http://test.com/test.jpg';
-  //   const categories = ['Environment'];
-  //   const description = 'description';
-  //   const link = {
-  //     title: title,
-  //     link: url,
-  //     image: image,
-  //     categories: categories,
-  //     description: description,
-  //   };
+  test('cant create link with only categories', async () => {
+    const createLinkAction = new CreateLinkAction(new LinkRepositoryInMemory());
 
-  //   createLinkAction.execute(link);
+    await expect(
+      createLinkAction.execute({
+        categories: ['Environment'],
+      }),
+    ).rejects.toThrow(MandatoryFieldEmptyException);
+  });
 
-  //   const [links, total] = await linkRepository.getAllLinks();
-  //   expect(total).toEqual(1);
-  //   expect(links[0].title).toEqual(title);
-  //   expect(links[0].link).toEqual(url);
-  //   expect(links[0].image).toEqual(image);
-  //   expect(links[0].categories).toEqual(categories);
-  //   expect(links[0].description).toEqual(description);
-  // });
+  test('cant create link with more than 2 categories', async () => {
+    const createLinkAction = new CreateLinkAction(new LinkRepositoryInMemory());
 
-  // test('should throw error when link already exists', async () => {
-  //   const linkRepository = new LinkRepositoryInMemory();
-  //   const createLinkAction = new CreateLinkAction(linkRepository);
-  //   const title = 'title';
-  //   const url = 'http://test.com/test';
-  //   const link = {
-  //     title: title,
-  //     link: url,
-  //     categories: ['Environment'],
-  //   };
-  //   linkRepository.storeLink(new Link(link));
-  //   createLinkAction.execute(link);
+    await expect(
+      createLinkAction.execute({
+        title: 'title',
+        link: 'http://example',
+        categories: ['Environment', 'News', 'Arts'],
+      }),
+    ).rejects.toThrow(CategoryRestrictionException);
+  });
 
-  //   await expect(createLinkAction.execute(link)).rejects.toThrow(
-  //     LinkExistsException,
-  //   );
-  // });
+  test('should throw error when link exists', async () => {
+    const linkRepository = new LinkRepositoryInMemory();
+    const createLinkAction = new CreateLinkAction(linkRepository);
+    const url = 'http://example';
+    await createLinkAction.execute({
+      title: 'title',
+      link: url,
+      categories: ['Environment'],
+    });
 
-  test('should create link with link', async () => {
+    await expect(
+      createLinkAction.execute({
+        title: 'title 2',
+        link: url,
+        categories: ['Environment', 'News'],
+      }),
+    ).rejects.toThrow(LinkExistsException);
+  });
+
+  test('create link with mandatory field', async () => {
     const linkRepository = new LinkRepositoryInMemory();
     const createLinkAction = new CreateLinkAction(linkRepository);
     const title = 'title';
-    const url = 'http://test.com/test';
-    const link = {
+    const url = 'http://example';
+    const categories = ['Environment'];
+
+    await createLinkAction.execute({
       title: title,
       link: url,
-      categories: ['Environment'],
-    };
-
-    createLinkAction.execute(link);
+      categories: categories,
+    });
 
     const [links, total] = await linkRepository.getAllLinks();
+
     expect(total).toEqual(1);
     expect(links[0].title).toEqual(title);
     expect(links[0].link).toEqual(url);
+    expect(links[0].categories).toEqual(categories);
+  });
+
+  test('create link with optional field', async () => {
+    const linkRepository = new LinkRepositoryInMemory();
+    const createLinkAction = new CreateLinkAction(linkRepository);
+    const title = 'title';
+    const url = 'http://example';
+    const categories = ['Environment'];
+    const image = 'http://image';
+    const description = '';
+
+    await createLinkAction.execute({
+      title: title,
+      link: url,
+      categories: categories,
+      image: image,
+      description: description,
+    });
+
+    const [links, total] = await linkRepository.getAllLinks();
+
+    expect(total).toEqual(1);
+    expect(links[0].image).toEqual(image);
+    expect(links[0].description).toEqual(description);
   });
 });
