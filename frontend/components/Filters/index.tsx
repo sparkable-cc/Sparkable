@@ -2,8 +2,8 @@ import styles from './index.module.scss';
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
 import { ApiTypes } from '../../types';
-import { getLinks, api } from '../../store/api';
-import { setFilters, selectSelectedFilters } from '../../store/UIslice';
+import { getLinks } from '../../store/api';
+import { setFilter, selectSelectedFilters } from '../../store/UIslice';
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -39,10 +39,10 @@ export const Filters = () => {
     const param = event?.target?.getAttribute('data-param');
     if (!param) return;
 
-    dispatch(setFilters(param))
+    dispatch(setFilter(param))
   }
 
-  const { data, isLoading } = useAppSelector(selectLinks)
+  const { data, isLoading } = useAppSelector(selectLinks);
 
   return (
     <aside className={styles.filtersSidebar}>

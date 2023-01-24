@@ -19,19 +19,23 @@ export const UISlice = createSlice({
     setMenuVisible: (state, action: PayloadAction<boolean>) => {
       state.isMenuVisible = action.payload;
     },
-    setFilters: (state, action: PayloadAction<ApiTypes.Model.CategorySlug>) => {
+    setFilter: (state, action: PayloadAction<ApiTypes.Model.CategorySlug>) => {
       if (state.selectedFilters?.find(item => item === action.payload)) {
         state.selectedFilters = state.selectedFilters.filter(item => item !== action.payload);
       } else {
         state.selectedFilters = [...state.selectedFilters, ...[action.payload]]
       }
+    },
+    resetFilter: (state, action: PayloadAction<void>) => {
+      state.selectedFilters = [];
     }
   },
 });
 
 export const {
   setMenuVisible,
-  setFilters,
+  setFilter,
+  resetFilter,
 } = UISlice.actions;
 
 export const selectIsMenuVisible = (state: RootState) => state.UI.isMenuVisible;
