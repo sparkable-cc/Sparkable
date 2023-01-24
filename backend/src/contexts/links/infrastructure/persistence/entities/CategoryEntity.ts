@@ -10,6 +10,9 @@ export class CategoryEntity implements CategoryDto {
     @Column() //UNIQUE
     name:string;
 
+    @Column({nullable: true})
+    slug:string;
+
     @ManyToMany((type) => LinkEntity, (link) => link.categories)
     links: LinkEntity[];
 }

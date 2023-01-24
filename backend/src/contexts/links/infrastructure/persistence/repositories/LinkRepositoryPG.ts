@@ -28,9 +28,9 @@ export class LinkRepositoryPG implements LinkRepository {
 
     private addQueryFilterByCategories(categoriesToFilter: string[] | undefined, query: Record<string, any>) {
         if (categoriesToFilter) {
-            const categoriesFilter: { categories: { name: string; }; }[] = [];
+            const categoriesFilter: { categories: { slug: string; }; }[] = [];
             categoriesToFilter.forEach(category => {
-                categoriesFilter.push({ categories: { name: category } });
+                categoriesFilter.push({ categories: { slug: category } });
             });
 
             query.relations = { categories: true };

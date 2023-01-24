@@ -1,6 +1,7 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Express, Request, Response } from 'express';
+import { GetAllCategoriesAction } from './contexts/links/actions/GetAllCategoriesAction';
 import { GetAllLinksAction } from './contexts/links/actions/GetAllLinksAction';
 import { LinkRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/LinkRepositoryPG';
 import { CreateUserAction } from './contexts/users/actions/CreateUserAction';
@@ -11,6 +12,7 @@ import { UsernameExistsException } from './contexts/users/domain/exceptions/User
 import { UserNotFoundException } from './contexts/users/domain/exceptions/UserNotFoundException';
 import { WrongPasswordException } from './contexts/users/domain/exceptions/WrongPasswordException';
 import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
+import { CategoryRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/CategoryRepositoryPG';
 import dataSource from './data-source';
 
 const app: Express = express();
@@ -100,5 +102,26 @@ app.get('/links', async (req: Request, res: Response) => {
       return res.send(500);
     });
 });
+
+app.get('/categories', async (req: Request, res: Response) => {
+  const getAllCategoriesAction = new GetAllCategoriesAction(
+    new CategoryRepositoryPG(dataSource),
+  );
+
+  getAllCategoriesAction
+    .execute()
+    .then((result) => {
+      res.status(200);
+      res.send({ categories: result[0], total: result[1] });
+    })
+    .catch((error) => {
+      console.log(
+        'Failed to do something async with an unspecified error: ',
+        error,
+      );
+      return res.send(500);
+    });
+});
+
 
 export default app;
