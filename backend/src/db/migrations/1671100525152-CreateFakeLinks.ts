@@ -1,7 +1,6 @@
 import { MigrationInterface, QueryRunner } from "typeorm"
 import { CategoryEntity } from "../../contexts/links/infrastructure/persistence/entities/CategoryEntity";
 import dataSource from "../../data-source";
-import CategoryFactory from "../../factories/CategoryFactory";
 import LinkFactory from "../../factories/LinkFactory";
 
 export class CreateFakeLinks1671100525152 implements MigrationInterface {

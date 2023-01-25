@@ -78,17 +78,18 @@ describe("GET /links", () => {
         const category = await CategoryFactory.create('Environment');
         await LinkFactory.create([category]);
 
-        const res = await request(app).get("/links?categories=Technology");
+        const res = await request(app).get("/links?categories=technology");
 
         expect(res.statusCode).toEqual(200);
         expect(res.body.total).toEqual(0);
     });
 
     it("returns 200 filtering for something does exist", async () => {
-        const category = await CategoryFactory.create('Environment');
+        const slug = 'environment';
+        const category = await CategoryFactory.create('Environment', slug);
         await LinkFactory.create([category]);
 
-        const res = await request(app).get("/links?categories=" + category.name);
+        const res = await request(app).get("/links?categories=" + slug);
 
         expect(res.statusCode).toEqual(200);
         expect(res.body.total).toEqual(1);
@@ -96,16 +97,16 @@ describe("GET /links", () => {
     });
 
     it("returns 200 sorting by date and filtering by multiple categories", async () => {
-        const category1 = await CategoryFactory.create('Environment');
+        const category1 = await CategoryFactory.create('Environment', 'env1');
         await LinkFactory.create([category1]);
 
-        const category2 = await CategoryFactory.create('Environment2');
+        const category2 = await CategoryFactory.create('Environment2', 'env2');
         await LinkFactory.create([category2]);
 
-        const category3 = await CategoryFactory.create('Environment3');
+        const category3 = await CategoryFactory.create('Environment3', 'env3');
         await LinkFactory.create([category3]);
 
-        const filter = category1.name + ',' + category3.name;
+        const filter = category1.slug + ',' + category3.slug;
         const res = await request(app).get("/links?categories=" + filter + "&sort=-date");
 
         expect(res.statusCode).toEqual(200);
@@ -115,21 +116,36 @@ describe("GET /links", () => {
     });
 
     it("returns 200 sorting randomly and filtering by multiple categories", async () => {
-        const category1 = await CategoryFactory.create('Environment');
-        const category2 = await CategoryFactory.create('Environment2');
-        const category3 = await CategoryFactory.create('Environment3');
+        const category1 = await CategoryFactory.create('Environment', 'env1');
+        const category2 = await CategoryFactory.create('Environment2', 'env2');
+        const category3 = await CategoryFactory.create('Environment3', 'env3');
 
         await LinkFactory.createX(5, [category1]);
         await LinkFactory.createX(5, [category2]);
         await LinkFactory.createX(5, [category3]);
 
-        const filter = category1.name + ',' + category3.name;
+        const filter = category1.slug + ',' + category3.slug;
         const res = await request(app).get("/links?categories=" + filter);
 
         expect(res.statusCode).toEqual(200);
         expect(res.body.total).toEqual(10);
         const maxId = Math.max(...res.body.links.map((links: { id: any; }) => links.id));
         expect(res.body.links[0].id).toBeLessThanOrEqual(maxId);
+    });
+
+    it("returns 200 filtering by category with multiple words", async () => {
+        const slug = 'business-and-economy';
+        const category1 = await CategoryFactory.create('Environment', 'env');
+        const category2 = await CategoryFactory.create('Business & Economy', slug);
+
+        await LinkFactory.createX(5, [category1]);
+        await LinkFactory.createX(5, [category2]);
+
+        const res = await request(app).get("/links?categories=" + category2.slug);
+
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.total).toEqual(5);
+        expect(res.body.links[0].categories[0].slug).toEqual(slug);
     });
 
 });

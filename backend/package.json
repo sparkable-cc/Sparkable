@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "rm -r dist",
     "build": "npm run clean; npx tsc",
-    "start": "node dist/server.js",
+    "start": "NODE_ENV=prod node dist/server.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server.js\"",
     "unit": "jest --testPathPattern=src/contexts",
     "e2e": "NODE_ENV=test jest --testPathPattern=src/tests --runInBand",
