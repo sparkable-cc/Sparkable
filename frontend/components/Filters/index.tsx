@@ -1,24 +1,61 @@
 import styles from './index.module.scss';
 import classNames from 'classnames';
+import React, { useMemo, useEffect } from 'react';
+import { getArticles, getCategories, useLazyGetCategoriesQuery } from '../../store/api';
+import { setFilter, selectSelectedFilters } from '../../store/UIslice';
+import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import { v4 as uuidv4 } from 'uuid';
 
 export const Filters = () => {
+  const dispatch = useAppDispatch();
+  const [triggerGetCategories] = useLazyGetCategoriesQuery();
+  const selectedFilters = useAppSelector(selectSelectedFilters);
+  const params = selectedFilters?.length ? selectedFilters : undefined;
+  const selectArticles = useMemo(() => getArticles.select({ categories: params }), [
+    selectedFilters,
+  ])
+  const selectCategories = useMemo(() => getCategories.select(), []);
+
+  const onSetFilter = (event: any) => {
+    const param = event?.target?.getAttribute('data-param');
+    if (!param) return;
+
+    dispatch(setFilter(param))
+  }
+
+  const articles = useAppSelector(selectArticles);
+  const categories = useAppSelector(selectCategories);
+  const categoriesData = categories?.data?.categories;
+
+  useEffect(() => {
+    if (!categoriesData) {
+      triggerGetCategories();
+    }
+  }, []);
 
   return (
     <aside className={styles.filtersSidebar}>
-      <span>102 Links</span>
+      <span>{articles?.data?.total || 0} Links</span>
       <section className={styles.filtersSection}>
         <h4 className={styles.filtersTitle}>Sort by</h4>
         <button className={styles.filterButton}>Random</button>
       </section>
       <section className={styles.filtersSection}>
         <h4 className={styles.filtersTitle}>Filter by category</h4>
-        <button className={styles.filterButton}>Art & Culture</button>
-        <button className={styles.filterButton}>Business & Economy</button>
-        <button className={styles.filterButton}>Environment</button>
-        <button className={styles.filterButton}>Mind & Body</button>
-        <button className={styles.filterButton}>Society</button>
-        <button className={styles.filterButton}>Technology</button>
-        <button className={styles.filterButton}>Other</button>
+        {
+          categoriesData && categoriesData?.map(item => (
+            <button
+              className={classNames(styles.filterButton, {
+                [styles.active]: selectedFilters.find(sortItem => sortItem === item.slug)
+              })}
+              onClick={onSetFilter}
+              disabled={articles?.isLoading}
+              key={uuidv4()}
+              data-param={item.slug}>
+              {item.name}
+            </button>
+          ))
+        }
       </section>
       <div className={styles.textWrapper}>
         <p className={styles.text}>

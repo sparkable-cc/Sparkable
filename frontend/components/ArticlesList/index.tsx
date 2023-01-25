@@ -1,24 +1,30 @@
 import { useEffect } from 'react';
 import { ArticleItem } from '../ArticleItem';
-import { useLazyGetLinksQuery } from '../../store/api/articles';
 import { v4 as uuidv4 } from 'uuid';
 import { Spiner } from '../Spiner';
 import { MobileFilters } from '../MobileFilters';
 import classNames from 'classnames';
 import styles from './index.module.scss';
+import { useLazyGetArticlesQuery } from '../../store/api';
+import { selectSelectedFilters } from '../../store/UIslice';
+import { useAppSelector, usePrevious } from "../../store/hooks";
+import isEqual from 'lodash.isequal';
 
 export const ArticlesList = () => {
-  const [triggerGetLinks, { isLoading, data }] = useLazyGetLinksQuery();
+  const [triggerGetArticles, { isLoading, data }] = useLazyGetArticlesQuery();
+  const selectedFilters = useAppSelector(selectSelectedFilters);
+  const previousSelectedFilters = usePrevious(selectedFilters);
 
-  const onGetArticles = () => {
-    triggerGetLinks();
-  };
+  useEffect(()=>{
+    triggerGetArticles({});
+  }, [])
 
   useEffect(() => {
-    if (!data) {
-      onGetArticles();
+    if (!isEqual(selectedFilters, previousSelectedFilters)) {
+      const params = selectedFilters?.length ? selectedFilters : undefined;
+      triggerGetArticles({ categories: params });
     }
-  }, [data]);
+  }, [selectedFilters]);
 
   return (
     <section className={styles.articlesWrapper} id="explore">

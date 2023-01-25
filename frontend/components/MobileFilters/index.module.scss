@@ -29,8 +29,8 @@
 }
 
 .selectedFilterItem {
-  @extend .buttonWhite; 
-  
+  @extend .buttonWhite;
+
   padding: 0 $gapXs;
   margin-bottom: $gapXxs;
   white-space: nowrap;
@@ -47,4 +47,115 @@
   &:hover {
     background: rgba(0, 108, 123, 0.4);
   }
+}
+
+.filtersViewport {
+  position: fixed;
+  z-index: 1000;
+  right: -100%;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  background: $colorWhite;
+  padding: $gapS;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: 0.3s;
+
+  &.enterActive {
+    right: 0;
+  }
+
+  &.enterDone {
+    right: 0;
+    opacity: 1;
+  }
+
+  &.exitActive {
+    right: 0;
+    opacity: 0;
+  }
+
+  &.exitDone {
+    right: -100%;
+  }
+}
+
+.filtersTitle {
+  font-weight: 600;
+  text-align: center;
+  font-size: $size18;
+}
+
+.filtersHeader {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.cancelButton {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: $size18;
+  font-weight: 500;
+  margin-left: auto;
+  cursor: pointer;
+
+  &:before {
+    position: relative;
+    left: -4px;
+    top: 1px;
+    content: url("../../public/svg/cros.svg");
+  }
+}
+
+.filtersListWrapper {
+  margin-top: 30px;
+  font-weight: 400;
+}
+
+.filtersSubtitle {
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.filtersList {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.filterItem {
+  padding: 0 $gapXs;
+  background: $colorWhite;
+  border: 1px solid $colorBlack;
+  height: 32px;
+  border-radius: 2px;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  margin-right: 8px;
+  cursor: pointer;
+
+  &:after {
+    margin-left: 4px;
+    position: relative;
+    top: 2px;
+    content: url("../../public/svg/plus-black.svg");
+  }
+
+  &.active {
+    background: rgba(0, 108, 123, 0.4);
+
+    &:after {
+      content: url("../../public/svg/cros.svg");
+    }
+  }
+}
+
+.applyButton {
+  @extend .buttonPrimary;
+
+  margin-top: auto;
+  width: 100%;
 }
