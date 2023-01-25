@@ -5,24 +5,24 @@ import { Spiner } from '../Spiner';
 import { MobileFilters } from '../MobileFilters';
 import classNames from 'classnames';
 import styles from './index.module.scss';
-import { useLazyGetLinksQuery } from '../../store/api';
+import { useLazyGetArticlesQuery } from '../../store/api';
 import { selectSelectedFilters } from '../../store/UIslice';
 import { useAppSelector, usePrevious } from "../../store/hooks";
 import isEqual from 'lodash.isequal';
 
 export const ArticlesList = () => {
-  const [triggerGetLinks, { isLoading, data }] = useLazyGetLinksQuery();
+  const [triggerGetArticles, { isLoading, data }] = useLazyGetArticlesQuery();
   const selectedFilters = useAppSelector(selectSelectedFilters);
   const previousSelectedFilters = usePrevious(selectedFilters);
 
   useEffect(()=>{
-    triggerGetLinks({});
+    triggerGetArticles({});
   }, [])
 
   useEffect(() => {
     if (!isEqual(selectedFilters, previousSelectedFilters)) {
       const params = selectedFilters?.length ? selectedFilters : undefined;
-      triggerGetLinks({ categories: params });
+      triggerGetArticles({ categories: params });
     }
   }, [selectedFilters]);
 

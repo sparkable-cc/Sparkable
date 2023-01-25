@@ -1,52 +1,41 @@
 import styles from './index.module.scss';
 import classNames from 'classnames';
-import React, { useMemo } from 'react';
-import { ApiTypes } from '../../types';
-import { getLinks } from '../../store/api';
+import React, { useMemo, useEffect } from 'react';
+import { getArticles, getCategories, useLazyGetCategoriesQuery } from '../../store/api';
 import { setFilter, selectSelectedFilters } from '../../store/UIslice';
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { v4 as uuidv4 } from 'uuid';
 
-// TO-DO: fetch real filters data
-const tempData: ApiTypes.Model.Filter[] = [
-  {
-    name: "Art & Culture",
-    slug: "Art+&+Culture"
-  },
-  {
-    name: "Business & Economy",
-    slug: "Business+&+Economy"
-  },
-  {
-    name: "Environment",
-    slug: "Environment"
-  },
-  {
-    name: "Technology",
-    slug: "Technology"
-  },
-];
-
 export const Filters = () => {
   const dispatch = useAppDispatch();
+  const [triggerGetCategories] = useLazyGetCategoriesQuery();
   const selectedFilters = useAppSelector(selectSelectedFilters);
   const params = selectedFilters?.length ? selectedFilters : undefined;
-  const selectLinks = useMemo(() => getLinks.select({ categories: params }), [
+  const selectArticles = useMemo(() => getArticles.select({ categories: params }), [
     selectedFilters,
   ])
+  const selectCategories = useMemo(() => getCategories.select(), []);
 
-  const onSetSort = (event: any) => {
+  const onSetFilter = (event: any) => {
     const param = event?.target?.getAttribute('data-param');
     if (!param) return;
 
     dispatch(setFilter(param))
   }
 
-  const { data, isLoading } = useAppSelector(selectLinks);
+  const articles = useAppSelector(selectArticles);
+  const categories = useAppSelector(selectCategories);
+  const categoriesData = categories?.data?.categories;
+
+  useEffect(() => {
+    if (!categoriesData) {
+      triggerGetCategories();
+    }
+  }, []);
 
   return (
     <aside className={styles.filtersSidebar}>
-      <span>{data?.total || 0} Links</span>
+      <span>{articles?.data?.total || 0} Links</span>
       <section className={styles.filtersSection}>
         <h4 className={styles.filtersTitle}>Sort by</h4>
         <button className={styles.filterButton}>Random</button>
@@ -54,13 +43,13 @@ export const Filters = () => {
       <section className={styles.filtersSection}>
         <h4 className={styles.filtersTitle}>Filter by category</h4>
         {
-          tempData?.length && tempData.map(item => (
+          categoriesData && categoriesData?.map(item => (
             <button
               className={classNames(styles.filterButton, {
                 [styles.active]: selectedFilters.find(sortItem => sortItem === item.slug)
               })}
-              onClick={onSetSort}
-              disabled={isLoading}
+              onClick={onSetFilter}
+              disabled={articles?.isLoading}
               key={uuidv4()}
               data-param={item.slug}>
               {item.name}
