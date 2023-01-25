@@ -44,7 +44,7 @@ export const MobileFilters = () => {
     <>
       <aside className={styles.mobileFiltersWrapper}>
         <div className={styles.buttonsWrapper}>
-          <button className={styles.buttonWhite}>
+          <button className={classNames(styles.buttonWhite, styles.disable)}>
             Newest First
           </button>
           <button
