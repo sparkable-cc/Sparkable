@@ -7,6 +7,7 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { CategoryDto } from '../../../domain/models/CategoryDto';
 import { LinkDto } from '../../../domain/models/LinkDto';
 import { CategoryEntity } from './CategoryEntity';
 
@@ -41,5 +42,5 @@ export class LinkEntity implements LinkDto {
     eager: true,
   })
   @JoinTable()
-  categories: CategoryEntity[];
+  categories: CategoryDto[];
 }

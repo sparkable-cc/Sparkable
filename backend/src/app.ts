@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import express, { Express, Request, Response } from 'express';
 import { CreateLinkAction } from './contexts/links/actions/CreateLinkAction';
 import { GetAllLinksAction } from './contexts/links/actions/GetAllLinksAction';
+import { CategoryRestrictionException } from './contexts/links/domain/exceptions/CategoryRestrictionException';
 import { LinkExistsException } from './contexts/links/domain/exceptions/LinkExistsException';
 import { LinkRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/LinkRepositoryPG';
 import { CreateUserAction } from './contexts/users/actions/CreateUserAction';
@@ -122,6 +123,10 @@ app.post('/links', async (req: Request, res: Response) => {
         case LinkExistsException:
           res.status(403);
           res.send({ message: 'Link already exists!' });
+          break;
+        case CategoryRestrictionException:
+          res.status(403);
+          res.send({ message: 'Category limit restriction!' });
           break;
         default:
           console.log(

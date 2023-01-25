@@ -20,14 +20,20 @@ export class LinkRepositoryInMemory implements LinkRepository {
     return new Promise((resolve) => resolve([this.links, this.links.length]));
   }
 
-  findLink(field: string, value: string): Promise<LinkDto | undefined> {
-    return new Promise((resolve) =>
-      resolve(
-        this.links.find((link) => {
-          let url = field as keyof LinkDto;
-          return link[url] === value;
-        }),
-      ),
-    );
+  findLink(field: string, value: string): Promise<LinkDto | null> {
+    const link = this.links.find((link) => {
+      let url = field as keyof LinkDto;
+      return link[url] === value;
+    });
+    if (link) {
+      return new Promise((resolve) => resolve(link));
+    } else {
+      return new Promise((resolve) => resolve(null));
+    }
   }
 }
+
+// this.links.find((link) => {
+//   let url = field as keyof LinkDto;
+//   return link[url] === value;
+// }),

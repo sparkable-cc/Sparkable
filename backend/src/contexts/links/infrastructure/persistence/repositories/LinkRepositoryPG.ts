@@ -1,4 +1,5 @@
 import { Any, DataSource } from 'typeorm';
+import { Link } from '../../../domain/models/Link';
 import { LinkDto } from '../../../domain/models/LinkDto';
 import { LinkRepository } from '../../../domain/repositories/LinkRepository';
 import { LinkEntity } from '../entities/LinkEntity';
@@ -28,7 +29,7 @@ export class LinkRepositoryPG implements LinkRepository {
     }
   }
 
-  async storeLink(link: LinkDto) {
+  async storeLink(link: Link) {
     const linkEntity = new LinkEntity();
     linkEntity.link = link.link;
     linkEntity.title = link.title;
@@ -38,16 +39,13 @@ export class LinkRepositoryPG implements LinkRepository {
     linkEntity.categories = link.categories;
 
     await this.repository.save(linkEntity);
-
-    return linkEntity.toDto();
   }
 
-  async findLink(field: string, value: string): Promise<LinkDto | undefined> {
-    const link = await this.repository.findOne({
+  async findLink(field: string, value: string): Promise<LinkDto | null> {
+    return await this.repository.findOne({
       where: { [field]: value },
       relations: ['categories'],
     });
-    return link?.toDto();
   }
 
   private addQueryFilterByCategories(
