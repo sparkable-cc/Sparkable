@@ -24,7 +24,6 @@ export const MobileHeader = () => {
           />
         </Link>
       </div>
-      <Link href="/auth/signup" className={styles.buttonPrimary}>Join now</Link>
     </header>
   );
 };

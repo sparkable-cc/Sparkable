@@ -29,7 +29,7 @@ export const Menu = () => {
       <aside ref={nodeRef} className={classNames(styles.menuWrapper)}>
         <div className={styles.logoWrapper}>
           <button className={styles.closeButton} onClick={onMenuHide} />
-          <Link href="/" className={styles.logo}>
+          <Link href="/" className={styles.logo} onClick={onMenuHide}>
             <Image
               src={logo}
               alt="Sparkable logo"
@@ -40,33 +40,42 @@ export const Menu = () => {
           <Link
             href="/#explore"
             scroll={false}
+            onClick={onMenuHide}
             className={styles.menuItem}
           >
             Explore
           </Link>
           <Link
             href=""
+            onClick={onMenuHide}
             className={classNames(styles.menuItem, styles.disable)}
           >
             Submit
           </Link>
           <Link
+            onClick={onMenuHide}
             href="/about"
             className={styles.menuItem}
           >
             About
           </Link>
-          <Link href="/signin" className={classNames(styles.buttonPrimary, styles.sizeXl, styles.signin)}>Sign In</Link>
+          <Link href="/auth/signin"
+            onClick={onMenuHide}
+            className={classNames(styles.buttonPrimary, styles.sizeXl, styles.signin)}>
+            Sign In
+          </Link>
         </nav>
         <footer className={styles.menuFooter}>
           <Link
             href=""
+            onClick={onMenuHide}
             className={classNames(styles.menuFooterLink, styles.disable)}
           >
             Contact
           </Link>
           <Link
             href=""
+            onClick={onMenuHide}
             className={classNames(styles.menuFooterLink, styles.disable)}
           >
             Privacy Policy

@@ -3,17 +3,20 @@
 
 .authButtons {
   position: fixed;
-  z-index: 500;
+  z-index: 1500;
   top: 20px;
-  right: $gapXL;
-
-  @media only screen and (max-width: $laptop) {
-    display: none;
-  }
+  right: $gapS;
 }
 
 .logInButton {
   @extend .buttonTransparent;
 
   margin-right: 16px;
+}
+
+@media only screen and (max-width: $mobile) {
+  
+  .logInButton {
+    display: none;
+  }
 }
