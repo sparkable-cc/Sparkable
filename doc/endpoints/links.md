@@ -43,3 +43,45 @@ By default sorted randomly
 ### Error Response
 
 **Code** : `500 OK`
+
+## Get link by id
+
+**URL** : `/links/:id`
+
+**Method** : `GET`
+
+**Auth required** : No
+
+**Permissions required** : None
+
+### Success Response
+
+**Code** : `200 OK`
+
+**Content example**
+
+```json
+{
+    "id": 47,
+    "uuid": "40608fde-fc54-4ff0-a8a5-29c35fcd7226",
+    "title": "title1",
+    "link": "https://www.butterfy.me/",
+    "image": "https://uploads-ssl.webflow.com/5fe2721ea6fb441f47d88866/5fe2726881e6e52053a0217c_Butterfy_Logo-p-500.png",
+    "date": "2023-01-23T17:45:45.684Z",
+    "username": "admin",
+    "categories": [
+        {
+            "id": 3,
+            "name": "Environment",
+            "slug": "environment"
+        }
+    ]
+}
+```
+
+### Error Response
+
+**Code** : `400 Link not exists`
+
+**Code** : `500 OK`
+
