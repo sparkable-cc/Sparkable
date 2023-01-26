@@ -30,4 +30,14 @@ describe("GET /links/:id", () => {
         expect(res.statusCode).toEqual(400);
     });
 
+    it("returns 200 with link when exists", async () => {
+        const link = await LinkFactory.create();
+
+        const res = await request(app).get("/links/" + link.id);
+
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.id).toEqual(link.id);
+        expect(res.body.title).toEqual(link.title);
+    });
+
 });
