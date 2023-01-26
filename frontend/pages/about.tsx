@@ -1,8 +1,7 @@
-import Head from 'next/head';
-import Link from 'next/link';
-import { IoMdMenu } from 'react-icons/io';
-import { RiExternalLinkLine } from 'react-icons/ri';
-import styles from '../styles/Home.module.scss';
+import Head from "next/head";
+import Link from "next/link";
+import { IoMdMenu } from "react-icons/io";
+import styles from "../styles/Home.module.scss";
 
 export default function About() {
   return (
@@ -13,7 +12,6 @@ export default function About() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <header>
         <i className={styles.burger}>
           <IoMdMenu />
@@ -27,7 +25,6 @@ export default function About() {
           </Link>
         </div>
       </header>
-
       <main className={styles.main}>
         <div className={styles.sparkableContainer}>
           <div className={styles.sparkable}>
@@ -40,8 +37,7 @@ export default function About() {
           </div>
         </div>
         <br />
-
-        <div className={styles.break}></div>
+        <div className={styles.break} />
         <div className={styles.expandContainer}>
           <div className={styles.svg}>
             <svg
@@ -234,7 +230,7 @@ export default function About() {
             </p>
           </div>
         </div>
-        <div className={styles.break}></div>
+        <div className={styles.break} />
         <div className={styles.contact}>
           <p>Contact </p>
           <p>Privacy Policy</p>

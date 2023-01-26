@@ -1,10 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "./index";
-import { ApiTypes } from "../types";
 
 export interface UIState {
   isMenuVisible: boolean;
-  selectedFilters: ApiTypes.Model.CategorySlug[]
+  selectedFilters: string[]
 }
 
 const initialState: UIState = {
@@ -19,7 +18,7 @@ export const UISlice = createSlice({
     setMenuVisible: (state, action: PayloadAction<boolean>) => {
       state.isMenuVisible = action.payload;
     },
-    setFilter: (state, action: PayloadAction<ApiTypes.Model.CategorySlug>) => {
+    setFilter: (state, action: PayloadAction<string>) => {
       if (state.selectedFilters?.find(item => item === action.payload)) {
         state.selectedFilters = state.selectedFilters.filter(item => item !== action.payload);
       } else {

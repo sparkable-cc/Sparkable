@@ -1,11 +1,11 @@
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 export default function SignIn() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState<
+  const [ username, setUsername ] = useState("");
+  const [ password, setPassword ] = useState("");
+  const [ errors, setErrors ] = useState<
     {
       message: string;
     }[]
@@ -17,15 +17,15 @@ export default function SignIn() {
     event.preventDefault();
 
     const response = await fetch(`${baseUrl}/user/signin`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     });
 
     if (errors.length > 0) {
       setErrors([]);
     } else if (response.ok) {
-      router.push('/');
+      router.push("/");
     } else {
       setErrors(await response.json());
     }
@@ -34,12 +34,12 @@ export default function SignIn() {
 
     if (
       returnTo &&
-      typeof returnTo === 'string' &&
-      !returnTo.startsWith('http')
+      typeof returnTo === "string" &&
+      !returnTo.startsWith("http")
     ) {
       await router.push(returnTo);
     } else {
-      await router.push('/');
+      await router.push("/");
     }
   }
 

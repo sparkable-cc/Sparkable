@@ -1,10 +1,11 @@
-import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 export default function PasswordReset(props: { onSuccess: () => void }) {
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState<Error | null>(null);
+  const [ password, setPassword ] = useState("");
+  const [ confirmPassword, setConfirmPassword ] = useState("");
+  const [ error, setError ] = useState<Error | null>(null);
+  const { onSuccess } = props;
 
   const router = useRouter();
 
@@ -12,17 +13,17 @@ export default function PasswordReset(props: { onSuccess: () => void }) {
     event: React.FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
-    const response = await fetch('/user/password-reset', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const response = await fetch("/user/password-reset", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password, confirmPassword }),
     });
 
-    if (password !== '' && password.length < 8) {
-      setError(new Error('Password must be at least 8 characters'));
+    if (password !== "" && password.length < 8) {
+      setError(new Error("Password must be at least 8 characters"));
     }
     if (response.ok) {
-      props.onSuccess();
+      onSuccess();
     } else {
       setError(await response.json());
     }
@@ -30,14 +31,14 @@ export default function PasswordReset(props: { onSuccess: () => void }) {
 
     if (
       returnTo &&
-      typeof returnTo === 'string' &&
-      !returnTo.startsWith('http')
+      typeof returnTo === "string" &&
+      !returnTo.startsWith("http")
     ) {
-      props.onSuccess();
+      onSuccess();
       await router.push(returnTo);
     } else {
-      props.onSuccess();
-      await router.push('/');
+      onSuccess();
+      await router.push("/");
     }
   };
 

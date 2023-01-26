@@ -7,5 +7,5 @@ export const AuthButtons = () => {
       <Link href="/signin" className={styles.logInButton}>Sign In</Link>
       <Link href="/signup" className={styles.buttonPrimary}>Join Now</Link>
     </div>
-  )
-}
+  );
+};
