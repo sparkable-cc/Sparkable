@@ -1,0 +1,29 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.layoutWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 400px;
+  background: $colorWhite;
+  box-shadow: 0px 2px 25px rgba(0, 48, 75, 0.2);
+  border-radius: 2px;
+  padding: $gapS;
+}
+
+.backButton {
+  @extend .buttonWhite;
+
+  &:before {
+    padding-right: 4px;
+    position: relative;
+    top: 2px;
+    content: url("../../public/svg/arrow-left.svg");
+  }
+}
