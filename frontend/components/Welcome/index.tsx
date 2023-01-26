@@ -1,6 +1,6 @@
-import styles from './index.module.scss';
-import classNames from 'classnames';
-import { ReactSVG } from 'react-svg';
+import styles from "./index.module.scss";
+import classNames from "classnames";
+import { ReactSVG } from "react-svg";
 import Link from "next/link";
 
 export const Welcome = () => {
@@ -33,5 +33,5 @@ export const Welcome = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

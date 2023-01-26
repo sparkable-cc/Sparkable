@@ -1,6 +1,6 @@
-import { RotatingLines } from 'react-loader-spinner';
-import classNames from 'classnames';
-import styles from './index.module.scss';
+import { RotatingLines } from "react-loader-spinner";
+import classNames from "classnames";
+import styles from "./index.module.scss";
 
 interface Props {
   sizeWidth?: string
@@ -14,7 +14,7 @@ export const Spiner = ({ sizeWidth, wrapperClassName }: Props) => (
       strokeWidth="5"
       animationDuration="0.75"
       width={sizeWidth || "40"}
-      visible={true}
+      visible
     />
   </div>
-)
+);

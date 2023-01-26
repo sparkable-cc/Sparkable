@@ -1,3 +1,166 @@
 {
-  "extends": "next/core-web-vitals"
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "react-app",
+    "react-app/jest",
+    "eslint:recommended",
+    "plugin:react/all",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:react/recommended",
+    "next/core-web-vitals"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "unused-imports"
+  ],
+  "rules": {
+    "react/jsx-curly-newline": "off",
+    "react/no-unescaped-entities": "off",
+    "unused-imports/no-unused-imports": "warn",
+    "quotes": [
+      "warn",
+      "double",
+      {
+        "allowTemplateLiterals": true
+      }
+    ],
+    "semi": [
+      "warn",
+      "always"
+    ],
+    "indent": [
+      "warn",
+      2,
+      {
+        "SwitchCase": 1,
+        "ObjectExpression": 1,
+        "flatTernaryExpressions": false
+      }
+    ],
+    "object-curly-spacing": [
+      "warn",
+      "always",
+      {
+        "arraysInObjects": false,
+        "objectsInObjects": false
+      }
+    ],
+    "array-bracket-spacing": [
+      "warn",
+      "always",
+      {
+        "singleValue": false,
+        "objectsInArrays": false,
+        "arraysInArrays": false
+      }
+    ],
+    "no-shadow": "off",
+    "no-trailing-spaces": "error",
+    "no-duplicate-imports": "warn",
+    "no-console": "warn",
+    "no-multi-spaces": "error",
+    "prefer-const": "error",
+    "object-shorthand": [
+      "error",
+      "always"
+    ],
+    "eol-last": [
+      "warn",
+      "always"
+    ],
+    "react/no-array-index-key": "error",
+    "space-before-function-paren": [
+      "warn",
+      {
+        "anonymous": "never",
+        "named": "never",
+        "asyncArrow": "always"
+      }
+    ],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 2,
+        "maxBOF": 1
+      }
+    ],
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".tsx",
+          ".ts"
+        ]
+      }
+    ],
+    "@typescript-eslint/no-use-before-define": [
+      "error"
+    ],
+    "@typescript-eslint/no-namespace": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "react/function-component-definition": "off",
+
+    "react/jsx-max-props-per-line": [
+      1,
+      {
+        "maximum": 5
+      }
+    ],
+    "react/jsx-max-depth": "off",
+    "react/jsx-sort-props": "off",
+    "react/jsx-one-expression-per-line": [
+      0,
+      {
+        "allow": "literal"
+      }
+    ],
+    "react/jsx-no-literals": "off",
+    "react/forbid-component-props": "off",
+    "react/hook-use-state": "off",
+    "react/jsx-wrap-multilines": "off",
+    "react/jsx-no-bind": "off",
+    "react/jsx-indent": "off",
+    "react/jsx-indent-props": "off",
+    "react/jsx-no-leaked-render": "off",
+    "react/require-default-props": "off",
+    "react/jsx-newline": [
+      1,
+      {
+        "prevent": true
+      }
+    ],
+    "react/jsx-closing-bracket-location": [
+      1,
+      {
+        "selfClosing": "line-aligned"
+      }
+    ],
+    "react/no-unused-prop-types": "warn",
+    "react/button-has-type": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/jsx-handler-names": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "react/jsx-child-element-spacing": "off",
+    "testing-library/prefer-screen-queries": "off",
+    "testing-library/no-container": "off",
+    "testing-library/no-node-access": "off"
+  }
 }

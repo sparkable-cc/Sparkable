@@ -1,9 +1,9 @@
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 
 export default function PasswordRecovery() {
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState<Error | null>(null);
+  const [ email, setEmail ] = useState("");
+  const [ error, setError ] = useState<Error | null>(null);
   const router = useRouter();
 
   const handlePasswordRecovery = async (
@@ -11,16 +11,16 @@ export default function PasswordRecovery() {
   ) => {
     event.preventDefault();
 
-    const response = await fetch('/user/password-recovery', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const response = await fetch("/user/password-recovery", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
     });
 
-    if (email === '') {
-      setError(new Error('email is required'));
+    if (email === "") {
+      setError(new Error("email is required"));
     } else if (response.ok) {
-      router.push('/');
+      router.push("/");
     } else {
       setError(await response.json());
     }

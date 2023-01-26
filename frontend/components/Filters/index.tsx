@@ -1,10 +1,10 @@
-import styles from './index.module.scss';
-import classNames from 'classnames';
-import React, { useMemo, useEffect } from 'react';
-import { getArticles, getCategories, useLazyGetCategoriesQuery } from '../../store/api';
-import { setFilter, selectSelectedFilters } from '../../store/UIslice';
+import styles from "./index.module.scss";
+import classNames from "classnames";
+import { useMemo, useEffect } from "react";
+import { getArticles, getCategories, useLazyGetCategoriesQuery } from "../../store/api";
+import { setFilter, selectSelectedFilters } from "../../store/UIslice";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 export const Filters = () => {
   const dispatch = useAppDispatch();
@@ -13,15 +13,15 @@ export const Filters = () => {
   const params = selectedFilters?.length ? selectedFilters : undefined;
   const selectArticles = useMemo(() => getArticles.select({ categories: params }), [
     selectedFilters,
-  ])
+  ]);
   const selectCategories = useMemo(() => getCategories.select(), []);
 
   const onSetFilter = (event: any) => {
-    const param = event?.target?.getAttribute('data-param');
+    const param = event?.target?.getAttribute("data-param");
     if (!param) return;
 
-    dispatch(setFilter(param))
-  }
+    dispatch(setFilter(param));
+  };
 
   const articles = useAppSelector(selectArticles);
   const categories = useAppSelector(selectCategories);
@@ -36,9 +36,9 @@ export const Filters = () => {
   return (
     <aside className={styles.filtersSidebar}>
       <span>{articles?.data?.total || 0} Links</span>
-      <section className={styles.filtersSection}>
+      <section className={classNames(styles.filtersSection, styles.disable)}>
         <h4 className={styles.filtersTitle}>Sort by</h4>
-        <button className={styles.filterButton}>Random</button>
+        <button className={classNames(styles.filterButton, styles.disable)}>Random</button>
       </section>
       <section className={styles.filtersSection}>
         <h4 className={styles.filtersTitle}>Filter by category</h4>
@@ -51,7 +51,8 @@ export const Filters = () => {
               onClick={onSetFilter}
               disabled={articles?.isLoading}
               key={uuidv4()}
-              data-param={item.slug}>
+              data-param={item.slug}
+            >
               {item.name}
             </button>
           ))
@@ -64,5 +65,5 @@ export const Filters = () => {
         <button className={classNames(styles.buttonPrimary, styles.sizeXl, styles.disable)}>Submit a link</button>
       </div>
     </aside>
-  )
-}
+  );
+};

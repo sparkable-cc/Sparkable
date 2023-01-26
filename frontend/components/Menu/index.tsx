@@ -4,9 +4,9 @@ import Image from "next/image";
 import logo from "../../public/svg/logo.svg";
 import classNames from "classnames";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
-import { selectIsMenuVisible, setMenuVisible } from '../../store/UIslice';
-import { CSSTransition } from 'react-transition-group';
-import { useRef } from 'react';
+import { selectIsMenuVisible, setMenuVisible } from "../../store/UIslice";
+import { CSSTransition } from "react-transition-group";
+import { useRef } from "react";
 
 export const Menu = () => {
   const isVisible = useAppSelector(selectIsMenuVisible);
@@ -15,18 +15,20 @@ export const Menu = () => {
 
   const onMenuHide = () => {
     dispatch(setMenuVisible(false));
-  }
+  };
 
   return (
-    <CSSTransition nodeRef={nodeRef} in={isVisible} timeout={400} classNames={{
-      enterActive: styles.enterActive,
-      enterDone: styles.enterDone,
-      exitActive: styles.exitActive,
-      exitDone: styles.exitDone,
-    }}>
+    <CSSTransition
+      nodeRef={nodeRef} in={isVisible} timeout={400} classNames={{
+        enterActive: styles.enterActive,
+        enterDone: styles.enterDone,
+        exitActive: styles.exitActive,
+        exitDone: styles.exitDone,
+      }}
+    >
       <aside ref={nodeRef} className={classNames(styles.menuWrapper)}>
         <div className={styles.logoWrapper}>
-          <button className={styles.closeButton} onClick={onMenuHide}></button>
+          <button className={styles.closeButton} onClick={onMenuHide} />
           <Link href="/" className={styles.logo}>
             <Image
               src={logo}
@@ -34,21 +36,24 @@ export const Menu = () => {
             />
           </Link>
         </div>
-        <nav className={""}>
+        <nav className="">
           <Link
             href="/#explore"
             scroll={false}
-            className={styles.menuItem}>
+            className={styles.menuItem}
+          >
             Explore
           </Link>
           <Link
             href=""
-            className={classNames(styles.menuItem, styles.disable)}>
+            className={classNames(styles.menuItem, styles.disable)}
+          >
             Submit
           </Link>
           <Link
             href="/about"
-            className={styles.menuItem}>
+            className={styles.menuItem}
+          >
             About
           </Link>
           <Link href="/signin" className={classNames(styles.buttonPrimary, styles.sizeXl, styles.signin)}>Sign In</Link>
@@ -56,16 +61,18 @@ export const Menu = () => {
         <footer className={styles.menuFooter}>
           <Link
             href=""
-            className={classNames(styles.menuFooterLink, styles.disable)}>
+            className={classNames(styles.menuFooterLink, styles.disable)}
+          >
             Contact
           </Link>
           <Link
             href=""
-            className={classNames(styles.menuFooterLink, styles.disable)}>
+            className={classNames(styles.menuFooterLink, styles.disable)}
+          >
             Privacy Policy
           </Link>
         </footer>
       </aside>
     </CSSTransition>
-  )
-}
+  );
+};

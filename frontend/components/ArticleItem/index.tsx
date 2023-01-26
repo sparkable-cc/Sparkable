@@ -1,7 +1,7 @@
-import styles from './index.module.scss';
-import { ApiTypes } from '../../types';
+import styles from "./index.module.scss";
+import { ApiTypes } from "../../types";
 
-interface Props extends ApiTypes.Model.Link { }
+type Props = ApiTypes.Model.Link
 
 export const ArticleItem = ({
   id,
@@ -18,13 +18,15 @@ export const ArticleItem = ({
         className={styles.articleCover}
         style={{
           backgroundImage: `url(${image})`
-        }} />}
+        }}
+      />}
       <div className={styles.articleInfoWrapper}>
         <a
           target="_blank"
           rel="noopener noreferrer"
           href={link}
-          className={styles.articleLink}>
+          className={styles.articleLink}
+        >
           {link}
         </a>
         <span className={styles.articleTitle}>
@@ -32,5 +34,5 @@ export const ArticleItem = ({
         </span>
       </div>
     </article>
-  )
-}
+  );
+};
