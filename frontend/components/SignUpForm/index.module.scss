@@ -1,0 +1,54 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.formHeader {
+  padding: $gapS;
+}
+
+.formFields {
+  padding: 0 $gapS;
+}
+
+.headerButtonWrapper {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.formTitle {
+  font-size: $gapXL;
+  font-weight: 500;
+}
+
+.buttonLink {
+  @extend .buttonWhite;
+  
+  margin-left: 8px;
+  border: 1px solid $colorBlack;
+}
+
+.submitButton {
+  @extend .buttonPrimary;
+
+  width: 100%;
+}
+
+.formFooter {
+  margin-top: 40px;
+}
+
+.footerText {
+  font-size: $size14;
+  text-align: center;
+  margin-top: 16px;
+}
+
+.footerLink {
+  color: #264F80;
+  text-decoration: underline;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
