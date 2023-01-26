@@ -59,4 +59,16 @@ describe('POST /link', () => {
       });
     expect(req.statusCode).toEqual(403);
   });
+
+  it('returns 403 when the category limit is reached', async () => {
+    const req = await request(app)
+      .post('/link')
+      .send({
+        title: 'title',
+        url: 'http://example',
+        categories: ['Environment', 'Arts', 'Technology'],
+      });
+
+    expect(req.statusCode).toEqual(403);
+  });
 });
