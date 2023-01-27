@@ -59,9 +59,11 @@ export const Menu = () => {
           >
             About
           </Link>
-          <Link href="/auth/signin"
+          <Link
+            href="/auth/signin"
             onClick={onMenuHide}
-            className={classNames(styles.buttonPrimary, styles.sizeXl, styles.signin)}>
+            className={classNames(styles.buttonPrimary, styles.sizeXl, styles.signin)}
+          >
             Sign In
           </Link>
         </nav>

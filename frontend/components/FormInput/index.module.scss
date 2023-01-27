@@ -22,6 +22,15 @@
   font-family: $secondaryFont;
   padding: $gapXxs 0;
   background: transparent;
+  padding-right: 40px;
+
+  &:focus {
+    border-color: $colorBlue;
+  }
+
+  &.error {
+    border-color: $colorRed;
+  }
 }
 
 .inputLabel {
@@ -37,4 +46,10 @@
   bottom: 0;
   cursor: pointer;
   content: url("../../public/svg/clearInput.svg")
+}
+
+.errorMessage {
+  padding-top: $gapXxs;
+  font-size: $size14;
+  color: $colorRed;
 }

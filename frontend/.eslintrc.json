@@ -29,6 +29,7 @@
   "rules": {
     "react/jsx-curly-newline": "off",
     "react/no-unescaped-entities": "off",
+    "no-unsafe-optional-chaining": "warn", 
     "unused-imports/no-unused-imports": "warn",
     "quotes": [
       "warn",

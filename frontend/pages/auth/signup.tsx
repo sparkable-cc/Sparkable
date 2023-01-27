@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { AuthLayout } from "../../layouts/AuthLayout";
-import { SignUpForm } from '../../components/SignUpForm';
+import { SignUpForm } from "../../components/SignUpForm";
 
 const SignUp: NextPage = () => {
 
@@ -8,7 +8,7 @@ const SignUp: NextPage = () => {
     <AuthLayout>
       <SignUpForm />
     </AuthLayout>
-  )
-}
+  );
+};
 
 export default SignUp;

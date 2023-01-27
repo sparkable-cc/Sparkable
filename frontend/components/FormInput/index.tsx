@@ -1,25 +1,30 @@
 
-import styles from './index.module.scss';
-import { FormEvent } from 'react';
+import styles from "./index.module.scss";
+import { FormEvent } from "react";
+import classNames from "classnames";
 
 interface Props {
   type?: string;
   value: string
   id: string;
+  name: string
   label: string;
   placeholder: string;
   errorMessage?: string;
   onChange: (event: FormEvent<HTMLInputElement>) => void;
+  onClear: (name: string) => void;
 }
 
 export const FormInput = ({
   type = "text",
   value,
   id,
+  name,
   label,
   placeholder,
   errorMessage,
   onChange,
+  onClear,
 }: Props) => {
 
   return (
@@ -30,15 +35,19 @@ export const FormInput = ({
       <div className={styles.imputWrapper}>
         <input
           id={id}
-          className={styles.input}
+          name={name}
+          className={classNames(styles.input, { [styles.error]: errorMessage })}
           type={type}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
         />
-      {/* <span className={styles.clearInput} /> */}
+        {value && <span className={styles.clearInput} onClick={() => onClear(name)} />}
       </div>
-      {errorMessage && errorMessage}
+      {errorMessage &&
+        <span className={styles.errorMessage}>
+          {errorMessage}
+        </span>}
     </div>
-  )
-}
+  );
+};
