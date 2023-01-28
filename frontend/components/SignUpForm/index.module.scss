@@ -36,6 +36,11 @@
 
 .formFooter {
   margin-top: 40px;
+
+  @media only screen and (max-width: $mobile) {
+    padding: 0 $gapS;
+    margin-top: 32px;
+  }
 }
 
 .footerText {
