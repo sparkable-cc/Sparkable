@@ -2,17 +2,18 @@
 @import "../../styles/common";
 
 .layoutWrapper {
+  @extend .container;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
   
   @media only screen and (max-width: $mobile) {
-    padding-top: 72px;
+    padding: 72px 0 0;
   }
 }
 
-.formContainer {
+.layoutContentWrapper {
   width: 100%;
   max-width: 400px;
   background: $colorWhite;
@@ -22,6 +23,7 @@
 
   @media only screen and (max-width: $mobile) {
     padding: $gapS 0;
+    min-height: calc(100vh - 72px);
   }
 }
 

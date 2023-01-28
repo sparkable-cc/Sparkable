@@ -47,7 +47,7 @@
 
 .buttonTransparent {
   @extend .buttonPrimary;
-  
+
   background: $colorWhiteBlue;
   color: $colorBlack;
   text-decoration: underline;
@@ -59,7 +59,7 @@
 
 .buttonWhite {
   @extend .buttonPrimary;
-  
+
   background: $colorWhite;
   color: $colorBlack;
   font-weight: 400;
@@ -72,4 +72,66 @@
 .disable {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+// AUTH
+.authForm {
+  display: flex;
+  flex-direction: column;
+
+  @media only screen and (max-width: $mobile) {
+    min-height: calc(100vh - 140px);
+  }
+}
+
+.authHeader {
+  padding: $gapS;
+}
+
+.authTitle {
+  font-size: $gapXL;
+  font-weight: 500;
+}
+
+.authNavWrapper {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.authFields {
+  padding: 0 $gapS;
+}
+
+.authButtonLink {
+  @extend .buttonWhite;
+
+  margin-left: 8px;
+  border: 1px solid $colorBlack;
+}
+
+.submitButton {
+  @extend .buttonPrimary;
+
+  width: 100%;
+}
+
+.authFooter {
+  margin-top: 40px;
+
+  @media only screen and (max-width: $mobile) {
+    padding: 0 $gapS;
+    margin-top: auto;
+  }
+}
+
+.authLink {
+  color: #264F80;
+  text-decoration: underline;
+  font-size: $size14;
+
+  &:hover {
+    text-decoration: none;
+  }
 }
