@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { AuthLayout } from "../../layouts/AuthLayout";
-import { PasswordRecoveryForm } from '../../components/PasswordRecoveryForm';
+import { PasswordRecoveryForm } from "../../components/PasswordRecoveryForm";
 
 const SignUp: NextPage = () => {
 

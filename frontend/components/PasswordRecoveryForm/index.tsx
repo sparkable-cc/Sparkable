@@ -1,11 +1,10 @@
 import { useState, FormEvent } from "react";
 import styles from "./index.module.scss";
-import Link from "next/link";
 import { FormInput } from "../FormInput";
 import classNames from "classnames";
 
 export const PasswordRecoveryForm = () => {
-  const [inputValues, setInputValues] = useState({
+  const [ inputValues, setInputValues ] = useState({
     email: "",
   });
 

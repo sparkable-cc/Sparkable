@@ -5,7 +5,7 @@ import { FormInput } from "../FormInput";
 import classNames from "classnames";
 
 export const SignInForm = () => {
-  const [inputValues, setInputValues] = useState({
+  const [ inputValues, setInputValues ] = useState({
     login: "",
     password: "",
   });
