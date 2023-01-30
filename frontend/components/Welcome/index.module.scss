@@ -8,7 +8,7 @@
   height: calc(100vh - 50px);
   min-height: 600px;
 
-  @media only screen and (max-width: $laptop) {
+  @media only screen and (max-width: $tablet) {
     height: auto;
     padding-top: 120px;
   }
@@ -68,7 +68,8 @@
 }
 
 .benefit {
-  width: 300px;
+  width: 29%;
+  max-width: 300px;
   margin-right: 24px;
   padding: 100px 30px 0 0;
   position: relative;
@@ -76,6 +77,7 @@
   @media only screen and (max-width: $tablet) {
     margin: 0 0 47px;
     padding: 0 0 0 75px;
+    max-width: auto;
     width: 100%;
   }
 }

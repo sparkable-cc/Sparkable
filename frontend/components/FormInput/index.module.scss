@@ -1,0 +1,55 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+
+.formInputWrapper {
+  padding: $gapS 0;
+  margin-bottom: 0px;
+  margin-bottom: 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.imputWrapper {
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  border-bottom: 1px solid $colorBlack;
+  font-family: $secondaryFont;
+  padding: $gapXxs 0;
+  background: transparent;
+  padding-right: 40px;
+
+  &:focus {
+    border-color: $colorBlue;
+  }
+
+  &.error {
+    border-color: $colorRed;
+  }
+}
+
+.inputLabel {
+  display: block;
+  font-size: $size18;
+  margin-bottom: 4px;
+  font-family: $secondaryFont;
+}
+
+.clearInput {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  cursor: pointer;
+  content: url("../../public/svg/clearInput.svg")
+}
+
+.errorMessage {
+  padding-top: $gapXxs;
+  font-size: $size14;
+  color: $colorRed;
+}

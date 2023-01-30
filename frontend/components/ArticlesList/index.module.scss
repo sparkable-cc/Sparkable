@@ -6,10 +6,6 @@
   align-items: center;
   margin-bottom: $gapS;
 
-  @media only screen and (max-width: $laptop) {
-    margin-top: 80px;
-  }
-
   @media only screen and (max-width: $tablet) {
     margin-top: 0;
   }
