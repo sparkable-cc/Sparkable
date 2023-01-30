@@ -18,4 +18,13 @@ export class SignInAction {
     if (match) return user;
     else throw new WrongPasswordException();
   }
+
+  async executeWithEmail(email: string, password: string) {
+    const user = await this.userRepository.findUser('email', email);
+    if (!user) throw new UserNotFoundException();
+
+    const match = await bcrypt.compare(password, user.password);
+    if (match) return user;
+    else throw new WrongPasswordException();
+  }
 }

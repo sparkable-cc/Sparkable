@@ -6,7 +6,6 @@ import { UserRepositoryInMemory } from '../infrastructure/persistence/repositori
 import { SignInAction } from './SignInAction';
 
 describe('signing in', () => {
-
   test('cant sign in because the user does not exist', async () => {
     const userRepository = new UserRepositoryInMemory();
     const signInAction = new SignInAction(userRepository);
@@ -14,6 +13,15 @@ describe('signing in', () => {
     await expect(signInAction.execute('username', 'password')).rejects.toThrow(
       UserNotFoundException,
     );
+  });
+
+  test('cant sign in because the email does not exist', async () => {
+    const userRepository = new UserRepositoryInMemory();
+    const signInAction = new SignInAction(userRepository);
+
+    await expect(
+      signInAction.executeWithEmail('email', 'password'),
+    ).rejects.toThrow(UserNotFoundException);
   });
 
   test('cant sign in because the password is wrong', async () => {
@@ -40,4 +48,15 @@ describe('signing in', () => {
     expect(user.username).toEqual(username);
   });
 
+  test('can sign in with email', async () => {
+    const userRepository = new UserRepositoryInMemory();
+    const email = 'email';
+    const password = 'password';
+    userRepository.storeUser(new User(email, 'username', password));
+    const signInAction = new SignInAction(userRepository);
+
+    const user = await signInAction.executeWithEmail(email, password);
+
+    expect(user.email).toEqual(email);
+  });
 });
