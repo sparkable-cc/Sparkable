@@ -26,6 +26,10 @@ export class LinkRepositoryPG implements LinkRepository {
         }
     }
 
+    async getLinkById(id:number): Promise<LinkDto | null> {
+        return this.repository.findOneBy({id:id});
+    }
+
     private addQueryFilterByCategories(categoriesToFilter: string[] | undefined, query: Record<string, any>) {
         if (categoriesToFilter) {
             const categoriesFilter: { categories: { slug: string; }; }[] = [];

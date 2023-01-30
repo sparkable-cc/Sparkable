@@ -14,6 +14,7 @@ import { WrongPasswordException } from './contexts/users/domain/exceptions/Wrong
 import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
 import { CategoryRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/CategoryRepositoryPG';
 import dataSource from './data-source';
+import { GetLinkByIdAction } from './contexts/links/actions/GetLinkByIdAction';
 
 const app: Express = express();
 
@@ -101,6 +102,31 @@ app.get('/links', async (req: Request, res: Response) => {
       );
       return res.send(500);
     });
+});
+
+app.get('/links/:id', async (req: Request, res: Response) => {
+  const getLinkByIdAction = new GetLinkByIdAction(
+    new LinkRepositoryPG(dataSource),
+  );
+
+  const link = await getLinkByIdAction
+    .execute(+req.params.id as number)
+    .catch((error:any) => {
+      console.log(
+        'Failed to do something async with an unspecified error: ',
+        error,
+      );
+      return res.send(500);
+    });
+
+  if (link) {
+    res.status(200);
+    res.send(link);
+  } else {
+    res.status(400);
+    res.send({ message: 'Link not exists!' });
+  }
+
 });
 
 app.get('/categories', async (req: Request, res: Response) => {
