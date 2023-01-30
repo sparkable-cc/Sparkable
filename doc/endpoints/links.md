@@ -16,6 +16,7 @@ By default sorted randomly
 
 - 'sort=-date' (sorted newest first)
 - 'categories=categories1,categories2,...' (filter by categories)
+- 'page=2' (pagination to sorted by date, 6 by 6)
 
 ### Success Response
 
