@@ -2,7 +2,7 @@
 
 ## Get links
 
-By default sorted randomly
+By default return 20 links sorted randomly
 
 **URL** : `/links`
 
@@ -14,7 +14,7 @@ By default sorted randomly
 
 **Query params** :
 
-- 'sort=-date' (sorted newest first)
+- 'sort=-date' (sorted newest first, 6 by 6)
 - 'categories=categories1,categories2,...' (filter by categories)
 - 'page=2' (pagination to sorted by date, 6 by 6)
 
