@@ -10,17 +10,16 @@ export class SignInAction {
     this.userRepository = userRepository;
   }
 
-  async execute(username: string, password: string) {
-    const user = await this.userRepository.findUser('username', username);
-    if (!user) throw new UserNotFoundException();
+  async execute(password: string, username?: string, email?: string) {
+    let user = null;
 
-    const match = await bcrypt.compare(password, user.password);
-    if (match) return user;
-    else throw new WrongPasswordException();
-  }
+    if (username) {
+      user = await this.userRepository.findUser('username', username);
+    }
+    if (email) {
+      user = await this.userRepository.findUser('email', email);
+    }
 
-  async executeWithEmail(email: string, password: string) {
-    const user = await this.userRepository.findUser('email', email);
     if (!user) throw new UserNotFoundException();
 
     const match = await bcrypt.compare(password, user.password);

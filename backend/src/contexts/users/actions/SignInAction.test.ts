@@ -6,11 +6,11 @@ import { UserRepositoryInMemory } from '../infrastructure/persistence/repositori
 import { SignInAction } from './SignInAction';
 
 describe('signing in', () => {
-  test('cant sign in because the user does not exist', async () => {
+  test('cant sign in because the username does not exist', async () => {
     const userRepository = new UserRepositoryInMemory();
     const signInAction = new SignInAction(userRepository);
 
-    await expect(signInAction.execute('username', 'password')).rejects.toThrow(
+    await expect(signInAction.execute('password', 'username')).rejects.toThrow(
       UserNotFoundException,
     );
   });
@@ -19,44 +19,35 @@ describe('signing in', () => {
     const userRepository = new UserRepositoryInMemory();
     const signInAction = new SignInAction(userRepository);
 
-    await expect(
-      signInAction.executeWithEmail('email', 'password'),
-    ).rejects.toThrow(UserNotFoundException);
+    await expect(signInAction.execute('password', 'email')).rejects.toThrow(
+      UserNotFoundException,
+    );
   });
 
   test('cant sign in because the password is wrong', async () => {
     const userRepository = new UserRepositoryInMemory();
     const username = 'username';
+    const email = 'email';
     const password = 'password';
-    userRepository.storeUser(new User('email', username, password));
+    userRepository.storeUser(new User(email, username, password));
     const signInAction = new SignInAction(userRepository);
 
     await expect(
-      signInAction.execute(username, 'wrong password'),
+      signInAction.execute('wrong password', username, email),
     ).rejects.toThrow(WrongPasswordException);
   });
 
   test('can sign in', async () => {
     const userRepository = new UserRepositoryInMemory();
     const username = 'username';
-    const password = 'password';
-    userRepository.storeUser(new User('email', username, password));
-    const signInAction = new SignInAction(userRepository);
-
-    const user = await signInAction.execute(username, password);
-
-    expect(user.username).toEqual(username);
-  });
-
-  test('can sign in with email', async () => {
-    const userRepository = new UserRepositoryInMemory();
     const email = 'email';
     const password = 'password';
-    userRepository.storeUser(new User(email, 'username', password));
+    userRepository.storeUser(new User(email, username, password));
     const signInAction = new SignInAction(userRepository);
 
-    const user = await signInAction.executeWithEmail(email, password);
+    const user = await signInAction.execute(password, username);
 
+    expect(user.username).toEqual(username);
     expect(user.email).toEqual(email);
   });
 });

@@ -17,7 +17,7 @@ describe('POST /signin', () => {
     await repository.clear();
   });
 
-  it('returns 200 when the user is signed in with username', async () => {
+  it('returns 200 when the user is signed in', async () => {
     await request(app).post('/user').send({
       email: 'admin@butterfy.me',
       username: 'admin',
@@ -25,23 +25,9 @@ describe('POST /signin', () => {
     });
 
     const req = await request(app).post('/signin').send({
+      password: 'password',
       username: 'admin',
-      password: 'password',
-    });
-
-    expect(req.statusCode).toEqual(200);
-  });
-
-  it('returns 200 when the user is signed in with email', async () => {
-    await request(app).post('/user').send({
       email: 'admin@butterfy.me',
-      username: 'admin',
-      password: 'password',
-    });
-
-    const req = await request(app).post('/signin').send({
-      email: 'admin@butterfy.me',
-      password: 'password',
     });
 
     expect(req.statusCode).toEqual(200);
@@ -56,6 +42,21 @@ describe('POST /signin', () => {
 
     const req = await request(app).post('/signin').send({
       username: 'wrongusername',
+      password: 'password',
+    });
+
+    expect(req.statusCode).toEqual(401);
+  });
+
+  it('returns 401 when the email is not correct', async () => {
+    await request(app).post('/user').send({
+      email: 'admin@butterfy.me',
+      username: 'admin',
+      password: 'password',
+    });
+
+    const req = await request(app).post('/signin').send({
+      email: 'wrongemail',
       password: 'password',
     });
 
