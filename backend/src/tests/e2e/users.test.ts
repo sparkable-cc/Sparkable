@@ -27,6 +27,16 @@ describe('POST /user', () => {
     expect(req.statusCode).toEqual(400);
   });
 
+  it('returns 400 when the password is less than 8 characters', async () => {
+    const req = await request(app).post('/user').send({
+      email: '',
+      username: 'admin',
+      password: 'pass',
+    });
+
+    expect(req.statusCode).toEqual(400);
+  });
+
   it('returns 201 when the user is created', async () => {
     const req = await request(app).post('/user').send({
       email: 'admin@butterfy.me',
