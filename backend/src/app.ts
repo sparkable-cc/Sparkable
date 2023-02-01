@@ -89,8 +89,15 @@ app.get('/links', async (req: Request, res: Response) => {
     new LinkRepositoryPG(dataSource),
   );
 
+  let page:number = 0;
+  if (req.query.page) page = +req.query.page;
+
   getAllLinksAction
-    .execute(req.query.sort as string, req.query.categories as string)
+    .execute(
+      req.query.sort as string,
+      req.query.categories as string,
+      page
+    )
     .then((result) => {
       res.status(200);
       res.send({ links: result[0], total: result[1] });
