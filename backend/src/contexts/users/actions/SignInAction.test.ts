@@ -37,7 +37,7 @@ describe('signing in', () => {
     ).rejects.toThrow(WrongPasswordException);
   });
 
-  test('can sign in', async () => {
+  test('can sign in with username', async () => {
     const userRepository = new UserRepositoryInMemory();
     const username = 'username';
     const email = 'email';
@@ -48,6 +48,18 @@ describe('signing in', () => {
     const user = await signInAction.execute(password, username);
 
     expect(user.username).toEqual(username);
+  });
+
+  test('can sign in with email', async () => {
+    const userRepository = new UserRepositoryInMemory();
+    const username = 'username';
+    const email = 'email';
+    const password = 'password';
+    userRepository.storeUser(new User(email, username, password));
+    const signInAction = new SignInAction(userRepository);
+
+    const user = await signInAction.execute(password, '', email);
+
     expect(user.email).toEqual(email);
   });
 });

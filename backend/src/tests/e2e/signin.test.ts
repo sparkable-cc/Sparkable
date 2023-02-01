@@ -14,10 +14,10 @@ describe('POST /signin', () => {
 
   afterEach(async () => {
     const repository = dataSource.getRepository(UserEntity);
-    await repository.clear();
+    await repository.delete({});
   });
 
-  it('returns 200 when the user is signed in', async () => {
+  it('returns 200 when the user is signed in with username', async () => {
     await request(app).post('/user').send({
       email: 'admin@butterfy.me',
       username: 'admin',
@@ -27,6 +27,20 @@ describe('POST /signin', () => {
     const req = await request(app).post('/signin').send({
       password: 'password',
       username: 'admin',
+    });
+
+    expect(req.statusCode).toEqual(200);
+  });
+
+  it('returns 200 when the user is signed in with email', async () => {
+    await request(app).post('/user').send({
+      email: 'admin@butterfy.me',
+      username: 'admin',
+      password: 'password',
+    });
+
+    const req = await request(app).post('/signin').send({
+      password: 'password',
       email: 'admin@butterfy.me',
     });
 
