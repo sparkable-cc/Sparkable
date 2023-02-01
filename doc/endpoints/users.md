@@ -6,7 +6,7 @@
 
 **Method** : `POST`
 
-**Auth required** : `id=[number]`
+**Auth required** : No
 
 **Permissions required** : None
 
@@ -43,7 +43,7 @@
 
 **Method** : `POST`
 
-**Auth required** : `id=[number]`
+**Auth required** : No
 
 **Permissions required** : None
 
@@ -55,13 +55,9 @@
 
 ```json
 {
-  "user": [
-    {
-      "id": 1,
-      "username": "admin",
-      "password": "passwordHash"
-    }
-  ]
+    "access_token": "xxxxxxxxxxx",
+    "expires_in": 86400,
+    "token_type": "Bearer"
 }
 ```
 

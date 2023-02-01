@@ -54,7 +54,7 @@ describe('signing in', () => {
 
     expect(authServiceMock.getToken).toHaveBeenCalled();
     expect(res.token_type).toEqual('Bearer');
-    expect(res).toHaveProperty('access_token');
+    expect(res.access_token).toEqual('xxxx');
   });
 
 });
