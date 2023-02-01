@@ -52,7 +52,7 @@ app.post('/user', async (req: Request, res: Response) => {
           break;
         case ShortPasswordException:
           res.status(400);
-          res.send({ message: 'Password too short!' });
+          res.send({ message: 'Password is too short!' });
           break;
         default:
           console.log(
