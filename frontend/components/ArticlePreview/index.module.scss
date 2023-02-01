@@ -1,0 +1,148 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.articlePreview {
+  width: 570px;
+  min-height: 100vh;
+  background: $colorWhite;
+  box-shadow: 0px 2px 25px rgba(0, 48, 75, 0.2);
+
+  @media only screen and (max-width: $laptop) {}
+
+  @media only screen and (max-width: $tablet) {}
+}
+
+.articleCover {
+  background: rgba(0,0,0,.1);
+  height: 320px;
+  background-size: cover;
+  background-position: center;
+}
+
+.contentWrapper {
+  padding: 27px 43px;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 320px);
+}
+
+.articleTitle {
+  font-size: $size22;
+  font-weight: 600;
+  margin-top: 12px;
+}
+
+.articleDescription {
+  font-weight: 400;
+  font-family: $secondaryFont;
+  margin-top: 16px;
+  max-height: 62px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.buttonsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 24px 0;
+}
+
+.openButton {
+  @extend .buttonPrimary;
+  margin-right: 8px;
+
+  &:after {
+    content: url("../../public/svg/open.svg");
+    position: relative;
+    margin-left: 6px;
+    top: 2px;
+  }
+}
+
+.bookmarkButton {
+  @extend .buttonWhite;
+  border: 1px solid $colorBlack;
+  margin-right: 8px;
+
+  &:before {
+    content: url("../../public/svg/bookmark.svg");
+    position: relative;
+    top: 2px;
+    right: 4px;
+  }
+}
+
+.shareButton {
+  @extend .buttonWhite;
+  margin-right: 8px;
+  width: 32px;
+  
+  &:before {
+    position: relative;
+    top: 2px;
+    content: url("../../public/svg/share.svg");
+  }
+}
+
+.dotsButton {
+  @extend .buttonWhite;
+  width: 32px;
+  
+  &:before {
+    position: relative;
+    top: 2px;
+    content: url("../../public/svg/dots.svg");
+  }
+}
+
+.categoriesWrapper {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 2px;
+  padding: $gapXxs;
+  margin-top: auto;
+}
+
+.categoriesHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: $size13;
+  font-family: $secondaryFont;
+}
+
+.date {
+  font-weight: 500;
+}
+
+.showMore {
+  cursor: pointer;
+  position: relative;
+  padding-right: 24px;
+
+  &:after {
+    position: absolute;
+    right: 0;
+    top: -1px;
+    content: url("../../public/svg/triangle.svg")
+  }
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.categoryTag {
+  font-family: $secondaryFont;
+  font-size: $size13;
+  margin-right: 12px;
+  border: 1px solid $colorBlack;
+  border-radius: 2px;
+  padding: 4px $gapXxs;
+}

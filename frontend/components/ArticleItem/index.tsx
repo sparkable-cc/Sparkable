@@ -1,5 +1,7 @@
 import styles from "./index.module.scss";
 import { ApiTypes } from "../../types";
+import { ArticleLink } from '../ArticleLink';
+import Link from "next/link";
 
 type Props = ApiTypes.Model.Link
 
@@ -14,24 +16,19 @@ export const ArticleItem = ({
 }: Props) => {
   return (
     <article className={styles.articleItem}>
-      {image && <div
-        className={styles.articleCover}
-        style={{
-          backgroundImage: `url(${image})`
-        }}
-      />}
+      <Link href={`/article/${id}`}>
+        {image && <div
+          className={styles.articleCover}
+          style={{
+            backgroundImage: `url(${image})`
+          }}
+        />}
+      </Link>
       <div className={styles.articleInfoWrapper}>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href={link}
-          className={styles.articleLink}
-        >
-          {link}
-        </a>
-        <span className={styles.articleTitle}>
+        <ArticleLink link={link} />
+        <Link className={styles.articleTitle} href={`/article/${id}`}>
           {title}
-        </span>
+        </Link>
       </div>
     </article>
   );

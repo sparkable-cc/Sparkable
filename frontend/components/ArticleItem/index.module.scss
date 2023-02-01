@@ -44,30 +44,6 @@
   }
 }
 
-.articleLink {
-  font-size: $size13;
-  line-height: 1;
-  margin-bottom: $gapXxs;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
-  color: $colorBlack;
-  padding-right: $gapS;
-  position: relative;
-
-  &:after {
-    position: absolute;
-    right: 0;
-    top: 1px;
-    content: url("../../public/svg/link.svg");
-  }
-
-  &:hover {
-    text-decoration: underline;
-  }
-}
-
 .articleTitle {
   max-width: 100%;
   font-weight: 500;
@@ -79,4 +55,5 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   word-wrap: break-word;
+  color: $colorBlack;
 }
