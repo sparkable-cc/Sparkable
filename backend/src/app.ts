@@ -67,7 +67,7 @@ app.post('/user', async (req: Request, res: Response) => {
 app.post('/signin', async (req: Request, res: Response) => {
   const signInAction = new SignInAction(new UserRepositoryPG(dataSource));
   signInAction
-    .execute(req.body.username, req.body.password)
+    .execute(req.body.password, req.body.username, req.body.email)
     .then(() => {
       res.status(200);
       res.send({ message: 'User signed in!' });
