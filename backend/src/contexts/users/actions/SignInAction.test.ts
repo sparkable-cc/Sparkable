@@ -14,11 +14,20 @@ describe('signing in', () => {
     authServiceMock = mock<AuthService>();
   })
 
-  test('cant sign in because the user does not exist', async () => {
+  test('cant sign in because the username does not exist', async () => {
     const userRepository = new UserRepositoryInMemory();
     const signInAction = new SignInAction(userRepository, authServiceMock);
 
-    await expect(signInAction.execute('username', 'password')).rejects.toThrow(
+    await expect(signInAction.execute('password', 'username')).rejects.toThrow(
+      UserNotFoundException,
+    );
+  });
+
+  test('cant sign in because the email does not exist', async () => {
+    const userRepository = new UserRepositoryInMemory();
+    const signInAction = new SignInAction(userRepository, authServiceMock);
+
+    await expect(signInAction.execute('password', 'email')).rejects.toThrow(
       UserNotFoundException,
     );
   });
@@ -26,18 +35,20 @@ describe('signing in', () => {
   test('cant sign in because the password is wrong', async () => {
     const userRepository = new UserRepositoryInMemory();
     const username = 'username';
+    const email = 'email';
     const password = 'password';
-    userRepository.storeUser(new User('email', username, password));
+    userRepository.storeUser(new User(email, username, password));
     const signInAction = new SignInAction(userRepository, authServiceMock);
 
     await expect(
-      signInAction.execute(username, 'wrong password'),
+      signInAction.execute('wrong password', username, email),
     ).rejects.toThrow(WrongPasswordException);
   });
 
-  test('can sign in', async () => {
+  test('can sign in with username', async () => {
     const userRepository = new UserRepositoryInMemory();
     const username = 'username';
+    const email = 'email';
     const password = 'password';
     userRepository.storeUser(new User('email', username, password));
     const authResponse = {
@@ -50,11 +61,33 @@ describe('signing in', () => {
     );
     const signInAction = new SignInAction(userRepository, authServiceMock);
 
-    const res = await signInAction.execute(username, password);
+    const res = await signInAction.execute(password, username);
 
     expect(authServiceMock.getToken).toHaveBeenCalled();
     expect(res.token_type).toEqual('Bearer');
     expect(res.access_token).toEqual('xxxx');
   });
 
+  test('can sign in with email', async () => {
+    const userRepository = new UserRepositoryInMemory();
+    const username = 'username';
+    const email = 'email';
+    const password = 'password';
+    userRepository.storeUser(new User(email, username, password));
+    const authResponse = {
+      access_token:"xxxx",
+      expires_in:86400,
+      token_type:"Bearer"
+    }
+    authServiceMock.getToken.mockReturnValue(
+      new Promise((resolve) => resolve(authResponse))
+    );
+    const signInAction = new SignInAction(userRepository, authServiceMock);
+
+    const res = await signInAction.execute(password, '', email);
+
+    expect(authServiceMock.getToken).toHaveBeenCalled();
+    expect(res.token_type).toEqual('Bearer');
+    expect(res.access_token).toEqual('xxxx');
+  });
 });

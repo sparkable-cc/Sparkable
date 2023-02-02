@@ -7,20 +7,21 @@ import { LinkDto } from '../../../domain/models/LinkDto';
 export class LinkRepositoryPG implements LinkRepository {
     private repository;
 
-    readonly LIMIT = 6;
+    readonly PAGINATION = 6;
+    readonly LIMIT_TO_RANDOM = 20;
 
     constructor(dataSource: DataSource) {
         this.repository = dataSource.getRepository(LinkEntity);
     }
 
-    async getAllLinks(sort?:string, categories?:string): Promise<[LinkDto[], number]> {
+    async getAllLinks(sort?:string, categories?:string, page?:number): Promise<[LinkDto[], number]> {
         let query: Record<string, any> = {};
 
         const categoriesToFilter = categories?.split(',');
         query = this.addQueryFilterByCategories(categoriesToFilter, query);
 
         if (sort) {
-            return await this.findSortingByDate(query);
+            return await this.findSortingByDate(query, page);
         } else {
             return await this.findSortingRandom(query);
         }
@@ -44,9 +45,13 @@ export class LinkRepositoryPG implements LinkRepository {
         return query;
     }
 
-    private async findSortingByDate(query: Record<string, any>): Promise<[LinkDto[], number]> {
+    private async findSortingByDate(query: Record<string, any>, page?:number): Promise<[LinkDto[], number]> {
         query.order = { date: "DESC" };
-        query.take = this.LIMIT;
+        query.take = this.PAGINATION;
+
+        if (page) {
+            query.skip = (page-1)*this.PAGINATION;
+        }
 
         return await this.repository.findAndCount(query);
     }
@@ -55,7 +60,7 @@ export class LinkRepositoryPG implements LinkRepository {
         const result = await this.repository.findAndCount(query);
         //improve this in the future... poor performance with lots of data
         this.shuffle(result[0]);
-        result[0] = result[0].slice(0, this.LIMIT);
+        result[0] = result[0].slice(0, this.LIMIT_TO_RANDOM);
         return result;
     }
 

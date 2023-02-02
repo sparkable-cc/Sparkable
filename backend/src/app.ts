@@ -4,6 +4,8 @@ import express, { Express, Request, Response } from 'express';
 import { auth } from 'express-oauth2-jwt-bearer';
 import { GetAllCategoriesAction } from './contexts/links/actions/GetAllCategoriesAction';
 import { GetAllLinksAction } from './contexts/links/actions/GetAllLinksAction';
+import { GetLinkByIdAction } from './contexts/links/actions/GetLinkByIdAction';
+import { CategoryRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/CategoryRepositoryPG';
 import { LinkRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/LinkRepositoryPG';
 import { CreateUserAction } from './contexts/users/actions/CreateUserAction';
 import { SignInAction } from './contexts/users/actions/SignInAction';
@@ -13,9 +15,7 @@ import { UsernameExistsException } from './contexts/users/domain/exceptions/User
 import { UserNotFoundException } from './contexts/users/domain/exceptions/UserNotFoundException';
 import { WrongPasswordException } from './contexts/users/domain/exceptions/WrongPasswordException';
 import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
-import { CategoryRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/CategoryRepositoryPG';
 import dataSource from './data-source';
-import { GetLinkByIdAction } from './contexts/links/actions/GetLinkByIdAction';
 import { AuthServiceAuth0 } from './contexts/users/infrastructure/services/AuthServiceAuth0';
 
 const app: Express = express();
@@ -80,7 +80,7 @@ app.post('/signin', async (req: Request, res: Response) => {
     new AuthServiceAuth0()
   );
   signInAction
-    .execute(req.body.username, req.body.password)
+    .execute(req.body.password, req.body.username, req.body.email)
     .then((result) => {
       res.status(200);
       res.send(result);
@@ -107,8 +107,15 @@ app.get('/links', async (req: Request, res: Response) => {
     new LinkRepositoryPG(dataSource),
   );
 
+  let page:number = 0;
+  if (req.query.page) page = +req.query.page;
+
   getAllLinksAction
-    .execute(req.query.sort as string, req.query.categories as string)
+    .execute(
+      req.query.sort as string,
+      req.query.categories as string,
+      page
+    )
     .then((result) => {
       res.status(200);
       res.send({ links: result[0], total: result[1] });
@@ -129,7 +136,7 @@ app.get('/links/:id', async (req: Request, res: Response) => {
 
   const link = await getLinkByIdAction
     .execute(+req.params.id as number)
-    .catch((error:any) => {
+    .catch((error: any) => {
       console.log(
         'Failed to do something async with an unspecified error: ',
         error,
@@ -144,7 +151,6 @@ app.get('/links/:id', async (req: Request, res: Response) => {
     res.status(400);
     res.send({ message: 'Link not exists!' });
   }
-
 });
 
 app.get('/categories', async (req: Request, res: Response) => {
@@ -166,6 +172,5 @@ app.get('/categories', async (req: Request, res: Response) => {
       return res.send(500);
     });
 });
-
 
 export default app;

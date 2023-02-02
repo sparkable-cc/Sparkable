@@ -52,14 +52,15 @@ describe("GET /links", () => {
         expect(res.body.total).toEqual(2);
     });
 
-    it("returns 200 sorted randomly by default", async () => {
-        const totalLinks = 20;
+    it("by default return 20 link randomly", async () => {
+        const totalLinks = 25;
         await LinkFactory.createX(totalLinks);
 
         const res = await request(app).get("/links");
 
         expect(res.statusCode).toEqual(200);
         expect(res.body.total).toEqual(totalLinks);
+        expect(res.body.links.length).toEqual(20);
         const maxId = Math.max(...res.body.links.map((links: { id: any; }) => links.id));
         expect(res.body.links[0].id).toBeLessThanOrEqual(maxId);
     });
@@ -146,6 +147,18 @@ describe("GET /links", () => {
         expect(res.statusCode).toEqual(200);
         expect(res.body.total).toEqual(5);
         expect(res.body.links[0].categories[0].slug).toEqual(slug);
+    });
+
+    it("returns 6 links from second page sorting by date", async () => {
+        await LinkFactory.createX(12);
+
+        const res = await request(app).get("/links?sort=-date&page=2");
+
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.total).toEqual(12);
+        expect(res.body.links.length).toEqual(6);
+        expect(res.body.links[0].title).toEqual('title5');
+        expect(res.body.links[1].title).toEqual('title4');
     });
 
 });
