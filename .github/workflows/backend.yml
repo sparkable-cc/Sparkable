@@ -28,7 +28,7 @@ jobs:
       # perform secret check & put boolean result as an output
       shell: bash
       run: |
-        if [ "${{ secrets.SECRET }}" != '' ]; then
+        if [ "${{  vars.AUTH0_AUDIENCE }}" != '' ]; then
           echo "available=true" >> $GITHUB_OUTPUT;
         else
           echo "available=false" >> $GITHUB_OUTPUT;
@@ -55,7 +55,7 @@ jobs:
       # Key will be blocked out in log output but will be not empty
       run: |
         echo "This command is executed with non-empty key: \
-          ${{ secrets.SECRET }}"
+          ${{  vars.AUTH0_AUDIENCE }}"
 
     - uses: actions/checkout@v3
 
