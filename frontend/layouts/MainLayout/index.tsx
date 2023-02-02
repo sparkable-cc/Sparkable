@@ -8,16 +8,34 @@ import { useRouter } from 'next/router'
 export const MainLayout = ({ children }: PropsWithChildren) => {
   const router = useRouter();
 
-  const hideAuthButtons = () => {
-    return router.route.includes('auth');
+  if (/auth/.test(router.route)) {
+    return (
+      <main className={styles.mainWrapper}>
+        <Menu />
+        <MobileHeader />
+        {children}
+      </main>
+    )
   }
 
-  return (
-    <main className={styles.mainWrapper}>
-      <Menu />
-      <MobileHeader />
-      <AuthButtons isHidden={hideAuthButtons()} />
-      {children}
-    </main>
-  )
+  if (/article/.test(router.route)) {
+    return (
+      <main className={styles.mainWrapper}>
+        <Menu isForcedMobile={true} />
+        <MobileHeader isForcedMobile={true} />
+        {children}
+      </main>
+    )
+  }
+
+  else {
+    return (
+      <main className={styles.mainWrapper}>
+        <Menu />
+        <MobileHeader />
+        <AuthButtons />
+        {children}
+      </main>
+    )
+  }
 }

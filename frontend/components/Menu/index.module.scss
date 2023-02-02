@@ -114,3 +114,48 @@
     display: none;
   }
 }
+
+.forcedMobile {
+
+  &.menuWrapper {
+    left: -100%;
+    position: fixed;
+    opacity: 0;
+
+    &.enterActive {
+      left: 0;
+    }
+    
+    &.enterDone {
+      left: 0;
+      opacity: 1;
+    }
+
+    &.exitActive {
+      left: 0;
+      opacity: 0;
+    }
+
+    &.exitDone {
+      left: -100%;
+    }
+  }
+
+  .logo {
+    left: 0;
+    width: 133px;
+    height: 28px;
+  }
+
+  .closeButton {
+    display: inline-block;
+  }
+
+  .logoWrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    left: -16px;
+    top: -3px;
+  }
+}

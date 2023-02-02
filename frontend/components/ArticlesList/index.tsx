@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { ArticleItem } from "../ArticleItem";
 import { v4 as uuidv4 } from "uuid";
 import { Spiner } from "../Spiner";
-import { MobileFilters } from "../MobileFilters";
 import classNames from "classnames";
 import styles from "./index.module.scss";
 import { useLazyGetArticlesQuery } from "../../store/api";
@@ -11,11 +10,11 @@ import { useAppSelector, usePrevious } from "../../store/hooks";
 import isEqual from "lodash.isequal";
 
 export const ArticlesList = () => {
-  const [ triggerGetArticles, { isLoading, data }] = useLazyGetArticlesQuery();
+  const [triggerGetArticles, { isLoading, data }] = useLazyGetArticlesQuery();
   const selectedFilters = useAppSelector(selectSelectedFilters);
   const previousSelectedFilters = usePrevious(selectedFilters);
 
-  useEffect(()=>{
+  useEffect(() => {
     triggerGetArticles({});
   }, []);
 
@@ -27,14 +26,7 @@ export const ArticlesList = () => {
   }, [selectedFilters]);
 
   return (
-    <section className={styles.articlesWrapper} id="explore">
-      <div className={styles.exploreTitleWrapper}>
-        <div className={styles.exploreButton} />
-        <h2 className={styles.exploreTitle}>
-          <span>Explore</span> what others have submitted
-        </h2>
-      </div>
-      <MobileFilters />
+    <>
       <section className={styles.articlesList}>
         {data?.links?.length &&
           data.links.map(item => <ArticleItem
@@ -46,6 +38,6 @@ export const ArticlesList = () => {
       <div className={styles.loadMoreWrapper}>
         <button className={classNames(styles.loadMoreButton, styles.disable)}>Load more</button>
       </div>
-    </section>
+    </>
   );
 };

@@ -4,8 +4,13 @@ import logo from "../../public/svg/logo.svg";
 import Image from "next/image";
 import { useAppDispatch } from "../../store/hooks";
 import { setMenuVisible } from "../../store/UIslice";
+import classNames from "classnames";
 
-export const MobileHeader = () => {
+interface Props {
+  isForcedMobile?: boolean
+}
+
+export const MobileHeader = ({isForcedMobile}: Props) => {
   const dispatch = useAppDispatch();
 
   const onMenuShow = () => {
@@ -13,7 +18,7 @@ export const MobileHeader = () => {
   };
 
   return (
-    <header className={styles.mobileHeaderWrapper}>
+    <header className={classNames(styles.mobileHeaderWrapper, {[styles.forcedMobile]: isForcedMobile})}>
       <div className={styles.logoWrapper}>
         <button className={styles.hamburger} onClick={onMenuShow} />
         <Link href="/" className={styles.logoLink}>

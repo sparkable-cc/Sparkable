@@ -8,7 +8,11 @@ import { selectIsMenuVisible, setMenuVisible } from "../../store/UIslice";
 import { CSSTransition } from "react-transition-group";
 import { useRef } from "react";
 
-export const Menu = () => {
+interface Props {
+  isForcedMobile?: boolean
+}
+
+export const Menu = ({isForcedMobile}: Props) => {
   const isVisible = useAppSelector(selectIsMenuVisible);
   const dispatch = useAppDispatch();
   const nodeRef = useRef(null);
@@ -26,7 +30,7 @@ export const Menu = () => {
         exitDone: styles.exitDone,
       }}
     >
-      <aside ref={nodeRef} className={classNames(styles.menuWrapper)}>
+      <aside ref={nodeRef} className={classNames(styles.menuWrapper, {[styles.forcedMobile]: isForcedMobile})}>
         <div className={styles.logoWrapper}>
           <button className={styles.closeButton} onClick={onMenuHide} />
           <Link href="/" className={styles.logo} onClick={onMenuHide}>
