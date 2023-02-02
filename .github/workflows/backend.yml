@@ -30,11 +30,11 @@ jobs:
         example-command "$AUTH0_AUDIENCE"
 
     - name: Run backend E2E tests
-      with:
-        AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
-        AUTH0_ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
-        AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
-        AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
+      # with:
+      #   AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+      #   AUTH0_ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
+      #   AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+      #   AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
       env:
         AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
         AUTH0_ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
