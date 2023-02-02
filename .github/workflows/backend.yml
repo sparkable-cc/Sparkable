@@ -23,13 +23,13 @@ jobs:
 
     steps:
 
-      - name: Test
-        env:
-          TEST_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TEST_SECRET: ${{ secrets.SECRET }}
-        run: |
-          echo ${#TEST_GITHUB_TOKEN}
-          echo ${#SECRET}
+    - name: Test
+      env:
+        TEST_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TEST_SECRET: ${{ secrets.SECRET }}
+      run: |
+        echo ${#TEST_GITHUB_TOKEN}
+        echo ${#SECRET}
 
     - name: Check for Secret availability
       id: secret-check
