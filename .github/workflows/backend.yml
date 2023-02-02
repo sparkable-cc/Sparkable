@@ -27,12 +27,16 @@ jobs:
       run: docker-compose exec -T backend npm run unit
 
     - shell: bash
+      with:
+        AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
       env:
         AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
       run: |
         echo ${{ secrets.AUTH0_AUDIENCE }}
         echo ${{ env.AUTH0_AUDIENCE }}
-        echo "$AUTH0_AUDIENCE"
+        echo $AUTH0_AUDIENCE
+      env:
+        AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
 
     - name: Run backend E2E tests
       # with:
