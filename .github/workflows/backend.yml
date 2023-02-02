@@ -5,6 +5,11 @@ on:
     branches: [ "develop" ]
   pull_request:
     branches: [ "develop" ]
+  workflow_call:
+    secrets:
+      password:
+        description: 'needed for login'
+        required: false
 
 env:
   AUTH0_AUDIENCE:  ${{ secrets.AUTH0_AUDIENCE }}
@@ -35,8 +40,6 @@ jobs:
         echo ${{ secrets.AUTH0_AUDIENCE }}
         echo ${{ env.AUTH0_AUDIENCE }}
         echo $AUTH0_AUDIENCE
-        env:
-          AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
 
     - name: Run backend E2E tests
       # with:
