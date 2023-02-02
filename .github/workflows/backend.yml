@@ -9,7 +9,7 @@ on:
     secrets:
       password:
         description: 'needed for login'
-        required: false
+        required: true
 
 env:
   AUTH0_AUDIENCE:  ${{ secrets.AUTH0_AUDIENCE }}
@@ -20,7 +20,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    secrets: inherit # <= this one
 
     steps:
 
