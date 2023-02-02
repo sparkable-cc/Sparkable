@@ -3,13 +3,21 @@
 
 .articlePreview {
   width: 570px;
-  min-height: 100vh;
+  height: 100vh;
   background: $colorWhite;
   box-shadow: 0px 2px 25px rgba(0, 48, 75, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1100;
 
-  @media only screen and (max-width: $laptop) {}
-
-  @media only screen and (max-width: $tablet) {}
+  @media only screen and (max-width: $tablet){
+    width: 100%;
+    position: static;
+    height: auto;
+    min-height: calc(100vh - 70px);
+    margin-top: 70px;
+    z-index: 0;
+  }
 }
 
 .articleCover {
@@ -17,6 +25,10 @@
   height: 320px;
   background-size: cover;
   background-position: center;
+
+  @media only screen and (max-width: $tablet) {
+    height: 210px;
+  }
 }
 
 .contentWrapper {
@@ -24,6 +36,12 @@
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - 320px);
+  
+  @media only screen and (max-width: $tablet) {
+    padding: $gapS;
+    min-height: calc(100vh - 280px);
+    min-height: auto;
+  }
 }
 
 .articleTitle {

@@ -12,6 +12,12 @@
   @media only screen and (max-width: $mobile) {
     columns: 1;
   }
+
+  &.previewPage {
+    @media only screen and (max-width: $laptop) {
+      columns: 1;
+    } 
+  }
 }
 
 .loadMoreWrapper {

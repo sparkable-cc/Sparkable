@@ -9,7 +9,11 @@ import { selectSelectedFilters } from "../../store/UIslice";
 import { useAppSelector, usePrevious } from "../../store/hooks";
 import isEqual from "lodash.isequal";
 
-export const ArticlesList = () => {
+interface Props {
+  isPreviewPage?: boolean
+}
+
+export const ArticlesList = ({ isPreviewPage }: Props) => {
   const [triggerGetArticles, { isLoading, data }] = useLazyGetArticlesQuery();
   const selectedFilters = useAppSelector(selectSelectedFilters);
   const previousSelectedFilters = usePrevious(selectedFilters);
@@ -27,7 +31,7 @@ export const ArticlesList = () => {
 
   return (
     <>
-      <section className={styles.articlesList}>
+      <section className={classNames(styles.articlesList, { [styles.previewPage]: isPreviewPage })}>
         {data?.links?.length &&
           data.links.map(item => <ArticleItem
             {...item}
