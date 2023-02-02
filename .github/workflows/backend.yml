@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ "develop" ]
 
+env:
+  AUTH0_AUDIENCE:  ${{ secrets.AUTH0_AUDIENCE }}
+
 jobs:
 
   build:
@@ -28,6 +31,7 @@ jobs:
         AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
       run: |
         echo ${{ secrets.AUTH0_AUDIENCE }}
+        echo ${{ env.AUTH0_AUDIENCE }}
         echo "$AUTH0_AUDIENCE"
 
     - name: Run backend E2E tests
