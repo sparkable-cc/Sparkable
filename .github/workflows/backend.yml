@@ -41,6 +41,21 @@ jobs:
         echo "variable from shell environment : $AUTH0_AUDIENCE"
         echo "variable from shell environment : $AUTH0_AUDIENCE2"
 
+    - name: Check secrets presence
+      id: checksecrets
+      shell: bash
+      run: |
+        if [ "$SECRET" == "" ]; then
+          echo "secretspresent=NO" >> $GITHUB_OUTPUT
+        else
+          echo "secretspresent=YES" >> $GITHUB_OUTPUT
+        fi
+      env:
+        SECRET: ${{ secrets.SECRET}}
+    - name: run step if secret is present
+      if: (steps.checksecrets.outputs.secretspresent == 'YES')
+      run: echo secret is present
+
     - name: Run backend E2E tests
       # with:
       #   AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
