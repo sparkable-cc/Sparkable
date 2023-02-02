@@ -13,6 +13,7 @@ on:
 
 env:
   AUTH0_AUDIENCE:  ${{ secrets.AUTH0_AUDIENCE }}
+  AUTH0_AUDIENCE2: ${{ vars.AUTH0_AUDIENCE }}
 
 jobs:
 
@@ -34,12 +35,11 @@ jobs:
       run: docker-compose exec -T backend npm run unit
 
     - shell: bash
-      env:
-        AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
       run: |
-        echo ${{ secrets.AUTH0_AUDIENCE }}
-        echo ${{ env.AUTH0_AUDIENCE }}
-        echo $AUTH0_AUDIENCE
+        echo "organization variable : ${{ secrets.AUTH0_AUDIENCE }}"
+        echo "overridden variable : ${{ vars.AUTH0_AUDIENCE }}"
+        echo "variable from shell environment : $AUTH0_AUDIENCE"
+        echo "variable from shell environment : $AUTH0_AUDIENCE2"
 
     - name: Run backend E2E tests
       # with:
@@ -53,6 +53,8 @@ jobs:
         AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
         AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
       run: docker-compose exec -T backend npm run e2e
+      secrets: inherit
+
 
     # - name: Run frontend E2E tests
     #   run: docker-compose exec -T frontend npm run e2e
