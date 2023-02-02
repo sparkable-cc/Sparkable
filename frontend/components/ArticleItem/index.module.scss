@@ -24,6 +24,7 @@
   width: 100%;
   background-size: cover;
   background-position: center;
+  cursor: pointer;
 
   @media only screen and (max-width: $mobile) {
     width: 50%;
@@ -41,6 +42,7 @@
 
   @media only screen and (max-width: $mobile) {
     width: 50%;
+    flex-grow: 0;
   }
 }
 
