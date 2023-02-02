@@ -50,7 +50,7 @@ describe('signing in', () => {
     const username = 'username';
     const email = 'email';
     const password = 'password';
-    userRepository.storeUser(new User('email', username, password));
+    userRepository.storeUser(new User(email, username, password));
     const authResponse = {
       access_token:"xxxx",
       expires_in:86400,
