@@ -11,6 +11,8 @@ on:
 env:
   AUTH0_AUDIENCE:  ${{ secrets.AUTH0_AUDIENCE }}
   AUTH0_AUDIENCE2: ${{ vars.AUTH0_AUDIENCE }}
+  env_var: ${{ vars.SECRET }}
+
 
 jobs:
 
@@ -19,6 +21,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: Use variables
+      run: |
+        echo "repository variable : ${{ vars.REPOSITORY_VAR }}"
+        echo "organization variable : ${{ vars.ORGANIZATION_VAR }}"
+        echo "overridden variable : ${{ vars.OVERRIDE_VAR }}"
+        echo "overridden variable : ${{ vars.SECRET }}"
+        echo "variable from shell environment : $env_var"
 
     - name: Test
       env:
