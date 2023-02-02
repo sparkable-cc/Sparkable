@@ -26,6 +26,8 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 dotenv.config();
 app.use(cors({ origin: process.env.CLIENT }));
 
+console.log(process.env.AUTH0_AUDIENCE);
+
 const checkJwt = auth({
   audience: process.env.AUTH0_AUDIENCE,
   issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
