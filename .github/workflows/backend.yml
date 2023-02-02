@@ -29,7 +29,12 @@ jobs:
         TEST_SECRET: ${{ secrets.SECRET }}
       run: |
         echo ${#TEST_GITHUB_TOKEN}
-        echo ${#SECRET}
+        echo ${#TEST_SECRET}
+
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
 
     - name: Check for Secret availability
       id: secret-check
