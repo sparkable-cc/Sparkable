@@ -30,15 +30,21 @@ jobs:
     #     echo "variable : $env_var"
     #     echo "AUTH0_AUDIENCE : $AUTH0_AUDIENCE"
 
-    # - name: Test
-    #   env:
-    #     TEST_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #     TEST_SECRET: ${{ secrets.SECRET }}
-    #     TEST_AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
-    #   run: |
-    #     echo ${#TEST_GITHUB_TOKEN}
-    #     echo ${#TEST_SECRET}
-    #     echo ${#TEST_AUTH0_AUDIENCE}
+    - name: Test
+      env:
+        TEST_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TEST_SECRET: ${{ secrets.SECRET }}
+        TEST_AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+        AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+        AUTH0_ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
+        AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+        AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
+      run: |
+        echo ${#TEST_GITHUB_TOKEN}
+        echo ${#TEST_SECRET}
+        echo ${#TEST_AUTH0_AUDIENCE}
+        echo ${#AUTH0_AUDIENCE}
+        echo ${#AUTH0_ISSUER_BASE_URL}
 
     # - name: Dump GitHub context
     #   env:
