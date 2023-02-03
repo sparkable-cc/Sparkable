@@ -7,12 +7,9 @@ on:
     branches: [ "develop" ]
   workflow_call:
 
-
-env:
-  AUTH0_AUDIENCE:  ${{ secrets.AUTH0_AUDIENCE }}
-  AUTH0_AUDIENCE2: ${{ vars.AUTH0_AUDIENCE }}
-  env_var: ${{ vars.SECRET }}
-
+# env:
+#   AUTH0_AUDIENCE:  ${{ secrets.AUTH0_AUDIENCE }}
+#   env_var: ${{ vars.SECRET }}
 
 jobs:
 
@@ -22,98 +19,76 @@ jobs:
 
     steps:
 
-    - name: Use variables
-      run: |
-        echo "repository variable : ${{ vars.REPOSITORY_VAR }}"
-        echo "organization variable : ${{ vars.ORGANIZATION_VAR }}"
-        echo "overridden variable : ${{ vars.OVERRIDE_VAR }}"
-        echo "overridden variable : ${{ vars.SECRET }}"
-        echo "overridden variable : ${{ env.SECRET }}"
-        echo "overridden variable : ${{ vars.USE_VARIABLES }}"
-        echo "variable : $env_var"
-        echo "AUTH0_AUDIENCE : $AUTH0_AUDIENCE"
+    # - name: Use variables
+    #   run: |
+    #     echo "repository variable : ${{ vars.REPOSITORY_VAR }}"
+    #     echo "organization variable : ${{ vars.ORGANIZATION_VAR }}"
+    #     echo "overridden variable : ${{ vars.OVERRIDE_VAR }}"
+    #     echo "overridden variable : ${{ vars.SECRET }}"
+    #     echo "overridden variable : ${{ env.SECRET }}"
+    #     echo "overridden variable : ${{ vars.USE_VARIABLES }}"
+    #     echo "variable : $env_var"
+    #     echo "AUTH0_AUDIENCE : $AUTH0_AUDIENCE"
 
-    - name: Test
-      env:
-        TEST_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        TEST_SECRET: ${{ secrets.SECRET }}
-        TEST_AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
-      run: |
-        echo ${#TEST_GITHUB_TOKEN}
-        echo ${#TEST_SECRET}
-        echo ${#TEST_AUTH0_AUDIENCE}
+    # - name: Test
+    #   env:
+    #     TEST_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     TEST_SECRET: ${{ secrets.SECRET }}
+    #     TEST_AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+    #   run: |
+    #     echo ${#TEST_GITHUB_TOKEN}
+    #     echo ${#TEST_SECRET}
+    #     echo ${#TEST_AUTH0_AUDIENCE}
 
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
+    # - name: Dump GitHub context
+    #   env:
+    #     GITHUB_CONTEXT: ${{ toJson(github) }}
+    #   run: echo "$GITHUB_CONTEXT"
 
-    - name: Check for Secret availability
-      id: secret-check
-      # perform secret check & put boolean result as an output
-      shell: bash
-      run: |
-        if [ "${{ secrets.SECRET }}" != '' ]; then
-          echo "available=true" >> $GITHUB_OUTPUT;
-        else
-          echo "available=false" >> $GITHUB_OUTPUT;
-        fi
+    # - name: Check for Secret availability
+    #   id: secret-check
+    #   # perform secret check & put boolean result as an output
+    #   shell: bash
+    #   run: |
+    #     if [ "${{ secrets.SECRET }}" != '' ]; then
+    #       echo "available=true" >> $GITHUB_OUTPUT;
+    #     else
+    #       echo "available=false" >> $GITHUB_OUTPUT;
+    #     fi
 
-    - name: Check Inadequate Permissions
-      if: ${{ steps.secret-check.outputs.available != 'true' }}
-      # provide feedback for likely problem, note dependabot cannot access
-      # secrets by default. Secondly, this step forces job failure due to
-      # missing secret via `exit 1`
-      shell: bash
-      run: |
-        if [ "${{ github.actor }}" == "dependabot[bot]" ]; then
-          echo >&2 "Unable to access secrets as unprivileged dependabot.";
-        else
-          echo >&2 "Inadequate Permissions or missing secret value";
-        fi
+    # - name: Check Inadequate Permissions
+    #   if: ${{ steps.secret-check.outputs.available != 'true' }}
+    #   # provide feedback for likely problem, note dependabot cannot access
+    #   # secrets by default. Secondly, this step forces job failure due to
+    #   # missing secret via `exit 1`
+    #   shell: bash
+    #   run: |
+    #     if [ "${{ github.actor }}" == "dependabot[bot]" ]; then
+    #       echo >&2 "Unable to access secrets as unprivileged dependabot.";
+    #     else
+    #       echo >&2 "Inadequate Permissions or missing secret value";
+    #     fi
 
-    - name: Execute Step requiring secret
-      # If you didn't abort step above, then use this conditional
-      # if: ${{ steps.secret-check.outputs.available == 'true' }}
-      shell: bash
-      # Key will be blocked out in log output but will be not empty
-      run: |
-        echo "This command is executed with non-empty key: \
-          ${{ secrets.SECRET }}"
+    # - name: Execute Step requiring secret
+    #   # If you didn't abort step above, then use this conditional
+    #   # if: ${{ steps.secret-check.outputs.available == 'true' }}
+    #   shell: bash
+    #   # Key will be blocked out in log output but will be not empty
+    #   run: |
+    #     echo "This command is executed with non-empty key: \
+    #       ${{ secrets.SECRET }}"
 
     - uses: actions/checkout@v3
 
     - name: Start docker containers
-      env:
-        AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+      # env:
+      #   AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
       run: |
         docker-compose -f docker-compose-test.yml up --build --detach
         sleep 10  # wait for database to be ready
 
     - name: Run backend unit tests
       run: docker-compose exec -T backend npm run unit
-
-    - shell: bash
-      run: |
-        echo "organization variable : ${{ secrets.AUTH0_AUDIENCE }}"
-        echo "overridden variable : ${{ vars.AUTH0_AUDIENCE }}"
-        echo "variable from shell environment : $AUTH0_AUDIENCE"
-        echo "variable from shell environment : $AUTH0_AUDIENCE2"
-
-    - name: Check secrets presence
-      id: checksecrets
-      shell: bash
-      run: |
-        if [ "$SECRET" == "" ]; then
-          echo "secretspresent=NO" >> $GITHUB_OUTPUT
-        else
-          echo "secretspresent=YES" >> $GITHUB_OUTPUT
-        fi
-      env:
-        SECRET: ${{ secrets.SECRET}}
-    - name: run step if secret is present
-      if: (steps.checksecrets.outputs.secretspresent == 'YES')
-      run: echo secret is present
 
     - name: Run backend E2E tests
       # with:
