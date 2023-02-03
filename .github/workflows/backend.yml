@@ -100,6 +100,9 @@ jobs:
         echo "AUTH0_ISSUER_BASE_URL=${{ secrets.AUTH0_ISSUER_BASE_URL }}" >> .env
         echo "AUTH0_CLIENT_ID=${{ secrets.AUTH0_CLIENT_ID }}" >> .env
         echo "AUTH0_CLIENT_SECRET=${{ secrets.AUTH0_CLIENT_SECRET }}" >> .env
+        echo "ls -la"
+        ls -la
+        echo "cat .env"
         cat .env
         docker-compose -f docker-compose-test.yml up --build --detach
         sleep 10  # wait for database to be ready
