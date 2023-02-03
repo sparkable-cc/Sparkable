@@ -16,7 +16,6 @@ export class CreateUserAction {
 
     await this.checkUsernameIsNotUsed(username);
     await this.checkEmailIsNotUsed(email);
-    await this.checkPasswordIsNotShort(password);
 
     this.userRepository.storeUser(user);
   }
@@ -29,9 +28,5 @@ export class CreateUserAction {
   private async checkEmailIsNotUsed(email: string) {
     const user = await this.userRepository.findUser('email', email);
     if (user) throw new EmailExistsException();
-  }
-
-  private async checkPasswordIsNotShort(password: string) {
-    if (password.length < 8) throw new ShortPasswordException();
   }
 }
