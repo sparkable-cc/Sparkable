@@ -16,6 +16,12 @@ export const api = createApi({
         };
       }
     }),
+    getArticleByID: builder.query<ApiTypes.Res.Article, string>({
+      query: (id) => ({
+        url: `/links/${id}`,
+        method: "GET",
+      }),
+    }),
     getCategories: builder.query<ApiTypes.Res.Categories, void>({
       query: () => {
         return {
@@ -28,9 +34,11 @@ export const api = createApi({
 
 export const {
   useLazyGetArticlesQuery,
+  useLazyGetArticleByIDQuery,
   useLazyGetCategoriesQuery,
 } = api;
 
 
 export const getArticles = api.endpoints.getArticles;
 export const getCategories = api.endpoints.getCategories;
+export const getArticleByID = api.endpoints.getArticleByID;

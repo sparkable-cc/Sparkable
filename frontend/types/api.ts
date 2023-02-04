@@ -36,4 +36,16 @@ export declare namespace ApiTypes.Res {
   interface Categories {
     categories: ApiTypes.Model.Category[]
   }
+
+  interface Article {
+    id: number
+    uuid: string
+    title: string
+    link: string
+    image: string
+    description?: string
+    date: string
+    username: string
+    categories: ApiTypes.Model.Category[]
+  }
 }
