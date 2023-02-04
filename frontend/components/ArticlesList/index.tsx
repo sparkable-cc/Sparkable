@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const ArticlesList = ({ isPreviewPage }: Props) => {
-  const [triggerGetArticles, { isLoading, data }] = useLazyGetArticlesQuery();
+  const [ triggerGetArticles, { isLoading, data }] = useLazyGetArticlesQuery();
   const selectedFilters = useAppSelector(selectSelectedFilters);
   const previousSelectedFilters = usePrevious(selectedFilters);
 

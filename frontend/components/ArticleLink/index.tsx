@@ -1,5 +1,5 @@
-import styles from './index.module.scss';
-import React from 'react';
+import styles from "./index.module.scss";
+import React from "react";
 
 interface Props {
   link: string;
@@ -15,5 +15,5 @@ export const ArticleLink = ({ link }: Props) => {
     >
       {link}
     </a>
-  )
-}
+  );
+};
