@@ -21,12 +21,12 @@ export const ArticlePreview = ({
 }: Props) => {
   return (
     <section className={styles.articlePreview}>
-      {image && <div
+      <div
         className={styles.articleCover}
         style={{
           backgroundImage: `url(${image})`
         }}
-      />}
+      />
       <div className={styles.contentWrapper}>
         <div>
           <ArticleLink link={link} />
