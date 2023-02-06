@@ -1,18 +1,17 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "../../styles/Article.module.scss";
 import { ArticlesList } from "../../components/ArticlesList";
 import { ArticlePreview } from "../../components/ArticlePreview";
 import { BackButton } from "../../components/BackButton";
 import { useLazyGetArticleByIDQuery } from "../../store/api";
-import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { ApiTypes } from "../../types";
-import { ModalShare } from '../../components/ModalShare';
+import { ModalShare } from "../../components/ModalShare";
 
 const Article: NextPage = () => {
-  const [isCopyModalVisible, setCopyModalVisible] = useState(false);
-  const [triggerGetArticleByID, { isLoading, data }] = useLazyGetArticleByIDQuery();
+  const [ isCopyModalVisible, setCopyModalVisible ] = useState(false);
+  const [ triggerGetArticleByID, { isLoading, data }] = useLazyGetArticleByIDQuery();
   const router = useRouter();
   const { slug } = router.query;
 
