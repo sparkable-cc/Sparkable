@@ -1,6 +1,7 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Express, Request, Response } from 'express';
+import { auth } from 'express-oauth2-jwt-bearer';
 import { GetAllCategoriesAction } from './contexts/links/actions/GetAllCategoriesAction';
 import { GetAllLinksAction } from './contexts/links/actions/GetAllLinksAction';
 import { GetLinkByIdAction } from './contexts/links/actions/GetLinkByIdAction';
@@ -15,6 +16,7 @@ import { UserNotFoundException } from './contexts/users/domain/exceptions/UserNo
 import { WrongPasswordException } from './contexts/users/domain/exceptions/WrongPasswordException';
 import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
 import dataSource from './data-source';
+import { AuthServiceAuth0 } from './contexts/users/infrastructure/services/AuthServiceAuth0';
 
 const app: Express = express();
 
@@ -24,8 +26,21 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 dotenv.config();
 app.use(cors({ origin: process.env.CLIENT }));
 
+const checkJwt = auth({
+  audience: process.env.AUTH0_AUDIENCE,
+  issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
+  tokenSigningAlg: 'RS256'
+});
+
 app.get('/', (req: Request, res: Response) => {
   res.send('Butterfy API');
+});
+
+// Example: This route needs authentication
+app.get('/private', checkJwt, function(req, res) {
+  res.json({
+    message: 'Hello from a private endpoint! You need to be authenticated to see this.'
+  });
 });
 
 app.post('/user', async (req: Request, res: Response) => {
@@ -60,12 +75,15 @@ app.post('/user', async (req: Request, res: Response) => {
 });
 
 app.post('/signin', async (req: Request, res: Response) => {
-  const signInAction = new SignInAction(new UserRepositoryPG(dataSource));
+  const signInAction = new SignInAction(
+    new UserRepositoryPG(dataSource),
+    new AuthServiceAuth0()
+  );
   signInAction
     .execute(req.body.password, req.body.username, req.body.email)
-    .then(() => {
+    .then((result) => {
       res.status(200);
-      res.send({ message: 'User signed in!' });
+      res.send(result);
     })
     .catch((error) => {
       switch (error.constructor) {

@@ -10,7 +10,7 @@ $ docker-compose up
 This runs the backend server on http://localhost:5000.
 Also the PgAdmin server on http://localhost:8080.
 
-#####Migrations
+##### Migrations
 
 To execute the migrations:
 ```bash
