@@ -8,7 +8,6 @@ import { useLazyGetArticleByIDQuery } from "../../store/api";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { ApiTypes } from "../../types";
-import { motion } from "framer-motion";
 import { ModalShare } from '../../components/ModalShare';
 
 const Article: NextPage = () => {
@@ -25,33 +24,17 @@ const Article: NextPage = () => {
 
   return (
     <>
-      <motion.div
-        className={styles.backButtonWrapper}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-      >
+      <div className={styles.backButtonWrapper}>
         <BackButton directPath="/#explore">Back <span>to Explore</span></BackButton>
-      </motion.div>
-      <motion.section
-        className={styles.articlesWrapper}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-      >
+      </div>
+      <section className={styles.articlesWrapper}>
         <ArticlesList isPreviewPage />
-      </motion.section>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
-      >
-        <ArticlePreview
-          isLoading={isLoading}
-          onShareClick={() => setCopyModalVisible(true)}
-          {...data as ApiTypes.Res.Article}
-        />
-      </motion.div>
+      </section>
+      <ArticlePreview
+        isLoading={isLoading}
+        onShareClick={() => setCopyModalVisible(true)}
+        {...data as ApiTypes.Res.Article}
+      />
       {
         data && <ModalShare
           isVisible={isCopyModalVisible}
