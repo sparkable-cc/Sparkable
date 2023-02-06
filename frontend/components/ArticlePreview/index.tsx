@@ -8,6 +8,7 @@ import { Spiner } from "../Spiner";
 
 interface Props extends ApiTypes.Res.Article {
   isLoading: boolean
+  onShareClick: () => void;
 }
 
 export const ArticlePreview = ({
@@ -17,7 +18,8 @@ export const ArticlePreview = ({
   date,
   description,
   categories,
-  isLoading
+  isLoading,
+  onShareClick
 }: Props) => {
   return (
     <section className={styles.articlePreview}>
@@ -47,7 +49,7 @@ export const ArticlePreview = ({
             Open
           </a>
           <button className={classNames(styles.bookmarkButton, styles.disable)}>Bookmark</button>
-          <button className={styles.shareButton} />
+          <button className={styles.shareButton} onClick={onShareClick} />
           <button className={classNames(styles.dotsButton, styles.disable)} />
         </nav>
         {isLoading && <Spiner wrapperClassName={styles.spinnerWrapper} />}
