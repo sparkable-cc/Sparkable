@@ -1,0 +1,32 @@
+@import "./common.scss";
+
+.articlesWrapper {
+  width: calc(100% - 570px);
+  padding: 80px $gapS;
+
+  @media only screen and (max-width: $tablet) {
+    display: none;
+  }
+}
+
+.backButtonWrapper {
+  position: fixed;
+  top: 18px;
+  right: 586px;
+  z-index: 1200;
+
+  span {
+    display: inline-flex;
+    padding-left: 5px;
+  }
+
+  @media only screen and (max-width: $laptop) {
+    span {
+      display: none;
+    }
+  }
+
+  @media only screen and (max-width: $tablet) {
+    right: $gapS;
+  }
+}
