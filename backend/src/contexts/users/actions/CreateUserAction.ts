@@ -1,4 +1,5 @@
 import { EmailExistsException } from '../domain/exceptions/EmailExistsException';
+import { ShortPasswordException } from '../domain/exceptions/ShortPasswordException';
 import { UsernameExistsException } from '../domain/exceptions/UsernameExistsException';
 import { User } from '../domain/models/User';
 import { UserRepository } from '../domain/repositories/UserRepository';

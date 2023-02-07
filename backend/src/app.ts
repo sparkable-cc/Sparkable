@@ -11,6 +11,7 @@ import { CreateUserAction } from './contexts/users/actions/CreateUserAction';
 import { SignInAction } from './contexts/users/actions/SignInAction';
 import { EmailExistsException } from './contexts/users/domain/exceptions/EmailExistsException';
 import { MandatoryFieldEmptyException } from './contexts/users/domain/exceptions/MandatoryFieldEmptyException';
+import { ShortPasswordException } from './contexts/users/domain/exceptions/ShortPasswordException';
 import { UsernameExistsException } from './contexts/users/domain/exceptions/UsernameExistsException';
 import { UserNotFoundException } from './contexts/users/domain/exceptions/UserNotFoundException';
 import { WrongPasswordException } from './contexts/users/domain/exceptions/WrongPasswordException';
@@ -64,6 +65,10 @@ app.post('/user', async (req: Request, res: Response) => {
           res.status(403);
           res.send({ message: 'User exist!' });
           break;
+        case ShortPasswordException:
+          res.status(400);
+          res.send({ message: 'Password is too short!' });
+          break;
         default:
           console.log(
             'Failed to do something async with an unspecified error: ',
@@ -107,15 +112,11 @@ app.get('/links', async (req: Request, res: Response) => {
     new LinkRepositoryPG(dataSource),
   );
 
-  let page:number = 0;
+  let page: number = 0;
   if (req.query.page) page = +req.query.page;
 
   getAllLinksAction
-    .execute(
-      req.query.sort as string,
-      req.query.categories as string,
-      page
-    )
+    .execute(req.query.sort as string, req.query.categories as string, page)
     .then((result) => {
       res.status(200);
       res.send({ links: result[0], total: result[1] });
