@@ -16,6 +16,12 @@ export declare namespace ApiTypes.Model {
     name: string,
     slug: string
   }
+
+  interface User {
+    email: string
+    username: string
+    password: string
+  }
 }
 
 export declare namespace ApiTypes.Req {
@@ -23,6 +29,12 @@ export declare namespace ApiTypes.Req {
   interface LinksQueryParams {
     sort?: "-date",
     categories?: string[]
+  }
+
+  interface SignUp {
+    email: string
+    username: string
+    password: string
   }
 }
 

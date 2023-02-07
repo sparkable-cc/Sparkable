@@ -1,0 +1,8 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.errorMessage {
+  padding-top: $gapXxs;
+  font-size: $size14;
+  color: $colorRed;
+}

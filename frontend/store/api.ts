@@ -29,6 +29,13 @@ export const api = createApi({
         };
       }
     }),
+    signUp: builder.query<undefined, ApiTypes.Req.SignUp>({
+      query: (body) => ({
+        url: `/user/`,
+        method: "POST",
+        body
+      }),
+    }),
   }),
 });
 
@@ -36,6 +43,7 @@ export const {
   useLazyGetArticlesQuery,
   useLazyGetArticleByIDQuery,
   useLazyGetCategoriesQuery,
+  useLazySignUpQuery,
 } = api;
 
 
