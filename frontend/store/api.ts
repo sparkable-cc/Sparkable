@@ -29,7 +29,7 @@ export const api = createApi({
         };
       }
     }),
-    signUp: builder.query<undefined, ApiTypes.Req.SignUp>({
+    signUp: builder.query<{ message: string }, ApiTypes.Req.SignUp>({
       query: (body) => ({
         url: `/user/`,
         method: "POST",

@@ -1,4 +1,4 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import styles from "./index.module.scss";
 import Link from "next/link";
 import { FormInput } from "../FormInput";
@@ -7,22 +7,25 @@ import { useLazySignUpQuery } from '../../store/api';
 import { ApiTypes } from "../../types";
 import { Spiner } from "../Spiner";
 import { signUpSchema } from '../../utils/validations';
-// import { ErrorMessage } from "../ErrorMessage";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 const validationErrorInitialState = {
   field: "",
   message: ""
 }
 
+const inputValuesInitialState = {
+  username: "",
+  email: "",
+  password: "",
+}
+
 export const SignUpForm = () => {
-  const [triggerSignUp, { isLoading, data, }] = useLazySignUpQuery();
-  const [inputValues, setInputValues] = useState<ApiTypes.Req.SignUp>({
-    username: "",
-    email: "",
-    password: "",
-  });
+  const [triggerSignUp, { isLoading, data }] = useLazySignUpQuery();
+  const [inputValues, setInputValues] = useState<ApiTypes.Req.SignUp>(inputValuesInitialState);
   const [validationError, setValidationError] = useState(validationErrorInitialState);
-  // const [responseError, setResponseError] = useState("");
+  const router = useRouter();
 
   const onInputChange = (event: FormEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
@@ -43,23 +46,37 @@ export const SignUpForm = () => {
 
     if (validationResult.error) {
       const error = validationResult?.error?.details[0];
+
       setValidationError({
         field: error?.path[0] as string,
         message: error?.message
       })
+
     } else {
+      setValidationError(validationErrorInitialState);
+
       try {
-        triggerSignUp(inputValues)
-      } catch (error) {
-        console.log('error', error);
+        triggerSignUp(inputValues).then(res => {
+          if (res?.error) {
+            toast.error(res?.error?.data?.message);
+          }
+        });
+      } catch (error: any) {
+        toast.error(error?.message);
       }
 
     }
   }
 
-  console.log('isLoading', isLoading);
-  console.log('data', data);
-  console.log('---------------');
+  useEffect(() => {
+    if (data?.message) {
+      toast.success(data?.message);
+      setInputValues(inputValuesInitialState);
+      setTimeout(() => {
+        router.push("/auth/signin");
+      }, 2500)
+    }
+  }, [data?.message]);
 
   return (
     <form className={styles.authForm} onSubmit={onSubmit}>
@@ -111,7 +128,6 @@ export const SignUpForm = () => {
         >
           {isLoading ? <Spiner color="#fff" sizeWidth="25" /> : "Create account"}
         </button>
-        {/* {!responseError && <ErrorMessage>asldnalsnd alsndlasndlasnd lasnd lasknd</ErrorMessage>} */}
         <div className={styles.footerText}>
           Click “Create account” to agree to the <Link href="/" className={styles.authLink}>Terms of Use</Link> of
           Sparkable and acknowledge that the <Link href="/" className={styles.authLink}>Privacy Policy</Link> of

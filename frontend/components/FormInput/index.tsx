@@ -2,7 +2,6 @@
 import styles from "./index.module.scss";
 import { FormEvent } from "react";
 import classNames from "classnames";
-import { ErrorMessage } from '../ErrorMessage';
 
 interface Props {
   type?: string;
@@ -46,9 +45,9 @@ export const FormInput = ({
         {value && <span className={styles.clearInput} onClick={() => onClear(name)} />}
       </div>
       {errorMessage &&
-        <ErrorMessage>
+        <div className={styles.errorMessage}>
           {errorMessage}
-        </ErrorMessage>}
+        </div>}
     </div>
   );
 };

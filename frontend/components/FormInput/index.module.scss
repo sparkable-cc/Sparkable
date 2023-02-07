@@ -47,3 +47,9 @@
   cursor: pointer;
   content: url("../../public/svg/clearInput.svg")
 }
+
+.errorMessage {
+  padding-top: $gapXxs;
+  font-size: $size14;
+  color: $colorRed;
+}
