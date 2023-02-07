@@ -35,6 +35,7 @@ describe('POST /user', () => {
     });
 
     expect(req.statusCode).toEqual(400);
+    expect(req.body.message).toEqual('Password is too short!');
   });
 
   it('returns 201 when the user is created', async () => {
