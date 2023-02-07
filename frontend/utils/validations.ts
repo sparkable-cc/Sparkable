@@ -16,3 +16,16 @@ export const signUpSchema = Joi.object({
     .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
     .required(),
 });
+
+export const signInSchema = Joi.object({
+  login: Joi.string()
+    .required(),
+
+  password: Joi.string()
+    .required(),
+});
+
+export const validationInitialState = {
+  field: "",
+  message: ""
+}

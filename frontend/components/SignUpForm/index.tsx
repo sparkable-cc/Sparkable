@@ -6,14 +6,9 @@ import classNames from "classnames";
 import { useLazySignUpQuery } from '../../store/api';
 import { ApiTypes } from "../../types";
 import { Spiner } from "../Spiner";
-import { signUpSchema } from '../../utils/validations';
+import { signUpSchema, validationInitialState } from '../../utils/validations';
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-
-const validationErrorInitialState = {
-  field: "",
-  message: ""
-}
 
 const inputValuesInitialState = {
   username: "",
@@ -24,7 +19,7 @@ const inputValuesInitialState = {
 export const SignUpForm = () => {
   const [triggerSignUp, { isLoading, data }] = useLazySignUpQuery();
   const [inputValues, setInputValues] = useState<ApiTypes.Req.SignUp>(inputValuesInitialState);
-  const [validationError, setValidationError] = useState(validationErrorInitialState);
+  const [validationError, setValidationError] = useState(validationInitialState);
   const router = useRouter();
 
   const onInputChange = (event: FormEvent<HTMLInputElement>) => {
@@ -53,7 +48,7 @@ export const SignUpForm = () => {
       })
 
     } else {
-      setValidationError(validationErrorInitialState);
+      setValidationError(validationInitialState);
 
       try {
         triggerSignUp(inputValues).then(res => {
@@ -70,8 +65,8 @@ export const SignUpForm = () => {
 
   useEffect(() => {
     if (data?.message) {
-      toast.success(data?.message);
       setInputValues(inputValuesInitialState);
+      toast.success(data?.message);
       setTimeout(() => {
         router.push("/auth/signin");
       }, 2500)
