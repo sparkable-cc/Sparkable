@@ -38,6 +38,7 @@ export class User {
 
   public toDto(): UserDto {
     return {
+      id: 0,
       email: this.email,
       username: this.username,
       password: this.password,
