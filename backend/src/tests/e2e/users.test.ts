@@ -46,6 +46,7 @@ describe('POST /user', () => {
     });
 
     expect(req.statusCode).toEqual(201);
+    expect(req.body.message).toEqual('User created!');
   });
 
   it('returns 403 when one unique field exists with the same value', async () => {
@@ -61,5 +62,6 @@ describe('POST /user', () => {
       password: 'password',
     });
     expect(req.statusCode).toEqual(403);
+    expect(req.body.message).toEqual('User exist!');
   });
 });
