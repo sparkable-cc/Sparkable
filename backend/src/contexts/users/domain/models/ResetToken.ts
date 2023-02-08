@@ -1,3 +1,4 @@
+import { ResetTokenDto } from "./ResetTokenDto";
 
 export class ResetToken {
   private userId: number;
@@ -12,6 +13,22 @@ export class ResetToken {
 
   public get getToken(): string {
     return this.token;
+  }
+
+  public get getUserId(): number {
+    return this.userId;
+  }
+
+  public get getCreatedAt(): Date {
+    return this.createdAt;
+  }
+
+  public toDto(): ResetTokenDto {
+    return {
+      userId: this.userId,
+      token: this.token,
+      createdAt: this.createdAt
+    }
   }
 
 }

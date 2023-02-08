@@ -1,14 +1,13 @@
-import bcrypt from 'bcrypt';
 import { MandatoryFieldEmptyException } from '../exceptions/MandatoryFieldEmptyException';
 import { ShortPasswordException } from '../exceptions/ShortPasswordException';
 import { UserDto } from './UserDto';
+import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
 
 export class User {
   private email: string;
   private username: string;
   private password: string;
-
-  private readonly salt = 10;
 
   constructor(email: string, username: string, password: string) {
     if (!email || !username || !password) {
@@ -21,7 +20,8 @@ export class User {
 
     this.email = email;
     this.username = username;
-    this.password = bcrypt.hashSync(password, this.salt);
+    dotenv.config();
+    this.password = bcrypt.hashSync(password, Number(process.env.SALT));
   }
 
   public get getEmail(): string {
