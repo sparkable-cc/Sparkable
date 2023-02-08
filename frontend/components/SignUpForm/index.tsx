@@ -3,10 +3,10 @@ import styles from "./index.module.scss";
 import Link from "next/link";
 import { FormInput } from "../FormInput";
 import classNames from "classnames";
-import { useLazySignUpQuery } from '../../store/api';
+import { useLazySignUpQuery } from "../../store/api";
 import { ApiTypes } from "../../types";
 import { Spiner } from "../Spiner";
-import { signUpSchema, validationInitialState } from '../../utils/validations';
+import { signUpSchema, validationInitialState } from "../../utils/validations";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 
@@ -14,12 +14,12 @@ const inputValuesInitialState = {
   username: "",
   email: "",
   password: "",
-}
+};
 
 export const SignUpForm = () => {
-  const [triggerSignUp, { isLoading, data }] = useLazySignUpQuery();
-  const [inputValues, setInputValues] = useState<ApiTypes.Req.SignUp>(inputValuesInitialState);
-  const [validationError, setValidationError] = useState(validationInitialState);
+  const [ triggerSignUp, { isLoading, data }] = useLazySignUpQuery();
+  const [ inputValues, setInputValues ] = useState<ApiTypes.Req.SignUp>(inputValuesInitialState);
+  const [ validationError, setValidationError ] = useState(validationInitialState);
   const router = useRouter();
 
   const onInputChange = (event: FormEvent<HTMLInputElement>) => {
@@ -45,7 +45,7 @@ export const SignUpForm = () => {
       setValidationError({
         field: error?.path[0] as string,
         message: error?.message
-      })
+      });
 
     } else {
       setValidationError(validationInitialState);
@@ -61,7 +61,7 @@ export const SignUpForm = () => {
       }
 
     }
-  }
+  };
 
   useEffect(() => {
     if (data?.message) {
@@ -69,7 +69,7 @@ export const SignUpForm = () => {
       toast.success(data?.message);
       setTimeout(() => {
         router.push("/auth/signin");
-      }, 2500)
+      }, 2500);
     }
   }, [data?.message]);
 

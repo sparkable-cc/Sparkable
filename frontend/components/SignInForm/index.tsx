@@ -3,9 +3,9 @@ import styles from "./index.module.scss";
 import Link from "next/link";
 import { FormInput } from "../FormInput";
 import classNames from "classnames";
-import { useLazySignInQuery } from '../../store/api';
+import { useLazySignInQuery } from "../../store/api";
 import { Spiner } from "../Spiner";
-import { signInSchema, validationInitialState } from '../../utils/validations';
+import { signInSchema, validationInitialState } from "../../utils/validations";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 
@@ -13,14 +13,14 @@ import { useRouter } from "next/router";
 const inputValuesInitialState = {
   login: "",
   password: "",
-}
+};
 
 export const SignInForm = () => {
-  const [triggerSignIn, { isLoading, data }] = useLazySignInQuery();
-  const [validationError, setValidationError] = useState(validationInitialState);
+  const [ triggerSignIn, { isLoading, data }] = useLazySignInQuery();
+  const [ validationError, setValidationError ] = useState(validationInitialState);
   const router = useRouter();
 
-  const [inputValues, setInputValues] = useState({
+  const [ inputValues, setInputValues ] = useState({
     login: "",
     password: "",
   });
@@ -49,7 +49,7 @@ export const SignInForm = () => {
       setValidationError({
         field: error?.path[0] as string,
         message: error?.message
-      })
+      });
 
     } else {
       setValidationError(validationInitialState);
@@ -57,7 +57,7 @@ export const SignInForm = () => {
       try {
         triggerSignIn({
           password: inputValues.password,
-          [inputValues.login.includes('@') ? "email" : "username"]: inputValues.login
+          [inputValues.login.includes("@") ? "email" : "username"]: inputValues.login
         }).then(res => {
           if (res?.error) {
             toast.error(res?.error?.data?.message);
@@ -68,16 +68,17 @@ export const SignInForm = () => {
       }
 
     }
-  }
+  };
 
   useEffect(() => {
     if (data) {
       setInputValues(inputValuesInitialState);
       toast.success("Authorized successfully!");
-      sessionStorage.setItem('token', JSON.stringify(data));
+      sessionStorage.setItem("token", JSON.stringify(data.access_token));
+      sessionStorage.setItem("token-expires", JSON.stringify(data.expires_in));
       setTimeout(() => {
         router.push("/");
-      }, 2500)
+      }, 2500);
     }
 
   }, [data]);

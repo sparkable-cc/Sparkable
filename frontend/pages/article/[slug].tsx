@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { ApiTypes } from "../../types";
 import { ModalShare } from "../../components/ModalShare";
 
+
 const Article: NextPage = () => {
   const [ isCopyModalVisible, setCopyModalVisible ] = useState(false);
   const [ triggerGetArticleByID, { isLoading, data }] = useLazyGetArticleByIDQuery();
