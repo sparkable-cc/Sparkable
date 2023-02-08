@@ -28,14 +28,14 @@ describe('POST /user', () => {
   });
 
   it('returns 400 when the password is less than 8 characters', async () => {
-    const req = await request(app).post('/user').send({
-      email: '',
+    const res = await request(app).post('/user').send({
+      email: 'admin@butterfy.me',
       username: 'admin',
       password: 'pass',
     });
 
-    expect(req.statusCode).toEqual(400);
-    expect(req.body.message).toEqual('Password is too short!');
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toEqual('Password is too short!');
   });
 
   it('returns 201 when the user is created', async () => {
@@ -56,12 +56,12 @@ describe('POST /user', () => {
       password: 'password',
     });
 
-    const req = await request(app).post('/user').send({
+    const res = await request(app).post('/user').send({
       email: 'admin@butterfy.me',
       username: 'admin',
       password: 'password',
     });
-    expect(req.statusCode).toEqual(403);
-    expect(req.body.message).toEqual('User exist!');
+    expect(res.statusCode).toEqual(403);
+    expect(res.body.message).toEqual('User exist!');
   });
 });

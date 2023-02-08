@@ -63,14 +63,14 @@ app.post('/user', async (req: Request, res: Response) => {
           res.status(400);
           res.send({ message: 'Bad request' });
           break;
+        case ShortPasswordException:
+          res.status(400);
+          res.send({ message: 'Password is too short!' });
+          break;
         case UsernameExistsException:
         case EmailExistsException:
           res.status(403);
           res.send({ message: 'User exist!' });
-          break;
-        case ShortPasswordException:
-          res.status(400);
-          res.send({ message: 'Password is too short!' });
           break;
         default:
           console.log(
