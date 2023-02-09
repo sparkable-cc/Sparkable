@@ -1,10 +1,25 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import styles from "./index.module.scss";
 import Link from "next/link";
 import { FormInput } from "../FormInput";
 import classNames from "classnames";
+import { useLazySignInQuery } from "../../store/api";
+import { Spiner } from "../Spiner";
+import { signInSchema, validationInitialState } from "../../utils/validations";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+
+
+const inputValuesInitialState = {
+  login: "",
+  password: "",
+};
 
 export const SignInForm = () => {
+  const [ triggerSignIn, { isLoading, data }] = useLazySignInQuery();
+  const [ validationError, setValidationError ] = useState(validationInitialState);
+  const router = useRouter();
+
   const [ inputValues, setInputValues ] = useState({
     login: "",
     password: "",
@@ -24,8 +39,52 @@ export const SignInForm = () => {
     });
   };
 
+  const onSubmit = (event) => {
+    event.preventDefault();
+    const validationResult = signInSchema.validate(inputValues);
+
+    if (validationResult.error) {
+      const error = validationResult?.error?.details[0];
+
+      setValidationError({
+        field: error?.path[0] as string,
+        message: error?.message
+      });
+
+    } else {
+      setValidationError(validationInitialState);
+
+      try {
+        triggerSignIn({
+          password: inputValues.password,
+          [inputValues.login.includes("@") ? "email" : "username"]: inputValues.login
+        }).then(res => {
+          if (res?.error) {
+            toast.error(res?.error?.data?.message);
+          }
+        });
+      } catch (error: any) {
+        toast.error(error?.message);
+      }
+
+    }
+  };
+
+  useEffect(() => {
+    if (data) {
+      setInputValues(inputValuesInitialState);
+      toast.success("Authorized successfully!");
+      sessionStorage.setItem("token", JSON.stringify(data.access_token));
+      sessionStorage.setItem("token-expires", JSON.stringify(data.expires_in));
+      setTimeout(() => {
+        router.push("/");
+      }, 2500);
+    }
+
+  }, [data]);
+
   return (
-    <form className={styles.authForm}>
+    <form className={styles.authForm} onSubmit={onSubmit}>
       <header className={styles.authHeader}>
         <h2 className={styles.authTitle}>Sign In</h2>
         <div className={styles.authNavWrapper}>
@@ -42,7 +101,7 @@ export const SignInForm = () => {
           placeholder="Your username or email"
           onChange={onInputChange}
           onClear={onInputClear}
-        // errorMessage="This email address is not valid. Please check for spelling errors and try again."
+          errorMessage={validationError.field === "login" ? validationError.message : ""}
         />
         <FormInput
           type="password"
@@ -53,15 +112,17 @@ export const SignInForm = () => {
           placeholder="Choose a secure password"
           onChange={onInputChange}
           onClear={onInputClear}
+          errorMessage={validationError.field === "password" ? validationError.message : ""}
         />
         <Link href="/auth/password-recovery" className={styles.authLink}>Forgot your password?</Link>
       </div>
       <footer className={styles.authFooter}>
         <button
-          disabled
-          className={classNames(styles.submitButton, styles.sizeXl, styles.disable)}
+          disabled={isLoading}
+          onClick={onSubmit}
+          className={classNames(styles.submitButton, styles.sizeXl)}
         >
-          Sign In
+          {isLoading ? <Spiner color="#fff" sizeWidth="25" /> : "Sign In"}
         </button>
       </footer>
     </form>

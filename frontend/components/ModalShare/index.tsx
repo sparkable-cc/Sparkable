@@ -1,5 +1,5 @@
 import { ModalLayout } from "../../layouts/ModalLayout";
-import styles from './index.module.scss';
+import styles from "./index.module.scss";
 
 interface Props {
   isVisible: boolean
@@ -13,8 +13,8 @@ export const ModalShare = ({ onCancel, isVisible, textLink }: Props) => {
     navigator.clipboard.writeText(textLink);
     setTimeout(() => {
       onCancel();
-    }, 100)
-  }
+    }, 100);
+  };
 
   return (
     <ModalLayout title="Share" onCancel={onCancel} isVisible={isVisible}>
@@ -25,6 +25,6 @@ export const ModalShare = ({ onCancel, isVisible, textLink }: Props) => {
         <button className={styles.copyButton} onClick={onCopy}>Copy</button>
       </section>
     </ModalLayout>
-  )
+  );
 
-}
+};

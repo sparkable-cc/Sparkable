@@ -29,6 +29,20 @@ export const api = createApi({
         };
       }
     }),
+    signUp: builder.query<{ message: string }, ApiTypes.Req.SignUp>({
+      query: (body) => ({
+        url: `/user`,
+        method: "POST",
+        body
+      }),
+    }),
+    signIn: builder.query<ApiTypes.Res.Token, ApiTypes.Req.SignIn>({
+      query: (body) => ({
+        url: `/signin`,
+        method: "POST",
+        body
+      }),
+    }),
   }),
 });
 
@@ -36,6 +50,8 @@ export const {
   useLazyGetArticlesQuery,
   useLazyGetArticleByIDQuery,
   useLazyGetCategoriesQuery,
+  useLazySignUpQuery,
+  useLazySignInQuery,  
 } = api;
 
 
