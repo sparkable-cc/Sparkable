@@ -53,10 +53,12 @@
 
 **Content example**
 
+Expires in 2 days
+
 ```json
 {
     "access_token": "xxxxxxxxxxx",
-    "expires_in": 86400,
+    "expires_in": "2023-02-11T09:16:35.346Z",
     "token_type": "Bearer"
 }
 ```
