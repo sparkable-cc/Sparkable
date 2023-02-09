@@ -22,7 +22,7 @@ export class AuthServiceAuth0 implements AuthService {
 
     const jsonResponse = await response.json();
     var date = new Date();
-    date.setDate(date.getDate() + 2);
+    date.setDate(date.getDate() + 1);
     jsonResponse.expires_in = date;
 
     return jsonResponse;

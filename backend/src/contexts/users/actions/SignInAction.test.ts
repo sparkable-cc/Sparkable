@@ -53,7 +53,7 @@ describe('signing in', () => {
     userRepository.storeUser(new User(email, username, password));
 
     var date = new Date();
-    date.setDate(date.getDate() + 2);
+    date.setDate(date.getDate() + 1);
     const authResponse = {
       access_token:"xxxx",
       expires_in: date,
@@ -80,7 +80,7 @@ describe('signing in', () => {
     userRepository.storeUser(new User(email, username, password));
 
     var date = new Date();
-    date.setDate(date.getDate() + 2);
+    date.setDate(date.getDate() + 1);
     const authResponse = {
       access_token:"xxxx",
       expires_in: date,
