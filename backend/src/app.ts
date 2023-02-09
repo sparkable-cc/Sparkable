@@ -18,6 +18,9 @@ import { WrongPasswordException } from './contexts/users/domain/exceptions/Wrong
 import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
 import dataSource from './data-source';
 import { AuthServiceAuth0 } from './contexts/users/infrastructure/services/AuthServiceAuth0';
+import { RecoveryPasswordAction } from './contexts/users/actions/RecoveryPasswordAction';
+import { ResetTokenRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/ResetTokenRepositoryPG';
+import { MailerServiceGD } from './contexts/users/infrastructure/services/MailerServiceGD';
 
 const app: Express = express();
 
@@ -60,14 +63,14 @@ app.post('/user', async (req: Request, res: Response) => {
           res.status(400);
           res.send({ message: 'Bad request' });
           break;
+        case ShortPasswordException:
+          res.status(400);
+          res.send({ message: 'Password is too short!' });
+          break;
         case UsernameExistsException:
         case EmailExistsException:
           res.status(403);
           res.send({ message: 'User exist!' });
-          break;
-        case ShortPasswordException:
-          res.status(400);
-          res.send({ message: 'Password is too short!' });
           break;
         default:
           console.log(
@@ -96,6 +99,38 @@ app.post('/signin', async (req: Request, res: Response) => {
         case WrongPasswordException:
           res.status(401);
           res.send({ message: 'Sign in not successful!' });
+          break;
+        default:
+          console.log(
+            'Failed to do something async with an unspecified error: ',
+            error,
+          );
+          return res.send(500);
+      }
+    });
+});
+
+app.post('/recovery-password', async (req: Request, res: Response) => {
+  const recoveryPasswordAction = new RecoveryPasswordAction(
+    new UserRepositoryPG(dataSource),
+    new ResetTokenRepositoryPG(dataSource),
+    new MailerServiceGD(),
+  );
+  recoveryPasswordAction
+    .execute(req.body.email)
+    .then(() => {
+      res.status(200);
+      res.send({ message: 'The mail was sent!' });
+    })
+    .catch((error) => {
+      switch (error.constructor) {
+        case MandatoryFieldEmptyException:
+          res.status(400);
+          res.send({ message: 'Email is mandatory!' });
+          break;
+        case UserNotFoundException:
+          res.status(200);
+          res.send({ message: 'The mail was sent!' });
           break;
         default:
           console.log(

@@ -10,7 +10,7 @@
 
 **Permissions required** : None
 
-### Success Response
+#### Success Response
 
 **Code** : `201 OK`
 
@@ -29,7 +29,7 @@
 }
 ```
 
-### Error Response
+#### Error Response
 
 **Code** : `400 BAD REQUEST`
 
@@ -47,7 +47,7 @@
 
 **Permissions required** : None
 
-### Success Response
+#### Success Response
 
 **Code** : `200 OK`
 
@@ -61,8 +61,46 @@
 }
 ```
 
-### Error Response
+#### Error Response
 
 **Code** : `401 UNAUTHORIZED`
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+
+## Recovery password
+
+**URL** : `/recovery-password`
+
+**Method** : `POST`
+
+**Data Example**:
+```json
+{
+    "email": "test@test.com"
+}
+```
+
+**Auth required** : No
+
+**Permissions required** : None
+
+#### Success Response
+
+**Code** : `200 OK`
+
+**Content example**
+
+```json
+{
+    "message": "The mail was sent!"
+}
+```
+
+#### Error Response
+
+**Code** : `400 BAD REQUEST` (Email is empty)
+
+**Code** : `200 OK` (When Email not exists in database)
 
 **Code** : `500 INTERNAL SERVER ERROR`
