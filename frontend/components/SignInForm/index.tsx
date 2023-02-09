@@ -8,7 +8,6 @@ import { Spiner } from "../Spiner";
 import { signInSchema, validationInitialState } from "../../utils/validations";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import { ApiTypes } from "../../types";
 
 
 const inputValuesInitialState = {
@@ -60,7 +59,7 @@ export const SignInForm = () => {
           password: inputValues.password,
           [inputValues.login.includes("@") ? "email" : "username"]: inputValues.login
         }).then((res: any) => {
-          if (res?.error) { 
+          if (res?.error) {
             toast.error(res?.error?.data?.message);
           }
         });
