@@ -27,7 +27,7 @@ export class RecoveryPasswordAction {
   async execute(email: string) {
     if (!email) throw new MandatoryFieldEmptyException();
 
-    const user = await this.userRepository.findUser('email', email);
+    const user = await this.userRepository.findUser({email: email});
     if (!user) throw new UserNotFoundException();
 
     const resetToken = await this.createToken(user);

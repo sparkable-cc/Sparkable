@@ -24,7 +24,7 @@ describe('Create user action', () => {
 
     await createUserAction.execute('admin@butterfy.me', username, 'password');
 
-    const user = await userRepository.findUser('username', username);
+    const user = await userRepository.findUser({ username: username });
     expect(user?.username).toEqual(username);
   });
 
@@ -69,7 +69,7 @@ describe('Create user action', () => {
 
     await createUserAction.execute('admin@butterfy.me', username, password);
 
-    const user = await userRepository.findUser('username', username);
+    const user = await userRepository.findUser({ username: username });
     expect(await bcrypt.compare(password, user?.password as string)).toBe(true);
   });
 });

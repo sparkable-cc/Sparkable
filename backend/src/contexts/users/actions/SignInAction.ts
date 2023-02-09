@@ -17,10 +17,10 @@ export class SignInAction {
     let user = null;
 
     if (username) {
-      user = await this.userRepository.findUser('username', username);
+      user = await this.userRepository.findUser({ username: username });
     }
     if (email) {
-      user = await this.userRepository.findUser('email', email);
+      user = await this.userRepository.findUser({ email: email });
     }
 
     if (!user) throw new UserNotFoundException();

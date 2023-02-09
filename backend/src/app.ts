@@ -18,7 +18,7 @@ import { WrongPasswordException } from './contexts/users/domain/exceptions/Wrong
 import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
 import dataSource from './data-source';
 import { AuthServiceAuth0 } from './contexts/users/infrastructure/services/AuthServiceAuth0';
-import { RecoveryPasswordAction } from './contexts/users/actions/RecoveryPasswordAction';
+import { RecoveryPasswordAction } from './contexts/users/actions/ResetPasswordAction';
 import { ResetTokenRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/ResetTokenRepositoryPG';
 import { MailerServiceGD } from './contexts/users/infrastructure/services/MailerServiceGD';
 
