@@ -58,7 +58,7 @@ export const SignInForm = () => {
         triggerSignIn({
           password: inputValues.password,
           [inputValues.login.includes("@") ? "email" : "username"]: inputValues.login
-        }).then(res => {
+        }).then((res: any) => {
           if (res?.error) {
             toast.error(res?.error?.data?.message);
           }

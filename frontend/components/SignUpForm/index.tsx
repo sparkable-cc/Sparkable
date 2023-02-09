@@ -51,7 +51,7 @@ export const SignUpForm = () => {
       setValidationError(validationInitialState);
 
       try {
-        triggerSignUp(inputValues).then(res => {
+        triggerSignUp(inputValues).then((res: any) => {
           if (res?.error) {
             toast.error(res?.error?.data?.message);
           }
