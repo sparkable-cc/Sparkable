@@ -5,6 +5,7 @@ import { Filters } from "../components/Filters";
 import { MobileFilters } from "../components/MobileFilters";
 import styles from "../styles/Home.module.scss";
 import { ArticlesList } from "../components/ArticlesList";
+import { SortsSelect } from '../components/SortsSelect';
 
 const HomePage: NextPage = () => {
   return (
@@ -18,6 +19,10 @@ const HomePage: NextPage = () => {
             <h2 className={styles.exploreTitle}>
               <span>Explore</span> what others have submitted
             </h2>
+          </div>
+          <div className={styles.sortsWrapper}>
+            <span className=""></span>
+            <SortsSelect />
           </div>
           <MobileFilters />
           <ArticlesList />

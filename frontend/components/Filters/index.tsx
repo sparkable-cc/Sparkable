@@ -35,11 +35,6 @@ export const Filters = () => {
 
   return (
     <aside className={styles.filtersSidebar}>
-      <span>{articles?.data?.total || 0} Links</span>
-      <section className={classNames(styles.filtersSection, styles.disable)}>
-        <h4 className={styles.filtersTitle}>Sort by</h4>
-        <button className={classNames(styles.filterButton, styles.disable)}>Random</button>
-      </section>
       <section className={styles.filtersSection}>
         <h4 className={styles.filtersTitle}>Filter by category</h4>
         {
@@ -57,6 +52,7 @@ export const Filters = () => {
             </button>
           ))
         }
+        {/* <button className={styles.applyButton}>Apply</button> */}
       </section>
       <div className={styles.textWrapper}>
         <p className={styles.text}>
