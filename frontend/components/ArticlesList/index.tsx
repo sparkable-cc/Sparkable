@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { ArticleItem } from "../ArticleItem";
 import { v4 as uuidv4 } from "uuid";
-import { Spiner } from "../Spiner";
+import { Spiner } from "../Spiner"; 
 import classNames from "classnames";
 import styles from "./index.module.scss";
 import { useLazyGetArticlesQuery } from "../../store/api";
-import { selectSelectedFilters } from "../../store/UIslice";
+import { selectSelectedFilters, selectCurrentSort } from "../../store/UIslice";
 import { useAppSelector, usePrevious } from "../../store/hooks";
 import isEqual from "lodash.isequal";
 
@@ -16,6 +16,7 @@ interface Props {
 export const ArticlesList = ({ isPreviewPage }: Props) => {
   const [ triggerGetArticles, { isLoading, data }] = useLazyGetArticlesQuery();
   const selectedFilters = useAppSelector(selectSelectedFilters);
+  const currentSort = useAppSelector(selectCurrentSort);
   const previousSelectedFilters = usePrevious(selectedFilters);
 
   useEffect(() => {
@@ -27,7 +28,7 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
       const params = selectedFilters?.length ? selectedFilters : undefined;
       triggerGetArticles({ categories: params });
     }
-  }, [selectedFilters]);
+  }, [selectedFilters, currentSort]);
 
   return (
     <>
@@ -40,7 +41,11 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
       </section>
       {isLoading && <Spiner wrapperClassName={styles.spinnerWrapper} />}
       <div className={styles.loadMoreWrapper}>
-        <button className={classNames(styles.loadMoreButton, styles.disable)}>Load more</button>
+        {
+          currentSort.value === "random" ? 
+          <button className={classNames(styles.reshuffleButton, styles.disable)}>Reshuffle</button> :
+          <button className={classNames(styles.loadMoreButton, styles.disable)}>Load more</button>
+        }
       </div>
     </>
   );

@@ -2,18 +2,35 @@ import { useState } from 'react';
 import styles from './index.module.scss';
 import classNames from 'classnames';
 import { v4 as uuidv4 } from "uuid";
+import { UITypes } from '../../types'
+import { setSort, selectCurrentSort } from "../../store/UIslice";
+import { useAppSelector, useAppDispatch } from "../../store/hooks";
 
-const options = [
-  "Random",
-  "Newest First"
+// TO-DO: 
+// call to API after sort apply button was clicked
+
+// articles list:
+// call to API reshuffle
+// load more functionallity
+
+const options: UITypes.Option[] = [
+  {
+    label: "Random",
+    value: "random",
+  },
+  {
+    label: "Newest First",
+    value: "newest-first",
+  },
 ];
 
 export const SortsSelect = () => {
   const [isOpen, setOpen] = useState(false);
-  const [currentOption, setCurrentOption] = useState("Random")
+  const dispatch = useAppDispatch();
+  const currentSort = useAppSelector(selectCurrentSort);
 
-  const onOptionClick = (value: string) => {
-    setCurrentOption(value);
+  const onOptionClick = (option: UITypes.Option) => {
+    dispatch(setSort(option));
     setOpen(false);
   }
 
@@ -21,14 +38,14 @@ export const SortsSelect = () => {
     <section className={styles.sortWrapper}>
       <div className={classNames(styles.selectWrapper, { [styles.open]: isOpen })} >
         <div className={styles.currentOption} onClick={() => setOpen(!isOpen)}>
-          {currentOption}
+          {currentSort.label}
         </div>
         {isOpen &&
           <ul className={styles.optionsList}>
             {
-              options?.filter(item => item !== currentOption).map(item =>
+              options?.filter(item => item.value !== currentSort.value).map(item =>
                 <li key={uuidv4()} className={styles.option} onClick={() => onOptionClick(item)}>
-                  {item}
+                  {item.label}
                 </li>
               )
             }
@@ -37,6 +54,5 @@ export const SortsSelect = () => {
       </div>
       <button className={styles.applyButton}></button>
     </section>
-
   )
 }
