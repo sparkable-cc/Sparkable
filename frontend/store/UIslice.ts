@@ -5,13 +5,13 @@ import { UITypes } from "../types";
 export interface UIState {
   isMenuVisible: boolean;
   selectedFilters: string[]
-  currentSort: UITypes.Option
+  sort: UITypes.Option
 }
 
 const initialState: UIState = {
   isMenuVisible: false,
   selectedFilters: [],
-  currentSort: {
+  sort: {
     value: "random",
     label: "Random"
   }
@@ -35,7 +35,7 @@ export const UISlice = createSlice({
       state.selectedFilters = [];
     },
     setSort: (state, action: PayloadAction<UITypes.Option>) => {
-      state.currentSort = action.payload;
+      state.sort = action.payload;
     },
   },
 });
@@ -49,6 +49,6 @@ export const {
 
 export const selectIsMenuVisible = (state: RootState) => state.UI.isMenuVisible;
 export const selectSelectedFilters = (state: RootState) => state.UI.selectedFilters;
-export const selectCurrentSort = (state: RootState) => state.UI.currentSort;
+export const selectSort = (state: RootState) => state.UI.sort;
 
 export default UISlice.reducer;

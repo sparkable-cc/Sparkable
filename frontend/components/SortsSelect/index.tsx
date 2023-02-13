@@ -3,15 +3,15 @@ import styles from './index.module.scss';
 import classNames from 'classnames';
 import { v4 as uuidv4 } from "uuid";
 import { UITypes } from '../../types'
-import { setSort, selectCurrentSort } from "../../store/UIslice";
+import { setSort, selectSort } from "../../store/UIslice";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import isEqual from "lodash.isequal";
 
 // TO-DO: 
-// call to API after sort apply button was clicked
-
 // articles list:
-// call to API reshuffle
 // load more functionallity
+
+// sorts mobile view
 
 const options: UITypes.Option[] = [
   {
@@ -26,12 +26,17 @@ const options: UITypes.Option[] = [
 
 export const SortsSelect = () => {
   const [isOpen, setOpen] = useState(false);
+  const sort = useAppSelector(selectSort);
+  const [currentSort, setCurrentSort] = useState(sort);
   const dispatch = useAppDispatch();
-  const currentSort = useAppSelector(selectCurrentSort);
 
   const onOptionClick = (option: UITypes.Option) => {
-    dispatch(setSort(option));
+    setCurrentSort(option)
     setOpen(false);
+  }
+
+  const onApply = () => {
+    dispatch(setSort(currentSort));
   }
 
   return (
@@ -52,7 +57,10 @@ export const SortsSelect = () => {
           </ul>
         }
       </div>
-      <button className={styles.applyButton}></button>
+      {
+        !isEqual(sort, currentSort) &&
+        <button className={styles.applyButton} onClick={onApply} />
+      }
     </section>
   )
 }

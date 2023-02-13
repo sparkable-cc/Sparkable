@@ -1,8 +1,12 @@
 /* eslint-disable */
 
 export declare namespace UITypes {
-  interface Option {
-    value: string,
-    label: string
+  type Option = {
+    label: "Random",
+    value: "random",
+  } |
+  {
+    label: "Newest First",
+    value: "newest-first",
   }
 }

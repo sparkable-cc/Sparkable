@@ -5,7 +5,7 @@ import { Spiner } from "../Spiner";
 import classNames from "classnames";
 import styles from "./index.module.scss";
 import { useLazyGetArticlesQuery } from "../../store/api";
-import { selectSelectedFilters, selectCurrentSort } from "../../store/UIslice";
+import { selectSelectedFilters, selectSort } from "../../store/UIslice";
 import { useAppSelector, usePrevious } from "../../store/hooks";
 import isEqual from "lodash.isequal";
 
@@ -16,8 +16,24 @@ interface Props {
 export const ArticlesList = ({ isPreviewPage }: Props) => {
   const [ triggerGetArticles, { isLoading, data }] = useLazyGetArticlesQuery();
   const selectedFilters = useAppSelector(selectSelectedFilters);
-  const currentSort = useAppSelector(selectCurrentSort);
   const previousSelectedFilters = usePrevious(selectedFilters);
+  const sort = useAppSelector(selectSort);
+  const previousSort = usePrevious(sort);
+
+  const onGetArticles = () => {
+    const params = selectedFilters?.length ? selectedFilters : undefined;
+    const sorts = sort.value === "newest-first" ? "-date" : "";
+
+    let data = { 
+      categories: params
+    }
+
+    if(sorts){
+      data = {...data, ...{sort: sorts}}
+    }
+
+    triggerGetArticles(data);
+  }
 
   useEffect(() => {
     triggerGetArticles({});
@@ -25,10 +41,12 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
 
   useEffect(() => {
     if (!isEqual(selectedFilters, previousSelectedFilters)) {
-      const params = selectedFilters?.length ? selectedFilters : undefined;
-      triggerGetArticles({ categories: params });
+      onGetArticles();
     }
-  }, [selectedFilters, currentSort]);
+    if(previousSort && !isEqual(sort, previousSort)){
+      onGetArticles();
+    }
+  }, [selectedFilters, sort]);
 
   return (
     <>
@@ -42,8 +60,14 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
       {isLoading && <Spiner wrapperClassName={styles.spinnerWrapper} />}
       <div className={styles.loadMoreWrapper}>
         {
-          currentSort.value === "random" ? 
-          <button className={classNames(styles.reshuffleButton, styles.disable)}>Reshuffle</button> :
+          sort.value === "random" ? 
+          <button 
+            disabled={isLoading} 
+            className={classNames(styles.reshuffleButton)}
+            onClick={onGetArticles}
+            >
+              Reshuffle
+            </button> :
           <button className={classNames(styles.loadMoreButton, styles.disable)}>Load more</button>
         }
       </div>
