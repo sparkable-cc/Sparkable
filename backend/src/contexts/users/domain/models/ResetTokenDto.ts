@@ -1,5 +1,5 @@
 export interface ResetTokenDto {
-  userId: number;
+  userUuid: string;
   token: string;
   createdAt: Date;
 }

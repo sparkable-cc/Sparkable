@@ -11,7 +11,7 @@ export class User {
   private password: string;
   private uuid: string;
 
-  constructor(email: string, username: string, password: string) {
+  constructor(email: string, username: string, password: string, uuid:string = uuidv4()) {
     if (!email || !username || !password) {
       throw new MandatoryFieldEmptyException();
     }
@@ -19,7 +19,7 @@ export class User {
     this.setPassword(password);
     this.email = email;
     this.username = username;
-    this.uuid = uuidv4();
+    this.uuid = uuid;
   }
 
   public setPassword(password:string) {
@@ -43,7 +43,7 @@ export class User {
   }
 
   public static factory(userDto: UserDto): User {
-    return new User(userDto.email, userDto.username, userDto.password);
+    return new User(userDto.email, userDto.username, userDto.password, userDto.uuid);
   }
 
   public toDto(): UserDto {

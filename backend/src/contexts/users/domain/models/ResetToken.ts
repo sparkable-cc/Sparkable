@@ -1,22 +1,22 @@
 import { ResetTokenDto } from "./ResetTokenDto";
 
 export class ResetToken {
-  private userId: number;
+  private userUuid: string;
   private token: string;
   private createdAt: Date;
 
-  constructor(userId: number, token:string) {
-    this.userId = userId;
+  constructor(userUuid: string, token:string, createdAt:Date = new Date()) {
+    this.userUuid = userUuid;
     this.token = token;
-    this.createdAt = new Date();
+    this.createdAt = createdAt;
   }
 
   public get getToken(): string {
     return this.token;
   }
 
-  public get getUserId(): number {
-    return this.userId;
+  public get getUserUUID(): string {
+    return this.userUuid;
   }
 
   public get getCreatedAt(): Date {
@@ -25,7 +25,7 @@ export class ResetToken {
 
   public toDto(): ResetTokenDto {
     return {
-      userId: this.userId,
+      userUuid: this.userUuid,
       token: this.token,
       createdAt: this.createdAt
     }

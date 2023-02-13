@@ -54,7 +54,7 @@ describe('Recovery password action', () => {
     await recoveryPasswordAction.execute(email);
 
     expect(resetTokenRepository.all().length).toEqual(1);
-    expect(resetTokenRepository.all()[0].getToken).not.toBeNull();
+    expect(resetTokenRepository.all()[0].token).not.toBeNull();
     expect(mailServiceMock.sendEmail).toHaveBeenCalled();
   });
 

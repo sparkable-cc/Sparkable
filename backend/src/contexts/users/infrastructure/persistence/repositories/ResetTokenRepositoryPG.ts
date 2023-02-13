@@ -10,9 +10,9 @@ export class ResetTokenRepositoryPG implements ResetTokenRepository {
       this.resetTokenRepository = dataSource.getRepository(ResetTokenEntity);
   }
 
-  async save(resetToken: ResetToken) {
+  async saveToken(resetToken: ResetToken) {
     const resetTokenInDatabase = await this.resetTokenRepository.findOneBy(
-      { userId: resetToken.getUserId }
+      { userId: resetToken.getUserUUID }
     );
 
     if (resetTokenInDatabase) {

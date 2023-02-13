@@ -1,4 +1,6 @@
 import { MandatoryFieldEmptyException } from "../domain/exceptions/MandatoryFieldEmptyException";
+import { TokenIsExpiredException } from "../domain/exceptions/TokenIsExpiredException";
+import { TokenNotFoundException } from "../domain/exceptions/TokenNotFoundException";
 import { UserNotFoundException } from "../domain/exceptions/UserNotFoundException";
 import { User } from "../domain/models/User";
 import { ResetTokenRepository } from "../domain/repositories/ResetTokenRepository";
@@ -19,26 +21,23 @@ export class ResetPasswordAction {
   //  this.mailerService = mailerService;
   }
 
-  async execute(uuid:string, token: string, password:string) {
-    if (!uuid || !token || !password) throw new MandatoryFieldEmptyException();
+  async execute(userUuid:string, token: string, password:string) {
+    if (!userUuid || !token || !password) throw new MandatoryFieldEmptyException();
 
-    const userDto = await this.userRepository.findUser({uuid: uuid});
+    const userDto = await this.userRepository.findUser({uuid: userUuid});
     if (!userDto) throw new UserNotFoundException();
 
     const user = User.factory(userDto);
     user.setPassword(password);
 
-  //   const resetToken = await this.createToken(user);
-  //   await this.sendEmail(resetToken, user);
-  // }
+    const resetToken = await this.resetTokenRepository.findToken({userUuid: userUuid});
+    if (!resetToken) throw new TokenNotFoundException();
 
-  // private async createToken(user:UserDto): Promise<string> {
-  //   const resetToken = crypto.randomBytes(32).toString("hex");
-  //   dotenv.config();
-  //   const hash = await bcrypt.hash(resetToken, Number(process.env.SALT));
-  //   await this.resetTokenRepository.save(new ResetToken(user.id, hash));
+    const date = new Date();
+    date.setDate(date.getDate() - 1);
+    if (date > resetToken.createdAt) throw new TokenIsExpiredException;
 
-  //   return resetToken;
+    await this.userRepository.storeUser(user);
   }
 
 }
