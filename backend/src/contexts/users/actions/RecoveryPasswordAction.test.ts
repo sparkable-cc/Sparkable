@@ -44,7 +44,7 @@ describe('Recovery password action', () => {
 
   test('Send email with temporary link when user exist', async () => {
     const email = 'user@email.com';
-    userRepository.storeUser(new User(email, 'user', 'password'));
+    await userRepository.storeUser(new User(email, 'user', 'password'));
     const recoveryPasswordAction = new RecoveryPasswordAction(
       userRepository,
       resetTokenRepository,

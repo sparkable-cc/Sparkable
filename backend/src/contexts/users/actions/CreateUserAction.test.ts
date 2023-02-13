@@ -31,7 +31,7 @@ describe('Create user action', () => {
   test('cant create user because the username exists', async () => {
     const userRepository = new UserRepositoryInMemory();
     const username = 'admin';
-    userRepository.storeUser(
+    await userRepository.storeUser(
       new User('admin@butterfy.me', username, 'password'),
     );
     const createUserAction = new CreateUserAction(userRepository);
@@ -44,7 +44,7 @@ describe('Create user action', () => {
   test('cant create user because the email is already registered', async () => {
     const userRepository = new UserRepositoryInMemory();
     const email = 'admin@butterfy.me';
-    userRepository.storeUser(new User(email, 'admin', 'password'));
+    await userRepository.storeUser(new User(email, 'admin', 'password'));
     const createUserAction = new CreateUserAction(userRepository);
 
     await expect(
