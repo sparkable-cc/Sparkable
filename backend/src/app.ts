@@ -162,6 +162,10 @@ app.post('/reset-password', async (req: Request, res: Response) => {
           res.status(400);
           res.send({ message: 'Bad request' });
           break;
+        case ShortPasswordException:
+          res.status(400);
+          res.send({ message: 'Password is too short!' });
+          break;
         case UserNotFoundException:
         case TokenNotFoundException:
           res.status(404);

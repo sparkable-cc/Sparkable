@@ -88,6 +88,31 @@ describe('POST /reset-password', () => {
     expect(res.statusCode).toEqual(401);
   });
 
+  it('returns 400 when the password is too short', async () => {
+    const userRepository = new UserRepositoryPG(dataSource);
+    const username = 'username';
+    const user = new User(
+      'email@email.com',
+      username,
+      'password',
+      'xxxxx'
+    );
+    await userRepository.storeUser(user);
+
+    const resetTokenRepository = new ResetTokenRepositoryPG(dataSource);
+    const token = 'XXXXXXX';
+    const resetToken = new ResetToken(user.getUuid, token);
+    await resetTokenRepository.saveToken(resetToken);
+
+    const res = await request(app).post('/reset-password').send({
+      userUuid: user.getUuid,
+      token: token,
+      password: '1234'
+    });
+
+    expect(res.statusCode).toEqual(400);
+  });
+
   it('returns 200 when the password is reset', async () => {
     const userRepository = new UserRepositoryPG(dataSource);
     const username = 'username';

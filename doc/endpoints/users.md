@@ -141,7 +141,7 @@ Expires in 1 days
 
 #### Error Response
 
-**Code** : `400 BAD REQUEST` (Mandatory fields are no filled)
+**Code** : `400 BAD REQUEST` (Mandatory fields are no filled or Password is too short)
 
 **Code** : `401 UNAUTHORIZED` (Token is expired)
 
