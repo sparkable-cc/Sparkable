@@ -79,7 +79,7 @@ describe('POST /recovery-password', () => {
 
     const total = result[1];
     expect(total).toEqual(1);
-    expect(oldToken.userId).toEqual(newToken.userId);
+    expect(oldToken.userUuid).toEqual(newToken.userUuid);
     expect(oldToken.token).not.toEqual(newToken.token);
     expect(oldToken.createdAt).not.toEqual(newToken.createdAt);
   });

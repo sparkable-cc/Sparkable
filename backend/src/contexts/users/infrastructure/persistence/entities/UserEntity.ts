@@ -3,15 +3,18 @@ import { UserDto } from "../../../domain/models/UserDto";
 
 @Entity('users')
 export class UserEntity implements UserDto {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    email: string;
+  @Column()
+  email: string;
 
-    @Column()
-    username: string;
+  @Column()
+  username: string;
 
-    @Column()
-    password: string;
+  @Column()
+  password: string;
+
+  @Column({nullable: true})
+  uuid: string;
 }

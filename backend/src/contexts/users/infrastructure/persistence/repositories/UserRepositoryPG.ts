@@ -5,19 +5,30 @@ import { DataSource } from 'typeorm';
 import { User } from '../../../domain/models/User';
 
 export class UserRepositoryPG implements UserRepository {
-    private userRepository;
+  private userRepository;
 
-    constructor(dataSource: DataSource) {
-        this.userRepository = dataSource.getRepository(UserEntity);
+  constructor(dataSource: DataSource) {
+    this.userRepository = dataSource.getRepository(UserEntity);
+  }
+
+  async storeUser(user:User) {
+    const userExist = await this.findUser({uuid: user.getUuid});
+
+    if (userExist) {
+      await this.userRepository.update(userExist.id, user.toDto());
+    } else  {
+      await this.userRepository.save(user.toDto());
     }
+  }
 
-    storeUser(user:User) {
-        this.userRepository.save(user.toDto());
-    }
+  async findUser(options:Object):Promise<UserDto | null> {
+    const keys = Object.keys(options);
+    type ObjectKey = keyof typeof options;
+    const property = keys[0] as ObjectKey;
 
-    async findUser(field:string, value:string):Promise<UserDto | null> {
-        return await this.userRepository.findOne({
-            where:{ [field]: value }
-        });
-   }
+    return await this.userRepository.findOne({
+        where:{ [property]: options[property] }
+    });
+  }
+
 }

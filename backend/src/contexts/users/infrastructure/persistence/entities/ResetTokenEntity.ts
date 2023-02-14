@@ -3,15 +3,15 @@ import { ResetTokenDto } from "../../../domain/models/ResetTokenDto";
 
 @Entity('tokens')
 export class ResetTokenEntity implements ResetTokenDto {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    userId: number;
+  @Column({nullable: true})
+  userUuid: string;
 
-    @Column()
-    token: string;
+  @Column()
+  token: string;
 
-    @Column()
-    createdAt: Date;
+  @Column()
+  createdAt: Date;
 }

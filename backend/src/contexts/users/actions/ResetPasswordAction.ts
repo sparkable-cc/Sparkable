@@ -9,16 +9,13 @@ import { UserRepository } from "../domain/repositories/UserRepository";
 export class ResetPasswordAction {
   private userRepository: UserRepository;
   private resetTokenRepository: ResetTokenRepository;
-  // private mailerService: MailerService;
 
   constructor(
     userRepository: UserRepository,
     resetTokenReposity: ResetTokenRepository,
-  //  mailerService: MailerService
   ) {
     this.userRepository = userRepository;
     this.resetTokenRepository = resetTokenReposity;
-  //  this.mailerService = mailerService;
   }
 
   async execute(userUuid:string, token: string, password:string) {

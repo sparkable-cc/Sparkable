@@ -18,9 +18,12 @@ import { WrongPasswordException } from './contexts/users/domain/exceptions/Wrong
 import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
 import dataSource from './data-source';
 import { AuthServiceAuth0 } from './contexts/users/infrastructure/services/AuthServiceAuth0';
-import { RecoveryPasswordAction } from './contexts/users/actions/ResetPasswordAction';
+import { ResetPasswordAction } from './contexts/users/actions/ResetPasswordAction';
 import { ResetTokenRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/ResetTokenRepositoryPG';
 import { MailerServiceGD } from './contexts/users/infrastructure/services/MailerServiceGD';
+import { RecoveryPasswordAction } from './contexts/users/actions/RecoveryPasswordAction';
+import { TokenNotFoundException } from './contexts/users/domain/exceptions/TokenNotFoundException';
+import { TokenIsExpiredException } from './contexts/users/domain/exceptions/TokenIsExpiredException';
 
 const app: Express = express();
 
@@ -122,7 +125,7 @@ app.post('/recovery-password', async (req: Request, res: Response) => {
       res.status(200);
       res.send({ message: 'The mail was sent!' });
     })
-    .catch((error) => {
+    .catch((error: { constructor: any; }) => {
       switch (error.constructor) {
         case MandatoryFieldEmptyException:
           res.status(400);
@@ -131,6 +134,42 @@ app.post('/recovery-password', async (req: Request, res: Response) => {
         case UserNotFoundException:
           res.status(200);
           res.send({ message: 'The mail was sent!' });
+          break;
+        default:
+          console.log(
+            'Failed to do something async with an unspecified error: ',
+            error,
+          );
+          return res.send(500);
+      }
+    });
+});
+
+app.post('/reset-password', async (req: Request, res: Response) => {
+  const resetPasswordAction = new ResetPasswordAction(
+    new UserRepositoryPG(dataSource),
+    new ResetTokenRepositoryPG(dataSource)
+  );
+  resetPasswordAction
+    .execute(req.body.userUuid, req.body.token, req.body.password)
+    .then(() => {
+      res.status(200);
+      res.send({ message: 'Password reset!' });
+    })
+    .catch((error) => {
+      switch (error.constructor) {
+        case MandatoryFieldEmptyException:
+          res.status(400);
+          res.send({ message: 'Bad request' });
+          break;
+        case UserNotFoundException:
+        case TokenNotFoundException:
+          res.status(404);
+          res.send({ message: 'Resource not found!' });
+          break;
+        case TokenIsExpiredException:
+          res.status(401);
+          res.send({ message: 'Token is expired!' });
           break;
         default:
           console.log(
