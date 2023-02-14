@@ -27,7 +27,7 @@ export class RecoveryPasswordAction {
   async execute(email: string) {
     if (!email) throw new MandatoryFieldEmptyException();
 
-    const user = await this.userRepository.findUser('email', email);
+    const user = await this.userRepository.findUser({email: email});
     if (!user) throw new UserNotFoundException();
 
     const resetToken = await this.createToken(user);
@@ -38,13 +38,13 @@ export class RecoveryPasswordAction {
     const resetToken = crypto.randomBytes(32).toString("hex");
     dotenv.config();
     const hash = await bcrypt.hash(resetToken, Number(process.env.SALT));
-    await this.resetTokenRepository.save(new ResetToken(user.id, hash));
+    await this.resetTokenRepository.saveToken(new ResetToken(user.uuid, hash));
 
     return resetToken;
   }
 
   private async sendEmail(resetToken:string, user: UserDto) {
-    const link = `${process.env.CLIENT}/passwordReset?token=${resetToken}&userId=${user.id}`;
+    const link = `${process.env.CLIENT}/passwordReset?token=${resetToken}&userUuid=${user.uuid}`;
 
     const mailOptions = {
       from: 'noreply@butterfy.me',

@@ -37,7 +37,7 @@ describe('signing in', () => {
     const username = 'username';
     const email = 'email';
     const password = 'password';
-    userRepository.storeUser(new User(email, username, password));
+    await userRepository.storeUser(new User(email, username, password));
     const signInAction = new SignInAction(userRepository, authServiceMock);
 
     await expect(
@@ -50,7 +50,7 @@ describe('signing in', () => {
     const username = 'username';
     const email = 'email';
     const password = 'password';
-    userRepository.storeUser(new User(email, username, password));
+    await userRepository.storeUser(new User(email, username, password));
 
     var date = new Date();
     date.setDate(date.getDate() + 1);
@@ -77,7 +77,7 @@ describe('signing in', () => {
     const username = 'username';
     const email = 'email';
     const password = 'password';
-    userRepository.storeUser(new User(email, username, password));
+    await userRepository.storeUser(new User(email, username, password));
 
     var date = new Date();
     date.setDate(date.getDate() + 1);

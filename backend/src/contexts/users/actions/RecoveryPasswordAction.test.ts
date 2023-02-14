@@ -3,9 +3,9 @@ import { User } from "../domain/models/User";
 import { MailerService } from "../domain/services/MailerService";
 import { ResetTokenRepositoryInMemory } from "../infrastructure/persistence/repositories/ResetTokenRepositoryInMemory";
 import { UserRepositoryInMemory } from "../infrastructure/persistence/repositories/UserRepositoryInMemory";
-import { RecoveryPasswordAction } from "./RecoveryPasswordAction";
 import { MockProxy, mock } from 'jest-mock-extended';
 import { MandatoryFieldEmptyException } from "../domain/exceptions/MandatoryFieldEmptyException";
+import { RecoveryPasswordAction } from "./RecoveryPasswordAction";
 
 describe('Recovery password action', () => {
   let userRepository: UserRepositoryInMemory;
@@ -44,7 +44,7 @@ describe('Recovery password action', () => {
 
   test('Send email with temporary link when user exist', async () => {
     const email = 'user@email.com';
-    userRepository.storeUser(new User(email, 'user', 'password'));
+    await userRepository.storeUser(new User(email, 'user', 'password'));
     const recoveryPasswordAction = new RecoveryPasswordAction(
       userRepository,
       resetTokenRepository,
@@ -54,7 +54,7 @@ describe('Recovery password action', () => {
     await recoveryPasswordAction.execute(email);
 
     expect(resetTokenRepository.all().length).toEqual(1);
-    expect(resetTokenRepository.all()[0].getToken).not.toBeNull();
+    expect(resetTokenRepository.all()[0].token).not.toBeNull();
     expect(mailServiceMock.sendEmail).toHaveBeenCalled();
   });
 

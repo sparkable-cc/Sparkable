@@ -106,3 +106,47 @@ Expires in 1 days
 **Code** : `200 OK` (When Email not exists in database)
 
 **Code** : `500 INTERNAL SERVER ERROR`
+
+
+## Reset password
+
+**URL** : `/reset-password`
+
+**Method** : `POST`
+
+**Data Example**:
+```json
+{
+  "userUuid": "xxxxxx",
+  "token": "xxxxxx",
+  "password": "newpassword"
+}
+```
+
+**Auth required** : No
+
+**Permissions required** : None
+
+#### Success Response
+
+**Code** : `200 OK`
+
+**Content example**
+
+```json
+{
+    "message": "Password reset!"
+}
+```
+
+#### Error Response
+
+**Code** : `400 BAD REQUEST` (Mandatory fields are no filled or Password is too short)
+
+**Code** : `401 UNAUTHORIZED` (Token is expired)
+
+**Code** : `404 RESOURCE NOT FOUND` (User or Token not found)
+
+**Code** : `200 OK` (Password reset)
+
+**Code** : `500 INTERNAL SERVER ERROR`

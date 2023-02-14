@@ -1,5 +1,7 @@
 import { ResetToken } from '../models/ResetToken'
+import { ResetTokenDto } from '../models/ResetTokenDto'
 
 export interface ResetTokenRepository {
-    save: (resetToken:ResetToken) => void
+    saveToken: (resetToken:ResetToken) => void,
+    findToken: (options:Object) => Promise<ResetTokenDto | null>
 }
