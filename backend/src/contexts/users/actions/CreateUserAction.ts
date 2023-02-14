@@ -16,7 +16,7 @@ export class CreateUserAction {
     await this.checkUsernameIsNotUsed(username);
     await this.checkEmailIsNotUsed(email);
 
-    this.userRepository.storeUser(user);
+    await this.userRepository.storeUser(user);
   }
 
   private async checkUsernameIsNotUsed(username: string) {
