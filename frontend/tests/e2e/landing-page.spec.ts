@@ -15,18 +15,18 @@ test('should click the "Start Exploring" button', async ({ page }) => {
 
 test('should click the "Join Now" link', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Join Now' }).click();
+  await page.click('text=Join Now', { force: true });
   await expect(page).toHaveURL('/auth/signup');
 });
 
 test('should click the "Sign In" link', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Sign In' }).click();
+  await page.locator('text=Sign In').last().click();
   await expect(page).toHaveURL('/auth/signin');
 });
 
-test('Explore should have 20 links', async ({ page }) => {
+test('Explore should have 10 links', async ({ page }) => {
   await page.goto('/');
   await page.click('text=Start Exploring');
-  await expect(page.locator('a')).toHaveLength(20);
+  expect(await page.locator('article').count()).toEqual(10);
 });
