@@ -45,7 +45,7 @@ export const MobileFilters = () => {
     <>
       <aside className={styles.mobileFiltersWrapper}>
         <div className={styles.buttonsWrapper}>
-          <SortsSelect isForcedMobile/>
+          <SortsSelect isForcedMobile />
           <button
             onClick={() => setModalOpen(true)}
             className={styles.buttonWhite}

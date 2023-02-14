@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import styles from './index.module.scss';
-import classNames from 'classnames';
+import { useState } from "react";
+import styles from "./index.module.scss";
+import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
-import { UITypes } from '../../types'
+import { UITypes } from "../../types";
 import { setSort, selectSort } from "../../store/UIslice";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import isEqual from "lodash.isequal";
@@ -23,22 +23,22 @@ interface Props {
 }
 
 export const SortsSelect = ({ isForcedMobile }: Props) => {
-  const [isOpen, setOpen] = useState(false);
+  const [ isOpen, setOpen ] = useState(false);
   const sort = useAppSelector(selectSort);
-  const [currentSort, setCurrentSort] = useState(sort);
+  const [ currentSort, setCurrentSort ] = useState(sort);
   const dispatch = useAppDispatch();
 
   const onOptionClick = (option: UITypes.Option) => {
-    setCurrentSort(option)
+    setCurrentSort(option);
     setOpen(false);
-  }
+  };
 
   const onApply = () => {
     dispatch(setSort(currentSort));
-  }
+  };
 
   return (
-    <section className={classNames(styles.sortWrapper, {[styles.forcedMobile]: isForcedMobile})}>
+    <section className={classNames(styles.sortWrapper, { [styles.forcedMobile]: isForcedMobile })}>
       <div className={classNames(styles.selectWrapper, { [styles.open]: isOpen })} >
         <div className={styles.currentOption} onClick={() => setOpen(!isOpen)}>
           {currentSort.label}
@@ -60,5 +60,5 @@ export const SortsSelect = ({ isForcedMobile }: Props) => {
         <button className={styles.applyButton} onClick={onApply} />
       }
     </section>
-  )
-}
+  );
+};
