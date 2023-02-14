@@ -22,6 +22,7 @@ export declare namespace ApiTypes.Req {
   interface LinksQueryParams {
     sort?: "-date",
     categories?: string[]
+    page?: number
   }
 
   interface SignUp {
