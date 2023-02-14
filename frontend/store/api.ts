@@ -9,10 +9,10 @@ export const api = createApi({
   endpoints: (builder) => ({
     getArticles: builder.query<ApiTypes.Res.Links, ApiTypes.Req.LinksQueryParams>({
       query: (args) => {
-        const { sort, categories } = args;
+        const { sort, categories, page } = args;
         return {
           url: `/links`,
-          params: { sort, categories },
+          params: { sort, categories, page },
         };
       }
     }),

@@ -37,6 +37,17 @@
   }
 }
 
+.reshuffleButton {
+  @extend .buttonPrimary;
+
+  &:before {
+    margin-right: 10px;
+    position: relative;
+    top: 2px;
+    content: url("../../public/svg/sort-apply.svg");
+  }
+}
+
 .spinnerWrapper {
   padding-top: $gapS;
 }
