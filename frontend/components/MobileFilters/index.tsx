@@ -6,6 +6,7 @@ import { setFilter, resetFilter, selectSelectedFilters } from "../../store/UIsli
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { v4 as uuidv4 } from "uuid";
 import { CSSTransition } from "react-transition-group";
+import { SortsSelect } from "../SortsSelect";
 
 export const MobileFilters = () => {
   const [ isModalOpen, setModalOpen ] = useState(false);
@@ -44,9 +45,7 @@ export const MobileFilters = () => {
     <>
       <aside className={styles.mobileFiltersWrapper}>
         <div className={styles.buttonsWrapper}>
-          <button className={classNames(styles.buttonWhite, styles.disable)}>
-            Newest First
-          </button>
+          <SortsSelect isForcedMobile/>
           <button
             onClick={() => setModalOpen(true)}
             className={styles.buttonWhite}

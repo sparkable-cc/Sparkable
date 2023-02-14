@@ -7,12 +7,6 @@ import { setSort, selectSort } from "../../store/UIslice";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import isEqual from "lodash.isequal";
 
-// TO-DO: 
-// articles list:
-// load more functionallity
-
-// sorts mobile view
-
 const options: UITypes.Option[] = [
   {
     label: "Random",
@@ -24,7 +18,11 @@ const options: UITypes.Option[] = [
   },
 ];
 
-export const SortsSelect = () => {
+interface Props {
+  isForcedMobile?: boolean
+}
+
+export const SortsSelect = ({ isForcedMobile }: Props) => {
   const [isOpen, setOpen] = useState(false);
   const sort = useAppSelector(selectSort);
   const [currentSort, setCurrentSort] = useState(sort);
@@ -40,7 +38,7 @@ export const SortsSelect = () => {
   }
 
   return (
-    <section className={styles.sortWrapper}>
+    <section className={classNames(styles.sortWrapper, {[styles.forcedMobile]: isForcedMobile})}>
       <div className={classNames(styles.selectWrapper, { [styles.open]: isOpen })} >
         <div className={styles.currentOption} onClick={() => setOpen(!isOpen)}>
           {currentSort.label}

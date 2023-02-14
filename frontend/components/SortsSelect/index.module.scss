@@ -6,6 +6,19 @@
   right: 0;
   top: 0;
   display: flex;
+
+  @media only screen and (max-width: $tablet) {
+    display: none;
+  }
+
+  &.forcedMobile {
+    display: none;
+
+    @media only screen and (max-width: $tablet) {
+      display: flex;
+      position: static;
+    }  
+  }
 }
 
 .selectWrapper {
@@ -28,7 +41,9 @@
 }
 
 .currentOption {
-  padding: 8px 46px 8px 14px;
+  padding: 0 46px 0 14px;
+  height: 32px;
+  line-height: 32px;
   cursor: pointer;
   position: relative;
 
@@ -54,8 +69,8 @@
 
 .option {
   border-radius: 2px;
-  height: 32px;
-  line-height: 32px;
+  height: 28px;
+  line-height: 28px;
   padding: 0 10px;
   cursor: pointer;
 
@@ -68,7 +83,7 @@
   @extend .buttonPrimary;
 
   width: 44px;
-  height: 37px;
+  height: 32px;
   margin-left: 8px;
   display: flex;
   align-items: center;
