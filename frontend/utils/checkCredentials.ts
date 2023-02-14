@@ -1,5 +1,10 @@
 
 export const checkCredentials = () => {
+
+  if(typeof window === "undefined" || !(window as any)?.sessionStorage){
+    return false;
+  }
+  
   const token = sessionStorage.getItem("token");
   const tokenExpires = sessionStorage.getItem("token-expires");
 
@@ -7,7 +12,7 @@ export const checkCredentials = () => {
 
   // TO-DO:
   // check is token does not expire and clear if so
-  
+
   else return true;
 }
 

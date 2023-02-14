@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 export declare namespace ApiTypes.Model {
   interface Link {
     id: number,

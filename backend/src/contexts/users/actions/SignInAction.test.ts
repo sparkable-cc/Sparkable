@@ -51,14 +51,18 @@ describe('signing in', () => {
     const email = 'email';
     const password = 'password';
     await userRepository.storeUser(new User(email, username, password));
+
+    var date = new Date();
+    date.setDate(date.getDate() + 1);
     const authResponse = {
       access_token:"xxxx",
-      expires_in:86400,
+      expires_in: date,
       token_type:"Bearer"
     }
     authServiceMock.getToken.mockReturnValue(
       new Promise((resolve) => resolve(authResponse))
     );
+
     const signInAction = new SignInAction(userRepository, authServiceMock);
 
     const res = await signInAction.execute(password, username);
@@ -74,14 +78,18 @@ describe('signing in', () => {
     const email = 'email';
     const password = 'password';
     await userRepository.storeUser(new User(email, username, password));
+
+    var date = new Date();
+    date.setDate(date.getDate() + 1);
     const authResponse = {
       access_token:"xxxx",
-      expires_in:86400,
+      expires_in: date,
       token_type:"Bearer"
     }
     authServiceMock.getToken.mockReturnValue(
       new Promise((resolve) => resolve(authResponse))
     );
+
     const signInAction = new SignInAction(userRepository, authServiceMock);
 
     const res = await signInAction.execute(password, '', email);

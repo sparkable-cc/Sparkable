@@ -20,6 +20,11 @@ export class AuthServiceAuth0 implements AuthService {
       }
     );
 
-    return await response.json();
+    const jsonResponse = await response.json();
+    var date = new Date();
+    date.setDate(date.getDate() + 1);
+    jsonResponse.expires_in = date;
+
+    return jsonResponse;
   }
 }
