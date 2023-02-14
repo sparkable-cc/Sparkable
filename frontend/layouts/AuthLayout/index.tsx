@@ -1,16 +1,13 @@
 import { PropsWithChildren } from 'react';
 import styles from './index.module.scss';
-import { useRouter } from 'next/router'
+import { BackButton } from '../../components/BackButton';
 
 export const AuthLayout = ({ children }: PropsWithChildren) => {
-  const router = useRouter();
 
   return (
     <section className={styles.layoutWrapper}>
       <div className={styles.layoutContentWrapper}>
-        <button className={styles.backButton} onClick={() => router.back()}>
-          Back
-        </button>
+        <BackButton>Back</BackButton>
         {children}
       </div>
     </section>

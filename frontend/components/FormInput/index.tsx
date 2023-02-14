@@ -45,9 +45,9 @@ export const FormInput = ({
         {value && <span className={styles.clearInput} onClick={() => onClear(name)} />}
       </div>
       {errorMessage &&
-        <span className={styles.errorMessage}>
+        <div className={styles.errorMessage}>
           {errorMessage}
-        </span>}
+        </div>}
     </div>
   );
 };

@@ -2,7 +2,7 @@
 @import "../../styles/common";
 
 .filtersSidebar {
-  padding: 65px 40px $gapXL 40px;
+  padding: 40px 40px $gapXL 40px;
   font-size: $size14;
   font-family: $secondaryFont;
   font-weight: 400;
@@ -12,10 +12,6 @@
   position: sticky;
   display: flex;
   flex-direction: column;
-
-  @media only screen and (max-width: $laptop) {
-    padding-top: 80px;
-  }
 
   @media only screen and (max-width: $tablet){
     display: none;
@@ -78,4 +74,11 @@
   font-size: 1rem;
   line-height: 1.2;
   padding: $gapS 0 $gapXL;
+}
+
+.applyButton {
+  @extend .buttonPrimary;
+
+  width: 100%;
+  margin-top: 8px;
 }

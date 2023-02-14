@@ -1,58 +1,6 @@
 @import "../../styles/variables";
 @import "../../styles/common";
 
-.exploreTitleWrapper {
-  display: flex;
-  align-items: center;
-  margin-bottom: $gapS;
-
-  @media only screen and (max-width: $tablet) {
-    margin-top: 0;
-  }
-}
-
-.exploreTitle {
-  font-size: $size24;
-
-  @media only screen and (max-width: $tablet) {
-    font-size: $size20;
-  }
-
-  span {
-    font-weight: 500;
-  }
-}
-
-.exploreButton {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 10px;
-  width: 50px;
-  height: 40px;
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
-
-  &:before {
-    position: relative;
-    top: 2px;
-    content: url('../../public/svg/explore-arrow.svg');
-  }
-
-  @media only screen and (max-width: $tablet) {
-    display: none;
-  }
-}
-
-.articlesWrapper {
-  width: calc(100% - 290px);
-  padding-bottom: $gapXL;
-
-  @media only screen and (max-width: $tablet) {
-    width: 100%;   
-  }
-}
-
 .articlesList {
   columns: 2;
   column-gap: $gapS;
@@ -63,6 +11,12 @@
 
   @media only screen and (max-width: $mobile) {
     columns: 1;
+  }
+
+  &.previewPage {
+    @media only screen and (max-width: $laptop) {
+      columns: 1;
+    } 
   }
 }
 
@@ -80,6 +34,17 @@
     position: relative;
     top: 2px;
     content: url("../../public/svg/plus-white.svg");
+  }
+}
+
+.reshuffleButton {
+  @extend .buttonPrimary;
+
+  &:before {
+    margin-right: 10px;
+    position: relative;
+    top: 2px;
+    content: url("../../public/svg/sort-apply.svg");
   }
 }
 

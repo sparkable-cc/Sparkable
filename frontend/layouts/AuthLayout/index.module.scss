@@ -24,16 +24,6 @@
   @media only screen and (max-width: $mobile) {
     padding: $gapS 0;
     min-height: calc(100vh - 72px);
-  }
-}
-
-.backButton {
-  @extend .buttonWhite;
-
-  &:before {
-    padding-right: 4px;
-    position: relative;
-    top: 2px;
-    content: url("../../public/svg/arrow-left.svg");
+    max-width: 100%;
   }
 }

@@ -48,7 +48,7 @@
 .buttonTransparent {
   @extend .buttonPrimary;
 
-  background: $colorWhiteBlue;
+  background: transparent;
   color: $colorBlack;
   text-decoration: underline;
 
@@ -65,7 +65,7 @@
   font-weight: 400;
 
   &:hover {
-    background: $colorWhite;
+    background: #f2f2f2;
   }
 }
 

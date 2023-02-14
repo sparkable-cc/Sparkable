@@ -24,12 +24,12 @@ describe('POST /signin', () => {
       password: 'password',
     });
 
-    const req = await request(app).post('/signin').send({
+    const res = await request(app).post('/signin').send({
       password: 'password',
       username: 'admin',
     });
 
-    expect(req.statusCode).toEqual(200);
+    expect(res.statusCode).toEqual(200);
   });
 
   it('returns 200 when the user is signed in with email', async () => {
@@ -39,12 +39,16 @@ describe('POST /signin', () => {
       password: 'password',
     });
 
-    const req = await request(app).post('/signin').send({
+    const res = await request(app).post('/signin').send({
       password: 'password',
       email: 'admin@butterfy.me',
     });
 
-    expect(req.statusCode).toEqual(200);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.token_type).toEqual('Bearer');
+    expect(res.body).toHaveProperty('access_token');
+    expect(res.body.expires_in).not.toEqual(86400);
+    expect(new Date(res.body.expires_in)).toBeInstanceOf(Date);
   });
 
   it('returns 401 when the username is not correct', async () => {
@@ -54,12 +58,12 @@ describe('POST /signin', () => {
       password: 'password',
     });
 
-    const req = await request(app).post('/signin').send({
+    const res = await request(app).post('/signin').send({
       username: 'wrongusername',
       password: 'password',
     });
 
-    expect(req.statusCode).toEqual(401);
+    expect(res.statusCode).toEqual(401);
   });
 
   it('returns 401 when the email is not correct', async () => {
@@ -84,11 +88,11 @@ describe('POST /signin', () => {
       password: 'password',
     });
 
-    const req = await request(app).post('/signin').send({
+    const res = await request(app).post('/signin').send({
       username: 'admin',
       password: 'wrongpassword',
     });
 
-    expect(req.statusCode).toEqual(401);
+    expect(res.statusCode).toEqual(401);
   });
 });

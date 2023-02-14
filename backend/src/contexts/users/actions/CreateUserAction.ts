@@ -16,16 +16,16 @@ export class CreateUserAction {
     await this.checkUsernameIsNotUsed(username);
     await this.checkEmailIsNotUsed(email);
 
-    this.userRepository.storeUser(user);
+    await this.userRepository.storeUser(user);
   }
 
   private async checkUsernameIsNotUsed(username: string) {
-    const user = await this.userRepository.findUser('username', username);
+    const user = await this.userRepository.findUser({ username: username });
     if (user) throw new UsernameExistsException();
   }
 
   private async checkEmailIsNotUsed(email: string) {
-    const user = await this.userRepository.findUser('email', email);
+    const user = await this.userRepository.findUser({ email: email });
     if (user) throw new EmailExistsException();
   }
 }

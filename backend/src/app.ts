@@ -1,6 +1,7 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Express, Request, Response } from 'express';
+import { auth } from 'express-oauth2-jwt-bearer';
 import { GetAllCategoriesAction } from './contexts/links/actions/GetAllCategoriesAction';
 import { GetAllLinksAction } from './contexts/links/actions/GetAllLinksAction';
 import { GetLinkByIdAction } from './contexts/links/actions/GetLinkByIdAction';
@@ -10,11 +11,19 @@ import { CreateUserAction } from './contexts/users/actions/CreateUserAction';
 import { SignInAction } from './contexts/users/actions/SignInAction';
 import { EmailExistsException } from './contexts/users/domain/exceptions/EmailExistsException';
 import { MandatoryFieldEmptyException } from './contexts/users/domain/exceptions/MandatoryFieldEmptyException';
+import { ShortPasswordException } from './contexts/users/domain/exceptions/ShortPasswordException';
 import { UsernameExistsException } from './contexts/users/domain/exceptions/UsernameExistsException';
 import { UserNotFoundException } from './contexts/users/domain/exceptions/UserNotFoundException';
 import { WrongPasswordException } from './contexts/users/domain/exceptions/WrongPasswordException';
 import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
 import dataSource from './data-source';
+import { AuthServiceAuth0 } from './contexts/users/infrastructure/services/AuthServiceAuth0';
+import { ResetPasswordAction } from './contexts/users/actions/ResetPasswordAction';
+import { ResetTokenRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/ResetTokenRepositoryPG';
+import { MailerServiceGD } from './contexts/users/infrastructure/services/MailerServiceGD';
+import { RecoveryPasswordAction } from './contexts/users/actions/RecoveryPasswordAction';
+import { TokenNotFoundException } from './contexts/users/domain/exceptions/TokenNotFoundException';
+import { TokenIsExpiredException } from './contexts/users/domain/exceptions/TokenIsExpiredException';
 
 const app: Express = express();
 
@@ -24,8 +33,21 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 dotenv.config();
 app.use(cors({ origin: process.env.CLIENT }));
 
+const checkJwt = auth({
+  audience: process.env.AUTH0_AUDIENCE,
+  issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
+  tokenSigningAlg: 'RS256'
+});
+
 app.get('/', (req: Request, res: Response) => {
   res.send('Butterfy API');
+});
+
+// Example: This route needs authentication
+app.get('/private', checkJwt, function(req, res) {
+  res.json({
+    message: 'Hello from a private endpoint! You need to be authenticated to see this.'
+  });
 });
 
 app.post('/user', async (req: Request, res: Response) => {
@@ -44,6 +66,10 @@ app.post('/user', async (req: Request, res: Response) => {
           res.status(400);
           res.send({ message: 'Bad request' });
           break;
+        case ShortPasswordException:
+          res.status(400);
+          res.send({ message: 'Password is too short!' });
+          break;
         case UsernameExistsException:
         case EmailExistsException:
           res.status(403);
@@ -60,12 +86,15 @@ app.post('/user', async (req: Request, res: Response) => {
 });
 
 app.post('/signin', async (req: Request, res: Response) => {
-  const signInAction = new SignInAction(new UserRepositoryPG(dataSource));
+  const signInAction = new SignInAction(
+    new UserRepositoryPG(dataSource),
+    new AuthServiceAuth0()
+  );
   signInAction
     .execute(req.body.password, req.body.username, req.body.email)
-    .then(() => {
+    .then((result) => {
       res.status(200);
-      res.send({ message: 'User signed in!' });
+      res.send(result);
     })
     .catch((error) => {
       switch (error.constructor) {
@@ -84,20 +113,88 @@ app.post('/signin', async (req: Request, res: Response) => {
     });
 });
 
+app.post('/recovery-password', async (req: Request, res: Response) => {
+  const recoveryPasswordAction = new RecoveryPasswordAction(
+    new UserRepositoryPG(dataSource),
+    new ResetTokenRepositoryPG(dataSource),
+    new MailerServiceGD(),
+  );
+  recoveryPasswordAction
+    .execute(req.body.email)
+    .then(() => {
+      res.status(200);
+      res.send({ message: 'The mail was sent!' });
+    })
+    .catch((error: { constructor: any; }) => {
+      switch (error.constructor) {
+        case MandatoryFieldEmptyException:
+          res.status(400);
+          res.send({ message: 'Email is mandatory!' });
+          break;
+        case UserNotFoundException:
+          res.status(200);
+          res.send({ message: 'The mail was sent!' });
+          break;
+        default:
+          console.log(
+            'Failed to do something async with an unspecified error: ',
+            error,
+          );
+          return res.send(500);
+      }
+    });
+});
+
+app.post('/reset-password', async (req: Request, res: Response) => {
+  const resetPasswordAction = new ResetPasswordAction(
+    new UserRepositoryPG(dataSource),
+    new ResetTokenRepositoryPG(dataSource)
+  );
+  resetPasswordAction
+    .execute(req.body.userUuid, req.body.token, req.body.password)
+    .then(() => {
+      res.status(200);
+      res.send({ message: 'Password reset!' });
+    })
+    .catch((error) => {
+      switch (error.constructor) {
+        case MandatoryFieldEmptyException:
+          res.status(400);
+          res.send({ message: 'Bad request' });
+          break;
+        case ShortPasswordException:
+          res.status(400);
+          res.send({ message: 'Password is too short!' });
+          break;
+        case UserNotFoundException:
+        case TokenNotFoundException:
+          res.status(404);
+          res.send({ message: 'Resource not found!' });
+          break;
+        case TokenIsExpiredException:
+          res.status(401);
+          res.send({ message: 'Token is expired!' });
+          break;
+        default:
+          console.log(
+            'Failed to do something async with an unspecified error: ',
+            error,
+          );
+          return res.send(500);
+      }
+    });
+});
+
 app.get('/links', async (req: Request, res: Response) => {
   const getAllLinksAction = new GetAllLinksAction(
     new LinkRepositoryPG(dataSource),
   );
 
-  let page:number = 0;
+  let page: number = 0;
   if (req.query.page) page = +req.query.page;
 
   getAllLinksAction
-    .execute(
-      req.query.sort as string,
-      req.query.categories as string,
-      page
-    )
+    .execute(req.query.sort as string, req.query.categories as string, page)
     .then((result) => {
       res.status(200);
       res.send({ links: result[0], total: result[1] });

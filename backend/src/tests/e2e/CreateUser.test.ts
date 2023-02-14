@@ -27,6 +27,17 @@ describe('POST /user', () => {
     expect(req.statusCode).toEqual(400);
   });
 
+  it('returns 400 when the password is less than 8 characters', async () => {
+    const res = await request(app).post('/user').send({
+      email: 'admin@butterfy.me',
+      username: 'admin',
+      password: 'pass',
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toEqual('Password is too short!');
+  });
+
   it('returns 201 when the user is created', async () => {
     const req = await request(app).post('/user').send({
       email: 'admin@butterfy.me',
@@ -35,6 +46,7 @@ describe('POST /user', () => {
     });
 
     expect(req.statusCode).toEqual(201);
+    expect(req.body.message).toEqual('User created!');
   });
 
   it('returns 403 when one unique field exists with the same value', async () => {
@@ -44,11 +56,12 @@ describe('POST /user', () => {
       password: 'password',
     });
 
-    const req = await request(app).post('/user').send({
+    const res = await request(app).post('/user').send({
       email: 'admin@butterfy.me',
       username: 'admin',
       password: 'password',
     });
-    expect(req.statusCode).toEqual(403);
+    expect(res.statusCode).toEqual(403);
+    expect(res.body.message).toEqual('User exist!');
   });
 });

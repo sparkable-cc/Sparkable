@@ -1,0 +1,28 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.contentWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $gapS 0;
+}
+
+.copyString {
+  border-bottom: 1px solid $colorBlack;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: calc(100% - 100px);
+  line-height: 32px;
+  height: 32px;
+} 
+
+.copyButton {
+  @extend .buttonPrimary;
+
+  &:before {
+    content: url("../../public/svg/copy.svg");
+    margin-right: 4px;
+  }
+}
