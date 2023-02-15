@@ -28,15 +28,8 @@ export const UISlice = createSlice({
     setMenuVisible: (state, action: PayloadAction<boolean>) => {
       state.isMenuVisible = action.payload;
     },
-    setFilter: (state, action: PayloadAction<string>) => {
-      if (state.selectedFilters?.find(item => item === action.payload)) {
-        state.selectedFilters = state.selectedFilters.filter(item => item !== action.payload);
-      } else {
-        state.selectedFilters = [...state.selectedFilters, ...[action.payload]]
-      }
-    },
-    resetFilter: (state) => {
-      state.selectedFilters = [];
+    setFilters: (state, action: PayloadAction<string[]>) => {
+      state.selectedFilters = action.payload
     },
     setSort: (state, action: PayloadAction<UITypes.Option>) => {
       state.sort = action.payload;
@@ -52,8 +45,7 @@ export const UISlice = createSlice({
 
 export const {
   setMenuVisible,
-  setFilter,
-  resetFilter,
+  setFilters,
   setSort,
   setArticles,
   setTotal,

@@ -2,48 +2,58 @@ import styles from "./index.module.scss";
 import classNames from "classnames";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { useLazyGetCategoriesQuery, getCategories } from "../../store/api";
-import { setFilter, resetFilter, selectSelectedFilters, selectTotal, selectArticles } from "../../store/UIslice";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { v4 as uuidv4 } from "uuid";
 import { CSSTransition } from "react-transition-group";
 import { SortsSelect } from "../SortsSelect";
 import { useOutsideClick } from '../../utils/useOutsideClick';
-
-/*
-TO-DO:
-
-- change calling logic to on "Apply" button click
-
-*/
-
+import isEqual from "lodash.isequal";
+import {
+  setFilters,
+  selectSelectedFilters,
+  selectTotal,
+  selectArticles,
+} from "../../store/UIslice";
 
 export const MobileFilters = () => {
-  const [isModalOpen, setModalOpen] = useState(!false);
-  const nodeRef = useRef(null);
   const dispatch = useAppDispatch();
   const [triggerGetCategories] = useLazyGetCategoriesQuery();
+
   const selectedFilters = useAppSelector(selectSelectedFilters);
-  const selectCategories = useMemo(() => getCategories.select(), []);
   const articles = useAppSelector(selectArticles);
+  const selectCategories = useMemo(() => getCategories.select(), []);
   const categories = useAppSelector(selectCategories);
-  const categoriesData = categories?.data?.categories;
   const total = useAppSelector(selectTotal);
 
-  useOutsideClick(nodeRef, () => {
-    setModalOpen(false);
-  });
+  const [isModalOpen, setModalOpen] = useState(!false);
+  const [currentFilters, setCurrentFilters] = useState<string[]>(selectedFilters)
 
-  const onSetFilter = (event: any) => {
+  const categoriesData = categories?.data?.categories;
+  const nodeRef = useRef(null);
+
+  const onSetCurrentFilter = (event: any) => {
     const param = event?.target?.getAttribute("data-param");
     if (!param) return;
 
-    dispatch(setFilter(param));
+    if (currentFilters?.find(item => item === param)) {
+      setCurrentFilters(currentFilters.filter(item => item !== param));
+    } else {
+      setCurrentFilters([...currentFilters, ...[param]]);
+    }
   };
 
-  const onReset = () => {
+  const onCancel = () => {
     setModalOpen(false);
-    // dispatch(resetFilter());
+    setCurrentFilters([]);
   };
+
+  const onApply = () => {
+    dispatch(setFilters(currentFilters));
+  }
+
+  useOutsideClick(nodeRef, () => {
+    onCancel();
+  });
 
   useEffect(() => {
     if (!categoriesData) {
@@ -69,26 +79,9 @@ export const MobileFilters = () => {
             }
           </button>
         </div>
-        {/* {
-          Boolean(selectedFilters?.length) &&
-          <div className={styles.selectedFiltersList}>
-            {
-              categoriesData?.length && categoriesData.map(item => (
-                selectedFilters.find(sortItem => sortItem === item.slug) ? (
-                  <button
-                    key={uuidv4()}
-                    onClick={onSetFilter}
-                    className={styles.selectedFilterItem}
-                    data-param={item.slug}
-                  >
-                    {item.name}
-                  </button>
-                ) : null
-              ))
-            }
-          </div>
-        } */}
-        <span className={styles.totalCounter}>{articles.length} / {total} submissions</span>
+        <span className={styles.totalCounter}>
+          {articles.length} / {total} submissions
+        </span>
       </aside>
       <CSSTransition
         nodeRef={nodeRef} in={isModalOpen} timeout={400} classNames={{
@@ -102,7 +95,7 @@ export const MobileFilters = () => {
           <header className={styles.filtersHeader}>
             <span
               className={styles.cancelButton}
-              onClick={onReset}>
+              onClick={onCancel}>
               Cancel
             </span>
             <h3 className={styles.filtersTitle}>Filter</h3>
@@ -115,9 +108,9 @@ export const MobileFilters = () => {
                   <div key={uuidv4()}>
                     <button
                       className={classNames(styles.filterItem, {
-                        [styles.active]: selectedFilters.find(sortItem => sortItem === item.slug)
+                        [styles.active]: currentFilters.find(sortItem => sortItem === item.slug)
                       })}
-                      onClick={onSetFilter}
+                      onClick={onSetCurrentFilter}
                       data-param={item.slug}
                     >
                       {item.name}
@@ -127,9 +120,13 @@ export const MobileFilters = () => {
               }
             </div>
           </section>
-          <button className={classNames(styles.applyButton, styles.sizeXl)}>
-            Apply
-          </button>
+          {
+            !isEqual(currentFilters, selectedFilters) &&
+            <button className={classNames(styles.applyButton, styles.sizeXl)}
+              onClick={onApply}>
+              Apply
+            </button>
+          }
         </div>
       </CSSTransition>
     </>
