@@ -6,7 +6,7 @@ import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { v4 as uuidv4 } from "uuid";
 import { CSSTransition } from "react-transition-group";
 import { SortsSelect } from "../SortsSelect";
-import { useOutsideClick } from '../../utils/useOutsideClick';
+import { useOutsideClick } from "../../utils/useOutsideClick";
 import isEqual from "lodash.isequal";
 import {
   setFilters,
@@ -25,8 +25,8 @@ export const MobileFilters = () => {
   const categories = useAppSelector(selectCategories);
   const total = useAppSelector(selectTotal);
 
-  const [isModalOpen, setModalOpen] = useState(!false);
-  const [currentFilters, setCurrentFilters] = useState<string[]>(selectedFilters)
+  const [ isModalOpen, setModalOpen ] = useState(!false);
+  const [ currentFilters, setCurrentFilters ] = useState<string[]>(selectedFilters);
 
   const categoriesData = categories?.data?.categories;
   const nodeRef = useRef(null);
@@ -38,7 +38,7 @@ export const MobileFilters = () => {
     if (currentFilters?.find(item => item === param)) {
       setCurrentFilters(currentFilters.filter(item => item !== param));
     } else {
-      setCurrentFilters([...currentFilters, ...[param]]);
+      setCurrentFilters([ ...currentFilters, ...[param] ]);
     }
   };
 
@@ -49,7 +49,7 @@ export const MobileFilters = () => {
 
   const onApply = () => {
     dispatch(setFilters(currentFilters));
-  }
+  };
 
   useOutsideClick(nodeRef, () => {
     onCancel();
@@ -95,7 +95,8 @@ export const MobileFilters = () => {
           <header className={styles.filtersHeader}>
             <span
               className={styles.cancelButton}
-              onClick={onCancel}>
+              onClick={onCancel}
+            >
               Cancel
             </span>
             <h3 className={styles.filtersTitle}>Filter</h3>
@@ -122,8 +123,10 @@ export const MobileFilters = () => {
           </section>
           {
             !isEqual(currentFilters, selectedFilters) &&
-            <button className={classNames(styles.applyButton, styles.sizeXl)}
-              onClick={onApply}>
+            <button
+              className={classNames(styles.applyButton, styles.sizeXl)}
+              onClick={onApply}
+            >
               Apply
             </button>
           }

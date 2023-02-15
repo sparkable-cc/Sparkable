@@ -9,7 +9,7 @@ import isEqual from "lodash.isequal";
 
 export const Filters = () => {
   const selectedFilters = useAppSelector(selectSelectedFilters);
-  const [currentFilters, setCurrentFilters] = useState<string[]>(selectedFilters)
+  const [ currentFilters, setCurrentFilters ] = useState<string[]>(selectedFilters);
   const dispatch = useAppDispatch();
   const [triggerGetCategories] = useLazyGetCategoriesQuery();
   const params = selectedFilters?.length ? selectedFilters : undefined;
@@ -28,13 +28,13 @@ export const Filters = () => {
     if (currentFilters?.find(item => item === param)) {
       setCurrentFilters(currentFilters.filter(item => item !== param));
     } else {
-      setCurrentFilters([...currentFilters, ...[param]]);
+      setCurrentFilters([ ...currentFilters, ...[param] ]);
     }
   };
 
   const onApply = () => {
     dispatch(setFilters(currentFilters));
-  }
+  };
 
   useEffect(() => {
     if (!categoriesData) {
@@ -65,7 +65,8 @@ export const Filters = () => {
           !isEqual(currentFilters, selectedFilters) &&
           <button
             className={styles.applyButton}
-            onClick={onApply}>
+            onClick={onApply}
+          >
             Apply
           </button>
         }
