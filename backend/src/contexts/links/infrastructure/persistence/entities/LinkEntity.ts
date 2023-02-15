@@ -28,7 +28,7 @@ export class LinkEntity implements LinkDto {
   @Column()
   image: string;
 
-  @Column()
+  @Column({nullable: true})
   description: string;
 
   @CreateDateColumn({ type: 'timestamptz' })
