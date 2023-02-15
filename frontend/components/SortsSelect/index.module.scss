@@ -16,7 +16,8 @@
 
     @media only screen and (max-width: $tablet) {
       display: flex;
-      position: static;
+      right: auto;
+      left: 0;
     }  
   }
 }

@@ -10,9 +10,8 @@
 }
 
 .buttonsWrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  height: 40px;
+  position: relative;
   padding: $gapXxs 0;
   border-bottom: 1px solid $colorBlack;
   margin-bottom: $gapXxs;
@@ -159,6 +158,9 @@
 }
 
 .filterButton {
+  position: absolute;
+  right: 0;
+  top: 0;
   @extend .buttonWhite;
 
   &:before {

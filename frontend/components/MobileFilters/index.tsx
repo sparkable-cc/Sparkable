@@ -13,7 +13,6 @@ import { useOutsideClick } from '../../utils/useOutsideClick';
 TO-DO:
 
 - change calling logic to on "Apply" button click
-- fix sort select on mobile whan select is opened
 - add total counter to the desktop view
 
 */
