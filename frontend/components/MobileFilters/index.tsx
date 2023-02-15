@@ -8,8 +8,18 @@ import { v4 as uuidv4 } from "uuid";
 import { CSSTransition } from "react-transition-group";
 import { SortsSelect } from "../SortsSelect";
 
+/*
+TO-DO:
+- update "MobileFilter" modal
+- change calling logic to on "Apply" button click
+- fix sort select on mobile whan select is opened
+- add total counter to the desktop view
+
+*/
+
+
 export const MobileFilters = () => {
-  const [ isModalOpen, setModalOpen ] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
   const nodeRef = useRef(null);
   const dispatch = useAppDispatch();
   const [triggerGetCategories] = useLazyGetCategoriesQuery();
@@ -48,9 +58,15 @@ export const MobileFilters = () => {
           <SortsSelect isForcedMobile />
           <button
             onClick={() => setModalOpen(true)}
-            className={styles.buttonWhite}
+            className={styles.filterButton}
           >
             Filter
+            {
+              Boolean(selectedFilters?.length) &&
+              <span className={styles.filterCounter}>
+                {selectedFilters?.length}
+              </span>
+            }
           </button>
         </div>
         {

@@ -51,7 +51,7 @@
 
 .filtersViewport {
   position: fixed;
-  z-index: 1000;
+  z-index: 2000;
   right: -100%;
   top: 0;
   height: 100vh;
@@ -158,4 +158,28 @@
 
   margin-top: auto;
   width: 100%;
+}
+
+.filterButton {
+  @extend .buttonWhite;
+
+  &:before {
+    position: relative;
+    top: 2px;
+    content: url("../../public/svg/filter.svg");
+    margin-right: 4px;
+  }
+}
+
+.filterCounter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  color: $colorWhite;
+  background: $colorBlue;
+  font-size: $size12;
+  margin-left: 8px;
 }
