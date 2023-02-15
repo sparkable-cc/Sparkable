@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 export const signUpSchema = Joi.object({
   email: Joi.string()
@@ -12,8 +12,8 @@ export const signUpSchema = Joi.object({
     .required(),
 
   password: Joi.string()
-    .min(6)
-    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+    .min(8)
+    .pattern(new RegExp(/^[a-zA-Z0-9]{3,30}$/))
     .required(),
 });
 
