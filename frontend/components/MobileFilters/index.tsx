@@ -25,8 +25,8 @@ export const MobileFilters = () => {
   const categories = useAppSelector(selectCategories);
   const total = useAppSelector(selectTotal);
 
-  const [ isModalOpen, setModalOpen ] = useState(!false);
-  const [ currentFilters, setCurrentFilters ] = useState<string[]>(selectedFilters);
+  const [ isModalOpen, setModalOpen ] = useState(false);
+  const [ currentFilters, setCurrentFilters ] = useState(selectedFilters);
 
   const categoriesData = categories?.data?.categories;
   const nodeRef = useRef(null);
@@ -44,11 +44,12 @@ export const MobileFilters = () => {
 
   const onCancel = () => {
     setModalOpen(false);
-    setCurrentFilters([]);
+    setCurrentFilters(selectedFilters);
   };
 
   const onApply = () => {
     dispatch(setFilters(currentFilters));
+    onCancel();
   };
 
   useOutsideClick(nodeRef, () => {
@@ -59,7 +60,10 @@ export const MobileFilters = () => {
     if (!categoriesData) {
       triggerGetCategories();
     }
-  }, []);
+    if(isModalOpen){
+      setCurrentFilters(selectedFilters);
+    }
+  }, [ isModalOpen, categoriesData ]);
 
   return (
     <>
