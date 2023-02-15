@@ -6,8 +6,13 @@ import { MobileFilters } from "../components/MobileFilters";
 import styles from "../styles/Home.module.scss";
 import { ArticlesList } from "../components/ArticlesList";
 import { SortsSelect } from "../components/SortsSelect";
+import { selectArticles, selectTotal } from "../store/UIslice";
+import { useAppSelector } from "../store/hooks";
 
 const HomePage: NextPage = () => {
+  const total = useAppSelector(selectTotal);
+  const articles = useAppSelector(selectArticles);
+
   return (
     <section className={styles.container}>
       <AuthButtons />
@@ -21,7 +26,7 @@ const HomePage: NextPage = () => {
             </h2>
           </div>
           <div className={styles.sortsWrapper}>
-            <span className="" />
+            <span className={styles.totalCounter}>{articles.length} / {total} submissions</span>
             <SortsSelect />
           </div>
           <MobileFilters />

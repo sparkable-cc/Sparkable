@@ -1,11 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "./index";
-import { UITypes } from "../types";
+import { UITypes, ApiTypes } from "../types";
 
 export interface UIState {
   isMenuVisible: boolean;
   selectedFilters: string[]
   sort: UITypes.Option
+  articles: ApiTypes.Model.Link[]
+  total: number
 }
 
 const initialState: UIState = {
@@ -14,7 +16,9 @@ const initialState: UIState = {
   sort: {
     value: "random",
     label: "Random"
-  }
+  },
+  articles: [],
+  total: 0
 };
 
 export const UISlice = createSlice({
@@ -31,11 +35,17 @@ export const UISlice = createSlice({
         state.selectedFilters = [...state.selectedFilters, ...[action.payload]]
       }
     },
-    resetFilter: (state, action: PayloadAction<void>) => {
+    resetFilter: (state) => {
       state.selectedFilters = [];
     },
     setSort: (state, action: PayloadAction<UITypes.Option>) => {
       state.sort = action.payload;
+    },
+    setArticles: (state, action: PayloadAction<ApiTypes.Model.Link[]>) => {
+      state.articles = action.payload;
+    },
+    setTotal: (state, action: PayloadAction<number>) => {
+      state.total = action.payload;
     },
   },
 });
@@ -45,10 +55,14 @@ export const {
   setFilter,
   resetFilter,
   setSort,
+  setArticles,
+  setTotal,
 } = UISlice.actions;
 
 export const selectIsMenuVisible = (state: RootState) => state.UI.isMenuVisible;
 export const selectSelectedFilters = (state: RootState) => state.UI.selectedFilters;
 export const selectSort = (state: RootState) => state.UI.sort;
+export const selectArticles = (state: RootState) => state.UI.articles;
+export const selectTotal = (state: RootState) => state.UI.total;
 
 export default UISlice.reducer;

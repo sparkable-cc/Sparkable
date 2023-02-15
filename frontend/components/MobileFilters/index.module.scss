@@ -17,8 +17,10 @@
   margin-bottom: $gapXxs;
 }
 
-.counter {
+.totalCounter {
   display: inline-flex;
+  font-family: $secondaryFont;
+  font-weight: 400;
   font-size: $size14;
 }
 

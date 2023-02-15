@@ -1,8 +1,8 @@
 import styles from "./index.module.scss";
 import classNames from "classnames";
 import { useMemo, useState, useEffect, useRef } from "react";
-import { getArticles, useLazyGetCategoriesQuery, getCategories } from "../../store/api";
-import { setFilter, resetFilter, selectSelectedFilters } from "../../store/UIslice";
+import { useLazyGetCategoriesQuery, getCategories } from "../../store/api";
+import { setFilter, resetFilter, selectSelectedFilters, selectTotal, selectArticles } from "../../store/UIslice";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { v4 as uuidv4 } from "uuid";
 import { CSSTransition } from "react-transition-group";
@@ -13,7 +13,6 @@ import { useOutsideClick } from '../../utils/useOutsideClick';
 TO-DO:
 
 - change calling logic to on "Apply" button click
-- add total counter to the desktop view
 
 */
 
@@ -24,19 +23,15 @@ export const MobileFilters = () => {
   const dispatch = useAppDispatch();
   const [triggerGetCategories] = useLazyGetCategoriesQuery();
   const selectedFilters = useAppSelector(selectSelectedFilters);
-  const params = selectedFilters?.length ? selectedFilters : undefined;
-  const selectArticles = useMemo(() => getArticles.select({ categories: params }), [
-    selectedFilters,
-  ]);
   const selectCategories = useMemo(() => getCategories.select(), []);
   const articles = useAppSelector(selectArticles);
   const categories = useAppSelector(selectCategories);
   const categoriesData = categories?.data?.categories;
+  const total = useAppSelector(selectTotal);
 
   useOutsideClick(nodeRef, () => {
     setModalOpen(false);
   });
-
 
   const onSetFilter = (event: any) => {
     const param = event?.target?.getAttribute("data-param");
@@ -93,7 +88,7 @@ export const MobileFilters = () => {
             }
           </div>
         } */}
-        <span className={styles.counter}>{articles?.data?.total || 0} Results</span>
+        <span className={styles.totalCounter}>{articles.length} / {total} submissions</span>
       </aside>
       <CSSTransition
         nodeRef={nodeRef} in={isModalOpen} timeout={400} classNames={{

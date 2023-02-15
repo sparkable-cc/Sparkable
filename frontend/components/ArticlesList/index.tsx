@@ -1,31 +1,36 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ArticleItem } from "../ArticleItem";
 import { v4 as uuidv4 } from "uuid";
 import { Spiner } from "../Spiner";
 import classNames from "classnames";
 import styles from "./index.module.scss";
 import { useLazyGetArticlesQuery } from "../../store/api";
-import { selectSelectedFilters, selectSort } from "../../store/UIslice";
-import { useAppSelector, usePrevious } from "../../store/hooks";
+import { useAppSelector, usePrevious, useAppDispatch } from "../../store/hooks";
 import isEqual from "lodash.isequal";
-import { ApiTypes, UITypes } from "../../types";
+import { UITypes } from "../../types";
 import uniqBy from "lodash.uniqby";
+import { 
+  selectSelectedFilters, 
+  selectSort, 
+  setArticles, 
+  setTotal, 
+  selectArticles, 
+  selectTotal
+} from "../../store/UIslice";
 
 interface Props {
   isPreviewPage?: boolean
 }
 
 export const ArticlesList = ({ isPreviewPage }: Props) => {
-  const [ articles, setArticles ] = useState<ApiTypes.Model.Link[]>([]);
-  const [ total, setTotal ] = useState(0);
-
+  const dispatch = useAppDispatch();
   const [ trigger, { isLoading }] = useLazyGetArticlesQuery();
   const selectedFilters = useAppSelector(selectSelectedFilters);
   const sort = useAppSelector(selectSort);
-
+  const total = useAppSelector(selectTotal);
+  const articles = useAppSelector(selectArticles);
   const previousSelectedFilters = usePrevious(selectedFilters);
   const previousSort: UITypes.Option | undefined = usePrevious(sort);
-
   const PAGE_SIZE = 6;
 
   const setQueryParams = (page?: number) => {
@@ -57,16 +62,16 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
         if (sort.value === "newest-first" && previousSort && isEqual(sort, previousSort)) {
 
           if (res.data?.total < articles.length) {
-            setArticles(res.data?.links);
+            dispatch(setArticles(res.data?.links));
           } else {
-            setArticles(uniqBy([ ...articles, ...res.data?.links ], "id"));
+            dispatch(setArticles(uniqBy([ ...articles, ...res.data?.links ], "id")));
           }
 
         } else {
-          setArticles(res.data?.links);
+          dispatch(setArticles(res.data?.links));
         }
 
-        setTotal(res.data?.total);
+        dispatch(setTotal(res.data?.total));
       });
     } catch (error) {
       console.log(error);
