@@ -1,14 +1,14 @@
-import { useState, FormEvent, useEffect } from "react";
-import styles from "./index.module.scss";
-import Link from "next/link";
-import { FormInput } from "../FormInput";
-import classNames from "classnames";
-import { useLazySignUpQuery } from "../../store/api";
-import { ApiTypes } from "../../types";
-import { Spiner } from "../Spiner";
-import { signUpSchema, validationInitialState } from "../../utils/validations";
-import { toast } from "react-toastify";
-import { useRouter } from "next/router";
+import classNames from 'classnames';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { FormEvent, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { useLazySignUpQuery } from '../../store/api';
+import { ApiTypes } from '../../types';
+import { signUpSchema, validationInitialState } from '../../utils/validations';
+import { FormInput } from '../FormInput';
+import { Spiner } from '../Spiner';
+import styles from './index.module.scss';
 
 const inputValuesInitialState = {
   username: "",
@@ -79,7 +79,7 @@ export const SignUpForm = () => {
         <h2 className={styles.authTitle}>Create Account</h2>
         <div className={styles.authNavWrapper}>
           <span className="">or</span>
-          <Link className={styles.authButtonLink} href="/auth/signin">Signin</Link>
+          <Link className={styles.authButtonLink} href="/auth/signin">Sign In</Link>
         </div>
       </header>
       <div className={styles.authFields}>
