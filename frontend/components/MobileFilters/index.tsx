@@ -7,10 +7,11 @@ import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { v4 as uuidv4 } from "uuid";
 import { CSSTransition } from "react-transition-group";
 import { SortsSelect } from "../SortsSelect";
+import { useOutsideClick } from '../../utils/useOutsideClick';
 
 /*
 TO-DO:
-- update "MobileFilter" modal
+
 - change calling logic to on "Apply" button click
 - fix sort select on mobile whan select is opened
 - add total counter to the desktop view
@@ -19,7 +20,7 @@ TO-DO:
 
 
 export const MobileFilters = () => {
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(!false);
   const nodeRef = useRef(null);
   const dispatch = useAppDispatch();
   const [triggerGetCategories] = useLazyGetCategoriesQuery();
@@ -33,6 +34,11 @@ export const MobileFilters = () => {
   const categories = useAppSelector(selectCategories);
   const categoriesData = categories?.data?.categories;
 
+  useOutsideClick(nodeRef, () => {
+    setModalOpen(false);
+  });
+
+
   const onSetFilter = (event: any) => {
     const param = event?.target?.getAttribute("data-param");
     if (!param) return;
@@ -42,7 +48,7 @@ export const MobileFilters = () => {
 
   const onReset = () => {
     setModalOpen(false);
-    dispatch(resetFilter());
+    // dispatch(resetFilter());
   };
 
   useEffect(() => {
@@ -69,7 +75,7 @@ export const MobileFilters = () => {
             }
           </button>
         </div>
-        {
+        {/* {
           Boolean(selectedFilters?.length) &&
           <div className={styles.selectedFiltersList}>
             {
@@ -87,7 +93,7 @@ export const MobileFilters = () => {
               ))
             }
           </div>
-        }
+        } */}
         <span className={styles.counter}>{articles?.data?.total || 0} Results</span>
       </aside>
       <CSSTransition
@@ -100,33 +106,35 @@ export const MobileFilters = () => {
       >
         <div ref={nodeRef} className={styles.filtersViewport}>
           <header className={styles.filtersHeader}>
+            <span
+              className={styles.cancelButton}
+              onClick={onReset}>
+              Cancel
+            </span>
             <h3 className={styles.filtersTitle}>Filter</h3>
-            <span className={styles.cancelButton} onClick={() => setModalOpen(false)}>Close</span>
           </header>
           <section className={styles.filtersListWrapper}>
             <h4 className={styles.filtersSubtitle}>Filter by category</h4>
             <div className={styles.filtersList}>
               {
                 categoriesData?.length && categoriesData.map(item => (
-                  <button
-                    className={classNames(styles.filterItem, {
-                      [styles.active]: selectedFilters.find(sortItem => sortItem === item.slug)
-                    })}
-                    onClick={onSetFilter}
-                    key={uuidv4()}
-                    data-param={item.slug}
-                  >
-                    {item.name}
-                  </button>
+                  <div key={uuidv4()}>
+                    <button
+                      className={classNames(styles.filterItem, {
+                        [styles.active]: selectedFilters.find(sortItem => sortItem === item.slug)
+                      })}
+                      onClick={onSetFilter}
+                      data-param={item.slug}
+                    >
+                      {item.name}
+                    </button>
+                  </div>
                 ))
               }
             </div>
           </section>
-          <button
-            className={classNames(styles.applyButton, styles.sizeXl)}
-            onClick={onReset}
-          >
-            Reset filters
+          <button className={classNames(styles.applyButton, styles.sizeXl)}>
+            Apply
           </button>
         </div>
       </CSSTransition>
