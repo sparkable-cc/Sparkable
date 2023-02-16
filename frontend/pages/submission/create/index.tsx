@@ -2,7 +2,7 @@ import { CreateSubmissionLayout } from "../../../layouts/CreateSubmissionLayout"
 import styles from '../../../styles/Submission.module.scss';
 import { useRouter } from "next/router";
 
-const SubmissionCreate = () => {
+const CreateSubmissionStart = () => {
   const router = useRouter();
 
   const onButtonClick = () => {
@@ -11,6 +11,7 @@ const SubmissionCreate = () => {
 
   return (
     <CreateSubmissionLayout 
+      isSubmitAvailable={true}
       submitButtonText="Start" 
       onSubmit={onButtonClick}>
       <h2 className={styles.title}>Make a submission</h2>
@@ -25,7 +26,7 @@ const SubmissionCreate = () => {
   )
 }
 
-export default SubmissionCreate;
+export default CreateSubmissionStart;
 
 
 export async function getStaticProps() {

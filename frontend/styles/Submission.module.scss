@@ -34,3 +34,21 @@
   color: rgba(0, 0, 0, 0.6);
   margin-bottom: $gapS;
 }
+
+// LINK
+.linkPreviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: $secondaryFont;
+  font-size: $size14;
+  margin-bottom: 60px;
+}
+
+.linkPreviewWrapper {
+  width: 100%;
+  max-width: 516px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}

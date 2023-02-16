@@ -1,11 +1,13 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import { api } from "./api";
 import UIReducer from "./UIslice";
+import submissionReducer from "./submissionSlice";
 
 export const store = configureStore({
   reducer: {
     [api.reducerPath]: api.reducer,
     UI: UIReducer,
+    submission: submissionReducer
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({

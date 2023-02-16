@@ -9,11 +9,13 @@ interface Props extends PropsWithChildren {
   onCancel?: () => void;
   onSubmit?: () => void
   submitButtonText?: string
+  isSubmitAvailable?: boolean
 }
 
 export const CreateSubmissionLayout = ({
   children,
   submitButtonText,
+  isSubmitAvailable,
   onSubmit,
   onCancel,
 }: Props) => {
@@ -43,7 +45,15 @@ export const CreateSubmissionLayout = ({
         {children}
         {submitButtonText &&
           <footer className={styles.submissionFooter}>
-            <button onClick={onSubmit} className={classNames(styles.submissionButton, styles.sizeXl, {[styles.start]: submitButtonText})}>
+            <button
+              disabled={!isSubmitAvailable}
+              onClick={onSubmit}
+              className={classNames(
+                styles.submissionButton,
+                styles.sizeXl,
+                { [styles.start]: submitButtonText === "Start" },
+                { [styles.disable]: !isSubmitAvailable},
+              )}>
               {submitButtonText}
             </button>
           </footer>
