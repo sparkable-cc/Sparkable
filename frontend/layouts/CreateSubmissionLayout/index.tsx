@@ -41,9 +41,9 @@ export const CreateSubmissionLayout = ({
           </div>
         }
         {children}
-        {onSubmit &&
+        {submitButtonText &&
           <footer className={styles.submissionFooter}>
-            <button onClick={onSubmit} className={classNames(styles.submissionButton, styles.sizeXl)}>
+            <button onClick={onSubmit} className={classNames(styles.submissionButton, styles.sizeXl, {[styles.start]: submitButtonText})}>
               {submitButtonText}
             </button>
           </footer>

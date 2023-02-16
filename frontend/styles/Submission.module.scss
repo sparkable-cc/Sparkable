@@ -1,0 +1,36 @@
+@import "./common.scss";
+
+// INDEX
+.title {
+  font-size: $size32;
+  font-weight: 500;
+  margin-bottom: $gapS;
+}
+
+.text {
+  margin-bottom: $gapS;
+}
+
+.quote {
+  padding: $gapS;
+  margin-bottom: $gapS;
+  background: rgba(77, 159, 255, 0.1);
+  border-radius: 2px;
+  position: relative;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.quoteText {
+  padding-left: $gapXxs;
+  border-left: 1px solid rgba(0, 0, 0, 0.8);
+  
+  strong {
+    font-weight: 500;
+  }
+
+}
+
+.note {
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: $gapS;
+}

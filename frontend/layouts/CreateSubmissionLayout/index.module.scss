@@ -25,6 +25,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: $gapXxs;
 }
 
 .submissionFooter {
@@ -36,9 +37,20 @@
   @extend .buttonPrimary;
 
   width: 100%;
+
+  &.start {
+    &:after {
+      content: url("../../public/svg/arrow-white.svg");
+      position: relative;
+      top: 2px;
+      right: -4px;
+    }
+  }
 }
 
-.submissionContent {}
+.submissionContent {
+  padding: $gapS 0;
+}
 
 .submissionSteps {
   display: flex;
