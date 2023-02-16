@@ -10,58 +10,34 @@
 }
 
 .buttonsWrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  height: 40px;
+  position: relative;
   padding: $gapXxs 0;
   border-bottom: 1px solid $colorBlack;
   margin-bottom: $gapXxs;
 }
 
-.counter {
+.totalCounter {
   display: inline-flex;
+  font-family: $secondaryFont;
+  font-weight: 400;
   font-size: $size14;
-}
-
-.selectedFiltersList {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.selectedFilterItem {
-  @extend .buttonWhite;
-
-  padding: 0 $gapXs;
-  margin-bottom: $gapXxs;
-  white-space: nowrap;
-  background: rgba(0, 108, 123, 0.4);
-  margin-right: $gapXxs;
-
-  &:after {
-    content: url("../../public/svg/cros.svg");
-    margin-left: 4px;
-    position: relative;
-    top: 2px;
-  }
-
-  &:hover {
-    background: rgba(0, 108, 123, 0.4);
-  }
 }
 
 .filtersViewport {
   position: fixed;
-  z-index: 1000;
+  z-index: 2000;
   right: -100%;
   top: 0;
   height: 100vh;
-  width: 100%;
+  width: 280px;
   background: $colorWhite;
   padding: $gapS;
   display: flex;
   flex-direction: column;
   opacity: 0;
   transition: 0.3s;
+  font-family: $secondaryFont;
 
   &.enterActive {
     right: 0;
@@ -96,17 +72,16 @@
 
 .cancelButton {
   position: absolute;
-  right: 0;
+  left: 0;
   top: 0;
-  font-size: $size18;
-  font-weight: 500;
+  font-weight: 400;
   margin-left: auto;
   cursor: pointer;
 
   &:before {
     position: relative;
     left: -4px;
-    top: 1px;
+    top: 2px;
     content: url("../../public/svg/cros.svg");
   }
 }
@@ -121,15 +96,13 @@
   width: 100%;
 }
 
-.filtersList {
-  display: flex;
-  flex-wrap: wrap;
-}
+.filtersList {}
 
 .filterItem {
   padding: 0 $gapXs;
   background: $colorWhite;
   border: 1px solid $colorBlack;
+  font-family: $secondaryFont;
   height: 32px;
   border-radius: 2px;
   font-size: 1rem;
@@ -156,6 +129,33 @@
 .applyButton {
   @extend .buttonPrimary;
 
-  margin-top: auto;
+  margin-top: 16px;
   width: 100%;
+}
+
+.filterButton {
+  position: absolute;
+  right: 0;
+  top: 0;
+  @extend .buttonWhite;
+
+  &:before {
+    position: relative;
+    top: 2px;
+    content: url("../../public/svg/filter.svg");
+    margin-right: 4px;
+  }
+}
+
+.filterCounter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  color: $colorWhite;
+  background: $colorBlue;
+  font-size: $size12;
+  margin-left: 8px;
 }
