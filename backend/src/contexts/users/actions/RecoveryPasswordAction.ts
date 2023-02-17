@@ -47,7 +47,7 @@ export class RecoveryPasswordAction {
     const link = `${process.env.CLIENT}/passwordReset?token=${resetToken}&userUuid=${user.uuid}`;
 
     const mailOptions = {
-      from: 'noreply@butterfy.me',
+      from: 'test@butterfy.me',
       to: user.email,
       subject: 'Password Reset Request',
       html:

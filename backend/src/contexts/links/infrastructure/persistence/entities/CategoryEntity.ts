@@ -4,15 +4,15 @@ import { LinkEntity } from "./LinkEntity";
 
 @Entity('categories')
 export class CategoryEntity implements CategoryDto {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column() //UNIQUE
-    name:string;
+  @Column() //UNIQUE
+  name:string;
 
-    @Column({nullable: true})
-    slug:string;
+  @Column({nullable: true})
+  slug:string;
 
-    @ManyToMany((type) => LinkEntity, (link) => link.categories)
-    links: LinkEntity[];
+  // @ManyToMany(() => LinkEntity, (link) => link.categories)
+  // links: LinkEntity[];
 }
