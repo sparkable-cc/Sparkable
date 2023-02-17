@@ -22,7 +22,9 @@ const CreateSubmissionLink = () => {
     dispatch(setLink(value));
 
     // TO-DO
-    // call API for the link preview
+    // open-graph-scraper 
+    // https://github.com/butterfyme/prototype/blob/main/apollo/resolvers.js
+
   }
 
   const debouncedHandler = useCallback(debounce(debounceSetLink, 1000), []);
@@ -51,7 +53,7 @@ const CreateSubmissionLink = () => {
 
   const onCancel = () => {
     // TO-DO
-    // reset submission store
+    // reset submission store (in layout component)
     // go back to the main page
   }
 

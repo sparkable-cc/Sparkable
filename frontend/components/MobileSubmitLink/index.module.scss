@@ -1,0 +1,29 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.submitLinkMobile {
+  display: none;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 2px;
+  margin-top: $gapS;
+
+  @media only screen and (max-width: $tablet) {
+    display: block;
+  }
+
+  @media only screen and (max-width: $mobile) {
+    height: auto;
+  }
+}
+
+.submitText {
+  margin-bottom: 16px;
+  font-size: $size18;
+}
+
+.submitButton {
+  @extend .buttonPrimary;
+
+  width: auto;
+}

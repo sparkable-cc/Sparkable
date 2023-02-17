@@ -6,6 +6,7 @@ import { setFilters, selectSelectedFilters } from "../../store/UIslice";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { v4 as uuidv4 } from "uuid";
 import isEqual from "lodash.isequal";
+import { useRouter } from "next/router";
 
 export const Filters = () => {
   const selectedFilters = useAppSelector(selectSelectedFilters);
@@ -20,6 +21,7 @@ export const Filters = () => {
   const articles = useAppSelector(selectArticles);
   const categories = useAppSelector(selectCategories);
   const categoriesData = categories?.data?.categories;
+  const router = useRouter();
 
   const onSetCurrentFilter = (event: any) => {
     const param = event?.target?.getAttribute("data-param");
@@ -75,7 +77,11 @@ export const Filters = () => {
         <p className={styles.text}>
           What is the most insightful piece of content you have encountered recently?
         </p>
-        <button className={classNames(styles.buttonPrimary, styles.sizeXl, styles.disable)}>Submit a link</button>
+        <button 
+          onClick={()=>router.push("/submission/create")}
+          className={classNames(styles.buttonPrimary, styles.sizeXl)}>
+            Submit a link
+          </button>
       </div>
     </aside>
   );
