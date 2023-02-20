@@ -28,6 +28,7 @@ import { CreateLinkAction } from './contexts/links/actions/CreateLinkAction';
 import { LinkExistsException } from './contexts/links/domain/exceptions/LinkExistsException';
 import { CategoryRestrictionException } from './contexts/links/domain/exceptions/CategoryRestrictionException';
 import { CategoryDto } from './contexts/links/domain/models/CategoryDto';
+import { CategoryNotFoundException } from './contexts/links/domain/exceptions/CategoryNotFoundException';
 
 const app: Express = express();
 
@@ -260,6 +261,7 @@ app.get('/links/:id', async (req: Request, res: Response) => {
 app.post('/links', async (req: Request, res: Response) => {
   const createLinkAction = new CreateLinkAction(
     new LinkRepositoryPG(dataSource),
+    new CategoryRepositoryPG(dataSource)
   );
 
   createLinkAction
@@ -277,6 +279,10 @@ app.post('/links', async (req: Request, res: Response) => {
         case CategoryRestrictionException:
           res.status(400);
           res.send({ message: 'Category limit restriction!' });
+          break;
+        case CategoryNotFoundException:
+          res.status(400);
+          res.send({ message: 'Category not found!' });
           break;
         case LinkExistsException:
           res.status(403);
