@@ -1,0 +1,74 @@
+@import "./common.scss";
+
+// INDEX
+.title {
+  font-size: $size32;
+  font-weight: 500;
+  margin-bottom: $gapS;
+}
+
+.text {
+  margin-bottom: $gapS;
+}
+
+.quote {
+  padding: $gapS;
+  margin-bottom: $gapS;
+  background: rgba(77, 159, 255, 0.1);
+  border-radius: 2px;
+  position: relative;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.quoteText {
+  padding-left: $gapXxs;
+  border-left: 1px solid rgba(0, 0, 0, 0.8);
+  
+  strong {
+    font-weight: 500;
+  }
+}
+
+.note {
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: $gapS;
+}
+
+// LINK
+.linkPreviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: $secondaryFont;
+  font-size: $size14;
+  margin-bottom: 60px;
+}
+
+.linkPreviewWrapper {
+  width: 100%;
+  max-width: 516px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+// CATEGORY
+.categoryDescription {
+  line-height: 1.3;
+  font-weight: 400;
+  margin-bottom: $gapS;
+}
+
+.categoryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: $secondaryFont;
+  font-size: $size14;
+  font-weight: 500;
+}
+
+.categorysWrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
