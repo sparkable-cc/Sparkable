@@ -27,14 +27,28 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: $gapXxs 0;
+  padding-bottom: $gapXxs;
 }
 
 .modalTitle {
   font-size: $size18;
   font-weight: 600;
   max-width: calc(100% - 100px);
+
+  &.titleIcon {
+    position: relative;
+    padding-left: 28px;
+    
+    &:before {
+      display: inline-flex;
+      position: absolute;
+      left: 0;
+      top: -1px;
+      content: url("../../public/svg/question.svg")
+    }
+  }
 }
+
 
 .cancelButton {
   @extend .buttonWhite;

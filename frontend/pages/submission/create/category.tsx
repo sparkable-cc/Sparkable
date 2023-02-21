@@ -7,13 +7,13 @@ import { useAppSelector, useAppDispatch } from "../../../store/hooks";
 import { getCategories, useLazyGetCategoriesQuery } from "../../../store/api";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
-import { 
-  setCategories, 
-  selectCategories, 
-  setSuggestedCategory, 
+import { ModalNote } from "../../../components/ModalNote";
+import {
+  setCategories,
+  selectCategories,
+  setSuggestedCategory,
   selectSuggestedCategory,
 } from "../../../store/submissionSlice";
-
 
 const CreateSubmissionCategory = () => {
   const dispatch = useAppDispatch();
@@ -68,7 +68,19 @@ const CreateSubmissionCategory = () => {
         None of the categories fit? Choose “Other” and suggest a new category.
       </div>
       <header className={styles.categoryHeader}>
-        Categories
+        <span>Categories</span>
+        <ModalNote title="Categories">
+          {Boolean(categoriesNote?.length) && categoriesNote.map(item => (
+            <div className={styles.modalCategoryItem} key={uuidv4()}>
+              <h3 className={styles.modalCategoryName}>
+                {item.name}
+              </h3>
+              <div className={styles.modalCategoryDescription}>
+                {item.description}
+              </div>
+            </div>
+          ))}
+        </ModalNote>
       </header>
       <div className={styles.categorysWrapper}>
         {
@@ -113,3 +125,30 @@ export async function getStaticProps() {
     },
   }
 }
+
+const categoriesNote = [
+  {
+    name: "Art & Culture",
+    description: "e.g. music, architecture, design, style"
+  },
+  {
+    name: "Business & Economy",
+    description: "e.g. work culture, finance, new markets"
+  },
+  {
+    name: "Environment",
+    description: "e.g. climate crisis, nature, natural sciences, energy"
+  },
+  {
+    name: "Mind & body",
+    description: "e.g. physical health, mental health, psychology, medicine"
+  },
+  {
+    name: "Society",
+    description: "e.g. ethics, justice, purpose, politics"
+  },
+  {
+    name: "Technology",
+    description: "e.g. digital culture, tech economy"
+  },
+];

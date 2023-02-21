@@ -7,6 +7,8 @@ import { useAppSelector, useAppDispatch } from "../../../store/hooks";
 import { setLink, selectLink } from "../../../store/submissionSlice";
 import debounce from 'lodash/debounce';
 import { LinkPreview } from '../../../components/LinkPreview';
+import { ModalNote } from "../../../components/ModalNote";
+import Link from "next/link";
 
 const CreateSubmissionLink = () => {
   const link = useAppSelector(selectLink)
@@ -70,6 +72,13 @@ const CreateSubmissionLink = () => {
       <div>
         <header className={styles.linkPreviewHeader}>
           <span>Link preview</span>
+          <ModalNote title="Link preview">
+            <div className={styles.modalText}>We generate the link preview based on each link’s public metadata.</div>
+            <div className={styles.modalText}>Something is wrong or not working as expected?</div>
+            <div className={styles.modalText}>
+              <Link href="/" className={styles.modalLink}>Contact us</Link>
+            </div>
+          </ModalNote>
         </header>
         <div className={styles.linkPreviewWrapper}>
           <LinkPreview

@@ -23,7 +23,7 @@
 .quoteText {
   padding-left: $gapXxs;
   border-left: 1px solid rgba(0, 0, 0, 0.8);
-  
+
   strong {
     font-weight: 500;
   }
@@ -75,8 +75,8 @@
 }
 
 .categoryButton {
-  @extend .buttonWhite; 
-  
+  @extend .buttonWhite;
+
   padding: 0 $gapXs;
   margin: 0 $gapXxs $gapXxs 0;
   white-space: nowrap;
@@ -172,8 +172,43 @@
   color: #264F80;
   text-decoration: underline;
   cursor: pointer;
-  
+
   &:hover {
     text-decoration: none;
   }
-} 
+}
+
+// MODALS
+.modalText {
+  font-family: $secondaryFont;
+  font-weight: 400;
+  margin-bottom: $gapS;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.modalLink {
+  text-decoration: underline;
+  cursor: pointer;
+  color: $colorBlack;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.modalCategoryItem {
+  margin-bottom: $gapS;
+  font-family: $secondaryFont;
+}
+
+.modalCategoryName {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.modalCategoryDescription {
+  font-weight: 400;
+}
