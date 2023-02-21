@@ -56,7 +56,7 @@
 .categoryDescription {
   line-height: 1.3;
   font-weight: 400;
-  margin-bottom: $gapS;
+  padding: $gapS 0;
 }
 
 .categoryHeader {
@@ -71,4 +71,39 @@
 .categorysWrapper {
   display: flex;
   flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.categoryButton {
+  @extend .buttonWhite; 
+  
+  padding: 0 $gapXs;
+  margin: 0 $gapXxs $gapXxs 0;
+  white-space: nowrap;
+  border: 1px solid $colorBlack;
+
+  &:hover {
+    background: rgba(0, 108, 123, 0.05);
+  }
+
+  &:after {
+    margin-left: 4px;
+    position: relative;
+    top: 2px;
+    content: url("../public/svg/plus-black.svg");
+  }
+
+  &.active {
+    background: rgba(0, 108, 123, 0.4);
+
+    &:after {
+      content: url("../public/svg/cros.svg");
+    }
+  }
+}
+
+.inputNote {
+  font-size: $size14;
+  font-weight: 400;
+  margin-top: -16px;
 }
