@@ -1,22 +1,22 @@
-
-import styles from "./index.module.scss";
-import { FormEvent } from "react";
-import classNames from "classnames";
+import classNames from 'classnames';
+import { FormEvent } from 'react';
+import styles from './index.module.scss';
 
 interface Props {
   type?: string;
-  value: string
+  value: string;
   id: string;
-  name: string
+  name: string;
   label: string;
   placeholder: string;
   errorMessage?: string;
   onChange: (event: FormEvent<HTMLInputElement>) => void;
-  onClear: (name: string) => void;
+  // onClear: (name: string) => void;
+  onIconClick: () => void;
 }
 
 export const FormInput = ({
-  type = "text",
+  type = 'text',
   value,
   id,
   name,
@@ -24,9 +24,9 @@ export const FormInput = ({
   placeholder,
   errorMessage,
   onChange,
-  onClear,
+  // onClear,
+  onIconClick,
 }: Props) => {
-
   return (
     <div className={styles.formInputWrapper}>
       <label className={styles.inputLabel} htmlFor={id}>
@@ -42,12 +42,11 @@ export const FormInput = ({
           value={value}
           onChange={onChange}
         />
-        {value && <span className={styles.clearInput} onClick={() => onClear(name)} />}
+        {value && <span className={styles.eyeIcon} onClick={onIconClick} />}
       </div>
-      {errorMessage &&
-        <div className={styles.errorMessage}>
-          {errorMessage}
-        </div>}
+      {errorMessage && (
+        <div className={styles.errorMessage}>{errorMessage}</div>
+      )}
     </div>
   );
 };

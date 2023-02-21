@@ -1,42 +1,52 @@
-import { useState, FormEvent, useEffect } from "react";
-import styles from "./index.module.scss";
-import Link from "next/link";
-import { FormInput } from "../FormInput";
-import classNames from "classnames";
-import { useLazySignInQuery } from "../../store/api";
-import { Spiner } from "../Spiner";
-import { signInSchema, validationInitialState } from "../../utils/validations";
-import { toast } from "react-toastify";
-import { useRouter } from "next/router";
-
+import classNames from 'classnames';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { FormEvent, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { useLazySignInQuery } from '../../store/api';
+import { signInSchema, validationInitialState } from '../../utils/validations';
+import { FormInput } from '../FormInput';
+import { Spiner } from '../Spiner';
+import styles from './index.module.scss';
 
 const inputValuesInitialState = {
-  login: "",
-  password: "",
+  login: '',
+  password: '',
 };
 
 export const SignInForm = () => {
-  const [ triggerSignIn, { isLoading, data }] = useLazySignInQuery();
-  const [ validationError, setValidationError ] = useState(validationInitialState);
+  const [triggerSignIn, { isLoading, data }] = useLazySignInQuery();
+  const [validationError, setValidationError] = useState(
+    validationInitialState,
+  );
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const router = useRouter();
 
-  const [ inputValues, setInputValues ] = useState({
-    login: "",
-    password: "",
+  const [inputValues, setInputValues] = useState({
+    login: '',
+    password: '',
   });
 
   const onInputChange = (event: FormEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
 
-    setInputValues(prevState => {
+    setInputValues((prevState) => {
       return { ...prevState, [name]: value };
     });
   };
 
-  const onInputClear = (name: string) => {
-    setInputValues(prevState => {
-      return { ...prevState, [name]: "" };
-    });
+  // const onInputClear = (name: string) => {
+  //   setInputValues((prevState) => {
+  //     return { ...prevState, [name]: '' };
+  //   });
+  // };
+
+  const togglePasswordVisibility = () => {
+    const eyeIcon = document.getElementById('eyeIcon');
+    if (eyeIcon) {
+      eyeIcon.classList.toggle('active');
+    }
+    setIsPasswordVisible((prevState) => !prevState);
   };
 
   const onSubmit = (event) => {
@@ -48,16 +58,16 @@ export const SignInForm = () => {
 
       setValidationError({
         field: error?.path[0] as string,
-        message: error?.message
+        message: error?.message,
       });
-
     } else {
       setValidationError(validationInitialState);
 
       try {
         triggerSignIn({
           password: inputValues.password,
-          [inputValues.login.includes("@") ? "email" : "username"]: inputValues.login
+          [inputValues.login.includes('@') ? 'email' : 'username']:
+            inputValues.login,
         }).then((res: any) => {
           if (res?.error) {
             toast.error(res?.error?.data?.message);
@@ -66,21 +76,19 @@ export const SignInForm = () => {
       } catch (error: any) {
         toast.error(error?.message);
       }
-
     }
   };
 
   useEffect(() => {
     if (data) {
       setInputValues(inputValuesInitialState);
-      toast.success("Authorized successfully!");
-      sessionStorage.setItem("token", JSON.stringify(data.access_token));
-      sessionStorage.setItem("token-expires", JSON.stringify(data.expires_in));
+      toast.success('Authorized successfully!');
+      sessionStorage.setItem('token', JSON.stringify(data.access_token));
+      sessionStorage.setItem('token-expires', JSON.stringify(data.expires_in));
       setTimeout(() => {
-        router.push("/");
+        router.push('/');
       }, 2500);
     }
-
   }, [data]);
 
   return (
@@ -89,7 +97,9 @@ export const SignInForm = () => {
         <h2 className={styles.authTitle}>Sign In</h2>
         <div className={styles.authNavWrapper}>
           <span>or</span>
-          <Link className={styles.authButtonLink} href="/auth/signup">Create a new account</Link>
+          <Link className={styles.authButtonLink} href="/auth/signup">
+            Create a new account
+          </Link>
         </div>
       </header>
       <div className={styles.authFields}>
@@ -100,21 +110,27 @@ export const SignInForm = () => {
           label="Username or email"
           placeholder="Your username or email"
           onChange={onInputChange}
-          onClear={onInputClear}
-          errorMessage={validationError.field === "login" ? validationError.message : ""}
+          onIconClick={() => {}}
+          errorMessage={
+            validationError.field === 'login' ? validationError.message : ''
+          }
         />
         <FormInput
-          type="password"
+          type={isPasswordVisible ? 'text' : 'password'}
           value={inputValues.password}
           name="password"
           id="password"
           label="Password"
           placeholder="Choose a secure password"
           onChange={onInputChange}
-          onClear={onInputClear}
-          errorMessage={validationError.field === "password" ? validationError.message : ""}
+          onIconClick={togglePasswordVisibility}
+          errorMessage={
+            validationError.field === 'password' ? validationError.message : ''
+          }
         />
-        <Link href="/auth/password-recovery" className={styles.authLink}>Forgot your password?</Link>
+        <Link href="/auth/password-recovery" className={styles.authLink}>
+          Forgot your password?
+        </Link>
       </div>
       <footer className={styles.authFooter}>
         <button
@@ -122,7 +138,7 @@ export const SignInForm = () => {
           onClick={onSubmit}
           className={classNames(styles.submitButton, styles.sizeXl)}
         >
-          {isLoading ? <Spiner color="#fff" sizeWidth="25" /> : "Sign In"}
+          {isLoading ? <Spiner color="#fff" sizeWidth="25" /> : 'Sign In'}
         </button>
       </footer>
     </form>

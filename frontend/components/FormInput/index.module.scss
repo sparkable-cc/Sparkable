@@ -1,6 +1,5 @@
-@import "../../styles/variables";
-@import "../../styles/common";
-
+@import '../../styles/variables';
+@import '../../styles/common';
 
 .formInputWrapper {
   padding: $gapS 0;
@@ -40,12 +39,24 @@
   font-family: $secondaryFont;
 }
 
-.clearInput {
+// .clearInput {
+//   position: absolute;
+//   right: 0;
+//   bottom: 0;
+//   cursor: pointer;
+//   content: url('../../public/svg/clearInput.svg');
+// }
+
+.eyeIcon {
   position: absolute;
   right: 0;
   bottom: 0;
   cursor: pointer;
-  content: url("../../public/svg/clearInput.svg")
+  content: url('../../public/svg/eye-open.svg');
+
+  &:active {
+    content: url('../../public/svg/eye-closed.svg');
+  }
 }
 
 .errorMessage {

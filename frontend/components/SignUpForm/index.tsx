@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useState } from 'react';
+import { BiShow } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 import { useLazySignUpQuery } from '../../store/api';
 import { ApiTypes } from '../../types';
@@ -11,28 +12,41 @@ import { Spiner } from '../Spiner';
 import styles from './index.module.scss';
 
 const inputValuesInitialState = {
-  username: "",
-  email: "",
-  password: "",
+  username: '',
+  email: '',
+  password: '',
 };
 
 export const SignUpForm = () => {
-  const [ triggerSignUp, { isLoading, data }] = useLazySignUpQuery();
-  const [ inputValues, setInputValues ] = useState<ApiTypes.Req.SignUp>(inputValuesInitialState);
-  const [ validationError, setValidationError ] = useState(validationInitialState);
+  const [triggerSignUp, { isLoading, data }] = useLazySignUpQuery();
+  const [inputValues, setInputValues] = useState<ApiTypes.Req.SignUp>(
+    inputValuesInitialState,
+  );
+  const [validationError, setValidationError] = useState(
+    validationInitialState,
+  );
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const router = useRouter();
 
   const onInputChange = (event: FormEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
-    setInputValues(prevState => {
+    setInputValues((prevState) => {
       return { ...prevState, [name]: value };
     });
   };
 
-  const onInputClear = (name: string) => {
-    setInputValues(prevState => {
-      return { ...prevState, [name]: "" };
-    });
+  // const onInputClear = (name: string) => {
+  //   setInputValues((prevState) => {
+  //     return { ...prevState, [name]: '' };
+  //   });
+  // };
+
+  const togglePasswordVisibility = () => {
+    const eyeIcon = document.getElementById('eyeIcon');
+    if (eyeIcon) {
+      eyeIcon.classList.toggle('active');
+    }
+    setIsPasswordVisible((prevState) => !prevState);
   };
 
   const onSubmit = (event) => {
@@ -44,9 +58,8 @@ export const SignUpForm = () => {
 
       setValidationError({
         field: error?.path[0] as string,
-        message: error?.message
+        message: error?.message,
       });
-
     } else {
       setValidationError(validationInitialState);
 
@@ -59,7 +72,6 @@ export const SignUpForm = () => {
       } catch (error: any) {
         toast.error(error?.message);
       }
-
     }
   };
 
@@ -68,7 +80,7 @@ export const SignUpForm = () => {
       setInputValues(inputValuesInitialState);
       toast.success(data?.message);
       setTimeout(() => {
-        router.push("/auth/signin");
+        router.push('/auth/signin');
       }, 2500);
     }
   }, [data?.message]);
@@ -79,7 +91,9 @@ export const SignUpForm = () => {
         <h2 className={styles.authTitle}>Create Account</h2>
         <div className={styles.authNavWrapper}>
           <span className="">or</span>
-          <Link className={styles.authButtonLink} href="/auth/signin">Sign In</Link>
+          <Link className={styles.authButtonLink} href="/auth/signin">
+            Sign In
+          </Link>
         </div>
       </header>
       <div className={styles.authFields}>
@@ -90,8 +104,10 @@ export const SignUpForm = () => {
           label="Email"
           placeholder="Your email address"
           onChange={onInputChange}
-          onClear={onInputClear}
-          errorMessage={validationError.field === "email" ? validationError.message : ""}
+          onIconClick={() => {}}
+          errorMessage={
+            validationError.field === 'email' ? validationError.message : ''
+          }
         />
         <FormInput
           value={inputValues.username}
@@ -100,19 +116,23 @@ export const SignUpForm = () => {
           label="Username"
           placeholder="Choose a username"
           onChange={onInputChange}
-          onClear={onInputClear}
-          errorMessage={validationError.field === "username" ? validationError.message : ""}
+          onIconClick={() => {}}
+          errorMessage={
+            validationError.field === 'username' ? validationError.message : ''
+          }
         />
         <FormInput
-          type="password"
+          type={isPasswordVisible ? 'text' : 'password'}
           value={inputValues.password}
           name="password"
           id="password"
           label="Password"
           placeholder="Choose a secure password"
           onChange={onInputChange}
-          onClear={onInputClear}
-          errorMessage={validationError.field === "password" ? validationError.message : ""}
+          onIconClick={togglePasswordVisibility}
+          errorMessage={
+            validationError.field === 'password' ? validationError.message : ''
+          }
         />
       </div>
       <footer className={styles.authFooter}>
@@ -121,12 +141,22 @@ export const SignUpForm = () => {
           onClick={onSubmit}
           className={classNames(styles.submitButton, styles.sizeXl)}
         >
-          {isLoading ? <Spiner color="#fff" sizeWidth="25" /> : "Create account"}
+          {isLoading ? (
+            <Spiner color="#fff" sizeWidth="25" />
+          ) : (
+            'Create account'
+          )}
         </button>
         <div className={styles.footerText}>
-          Click “Create account” to agree to the <Link href="/" className={styles.authLink}>Terms of Use</Link> of
-          Sparkable and acknowledge that the <Link href="/" className={styles.authLink}>Privacy Policy</Link> of
-          Sparkable applies to you.
+          Click “Create account” to agree to the{' '}
+          <Link href="/" className={styles.authLink}>
+            Terms of Use
+          </Link>{' '}
+          of Sparkable and acknowledge that the{' '}
+          <Link href="/" className={styles.authLink}>
+            Privacy Policy
+          </Link>{' '}
+          of Sparkable applies to you.
         </div>
       </footer>
     </form>

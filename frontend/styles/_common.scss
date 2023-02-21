@@ -1,4 +1,4 @@
-@import "./variables.scss";
+@import './variables.scss';
 
 // CONTAINERS
 .mainWrapper {
@@ -104,6 +104,15 @@
   padding: 0 $gapS;
 }
 
+.eyeIcon {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  cursor: pointer;
+}
+
 .authButtonLink {
   @extend .buttonWhite;
 
@@ -127,7 +136,7 @@
 }
 
 .authLink {
-  color: #264F80;
+  color: #264f80;
   text-decoration: underline;
   font-size: $size14;
 
