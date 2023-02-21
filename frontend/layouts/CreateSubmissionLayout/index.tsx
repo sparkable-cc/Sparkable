@@ -8,8 +8,9 @@ import { useRouter } from 'next/router';
 interface Props extends PropsWithChildren {
   onSubmit?: () => void
   isCancelAvailable?: boolean
-  submitButtonText?: string
   isSubmitAvailable?: boolean
+  isBackButtonAvailable?: boolean
+  submitButtonText?: string
 }
 
 export const CreateSubmissionLayout = ({
@@ -17,6 +18,7 @@ export const CreateSubmissionLayout = ({
   submitButtonText,
   isSubmitAvailable,
   isCancelAvailable,
+  isBackButtonAvailable = true,
   onSubmit,
 }: Props) => {
   const router = useRouter();
@@ -31,7 +33,7 @@ export const CreateSubmissionLayout = ({
     <div className={styles.createWrapper}>
       <div className={styles.submissionWrapper}>
         <header className={styles.submissionHeader}>
-          <BackButton>Back</BackButton>
+          {isBackButtonAvailable && <BackButton>Back</BackButton>}
           {isCancelAvailable && <CancelButton onCancel={onCancel}>Cancel</CancelButton>}
         </header>
         {
@@ -58,7 +60,7 @@ export const CreateSubmissionLayout = ({
                 styles.submissionButton,
                 styles.sizeXl,
                 { [styles.start]: submitButtonText === "Start" },
-                { [styles.disable]: !isSubmitAvailable},
+                { [styles.disable]: !isSubmitAvailable },
               )}>
               {submitButtonText}
             </button>
