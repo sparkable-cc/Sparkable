@@ -45,6 +45,7 @@ By default return 20 links sorted randomly
 
 **Code** : `500 OK`
 
+
 ## Get link by id
 
 **URL** : `/links/:id`
@@ -86,3 +87,49 @@ By default return 20 links sorted randomly
 
 **Code** : `500 OK`
 
+
+## Get preview link data
+
+**URL** : `/link-preview-data`
+
+**Method** : `POST`
+
+**Auth required** : Yes
+
+**Permissions required** : None
+
+**Data Example**:
+```json
+{
+  "url": "http://ogp.me/"
+}
+```
+
+### Success Response
+
+**Code** : `200 OK`
+
+**Content example**
+
+```json
+{
+  ogTitle: 'Open Graph protocol',
+  ogType: 'website',
+  ogUrl: 'http://ogp.me/',
+  ogDescription: 'The Open Graph protocol enables any web page to become a rich object in a social graph.',
+  ogImage: {
+    url: 'http://ogp.me/logo.png',
+    width: '300',
+    height: '300',
+    type: 'image/png'
+  },
+  requestUrl: 'http://ogp.me/',
+  success: true
+}
+```
+
+### Error Response
+
+**Code** : `400 Bad request` (url is empty)
+
+**Code** : `500 OK`
