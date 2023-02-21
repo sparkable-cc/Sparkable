@@ -32,7 +32,6 @@ const CreateSubmissionCategory = () => {
 
   const onInputChange = (event: FormEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
-    console.log('value', value)
     dispatch(setSuggestedCategory(value));
   };
 
