@@ -2,7 +2,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Generated,
   JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
@@ -15,17 +14,16 @@ export class LinkEntity implements LinkDto {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  @Generated('uuid')
+  @Column({nullable: true})
   uuid: string;
 
   @Column()
   title: string;
 
-  @Column()
-  link: string;
+  @Column({nullable: true})
+  url: string;
 
-  @Column()
+  @Column({nullable: true})
   image: string;
 
   @Column({nullable: true})
@@ -34,11 +32,13 @@ export class LinkEntity implements LinkDto {
   @CreateDateColumn({ type: 'timestamptz' })
   date: Date;
 
-  @Column()
+  @Column({nullable: true})
   username: string;
 
-  @ManyToMany((type) => CategoryEntity, (category) => category.links, {
+  //@ManyToMany(() => CategoryEntity, (category) => category.links, {
+  @ManyToMany(() => CategoryEntity, {
     eager: true,
+    cascade: true,
   })
   @JoinTable()
   categories: CategoryEntity[];

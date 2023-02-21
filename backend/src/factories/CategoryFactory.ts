@@ -12,9 +12,7 @@ export default class CategoryFactory {
             category.slug = slug
         }
 
-        await categoryRepository.save(category);
-
-        return category;
+        return await categoryRepository.save(category);
     }
 
 }
