@@ -9,6 +9,7 @@ import debounce from 'lodash/debounce';
 import { LinkPreview } from '../../../components/LinkPreview';
 import { ModalNote } from "../../../components/ModalNote";
 import Link from "next/link";
+import { storageKeys } from "../../../utils/storageKeys";
 
 const CreateSubmissionLink = () => {
   const link = useAppSelector(selectLink)
@@ -22,10 +23,9 @@ const CreateSubmissionLink = () => {
 
   const debounceSetLink = (value) => {
     dispatch(setLink(value));
-
+    sessionStorage.setItem(storageKeys.submissionLink, value);
     // TO-DO
     // call to API 
-
   }
 
   const debouncedHandler = useCallback(debounce(debounceSetLink, 1000), []);

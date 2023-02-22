@@ -4,6 +4,9 @@ import { CancelButton } from '../../components/CancelButton';
 import styles from './index.module.scss';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
+import { resetSubmission } from '../../store/submissionSlice';
+import { useAppDispatch } from "../../store/hooks";
+import { storageKeys } from '../../utils/storageKeys';
 
 interface Props extends PropsWithChildren {
   onSubmit?: () => void
@@ -22,11 +25,16 @@ export const CreateSubmissionLayout = ({
   onSubmit,
 }: Props) => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const onCancel = () => {
-    // TO-DO
-    // reset submission store
-    // go back to the main page
+    router.push("/");
+    dispatch(resetSubmission());
+    
+    sessionStorage.removeItem(storageKeys.submissionLink)
+    sessionStorage.removeItem(storageKeys.submissionCategories)
+    sessionStorage.removeItem(storageKeys.submissionSuggestedCategory)
+    sessionStorage.removeItem(storageKeys.submissionYourStatement)
   }
 
   return (

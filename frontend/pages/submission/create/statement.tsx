@@ -4,6 +4,7 @@ import styles from '../../../styles/Submission.module.scss';
 import { useRouter } from "next/router";
 import { useAppSelector, useAppDispatch } from "../../../store/hooks";
 import debounce from 'lodash/debounce';
+import { storageKeys } from "../../../utils/storageKeys";
 import {
   selectYourStatement,
   setYourStatement,
@@ -18,6 +19,7 @@ const CreateSubmissionStatement = () => {
 
   const debounceSetLink = (value) => {
     dispatch(setYourStatement(value));
+    sessionStorage.setItem(storageKeys.submissionYourStatement, value);
   }
 
   const debouncedHandler = useCallback(debounce(debounceSetLink, 1000), []);

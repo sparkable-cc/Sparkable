@@ -8,6 +8,7 @@ import { getCategories, useLazyGetCategoriesQuery } from "../../../store/api";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 import { ModalNote } from "../../../components/ModalNote";
+import { storageKeys } from "../../../utils/storageKeys";
 import {
   setCategories,
   selectCategories,
@@ -33,6 +34,7 @@ const CreateSubmissionCategory = () => {
   const onInputChange = (event: FormEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
     dispatch(setSuggestedCategory(value));
+    sessionStorage.setItem(storageKeys.submissionSuggestedCategory, value);
   };
 
   const onInputClear = () => {
@@ -43,11 +45,15 @@ const CreateSubmissionCategory = () => {
     const param = event?.target?.getAttribute("data-param");
     if (!param) return;
 
+    let data;
     if (activeCategories?.find(item => item === param)) {
-      dispatch(setCategories(activeCategories.filter(item => item !== param)));
+      data = activeCategories.filter(item => item !== param);
     } else {
-      dispatch(setCategories([...activeCategories, ...[param]]));
+      data = [...activeCategories, ...[param]];
     }
+
+    dispatch(setCategories(data));
+    sessionStorage.setItem(storageKeys.submissionCategories, JSON.stringify(data));
   };
 
   useEffect(() => {

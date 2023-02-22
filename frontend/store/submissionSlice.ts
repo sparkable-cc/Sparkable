@@ -1,5 +1,21 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "./index";
+import { storageKeys } from "../utils/storageKeys";
+
+let storageLink;
+let storageCategories;
+let storageSuggestedCategory;
+let storageYourStatement;
+
+console.log("window outside", typeof window)
+
+if (typeof window !== 'undefined') {
+  console.log("window inside", typeof window)
+  storageLink = sessionStorage.getItem(storageKeys.submissionLink);
+  storageCategories = sessionStorage.getItem(storageKeys.submissionCategories);
+  storageSuggestedCategory = sessionStorage.getItem(storageKeys.submissionSuggestedCategory);
+  storageYourStatement = sessionStorage.getItem(storageKeys.submissionYourStatement);
+}
 
 export interface SubmissionState {
   link: string;
@@ -9,10 +25,10 @@ export interface SubmissionState {
 }
 
 const initialState: SubmissionState = {
-  link: "",
-  categories: [],
-  suggestedCategory: "",
-  yourStatement: ""
+  link: storageLink || "",
+  categories: storageCategories ? JSON.parse(storageCategories) : [],
+  suggestedCategory: storageSuggestedCategory || "",
+  yourStatement: storageYourStatement || ""
 };
 
 export const submissionState = createSlice({
@@ -31,6 +47,12 @@ export const submissionState = createSlice({
     setYourStatement: (state, action: PayloadAction<string>) => {
       state.yourStatement = action.payload;
     },
+    resetSubmission: (state) => {
+      state.link = "";
+      state.categories = [];
+      state.suggestedCategory = "";
+      state.yourStatement = "";
+    },
   },
 });
 
@@ -39,6 +61,7 @@ export const {
   setCategories,
   setSuggestedCategory,
   setYourStatement,
+  resetSubmission,
 } = submissionState.actions;
 
 export const selectLink = (state: RootState) => state.submission.link;
