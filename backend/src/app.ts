@@ -48,13 +48,6 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Butterfy API');
 });
 
-// Example: This route needs authentication
-app.get('/private', checkJwt, function(req, res) {
-  res.json({
-    message: 'Hello from a private endpoint! You need to be authenticated to see this.'
-  });
-});
-
 app.post('/user', async (req: Request, res: Response) => {
   const createUserAction = new CreateUserAction(
     new UserRepositoryPG(dataSource),
@@ -257,8 +250,7 @@ app.get('/links/:id', async (req: Request, res: Response) => {
   }
 });
 
-//PROTEGER POR TOKEN!
-app.post('/links', async (req: Request, res: Response) => {
+app.post('/links', checkJwt, async (req: Request, res: Response) => {
   const createLinkAction = new CreateLinkAction(
     new LinkRepositoryPG(dataSource),
     new CategoryRepositoryPG(dataSource)

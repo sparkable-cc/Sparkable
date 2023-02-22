@@ -17,11 +17,11 @@ describe('POST /links', () => {
   });
 
   afterEach(async () => {
-    const categoryRepository = dataSource.getRepository(CategoryEntity);
-    await categoryRepository.delete({});
-
     const repository = dataSource.getRepository(LinkEntity);
     await repository.delete({});
+
+    const categoryRepository = dataSource.getRepository(CategoryEntity);
+    await categoryRepository.delete({});
   });
 
   it('returns 400 when the mandatory field is empty', async () => {
@@ -89,7 +89,7 @@ describe('POST /links', () => {
 
   it('returns 201 when the link is created with the mandatory fields', async () => {
     const title = 'title';
-    const url = 'http://example';
+    const url = 'http://example2';
     const category = await CategoryFactory.create('name', 'slug');
 
     const res = await request(app)

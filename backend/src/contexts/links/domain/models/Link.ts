@@ -24,6 +24,10 @@ export class Link {
       throw new MandatoryFieldEmptyException();
     }
 
+    if (typeof link.categories === 'string') {
+      link.categories = JSON.parse(link.categories);
+    }
+
     link.categories.forEach(category => {
       if (!this.isACategoryDto(category)) {
         throw new MandatoryFieldEmptyException();
