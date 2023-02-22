@@ -30,7 +30,7 @@ export const CreateSubmissionLayout = ({
   const onCancel = () => {
     router.push("/");
     dispatch(resetSubmission());
-    
+
     sessionStorage.removeItem(storageKeys.submissionLink)
     sessionStorage.removeItem(storageKeys.submissionCategories)
     sessionStorage.removeItem(storageKeys.submissionSuggestedCategory)
@@ -67,9 +67,10 @@ export const CreateSubmissionLayout = ({
               className={classNames(
                 styles.submissionButton,
                 styles.sizeXl,
-                { [styles.start]: submitButtonText === "Start" },
+                { [styles.start]: submitButtonText === "Start"},
                 { [styles.disable]: !isSubmitAvailable },
-              )}>
+              )}
+              >
               {submitButtonText}
             </button>
           </footer>

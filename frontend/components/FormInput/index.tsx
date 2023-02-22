@@ -42,7 +42,7 @@ export const FormInput = ({
           value={value}
           onChange={onChange}
         />
-        {value && <span className={styles.clearInput} onClick={() => onClear(name)} />}
+        <span className={classNames(styles.clearInput, {[styles.hidden]: !value})} onClick={() => onClear(name)} />
       </div>
       {errorMessage &&
         <div className={styles.errorMessage}>

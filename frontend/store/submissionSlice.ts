@@ -7,10 +7,7 @@ let storageCategories;
 let storageSuggestedCategory;
 let storageYourStatement;
 
-console.log("window outside", typeof window)
-
 if (typeof window !== 'undefined') {
-  console.log("window inside", typeof window)
   storageLink = sessionStorage.getItem(storageKeys.submissionLink);
   storageCategories = sessionStorage.getItem(storageKeys.submissionCategories);
   storageSuggestedCategory = sessionStorage.getItem(storageKeys.submissionSuggestedCategory);
