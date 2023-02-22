@@ -298,8 +298,7 @@ app.post('/links', async (req: Request, res: Response) => {
     });
 });
 
-//app.post('/link-preview-data', checkJwt,  async (req: Request, res: Response) => {
-app.post('/link-preview-data', async (req: Request, res: Response) => {
+app.post('/link-preview-data', checkJwt,  async (req: Request, res: Response) => {
   const url = req.body.url;
 
   if (!url) {
