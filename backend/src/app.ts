@@ -28,7 +28,7 @@ import { CreateLinkAction } from './contexts/links/actions/CreateLinkAction';
 import { LinkExistsException } from './contexts/links/domain/exceptions/LinkExistsException';
 import { CategoryRestrictionException } from './contexts/links/domain/exceptions/CategoryRestrictionException';
 import { CategoryNotFoundException } from './contexts/links/domain/exceptions/CategoryNotFoundException';
-import openGraphScraper from "open-graph-scraper";
+import ogs from 'ts-open-graph-scraper'
 
 const app: Express = express();
 
@@ -298,7 +298,8 @@ app.post('/links', async (req: Request, res: Response) => {
     });
 });
 
-app.post('/link-preview-data', checkJwt,  async (req: Request, res: Response) => {
+//app.post('/link-preview-data', checkJwt,  async (req: Request, res: Response) => {
+app.post('/link-preview-data', async (req: Request, res: Response) => {
   const url = req.body.url;
 
   if (!url) {
@@ -307,20 +308,10 @@ app.post('/link-preview-data', checkJwt,  async (req: Request, res: Response) =>
     return;
   }
 
-  const options = { url: url };
-  await openGraphScraper(options).then((data: { error?: any; result?: any; }) => {
-    if (!data.error) {
-      const { result } = data;
-      res.status(200);
-      res.send(result);
-    } else {
-      const { result } = data;
-      console.log(
-        'Failed to do something async with an unspecified error: ',
-        result.errorDetails,
-      );
-      return res.status(500);
-    }
+  ogs(url).then((data:any) => {
+    const { response, ...result } = data;
+    res.status(200);
+    res.send(result);
   })
   .catch((error:any) => {
     console.log(

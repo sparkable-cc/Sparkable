@@ -113,23 +113,22 @@ By default return 20 links sorted randomly
 
 ```json
 {
-  ogTitle: 'Open Graph protocol',
-  ogType: 'website',
-  ogUrl: 'http://ogp.me/',
-  ogDescription: 'The Open Graph protocol enables any web page to become a rich object in a social graph.',
-  ogImage: {
-    url: 'http://ogp.me/logo.png',
-    width: '300',
-    height: '300',
-    type: 'image/png'
-  },
-  requestUrl: 'http://ogp.me/',
-  success: true
+    "ogTitle": "Open Graph protocol",
+    "ogType": "website",
+    "ogUrl": "https://ogp.me/",
+    "ogDescription": "The Open Graph protocol enables any web page to become a rich object in a social graph.",
+    "ogImage": [
+        {
+            "url": "https://ogp.me/logo.png",
+            "width": 300,
+            "height": 300,
+            "type": "image/png"
+        }
+    ]
 }
 ```
 
 ### Error Response
 
 **Code** : `400 Bad request` (url is empty)
-
 **Code** : `500 OK`
