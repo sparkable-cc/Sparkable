@@ -24,6 +24,11 @@ import { MailerServiceGD } from './contexts/users/infrastructure/services/Mailer
 import { RecoveryPasswordAction } from './contexts/users/actions/RecoveryPasswordAction';
 import { TokenNotFoundException } from './contexts/users/domain/exceptions/TokenNotFoundException';
 import { TokenIsExpiredException } from './contexts/users/domain/exceptions/TokenIsExpiredException';
+import { CreateLinkAction } from './contexts/links/actions/CreateLinkAction';
+import { LinkExistsException } from './contexts/links/domain/exceptions/LinkExistsException';
+import { CategoryRestrictionException } from './contexts/links/domain/exceptions/CategoryRestrictionException';
+import { CategoryNotFoundException } from './contexts/links/domain/exceptions/CategoryNotFoundException';
+import ogs from 'ts-open-graph-scraper'
 
 const app: Express = express();
 
@@ -80,7 +85,7 @@ app.post('/user', async (req: Request, res: Response) => {
             'Failed to do something async with an unspecified error: ',
             error,
           );
-          return res.send(500);
+          return res.status(500);
       }
     });
 });
@@ -108,7 +113,7 @@ app.post('/signin', async (req: Request, res: Response) => {
             'Failed to do something async with an unspecified error: ',
             error,
           );
-          return res.send(500);
+          return res.status(500);
       }
     });
 });
@@ -185,6 +190,26 @@ app.post('/reset-password', async (req: Request, res: Response) => {
     });
 });
 
+app.get('/categories', async (req: Request, res: Response) => {
+  const getAllCategoriesAction = new GetAllCategoriesAction(
+    new CategoryRepositoryPG(dataSource),
+  );
+
+  getAllCategoriesAction
+    .execute()
+    .then((result) => {
+      res.status(200);
+      res.send({ categories: result[0], total: result[1] });
+    })
+    .catch((error) => {
+      console.log(
+        'Failed to do something async with an unspecified error: ',
+        error,
+      );
+      return res.send(500);
+    });
+});
+
 app.get('/links', async (req: Request, res: Response) => {
   const getAllLinksAction = new GetAllLinksAction(
     new LinkRepositoryPG(dataSource),
@@ -232,24 +257,69 @@ app.get('/links/:id', async (req: Request, res: Response) => {
   }
 });
 
-app.get('/categories', async (req: Request, res: Response) => {
-  const getAllCategoriesAction = new GetAllCategoriesAction(
-    new CategoryRepositoryPG(dataSource),
+//PROTEGER POR TOKEN!
+app.post('/links', async (req: Request, res: Response) => {
+  const createLinkAction = new CreateLinkAction(
+    new LinkRepositoryPG(dataSource),
+    new CategoryRepositoryPG(dataSource)
   );
 
-  getAllCategoriesAction
-    .execute()
-    .then((result) => {
-      res.status(200);
-      res.send({ categories: result[0], total: result[1] });
+  createLinkAction
+    .execute(req.body)
+    .then(() => {
+      res.status(201);
+      res.send({ message: 'Link created!' });
     })
     .catch((error) => {
-      console.log(
-        'Failed to do something async with an unspecified error: ',
-        error,
-      );
-      return res.send(500);
+      switch (error.constructor) {
+        case MandatoryFieldEmptyException:
+          res.status(400);
+          res.send({ message: 'Bad request' });
+          break;
+        case CategoryRestrictionException:
+          res.status(400);
+          res.send({ message: 'Category limit restriction!' });
+          break;
+        case CategoryNotFoundException:
+          res.status(400);
+          res.send({ message: 'Category not found!' });
+          break;
+        case LinkExistsException:
+          res.status(403);
+          res.send({ message: 'Link already exists!' });
+          break;
+        default:
+          console.log(
+            'Failed to do something async with an unspecified error: ',
+            error,
+          );
+          return res.send(500);
+      }
     });
+});
+
+app.post('/link-preview-data', checkJwt,  async (req: Request, res: Response) => {
+  const url = req.body.url;
+
+  if (!url) {
+    res.status(400);
+    res.send({ message: 'Bad request' });
+    return;
+  }
+
+  ogs(url).then((data:any) => {
+    const { response, ...result } = data;
+    res.status(200);
+    res.send(result);
+  })
+  .catch((error:any) => {
+    console.log(
+      'Failed to do something async with an unspecified error: ',
+      error,
+    );
+    return res.status(500);
+  });
+
 });
 
 export default app;
