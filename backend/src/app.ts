@@ -27,8 +27,8 @@ import { TokenIsExpiredException } from './contexts/users/domain/exceptions/Toke
 import { CreateLinkAction } from './contexts/links/actions/CreateLinkAction';
 import { LinkExistsException } from './contexts/links/domain/exceptions/LinkExistsException';
 import { CategoryRestrictionException } from './contexts/links/domain/exceptions/CategoryRestrictionException';
-import { CategoryDto } from './contexts/links/domain/models/CategoryDto';
 import { CategoryNotFoundException } from './contexts/links/domain/exceptions/CategoryNotFoundException';
+import ogs from 'ts-open-graph-scraper'
 
 const app: Express = express();
 
@@ -85,7 +85,7 @@ app.post('/user', async (req: Request, res: Response) => {
             'Failed to do something async with an unspecified error: ',
             error,
           );
-          return res.send(500);
+          return res.status(500);
       }
     });
 });
@@ -113,7 +113,7 @@ app.post('/signin', async (req: Request, res: Response) => {
             'Failed to do something async with an unspecified error: ',
             error,
           );
-          return res.send(500);
+          return res.status(500);
       }
     });
 });
@@ -296,6 +296,30 @@ app.post('/links', async (req: Request, res: Response) => {
           return res.send(500);
       }
     });
+});
+
+app.post('/link-preview-data', checkJwt,  async (req: Request, res: Response) => {
+  const url = req.body.url;
+
+  if (!url) {
+    res.status(400);
+    res.send({ message: 'Bad request' });
+    return;
+  }
+
+  ogs(url).then((data:any) => {
+    const { response, ...result } = data;
+    res.status(200);
+    res.send(result);
+  })
+  .catch((error:any) => {
+    console.log(
+      'Failed to do something async with an unspecified error: ',
+      error,
+    );
+    return res.status(500);
+  });
+
 });
 
 export default app;
