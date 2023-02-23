@@ -132,3 +132,44 @@ By default return 20 links sorted randomly
 
 **Code** : `400 Bad request` (url is empty)
 **Code** : `500 OK`
+
+
+## Create link
+
+**URL** : `/links`
+
+**Method** : `POST`
+
+**Auth required** : Yes
+
+**Permissions required** : None
+
+**Data Example**:
+```json
+{
+    "title": "title",
+    "url": "http://bufferfy.me/",
+    "categories": [ {"id":2, "name":"cat1", "slug":"cat1"}],
+    "userUuid": "xxxxxxx",
+    "description": "description",
+    "image": "http://bufferfy.me/img.png"
+}
+```
+
+### Success Response
+
+**Code** : `200 OK`
+
+**Content example**
+
+```json
+{
+    "message": "Link created!"
+}
+```
+
+### Error Response
+
+**Code** : `400 Bad request` (url, title, categories and uuid are mandatory)
+**Code** : `403 Link exists`
+**Code** : `500 OK`

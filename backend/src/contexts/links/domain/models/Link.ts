@@ -14,14 +14,19 @@ export class Link {
   date: Date;
   uuid: string;
   username: string;
+  userUuid: string;
 
   constructor(link: LinkDto) {
     if (Object.keys(link).length === 0) {
       throw new MandatoryFieldEmptyException();
     }
 
-    if (!link.title || !link.url || !link.categories) {
+    if (!link.title || !link.url || !link.categories || !link.userUuid) {
       throw new MandatoryFieldEmptyException();
+    }
+
+    if (typeof link.categories === 'string') {
+      link.categories = JSON.parse(link.categories);
     }
 
     link.categories.forEach(category => {
@@ -37,16 +42,12 @@ export class Link {
     this.title = link.title;
     this.url = link.url;
     this.categories = link.categories;
+    this.userUuid = link.userUuid;
     this.image = link.image;
     this.description = link.description;
     this.date = new Date();
+    this.username = link.username;
     this.uuid = uuidv4();
-  }
-
-  private isACategoryDto(object: any): object is CategoryDto {
-    return Object.prototype.hasOwnProperty.call(object, 'id')
-    && Object.prototype.hasOwnProperty.call(object, 'name')
-    && Object.prototype.hasOwnProperty.call(object, 'slug');
   }
 
   public static factory(linkDto: LinkDto): Link {
@@ -58,13 +59,20 @@ export class Link {
       id: 0,
       uuid: this.uuid,
       title: this.title,
-      username: '',
       url: this.url,
       image: this.image,
       description: this.description,
       date: this.date,
       categories: this.categories,
+      userUuid: this.userUuid,
+      username: this.username
     };
+  }
+
+  private isACategoryDto(object: any): object is CategoryDto {
+    return Object.prototype.hasOwnProperty.call(object, 'id')
+    && Object.prototype.hasOwnProperty.call(object, 'name')
+    && Object.prototype.hasOwnProperty.call(object, 'slug');
   }
 
 }

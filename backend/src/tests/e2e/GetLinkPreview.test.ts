@@ -2,6 +2,8 @@ import request from 'supertest';
 import app from '../../app';
 import { UserEntity } from '../../contexts/users/infrastructure/persistence/entities/UserEntity';
 import dataSource from '../../data-source';
+import UserFactory from "../../factories/UserFactory"
+
 
 describe('POST /link-preview', () => {
 
@@ -27,19 +29,12 @@ describe('POST /link-preview', () => {
   it('returns 400 when the body is empty', async () => {
     const email = 'admin@butterfy.me';
     const password = 'password';
-    await request(app).post('/user').send({
-      email: email,
-      username: 'admin',
-      password: password,
-    });
-    const resSignIn = await request(app).post('/signin').send({
-      password: password,
-      email: email,
-    });
+    await UserFactory.create(request, app, email, password);
+    const auth = await UserFactory.signIn(request, app, email, password);
 
     const res = await request(app)
     .post('/link-preview-data')
-    .auth(resSignIn.body.access_token, { type: 'bearer' })
+    .auth(auth.body.access_token, { type: 'bearer' })
     .send({});
 
     expect(res.statusCode).toEqual(400);
@@ -48,22 +43,14 @@ describe('POST /link-preview', () => {
   it('returns 200 when the url exists', async () => {
     const email = 'admin@butterfy.me';
     const password = 'password';
-    await request(app).post('/user').send({
-      email: email,
-      username: 'admin',
-      password: password,
-    });
-    const resSignIn = await request(app).post('/signin').send({
-      password: password,
-      email: email,
-    });
+    await UserFactory.create(request, app, email, password);
+    const auth = await UserFactory.signIn(request, app, email, password);
     const url = 'https://ogp.me/';
 
-
     const res = await request(app)
-    .post('/link-preview-data')
-    .auth(resSignIn.body.access_token, { type: 'bearer' })
-    .send({url: url});
+      .post('/link-preview-data')
+      .auth(auth.body.access_token, { type: 'bearer' })
+      .send({url: url});
 
     expect(res.statusCode).toEqual(200);
     expect(res.body.ogUrl).toEqual(url);

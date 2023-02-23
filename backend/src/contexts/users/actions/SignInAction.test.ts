@@ -97,5 +97,7 @@ describe('signing in', () => {
     expect(authServiceMock.getToken).toHaveBeenCalled();
     expect(res.token_type).toEqual('Bearer');
     expect(res.access_token).toEqual('xxxx');
+    expect(res).toHaveProperty('uuid');
+    expect(res.uuid).not.toBeNull();
   });
 });

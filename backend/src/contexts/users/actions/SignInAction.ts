@@ -19,6 +19,7 @@ export class SignInAction {
     if (username) {
       user = await this.userRepository.findUser({ username: username });
     }
+
     if (email) {
       user = await this.userRepository.findUser({ email: email });
     }
@@ -28,6 +29,9 @@ export class SignInAction {
     const match = await bcrypt.compare(password, user.password);
     if (!match) throw new WrongPasswordException();
 
-    return await this.authService.getToken();
+    const auth0 = await this.authService.getToken();
+    const uuid = { uuid: user.uuid };
+
+    return {...auth0, ...uuid};
   }
 }
