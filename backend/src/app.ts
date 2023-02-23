@@ -253,7 +253,8 @@ app.get('/links/:id', async (req: Request, res: Response) => {
 app.post('/links', checkJwt, async (req: Request, res: Response) => {
   const createLinkAction = new CreateLinkAction(
     new LinkRepositoryPG(dataSource),
-    new CategoryRepositoryPG(dataSource)
+    new CategoryRepositoryPG(dataSource),
+    new UserRepositoryPG(dataSource)
   );
 
   createLinkAction
@@ -275,6 +276,10 @@ app.post('/links', checkJwt, async (req: Request, res: Response) => {
         case CategoryNotFoundException:
           res.status(400);
           res.send({ message: 'Category not found!' });
+          break;
+        case UserNotFoundException:
+          res.status(400);
+          res.send({ message: 'User not found!' });
           break;
         case LinkExistsException:
           res.status(403);

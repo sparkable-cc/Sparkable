@@ -5,11 +5,18 @@ import { LinkEntity } from '../../contexts/links/infrastructure/persistence/enti
 import { LinkRepositoryPG } from '../../contexts/links/infrastructure/persistence/repositories/LinkRepositoryPG';
 import dataSource from '../../data-source';
 import CategoryFactory from '../../factories/CategoryFactory';
+import UserFactory from '../../factories/UserFactory';
 
 describe('POST /links', () => {
+  let auth: { body: { access_token: string; uuid: string; } };
 
   beforeAll(async () => {
     await dataSource.initialize();
+
+    const email = 'admin@butterfy.me';
+    const password = 'password';
+    await UserFactory.create(request, app, email, password);
+    auth = await UserFactory.signIn(request, app, email, password);
   });
 
   afterAll(async () => {
@@ -24,9 +31,16 @@ describe('POST /links', () => {
     await categoryRepository.delete({});
   });
 
+  it('returns 401 when the user is not logged', async () => {
+    const res = await request(app).post('/links').send({});
+
+    expect(res.statusCode).toEqual(401);
+  });
+
   it('returns 400 when the mandatory field is empty', async () => {
     const res = await request(app)
       .post('/links')
+      .auth(auth.body.access_token, { type: 'bearer' })
       .send({});
 
     expect(res.statusCode).toEqual(400);
@@ -36,9 +50,11 @@ describe('POST /links', () => {
   it('returns 400 when the category limit is reached', async () => {
     const res = await request(app)
       .post('/links')
+      .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         title: 'title',
         url: 'http://example',
+        userUuid: 'xxxxxx',
         categories: [
           {id:1, name:'name', slug:'name'},
           {id:2, name:'name2', slug:'name2'},
@@ -53,9 +69,11 @@ describe('POST /links', () => {
   it('returns 400 when the category does not exist', async () => {
     const res = await request(app)
       .post('/links')
+      .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         title: 'title',
         url: 'http://example',
+        userUuid: 'xxxxxx',
         categories: [
           {id:1, name:'name', slug:'name'}
         ],
@@ -65,23 +83,44 @@ describe('POST /links', () => {
     expect(res.body.message).toEqual('Category not found!');
   });
 
+  it('returns 400 when the user does not exist', async () => {
+    const category = await CategoryFactory.create('Environment', 'environment');
+
+    const res = await request(app)
+      .post('/links')
+      .auth(auth.body.access_token, { type: 'bearer' })
+      .send({
+        title: 'title',
+        url: 'http://example',
+        categories: [category],
+        userUuid: 'xxxxxx'
+      });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toEqual('User not found!');
+  });
+
   it('returns 403 when link exist', async () => {
     const category = await CategoryFactory.create('Environment', 'environment');
 
     await request(app)
       .post('/links')
+      .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         title: 'title',
         url: 'http://example',
         categories: [category],
+        userUuid: auth.body.uuid
       });
 
     const res = await request(app)
       .post('/links')
+      .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         title: 'title2',
         url: 'http://example',
         categories: [category],
+        userUuid: auth.body.uuid
       });
 
     expect(res.statusCode).toEqual(403);
@@ -94,10 +133,12 @@ describe('POST /links', () => {
 
     const res = await request(app)
       .post('/links')
+      .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         title: title,
         url: url,
-        categories: [category]
+        categories: [category],
+        userUuid: auth.body.uuid
       });
 
     expect(res.statusCode).toEqual(201);
@@ -108,7 +149,7 @@ describe('POST /links', () => {
     expect(links[0].date).not.toBeNull();
     expect(links[0].title).toEqual(title);
     expect(links[0].url).toEqual(url);
-    expect(links[0].categories).toEqual([category]);
+    expect(links[0].userUuid).toEqual(auth.body.uuid);
   });
 
   it('returns 201 when the link is created with all the fields', async () => {
@@ -120,9 +161,11 @@ describe('POST /links', () => {
 
     const res = await request(app)
       .post('/links')
+      .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         title: title,
         url: url,
+        userUuid: auth.body.uuid,
         categories: [category],
         image: image,
         description: description,

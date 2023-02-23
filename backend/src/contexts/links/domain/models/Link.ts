@@ -58,7 +58,6 @@ export class Link {
       id: 0,
       uuid: this.uuid,
       title: this.title,
-      username: '',
       url: this.url,
       image: this.image,
       description: this.description,

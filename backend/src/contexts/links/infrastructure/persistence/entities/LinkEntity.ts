@@ -33,10 +33,9 @@ export class LinkEntity implements LinkDto {
   date: Date;
 
   @Column({nullable: true})
-  username: string;
+  userUuid: string;
 
   @ManyToMany(() => CategoryEntity, (category) => category.links, {
-  //@ManyToMany(() => CategoryEntity, {
     eager: true,
     cascade: ["insert"],
   })

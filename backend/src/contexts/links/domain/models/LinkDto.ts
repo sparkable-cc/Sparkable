@@ -4,7 +4,6 @@ export interface LinkDto {
   id: number;
   uuid: string;
   title: string;
-  username: string;
   url: string;
   image: string;
   description: string;
