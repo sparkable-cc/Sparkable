@@ -5,6 +5,10 @@
   font-size: $size32;
   font-weight: 500;
   margin-bottom: $gapS;
+
+  @media only screen and (max-width: $mobile) {
+    font-size: $size24;
+  }
 }
 
 .text {
@@ -42,6 +46,10 @@
   font-family: $secondaryFont;
   font-size: $size14;
   margin-bottom: 60px;
+
+  @media only screen and (max-width: $mobile) {
+    margin-bottom: 8px;
+  }
 }
 
 .linkPreviewWrapper {
@@ -144,6 +152,10 @@
 .successWrapper {
   text-align: center;
   padding-top: 40px;
+
+  @media only screen and (max-width: $mobile){
+    padding-top: 0;
+  }
 }
 
 .successTitle {

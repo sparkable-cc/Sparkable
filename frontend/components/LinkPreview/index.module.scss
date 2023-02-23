@@ -40,11 +40,21 @@
   display: flex;
   justify-content: space-between;
   overflow: hidden;
+
+  @media only screen and (max-width: $mobile) {
+    min-height: auto;
+    flex-wrap: wrap;
+    flex-direction: column-reverse;
+  }
 }
 
 .linkPreviewContent {
   padding: $gapXs $gapXL $gapXs $gapXxs;
   width: 67%;
+
+  @media only screen and (max-width: $mobile) {
+    width: 100%;
+  }
 }
 
 .linkPreviewCover {
@@ -52,6 +62,11 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-color: rgba(0,0,0,.1);
+
+  @media only screen and (max-width: $mobile) {
+    height: 190px;
+    width: 100%;
+  }
 }
 
 .linkTitle {
@@ -59,8 +74,4 @@
   line-height: 1.2;
   font-weight: 500;
   margin: 4px 0;
-}
-
-.linkDescription {
-
 }

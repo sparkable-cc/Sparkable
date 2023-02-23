@@ -7,6 +7,11 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+
+  @media only screen and (max-width: $mobile) {
+    align-items: start;
+    padding-top: 72px;
+  }
 }
 
 .submissionWrapper {
@@ -19,6 +24,11 @@
   padding: $gapS;
   display: flex;
   flex-direction: column;
+
+  @media only screen and (max-width: $mobile) {
+    min-height: calc(100vh - 72px);
+    justify-content: center;
+  }
 }
 
 .submissionHeader {

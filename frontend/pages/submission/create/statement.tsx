@@ -30,14 +30,17 @@ const CreateSubmissionStatement = () => {
     debouncedHandler(value);
   };
 
-  const onButtonClick = () => {
-    router.push("/submission/create/statement")
+  const onSubmit = () => {
+    // 1. Check is all required fields are filled out
+    // 2. Check is user authorised
+    // 3. Call to API here
+    // 4. redirect to router.push("/submission/create/statement")
   }
 
   return (
     <CreateSubmissionLayout
       submitButtonText="Submit"
-      onSubmit={onButtonClick}
+      onSubmit={onSubmit}
       isSubmitAvailable={true}
       isCancelAvailable={true}
     >
