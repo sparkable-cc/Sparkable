@@ -1,11 +1,11 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithAuth } from "../../utils/api";
 import { ApiTypes } from "../../types";
 
 export const submissionApi = createApi({
   reducerPath: "submissionApi",
   tagTypes: ["submissionApi"],
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BASE_URL_API }),
+  baseQuery: baseQueryWithAuth,
   endpoints: (builder) => ({
     postLinkPreview: builder.query<ApiTypes.Res.SubmissionLinkPreview, string>({
       query: (value: string) => ({

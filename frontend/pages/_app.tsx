@@ -9,7 +9,7 @@ import { NoAccess } from "../components/NoAccess";
 import { checkCredentials } from "../utils/checkCredentials";
 
 export default function App({ Component, pageProps }: AppProps) {
-  if (pageProps.protected && checkCredentials()) {
+  if (pageProps.protected && !checkCredentials()) {
     return (
       <Provider store={store}>
         <MainLayout>

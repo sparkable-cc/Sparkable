@@ -1,4 +1,5 @@
 import dayjs from "dayjs"
+import { quotesClear } from "../utils/quotesClear";
 
 export const checkCredentials = () => {
 
@@ -9,9 +10,9 @@ export const checkCredentials = () => {
   const token = sessionStorage.getItem("token");
   const tokenExpires = sessionStorage.getItem("token-expires");
 
-  if (!token) return false;
+  if (!token || !tokenExpires) return false;
 
-  if(dayjs().isAfter(dayjs(tokenExpires))){
+  if(dayjs().isAfter(dayjs(quotesClear(tokenExpires!)))){
     sessionStorage.clear();
     return false;
   }
