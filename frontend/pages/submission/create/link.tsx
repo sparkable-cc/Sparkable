@@ -1,4 +1,4 @@
-import { useState, FormEvent, useCallback } from "react";
+import { useState, FormEvent, useCallback, useEffect } from "react";
 import { CreateSubmissionLayout } from "../../../layouts/CreateSubmissionLayout";
 import styles from '../../../styles/Submission.module.scss';
 import { useRouter } from "next/router";
@@ -53,17 +53,18 @@ const CreateSubmissionLink = () => {
   }
 
   const isPreviewAvailable = (): boolean => {
-    if (value) return true;
-
-    // TO-DO
-    // check is link preview available 
+    if (value && data) return true;
 
     else {
       return false;
     }
   }
 
-  console.log('data', data)
+  useEffect(()=>{
+    if(link){
+      debounceSetLink(link)
+    }
+  }, [])
 
   return (
     <CreateSubmissionLayout
@@ -96,10 +97,10 @@ const CreateSubmissionLink = () => {
         <div className={styles.linkPreviewWrapper}>
           <LinkPreview
             isLoading={isLoading}
-            site="site.com"
-            title="Man simulates time travel thanks to Stable Diffusion image synthesis"
-            description="Fictional travelogue shows man taking selfies in ancient Greece, Egypt, and more."
-            image="https://picsum.photos/id/103/200/200"
+            site={data?.ogUrl}
+            title={data?.ogTitle}
+            description={data?.ogDescription}
+            image={data?.ogImage[0]?.url}
           />
         </div>
       </div>
