@@ -5,17 +5,20 @@ import { useRouter } from "next/router";
 import { FormInput } from "../../../components/FormInput";
 import { useAppSelector, useAppDispatch } from "../../../store/hooks";
 import { setLink, selectLink } from "../../../store/submissionSlice";
+import { useLazyPostLinkPreviewQuery, postLinkPreview } from "../../../store/api/submissionApi";
 import debounce from 'lodash/debounce';
 import { LinkPreview } from '../../../components/LinkPreview';
 import { ModalNote } from "../../../components/ModalNote";
 import Link from "next/link";
 import { storageKeys } from "../../../utils/storageKeys";
+import { toast } from "react-toastify";
 
 const CreateSubmissionLink = () => {
   const link = useAppSelector(selectLink)
   const [value, setValue] = useState(link);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [ triggerPostLinkPreview, { isLoading, data }] = useLazyPostLinkPreviewQuery();
 
   const onButtonClick = () => {
     router.push("/submission/create/category")
@@ -24,8 +27,16 @@ const CreateSubmissionLink = () => {
   const debounceSetLink = (value) => {
     dispatch(setLink(value));
     sessionStorage.setItem(storageKeys.submissionLink, value);
-    // TO-DO
-    // call to API 
+    
+    try {
+      triggerPostLinkPreview(value).then((res: any) => {
+        if (res?.error) {
+          toast.error(res?.error?.data?.message);
+        }
+      });
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
   }
 
   const debouncedHandler = useCallback(debounce(debounceSetLink, 1000), []);
@@ -51,6 +62,8 @@ const CreateSubmissionLink = () => {
       return false;
     }
   }
+
+  console.log('data', data)
 
   return (
     <CreateSubmissionLayout
@@ -82,7 +95,7 @@ const CreateSubmissionLink = () => {
         </header>
         <div className={styles.linkPreviewWrapper}>
           <LinkPreview
-            isLoading={false}
+            isLoading={isLoading}
             site="site.com"
             title="Man simulates time travel thanks to Stable Diffusion image synthesis"
             description="Fictional travelogue shows man taking selfies in ancient Greece, Egypt, and more."

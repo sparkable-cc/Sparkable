@@ -1,3 +1,4 @@
+import dayjs from "dayjs"
 
 export const checkCredentials = () => {
 
@@ -10,8 +11,10 @@ export const checkCredentials = () => {
 
   if (!token) return false;
 
-  // TO-DO:
-  // check is token does not expire and clear if so
+  if(dayjs().isAfter(dayjs(tokenExpires))){
+    sessionStorage.clear();
+    return false;
+  }
 
   else return true;
 }

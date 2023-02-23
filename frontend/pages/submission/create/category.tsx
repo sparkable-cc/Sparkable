@@ -4,7 +4,7 @@ import styles from '../../../styles/Submission.module.scss';
 import { useRouter } from "next/router";
 import { FormInput } from "../../../components/FormInput";
 import { useAppSelector, useAppDispatch } from "../../../store/hooks";
-import { getCategories, useLazyGetCategoriesQuery } from "../../../store/api";
+import { getCategories, useLazyGetCategoriesQuery } from "../../../store/api/articlesApi";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 import { ModalNote } from "../../../components/ModalNote";

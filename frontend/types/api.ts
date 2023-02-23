@@ -15,6 +15,13 @@ export declare namespace ApiTypes.Model {
     name: string,
     slug: string
   }
+
+  interface SubmissionLinkImage {
+    url: string
+    width: number
+    height: number
+    type: string
+  }
 }
 
 export declare namespace ApiTypes.Req {
@@ -30,7 +37,7 @@ export declare namespace ApiTypes.Req {
     username: string
     password: string
   }
-  
+
   interface SignIn {
     email?: string
     username?: string
@@ -64,5 +71,13 @@ export declare namespace ApiTypes.Res {
     access_token: string,
     expires_in: number,
     token_type: string
+  }
+
+  interface SubmissionLinkPreview {
+    ogTitle: string
+    ogType: string
+    ogUrl: string
+    ogDescription: string
+    ogImage: ApiTypes.Model.SubmissionLinkImage[]
   }
 }

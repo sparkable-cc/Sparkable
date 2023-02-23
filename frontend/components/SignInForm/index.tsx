@@ -3,7 +3,7 @@ import styles from "./index.module.scss";
 import Link from "next/link";
 import { FormInput } from "../FormInput";
 import classNames from "classnames";
-import { useLazySignInQuery } from "../../store/api";
+import { useLazySignInQuery } from "../../store/api/authApi";
 import { Spiner } from "../Spiner";
 import { signInSchema, validationInitialState } from "../../utils/validations";
 import { toast } from "react-toastify";

@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Spiner } from "../Spiner";
 import classNames from "classnames";
 import styles from "./index.module.scss";
-import { useLazyGetArticlesQuery } from "../../store/api";
+import { useLazyGetArticlesQuery } from "../../store/api/articlesApi";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { usePrevious } from "../../utils/usePrevious";
 import isEqual from "lodash.isequal";

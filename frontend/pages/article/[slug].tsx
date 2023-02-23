@@ -4,7 +4,7 @@ import styles from "../../styles/Article.module.scss";
 import { ArticlesList } from "../../components/ArticlesList";
 import { ArticlePreview } from "../../components/ArticlePreview";
 import { BackButton } from "../../components/BackButton";
-import { useLazyGetArticleByIDQuery } from "../../store/api";
+import { useLazyGetArticleByIDQuery } from "../../store/api/articlesApi";
 import { useRouter } from "next/router";
 import { ApiTypes } from "../../types";
 import { ModalShare } from "../../components/ModalShare";

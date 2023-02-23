@@ -1,7 +1,7 @@
 import styles from "./index.module.scss";
 import classNames from "classnames";
 import { useMemo, useEffect, useState } from "react";
-import { getArticles, getCategories, useLazyGetCategoriesQuery } from "../../store/api";
+import { getArticles, getCategories, useLazyGetCategoriesQuery } from "../../store/api/articlesApi";
 import { setFilters, selectSelectedFilters } from "../../store/UIslice";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { v4 as uuidv4 } from "uuid";
