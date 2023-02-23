@@ -19,6 +19,7 @@ export class SignInAction {
     if (username) {
       user = await this.userRepository.findUser({ username: username });
     }
+
     if (email) {
       user = await this.userRepository.findUser({ email: email });
     }
