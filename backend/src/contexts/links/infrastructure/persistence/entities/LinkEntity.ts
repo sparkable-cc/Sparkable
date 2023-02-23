@@ -35,6 +35,9 @@ export class LinkEntity implements LinkDto {
   @Column({nullable: true})
   userUuid: string;
 
+  @Column({nullable: true})
+  username: string;
+
   @ManyToMany(() => CategoryEntity, (category) => category.links, {
     eager: true,
     cascade: ["insert"],

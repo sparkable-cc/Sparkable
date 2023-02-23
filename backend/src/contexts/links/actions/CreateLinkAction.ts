@@ -24,8 +24,9 @@ export class CreateLinkAction {
   async execute(linkData: any) {
     const link = new Link(linkData);
     await this.checkExistsCategories(link);
-    await this.checkUserExists(link);
-    await this.checkUrlIsNew(linkData);
+    const user = await this.checkUserExists(link);
+    await this.checkUrlIsNew(link);
+    link.username = user.username;
     this.linkRepository.storeLink(link);
   }
 
@@ -39,6 +40,8 @@ export class CreateLinkAction {
     const user = await this.userRepository.findUser({ uuid: link.userUuid });
     if (!user)
       throw new UserNotFoundException();
+
+    return user;
   }
 
   private async checkExistsCategories(link: Link) {

@@ -3,19 +3,22 @@ import app from '../../app';
 import { CategoryEntity } from '../../contexts/links/infrastructure/persistence/entities/CategoryEntity';
 import { LinkEntity } from '../../contexts/links/infrastructure/persistence/entities/LinkEntity';
 import { LinkRepositoryPG } from '../../contexts/links/infrastructure/persistence/repositories/LinkRepositoryPG';
+import { UserEntity } from '../../contexts/users/infrastructure/persistence/entities/UserEntity';
 import dataSource from '../../data-source';
 import CategoryFactory from '../../factories/CategoryFactory';
 import UserFactory from '../../factories/UserFactory';
 
 describe('POST /links', () => {
   let auth: { body: { access_token: string; uuid: string; } };
+  let username: string;
 
   beforeAll(async () => {
     await dataSource.initialize();
 
     const email = 'admin@butterfy.me';
     const password = 'password';
-    await UserFactory.create(request, app, email, password);
+    username = 'admin';
+    await UserFactory.create(request, app, email, password, username);
     auth = await UserFactory.signIn(request, app, email, password);
   });
 
@@ -29,6 +32,9 @@ describe('POST /links', () => {
 
     const categoryRepository = dataSource.getRepository(CategoryEntity);
     await categoryRepository.delete({});
+
+    const userRepository = dataSource.getRepository(UserEntity);
+    await userRepository.delete({});
   });
 
   it('returns 401 when the user is not logged', async () => {
@@ -150,6 +156,7 @@ describe('POST /links', () => {
     expect(links[0].title).toEqual(title);
     expect(links[0].url).toEqual(url);
     expect(links[0].userUuid).toEqual(auth.body.uuid);
+    expect(links[0].username).toEqual(username);
   });
 
   it('returns 201 when the link is created with all the fields', async () => {

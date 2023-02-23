@@ -10,4 +10,5 @@ export interface LinkDto {
   date: Date;
   categories: Array<CategoryDto>;
   userUuid: string;
+  username: string;
 }

@@ -46,6 +46,7 @@ export class Link {
     this.image = link.image;
     this.description = link.description;
     this.date = new Date();
+    this.username = link.username;
     this.uuid = uuidv4();
   }
 
@@ -63,7 +64,8 @@ export class Link {
       description: this.description,
       date: this.date,
       categories: this.categories,
-      userUuid: this.userUuid
+      userUuid: this.userUuid,
+      username: this.username
     };
   }
 
