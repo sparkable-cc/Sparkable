@@ -1,14 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "./index";
 import { storageKeys } from "../utils/storageKeys";
+import { ApiTypes } from "../types/api"
 
 let storageLink;
+let storageLinkData;
 let storageCategories;
 let storageSuggestedCategory;
 let storageYourStatement;
 
 if (typeof window !== 'undefined') {
   storageLink = sessionStorage.getItem(storageKeys.submissionLink);
+  storageLinkData = sessionStorage.getItem(storageKeys.submissionLinkData);
   storageCategories = sessionStorage.getItem(storageKeys.submissionCategories);
   storageSuggestedCategory = sessionStorage.getItem(storageKeys.submissionSuggestedCategory);
   storageYourStatement = sessionStorage.getItem(storageKeys.submissionYourStatement);
@@ -16,6 +19,7 @@ if (typeof window !== 'undefined') {
 
 export interface SubmissionState {
   link: string;
+  linkData: ApiTypes.Res.SubmissionLinkPreview | null
   categories: string[];
   suggestedCategory: string
   yourStatement: string
@@ -23,6 +27,7 @@ export interface SubmissionState {
 
 const initialState: SubmissionState = {
   link: storageLink || "",
+  linkData: storageLinkData ? JSON.parse(storageLinkData) : null,
   categories: storageCategories ? JSON.parse(storageCategories) : [],
   suggestedCategory: storageSuggestedCategory || "",
   yourStatement: storageYourStatement || ""
@@ -34,6 +39,9 @@ export const submissionState = createSlice({
   reducers: {
     setLink: (state, action: PayloadAction<string>) => {
       state.link = action.payload;
+    },
+    setLinkData: (state, action: PayloadAction<ApiTypes.Res.SubmissionLinkPreview>) => {
+      state.linkData = action.payload;
     },
     setCategories: (state, action: PayloadAction<string[]>) => {
       state.categories = action.payload;
@@ -55,6 +63,7 @@ export const submissionState = createSlice({
 
 export const {
   setLink,
+  setLinkData,
   setCategories,
   setSuggestedCategory,
   setYourStatement,
@@ -62,6 +71,7 @@ export const {
 } = submissionState.actions;
 
 export const selectLink = (state: RootState) => state.submission.link;
+export const selectLinkData = (state: RootState) => state.submission.linkData;
 export const selectCategories = (state: RootState) => state.submission.categories;
 export const selectSuggestedCategory = (state: RootState) => state.submission.suggestedCategory;
 export const selectYourStatement = (state: RootState) => state.submission.yourStatement;

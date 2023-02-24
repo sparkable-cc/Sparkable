@@ -1,5 +1,6 @@
 import dayjs from "dayjs"
 import { quotesClear } from "../utils/quotesClear";
+import { storageKeys } from "./storageKeys";
 
 export const checkCredentials = () => {
 
@@ -7,8 +8,8 @@ export const checkCredentials = () => {
     return false;
   }
   
-  const token = sessionStorage.getItem("token");
-  const tokenExpires = sessionStorage.getItem("token-expires");
+  const token = sessionStorage.getItem(storageKeys.token);
+  const tokenExpires = sessionStorage.getItem(storageKeys.tokenExpires);
 
   if (!token || !tokenExpires) return false;
 

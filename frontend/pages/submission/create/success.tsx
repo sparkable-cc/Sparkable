@@ -28,12 +28,3 @@ const SuccessSubmission = () => {
 }
 
 export default SuccessSubmission;
-
-
-export async function getStaticProps() {
-  return {
-    props: {
-      protected: true,
-    },
-  }
-}

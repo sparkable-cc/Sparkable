@@ -27,7 +27,17 @@ export const LinkPreview = ({
         </div>
       </div>
     )
-  } else {
+  }
+  if (!site && !title && !description) {
+    return (
+      <div className={styles.loadingWrapper}>
+        <div className={styles.loadingText}>
+          Data not found, you can try another link
+        </div>
+      </div>
+    )
+  }
+  else {
     return (
       <section className={styles.linkPreview}>
         <div className={styles.linkPreviewContent}>

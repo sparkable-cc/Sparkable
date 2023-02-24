@@ -123,15 +123,6 @@ const CreateSubmissionCategory = () => {
 
 export default CreateSubmissionCategory;
 
-
-export async function getStaticProps() {
-  return {
-    props: {
-      protected: true,
-    },
-  }
-}
-
 const categoriesNote = [
   {
     name: "Art & Culture",

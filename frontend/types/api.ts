@@ -43,6 +43,15 @@ export declare namespace ApiTypes.Req {
     username?: string
     password: string
   }
+
+  interface CreateLink {
+    title: string
+    url: string
+    categories: ApiTypes.Model.Category[]
+    userUuid: string
+    description: string
+    image: string
+  }
 }
 
 export declare namespace ApiTypes.Res {
@@ -69,8 +78,9 @@ export declare namespace ApiTypes.Res {
 
   interface Token {
     access_token: string,
-    expires_in: number,
+    expires_in: string,
     token_type: string
+    uuid: string
   }
 
   interface SubmissionLinkPreview {
@@ -79,5 +89,9 @@ export declare namespace ApiTypes.Res {
     ogUrl: string
     ogDescription: string
     ogImage: ApiTypes.Model.SubmissionLinkImage[]
+  }
+
+  interface CreateLink {
+    message: string
   }
 }

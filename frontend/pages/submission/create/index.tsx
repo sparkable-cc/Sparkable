@@ -27,12 +27,3 @@ const CreateSubmissionStart = () => {
 }
 
 export default CreateSubmissionStart;
-
-
-export async function getStaticProps() {
-  return {
-    props: {
-      protected: true,
-    },
-  }
-}

@@ -8,7 +8,7 @@ import { Spiner } from "../Spiner";
 import { signInSchema, validationInitialState } from "../../utils/validations";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-
+import { storageKeys } from "../../utils/storageKeys";
 
 const inputValuesInitialState = {
   login: "",
@@ -74,8 +74,9 @@ export const SignInForm = () => {
     if (data) {
       setInputValues(inputValuesInitialState);
       toast.success("Authorized successfully!");
-      sessionStorage.setItem("token", JSON.stringify(data.access_token));
-      sessionStorage.setItem("token-expires", JSON.stringify(data.expires_in));
+      sessionStorage.setItem(storageKeys.token, data.access_token);
+      sessionStorage.setItem(storageKeys.tokenExpires, data.expires_in);
+      sessionStorage.setItem(storageKeys.userId, data.uuid);
       setTimeout(() => {
         router.push("/");
       }, 2500);

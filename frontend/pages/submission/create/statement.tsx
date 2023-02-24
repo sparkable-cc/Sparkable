@@ -1,13 +1,21 @@
-import { FormEvent, useCallback, useState } from "react";
+import { FormEvent, useCallback, useState, useEffect } from "react";
 import { CreateSubmissionLayout } from "../../../layouts/CreateSubmissionLayout";
 import styles from '../../../styles/Submission.module.scss';
 import { useRouter } from "next/router";
 import { useAppSelector, useAppDispatch } from "../../../store/hooks";
 import debounce from 'lodash/debounce';
 import { storageKeys } from "../../../utils/storageKeys";
+import { checkCredentials } from "../../../utils/checkCredentials";
+import { useLazyPostLinksQuery } from "../../../store/api/submissionApi";
+import { ApiTypes } from "../../../types";
+import { toast } from "react-toastify";
 import {
   selectYourStatement,
   setYourStatement,
+  selectCategories,
+  selectSuggestedCategory,
+  selectLink,
+  selectLinkData,
 } from "../../../store/submissionSlice";
 
 
@@ -15,7 +23,15 @@ const CreateSubmissionStatement = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const yourStatement = useAppSelector(selectYourStatement);
-  const [value, setValue] = useState(yourStatement)
+  const [value, setValue] = useState(yourStatement);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const activeCategories = useAppSelector(selectCategories);
+  const suggestedCategory = useAppSelector(selectSuggestedCategory);
+  const link = useAppSelector(selectLink);
+  const linkData = useAppSelector(selectLinkData);
+
+  const [triggerPostLinks, { isLoading, data }] = useLazyPostLinksQuery();
 
   const debounceSetLink = (value) => {
     dispatch(setYourStatement(value));
@@ -30,12 +46,62 @@ const CreateSubmissionStatement = () => {
     debouncedHandler(value);
   };
 
-  const onSubmit = () => {
-    // 1. Check is all required fields are filled out
-    // 2. Check is user authorised
-    // 3. Call to API here
-    // 4. redirect to router.push("/submission/create/statement")
+  const onValidate = () => {
+    if (!activeCategories.length) {
+      setErrorMessage("You did not specify categories, please go back and specify them.");
+      return false;
+    }
+    if (!linkData) {
+      setErrorMessage("You did not specify a link, please go back and specify one.");
+      return false;
+    }
+    if (!checkCredentials()) {
+      setErrorMessage("You are not logged in, please log in to continue..");
+      return false;
+    }
+    else {
+      setErrorMessage("");
+      return true;
+    }
   }
+
+  const onSubmit = () => {
+    const userId = sessionStorage.getItem(storageKeys.userId);
+
+    if (onValidate() && linkData && userId) {
+
+      const data: ApiTypes.Req.CreateLink = {
+        title: linkData.ogTitle,
+        url: linkData?.ogUrl,
+        categories: [],
+        userUuid: userId,
+        description: linkData?.ogDescription,
+        image: linkData?.ogImage[0]?.url || ""
+      }
+
+      console.log(data);
+
+      // try {
+      //   triggerPostLinks(data).then((res: any) => {
+      //     if (res?.error) {
+      //       toast.error(res?.error?.data?.message);
+      //     }
+      //   });
+      // } catch (error: any) {
+      //   toast.error(error?.message);
+      // }
+    }
+
+    // 5. clean previous link data when input was changed
+    // 6. Change privat access to submission flow
+    // 7. add "Finish" tab now (at least simple version for now)?
+  }
+
+  useEffect(()=>{
+    if(data){
+      router.push("/submission/create/success");
+    }
+  },[data])
 
   return (
     <CreateSubmissionLayout
@@ -54,24 +120,16 @@ const CreateSubmissionStatement = () => {
       </div>
       <div>
         <div className={styles.textareaLabel}>Optional</div>
-        <textarea 
+        <textarea
           value={value}
-          className={styles.textarea} 
+          className={styles.textarea}
           placeholder="Text"
           onChange={onTextareaChange}
         ></textarea>
+        {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
       </div>
     </CreateSubmissionLayout>
   )
 }
 
 export default CreateSubmissionStatement;
-
-
-export async function getStaticProps() {
-  return {
-    props: {
-      protected: true,
-    },
-  }
-}

@@ -16,11 +16,19 @@ export const submissionApi = createApi({
         }
       }),
     }),
+    postLinks: builder.query<ApiTypes.Res.CreateLink, ApiTypes.Req.CreateLink>({
+      query: (data) => ({
+        url: `/links`,
+        method: "POST",
+        body: data
+      }),
+    }),
   }),
 });
 
 export const {
-  useLazyPostLinkPreviewQuery
+  useLazyPostLinkPreviewQuery,
+  useLazyPostLinksQuery
 } = submissionApi;
 
 

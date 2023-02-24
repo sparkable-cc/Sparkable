@@ -4,8 +4,8 @@ import styles from '../../../styles/Submission.module.scss';
 import { useRouter } from "next/router";
 import { FormInput } from "../../../components/FormInput";
 import { useAppSelector, useAppDispatch } from "../../../store/hooks";
-import { setLink, selectLink } from "../../../store/submissionSlice";
-import { useLazyPostLinkPreviewQuery, postLinkPreview } from "../../../store/api/submissionApi";
+import { setLink, selectLink, setLinkData } from "../../../store/submissionSlice";
+import { useLazyPostLinkPreviewQuery } from "../../../store/api/submissionApi";
 import debounce from 'lodash/debounce';
 import { LinkPreview } from '../../../components/LinkPreview';
 import { ModalNote } from "../../../components/ModalNote";
@@ -18,7 +18,7 @@ const CreateSubmissionLink = () => {
   const [value, setValue] = useState(link);
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [ triggerPostLinkPreview, { isLoading, data }] = useLazyPostLinkPreviewQuery();
+  const [triggerPostLinkPreview, { isLoading, data }] = useLazyPostLinkPreviewQuery();
 
   const onButtonClick = () => {
     router.push("/submission/create/category")
@@ -27,7 +27,7 @@ const CreateSubmissionLink = () => {
   const debounceSetLink = (value) => {
     dispatch(setLink(value));
     sessionStorage.setItem(storageKeys.submissionLink, value);
-    
+
     try {
       triggerPostLinkPreview(value).then((res: any) => {
         if (res?.error) {
@@ -60,11 +60,18 @@ const CreateSubmissionLink = () => {
     }
   }
 
-  useEffect(()=>{
-    if(link){
+  useEffect(() => {
+    if (link) {
       debounceSetLink(link)
     }
   }, [])
+
+  useEffect(()=>{
+    if(data){
+      setLinkData(data);
+      sessionStorage.setItem(storageKeys.submissionLinkData, JSON.stringify(data));
+    }
+  }, [data])
 
   return (
     <CreateSubmissionLayout
@@ -109,12 +116,3 @@ const CreateSubmissionLink = () => {
 }
 
 export default CreateSubmissionLink;
-
-
-export async function getStaticProps() {
-  return {
-    props: {
-      protected: true,
-    },
-  }
-}
