@@ -1,4 +1,4 @@
-import { FormEvent, useMemo, useEffect } from "react";
+import { FormEvent, useMemo, useEffect, useState } from "react";
 import { CreateSubmissionLayout } from "../../../layouts/CreateSubmissionLayout";
 import styles from '../../../styles/Submission.module.scss';
 import { useRouter } from "next/router";
@@ -45,11 +45,13 @@ const CreateSubmissionCategory = () => {
     const param = event?.target?.getAttribute("data-param");
     if (!param) return;
 
+    const category = categoriesData?.filter(item => item.slug === param);
+  
     let data;
-    if (activeCategories?.find(item => item === param)) {
-      data = activeCategories.filter(item => item !== param);
+    if (activeCategories?.find(item => item.slug === param)) {
+      data = activeCategories.filter(item => item.slug !== param);
     } else {
-      data = [...activeCategories, ...[param]];
+      data = [...activeCategories, ...category!];
     }
 
     dispatch(setCategories(data));
@@ -66,7 +68,7 @@ const CreateSubmissionCategory = () => {
     <CreateSubmissionLayout
       submitButtonText="Continue"
       onSubmit={onButtonClick}
-      isSubmitAvailable={Boolean(activeCategories?.length)}
+      isSubmitAvailable={Boolean(activeCategories?.length) && activeCategories?.length <= 2}
       isCancelAvailable={true}
     >
       <div className={styles.categoryDescription}>
@@ -93,7 +95,7 @@ const CreateSubmissionCategory = () => {
           categoriesData && categoriesData?.map(item => (
             <button
               className={classNames(styles.categoryButton, {
-                [styles.active]: activeCategories.find(sortItem => sortItem === item.slug)
+                [styles.active]: activeCategories.find(sortItem => sortItem.slug === item.slug)
               })}
               onClick={onSetCurrentCategory}
               key={uuidv4()}

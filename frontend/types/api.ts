@@ -4,10 +4,13 @@ export declare namespace ApiTypes.Model {
     id: number,
     uuid: string,
     title: string,
-    link: string,
+    url: string,
     image: string,
     date: Date
     username: string
+    description: string
+    userUuid: string
+    categories: Category[]
   }
 
   interface Category {
@@ -51,6 +54,7 @@ export declare namespace ApiTypes.Req {
     userUuid: string
     description: string
     image: string
+    statement?: string
   }
 }
 
@@ -68,11 +72,12 @@ export declare namespace ApiTypes.Res {
     id: number
     uuid: string
     title: string
-    link: string
+    url: string
     image: string
     description?: string
     date: string
     username: string
+    userUuid: string
     categories: ApiTypes.Model.Category[]
   }
 

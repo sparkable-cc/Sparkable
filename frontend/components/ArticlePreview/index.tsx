@@ -13,7 +13,7 @@ interface Props extends ApiTypes.Res.Article {
 
 export const ArticlePreview = ({
   title,
-  link,
+  url,
   image,
   date,
   description,
@@ -31,7 +31,7 @@ export const ArticlePreview = ({
       />
       <div className={styles.contentWrapper}>
         <div>
-          <ArticleLink link={link} />
+          <ArticleLink link={url} />
         </div>
         <h2 className={styles.articleTitle}>
           {title}
@@ -41,7 +41,7 @@ export const ArticlePreview = ({
         </p>
         <nav className={styles.buttonsWrapper}>
           <a
-            href={link}
+            href={url}
             className={styles.openButton}
             rel="noopener noreferrer"
             target="_blank"

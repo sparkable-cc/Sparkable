@@ -39,7 +39,7 @@ const Article: NextPage = () => {
         data && <ModalShare
           isVisible={isCopyModalVisible}
           onCancel={() => setCopyModalVisible(false)}
-          textLink={data?.link}
+          textLink={data?.url}
         />
       }
     </>

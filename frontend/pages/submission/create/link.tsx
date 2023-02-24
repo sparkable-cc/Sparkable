@@ -4,7 +4,7 @@ import styles from '../../../styles/Submission.module.scss';
 import { useRouter } from "next/router";
 import { FormInput } from "../../../components/FormInput";
 import { useAppSelector, useAppDispatch } from "../../../store/hooks";
-import { setLink, selectLink, setLinkData } from "../../../store/submissionSlice";
+import { setLink, selectLink, setLinkData, selectLinkData } from "../../../store/submissionSlice";
 import { useLazyPostLinkPreviewQuery } from "../../../store/api/submissionApi";
 import debounce from 'lodash/debounce';
 import { LinkPreview } from '../../../components/LinkPreview';
@@ -18,7 +18,7 @@ const CreateSubmissionLink = () => {
   const [value, setValue] = useState(link);
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [triggerPostLinkPreview, { isLoading, data }] = useLazyPostLinkPreviewQuery();
+  const [triggerPostLinkPreview, {isFetching, data}] = useLazyPostLinkPreviewQuery();
 
   const onButtonClick = () => {
     router.push("/submission/create/category")
@@ -64,14 +64,14 @@ const CreateSubmissionLink = () => {
     if (link) {
       debounceSetLink(link)
     }
-  }, [])
+  }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     if(data){
       setLinkData(data);
       sessionStorage.setItem(storageKeys.submissionLinkData, JSON.stringify(data));
     }
-  }, [data])
+  }, [data]);
 
   return (
     <CreateSubmissionLayout
@@ -103,7 +103,7 @@ const CreateSubmissionLink = () => {
         </header>
         <div className={styles.linkPreviewWrapper}>
           <LinkPreview
-            isLoading={isLoading}
+            isLoading={isFetching}
             site={data?.ogUrl}
             title={data?.ogTitle}
             description={data?.ogDescription}

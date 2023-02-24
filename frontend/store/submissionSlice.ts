@@ -20,7 +20,7 @@ if (typeof window !== 'undefined') {
 export interface SubmissionState {
   link: string;
   linkData: ApiTypes.Res.SubmissionLinkPreview | null
-  categories: string[];
+  categories: ApiTypes.Model.Category[];
   suggestedCategory: string
   yourStatement: string
 }
@@ -40,10 +40,10 @@ export const submissionState = createSlice({
     setLink: (state, action: PayloadAction<string>) => {
       state.link = action.payload;
     },
-    setLinkData: (state, action: PayloadAction<ApiTypes.Res.SubmissionLinkPreview>) => {
+    setLinkData: (state, action: PayloadAction<ApiTypes.Res.SubmissionLinkPreview | null>) => {
       state.linkData = action.payload;
     },
-    setCategories: (state, action: PayloadAction<string[]>) => {
+    setCategories: (state, action: PayloadAction<ApiTypes.Model.Category[]>) => {
       state.categories = action.payload;
     },
     setSuggestedCategory: (state, action: PayloadAction<string>) => {
@@ -57,6 +57,13 @@ export const submissionState = createSlice({
       state.categories = [];
       state.suggestedCategory = "";
       state.yourStatement = "";
+      state.linkData = null
+
+      sessionStorage.removeItem(storageKeys.submissionLink);
+      sessionStorage.removeItem(storageKeys.submissionLinkData);
+      sessionStorage.removeItem(storageKeys.submissionCategories);
+      sessionStorage.removeItem(storageKeys.submissionSuggestedCategory);
+      sessionStorage.removeItem(storageKeys.submissionYourStatement);
     },
   },
 });

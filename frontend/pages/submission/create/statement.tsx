@@ -14,8 +14,8 @@ import {
   setYourStatement,
   selectCategories,
   selectSuggestedCategory,
-  selectLink,
   selectLinkData,
+  resetSubmission
 } from "../../../store/submissionSlice";
 
 
@@ -28,7 +28,6 @@ const CreateSubmissionStatement = () => {
 
   const activeCategories = useAppSelector(selectCategories);
   const suggestedCategory = useAppSelector(selectSuggestedCategory);
-  const link = useAppSelector(selectLink);
   const linkData = useAppSelector(selectLinkData);
 
   const [triggerPostLinks, { isLoading, data }] = useLazyPostLinksQuery();
@@ -73,32 +72,28 @@ const CreateSubmissionStatement = () => {
       const data: ApiTypes.Req.CreateLink = {
         title: linkData.ogTitle,
         url: linkData?.ogUrl,
-        categories: [],
+        categories: activeCategories,
         userUuid: userId,
         description: linkData?.ogDescription,
-        image: linkData?.ogImage[0]?.url || ""
+        image: linkData?.ogImage[0]?.url || "",
+        statement: yourStatement
       }
 
-      console.log(data);
-
-      // try {
-      //   triggerPostLinks(data).then((res: any) => {
-      //     if (res?.error) {
-      //       toast.error(res?.error?.data?.message);
-      //     }
-      //   });
-      // } catch (error: any) {
-      //   toast.error(error?.message);
-      // }
+      try {
+        triggerPostLinks(data).then((res: any) => {
+          if (res?.error) {
+            toast.error(res?.error?.data?.message);
+          }
+        });
+      } catch (error: any) {
+        toast.error(error?.message);
+      }
     }
-
-    // 5. clean previous link data when input was changed
-    // 6. Change privat access to submission flow
-    // 7. add "Finish" tab now (at least simple version for now)?
   }
 
   useEffect(()=>{
     if(data){
+      dispatch(resetSubmission());
       router.push("/submission/create/success");
     }
   },[data])
