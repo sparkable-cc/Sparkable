@@ -1,3 +1,5 @@
+import { UserNotFoundException } from '../../users/domain/exceptions/UserNotFoundException';
+import { UserRepository } from '../../users/domain/repositories/UserRepository';
 import { CategoryNotFoundException } from '../domain/exceptions/CategoryNotFoundException';
 import { LinkExistsException } from '../domain/exceptions/LinkExistsException';
 import { Link } from '../domain/models/Link';
@@ -7,16 +9,24 @@ import { LinkRepository } from '../domain/repositories/LinkRepository';
 export class CreateLinkAction {
   linkRepository: LinkRepository;
   categoryRepository: CategoryRepository;
+  userRepository: UserRepository;
 
-  constructor(linkRepository: LinkRepository, categoryRepository: CategoryRepository) {
+  constructor(
+    linkRepository: LinkRepository,
+    categoryRepository: CategoryRepository,
+    userRepository: UserRepository
+  ) {
     this.linkRepository = linkRepository;
     this.categoryRepository = categoryRepository;
+    this.userRepository = userRepository;
   }
 
   async execute(linkData: any) {
     const link = new Link(linkData);
     await this.checkExistsCategories(link);
-    await this.checkUrlIsNew(linkData);
+    const user = await this.checkUserExists(link);
+    await this.checkUrlIsNew(link);
+    link.username = user.username;
     this.linkRepository.storeLink(link);
   }
 
@@ -24,6 +34,14 @@ export class CreateLinkAction {
     const linkExists = await this.linkRepository.findLink('url', linkData.url);
     if (linkExists)
       throw new LinkExistsException();
+  }
+
+  private async checkUserExists(link: Link) {
+    const user = await this.userRepository.findUser({ uuid: link.userUuid });
+    if (!user)
+      throw new UserNotFoundException();
+
+    return user;
   }
 
   private async checkExistsCategories(link: Link) {
@@ -34,4 +52,5 @@ export class CreateLinkAction {
         throw new CategoryNotFoundException();
     }
   }
+
 }

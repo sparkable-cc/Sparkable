@@ -59,7 +59,8 @@ Expires in 1 days
 {
     "access_token": "xxxxxxxxxxx",
     "expires_in": "2023-02-10T09:16:35.346Z",
-    "token_type": "Bearer"
+    "token_type": "Bearer",
+    "uuid": "xxxxxx"
 }
 ```
 

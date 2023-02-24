@@ -1,5 +1,9 @@
 import { describe, expect, test } from '@jest/globals';
 import { MandatoryFieldEmptyException } from '../../users/domain/exceptions/MandatoryFieldEmptyException';
+import { UserNotFoundException } from '../../users/domain/exceptions/UserNotFoundException';
+import { User } from '../../users/domain/models/User';
+import { UserRepository } from '../../users/domain/repositories/UserRepository';
+import { UserRepositoryInMemory } from '../../users/infrastructure/persistence/repositories/UserRepositoryInMemory';
 import { CategoryNotFoundException } from '../domain/exceptions/CategoryNotFoundException';
 import { CategoryRestrictionException } from '../domain/exceptions/CategoryRestrictionException';
 import { LinkExistsException } from '../domain/exceptions/LinkExistsException';
@@ -13,13 +17,16 @@ describe('Create link action', () => {
   let createLinkAction: CreateLinkAction;
   let linkRepository: LinkRepository;
   let categoryRepository: CategoryRepository;
+  let userRepository: UserRepository;
 
   beforeEach(async () => {
     linkRepository = new LinkRepositoryInMemory();
     categoryRepository = new CategoryRepositoryInMemory();
+    userRepository = new UserRepositoryInMemory();
     createLinkAction = new CreateLinkAction(
       linkRepository,
-      categoryRepository
+      categoryRepository,
+      userRepository
     );
   });
 
@@ -59,11 +66,24 @@ describe('Create link action', () => {
     ).rejects.toThrow(MandatoryFieldEmptyException);
   });
 
+  test('cant create link without user', async () => {
+    await expect(
+      createLinkAction.execute({
+        title: 'title',
+        url: 'http://example',
+        categories: [
+          {id:1, name:'name', slug:'name'},
+        ],
+      }),
+    ).rejects.toThrow(MandatoryFieldEmptyException);
+  });
+
   test('cant create link with more than 2 categories', async () => {
     await expect(
       createLinkAction.execute({
         title: 'title',
         url: 'http://example',
+        userUuid: 'xxxxxx',
         categories: [
           {id:1, name:'name', slug:'name'},
           {id:2, name:'name2', slug:'name2'},
@@ -78,6 +98,7 @@ describe('Create link action', () => {
       createLinkAction.execute({
         title: 'title',
         url: 'http://example',
+        userUuid: 'xxxxxx',
         categories: [
           {id:1, name:'name', slug:'name'},
         ],
@@ -85,20 +106,54 @@ describe('Create link action', () => {
     ).rejects.toThrow(CategoryNotFoundException);
   });
 
-  test('should throw error when link exists', async () => {
+  test('should throw error when user does not exists', async () => {
     const categoryDto = {id:1, name:'name', slug:'name'};
     const categoryRepository = new CategoryRepositoryInMemory(
       [categoryDto]
     );
     createLinkAction = new CreateLinkAction(
       linkRepository,
-      categoryRepository
+      categoryRepository,
+      userRepository
     );
+
+    await expect(
+      createLinkAction.execute({
+        title: 'title 2',
+        url: 'http://example',
+        userUuid: 'xxxxxx',
+        categories: [categoryDto],
+      }),
+    ).rejects.toThrow(UserNotFoundException);
+  });
+
+  test('should throw error when link exists', async () => {
+    const categoryDto = {id:1, name:'name', slug:'name'};
+    const categoryRepository = new CategoryRepositoryInMemory(
+      [categoryDto]
+    );
+
+    const userUuid = 'xxxxx';
+    const user = new User(
+      'admin@butterfy.me',
+      'admin',
+      'password',
+      userUuid
+    );
+    userRepository.storeUser(user);
+
+    createLinkAction = new CreateLinkAction(
+      linkRepository,
+      categoryRepository,
+      userRepository
+    );
+
     const url = 'http://example';
 
     await createLinkAction.execute({
       title: 'title',
       url: url,
+      userUuid: userUuid,
       categories: [categoryDto],
     });
 
@@ -106,6 +161,7 @@ describe('Create link action', () => {
       createLinkAction.execute({
         title: 'title 2',
         url: url,
+        userUuid: userUuid,
         categories: [categoryDto],
       }),
     ).rejects.toThrow(LinkExistsException);
@@ -114,19 +170,32 @@ describe('Create link action', () => {
   test('create link with mandatory field', async () => {
     const title = 'title';
     const url = 'http://example';
+
     const categoryDto = {id:1, name:'name', slug:'name'};
     const categoryRepository = new CategoryRepositoryInMemory(
       [categoryDto]
     );
+
+    const userUuid = 'xxxxx';
+    const user = new User(
+      'admin@butterfy.me',
+      'admin',
+      'password',
+      userUuid
+    );
+    userRepository.storeUser(user);
+
     createLinkAction = new CreateLinkAction(
       linkRepository,
-      categoryRepository
+      categoryRepository,
+      userRepository
     );
 
     await createLinkAction.execute({
       title: title,
       url: url,
       categories: [categoryDto],
+      userUuid: userUuid
     });
 
     const [links, total] = await linkRepository.getAllLinks();
@@ -142,13 +211,25 @@ describe('Create link action', () => {
     const url = 'http://example';
     const image = 'http://image';
     const description = '123';
+
     const categoryDto = {id:1, name:'name', slug:'name'};
     const categoryRepository = new CategoryRepositoryInMemory(
       [categoryDto]
     );
+
+    const userUuid = 'xxxxx';
+    const user = new User(
+      'admin@butterfy.me',
+      'admin',
+      'password',
+      userUuid
+    );
+    userRepository.storeUser(user);
+
     createLinkAction = new CreateLinkAction(
       linkRepository,
-      categoryRepository
+      categoryRepository,
+      userRepository
     );
 
     await createLinkAction.execute({
@@ -157,6 +238,7 @@ describe('Create link action', () => {
       categories: [categoryDto],
       image: image,
       description: description,
+      userUuid: userUuid
     });
 
     const [links, total] = await linkRepository.getAllLinks();
