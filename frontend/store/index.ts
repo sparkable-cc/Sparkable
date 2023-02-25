@@ -1,17 +1,25 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
-import { api } from "./api";
+import { articlesApi } from "./api/articlesApi";
+import { authApi } from "./api/authApi";
+import { submissionApi } from "./api/submissionApi";
 import UIReducer from "./UIslice";
+import submissionReducer from "./submissionSlice";
 
 export const store = configureStore({
   reducer: {
-    [api.reducerPath]: api.reducer,
+    [articlesApi.reducerPath]: articlesApi.reducer,
+    [authApi.reducerPath]: authApi.reducer,
+    [submissionApi.reducerPath]: submissionApi.reducer,
     UI: UIReducer,
+    submission: submissionReducer
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
       serializableCheck: false,
     })
-      .concat(api.middleware)
+      .concat(articlesApi.middleware)
+      .concat(authApi.middleware)
+      .concat(submissionApi.middleware);
   },
 });
 

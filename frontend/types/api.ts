@@ -4,16 +4,26 @@ export declare namespace ApiTypes.Model {
     id: number,
     uuid: string,
     title: string,
-    link: string,
+    url: string,
     image: string,
     date: Date
     username: string
+    description: string
+    userUuid: string
+    categories: Category[]
   }
 
   interface Category {
     id: number
     name: string,
     slug: string
+  }
+
+  interface SubmissionLinkImage {
+    url: string
+    width: number
+    height: number
+    type: string
   }
 }
 
@@ -30,11 +40,21 @@ export declare namespace ApiTypes.Req {
     username: string
     password: string
   }
-  
+
   interface SignIn {
     email?: string
     username?: string
     password: string
+  }
+
+  interface CreateLink {
+    title: string
+    url: string
+    categories: ApiTypes.Model.Category[]
+    userUuid: string
+    description: string
+    image: string
+    statement?: string
   }
 }
 
@@ -52,17 +72,31 @@ export declare namespace ApiTypes.Res {
     id: number
     uuid: string
     title: string
-    link: string
+    url: string
     image: string
     description?: string
     date: string
     username: string
+    userUuid: string
     categories: ApiTypes.Model.Category[]
   }
 
   interface Token {
     access_token: string,
-    expires_in: number,
+    expires_in: string,
     token_type: string
+    uuid: string
+  }
+
+  interface SubmissionLinkPreview {
+    ogTitle: string
+    ogType: string
+    ogUrl: string
+    ogDescription: string
+    ogImage: ApiTypes.Model.SubmissionLinkImage[]
+  }
+
+  interface CreateLink {
+    message: string
   }
 }

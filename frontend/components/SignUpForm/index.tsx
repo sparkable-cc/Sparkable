@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useLazySignUpQuery } from '../../store/api';
+import { useLazySignUpQuery } from '../../store/api/authApi';
 import { ApiTypes } from '../../types';
 import { signUpSchema, validationInitialState } from '../../utils/validations';
 import { FormInput } from '../FormInput';

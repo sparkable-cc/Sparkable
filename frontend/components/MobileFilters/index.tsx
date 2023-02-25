@@ -1,7 +1,7 @@
 import styles from "./index.module.scss";
 import classNames from "classnames";
 import { useMemo, useState, useEffect, useRef } from "react";
-import { useLazyGetCategoriesQuery, getCategories } from "../../store/api";
+import { useLazyGetCategoriesQuery, getCategories } from "../../store/api/articlesApi";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { v4 as uuidv4 } from "uuid";
 import { CSSTransition } from "react-transition-group";

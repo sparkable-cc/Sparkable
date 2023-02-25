@@ -8,7 +8,7 @@
   z-index: 2000;
   left: 0;
   top: 0;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.2);
@@ -21,20 +21,38 @@
   box-shadow: 0px 2px 25px rgba(0, 48, 75, 0.2);
   border-radius: 2px;
   padding: $gapS;
+
+  @media only screen and (max-width: $mobile){
+    width: calc(100% - 80px);
+  }
 }
 
 .modalHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: $gapXxs 0;
+  padding-bottom: $gapXxs;
 }
 
 .modalTitle {
   font-size: $size18;
   font-weight: 600;
   max-width: calc(100% - 100px);
+
+  &.titleIcon {
+    position: relative;
+    padding-left: 28px;
+    
+    &:before {
+      display: inline-flex;
+      position: absolute;
+      left: 0;
+      top: -1px;
+      content: url("../../public/svg/question.svg")
+    }
+  }
 }
+
 
 .cancelButton {
   @extend .buttonWhite;

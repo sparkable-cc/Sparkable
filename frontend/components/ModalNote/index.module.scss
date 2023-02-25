@@ -1,0 +1,7 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.noteIcon {
+  cursor: pointer;
+  content: url("../../public/svg/question.svg");
+}

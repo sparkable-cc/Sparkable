@@ -1,3 +1,6 @@
+import dayjs from "dayjs"
+import { quotesClear } from "../utils/quotesClear";
+import { storageKeys } from "./storageKeys";
 
 export const checkCredentials = () => {
 
@@ -5,13 +8,15 @@ export const checkCredentials = () => {
     return false;
   }
   
-  const token = sessionStorage.getItem("token");
-  const tokenExpires = sessionStorage.getItem("token-expires");
+  const token = sessionStorage.getItem(storageKeys.token);
+  const tokenExpires = sessionStorage.getItem(storageKeys.tokenExpires);
 
-  if (!token) return false;
+  if (!token || !tokenExpires) return false;
 
-  // TO-DO:
-  // check is token does not expire and clear if so
+  if(dayjs().isAfter(dayjs(quotesClear(tokenExpires!)))){
+    sessionStorage.clear();
+    return false;
+  }
 
   else return true;
 }

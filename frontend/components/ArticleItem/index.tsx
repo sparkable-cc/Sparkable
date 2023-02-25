@@ -10,8 +10,9 @@ export const ArticleItem = ({
   id,
   uuid,
   title,
-  link,
+  url,
   image,
+  description,
   date,
   username
 }: Props) => {
@@ -27,7 +28,7 @@ export const ArticleItem = ({
         }}
       />}
       <div className={styles.articleInfoWrapper}>
-        <ArticleLink link={link} />
+        <ArticleLink link={url} />
         <Link className={styles.articleTitle} href={`/article/${id}`}>
           {title}
         </Link>
