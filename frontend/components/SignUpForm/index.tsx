@@ -1,14 +1,14 @@
-import classNames from 'classnames';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { FormEvent, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import { useLazySignUpQuery } from '../../store/api/authApi';
-import { ApiTypes } from '../../types';
-import { signUpSchema, validationInitialState } from '../../utils/validations';
-import { FormInput } from '../FormInput';
-import { Spiner } from '../Spiner';
-import styles from './index.module.scss';
+import classNames from "classnames";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { FormEvent, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useLazySignUpQuery } from "../../store/api/authApi";
+import { ApiTypes } from "../../types";
+import { signUpSchema, validationInitialState } from "../../utils/validations";
+import { FormInput } from "../FormInput";
+import { Spiner } from "../Spiner";
+import styles from "./index.module.scss";
 
 const inputValuesInitialState = {
   username: "",

@@ -1,6 +1,6 @@
 
 import styles from "./index.module.scss";
-import { ArticleLink } from '../../components/ArticleLink';
+import { ArticleLink } from "../../components/ArticleLink";
 
 interface Props {
   isLoading?: boolean
@@ -26,7 +26,7 @@ export const LinkPreview = ({
           Creating link preview
         </div>
       </div>
-    )
+    );
   }
   if (!site && !title && !description) {
     return (
@@ -35,7 +35,7 @@ export const LinkPreview = ({
           Data not found, you can try another link
         </div>
       </div>
-    )
+    );
   }
   else {
     return (

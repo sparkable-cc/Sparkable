@@ -77,11 +77,12 @@ export const Filters = () => {
         <p className={styles.text}>
           What is the most insightful piece of content you have encountered recently?
         </p>
-        <button 
+        <button
           onClick={()=>router.push("/submission/create")}
-          className={classNames(styles.buttonPrimary, styles.sizeXl)}>
+          className={classNames(styles.buttonPrimary, styles.sizeXl)}
+        >
             Submit a link
-          </button>
+        </button>
       </div>
     </aside>
   );

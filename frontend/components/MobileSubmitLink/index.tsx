@@ -9,5 +9,5 @@ export const MobileSubmitLink = () => {
       </div>
       <Link className={styles.submitButton} href="/submission/create">Submit a Link</Link>
     </div>
-  )
-}
+  );
+};
