@@ -11,4 +11,5 @@ export interface LinkDto {
   categories: Array<CategoryDto>;
   userUuid: string;
   username: string;
+  statement: string;
 }

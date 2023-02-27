@@ -153,6 +153,7 @@ By default return 20 links sorted randomly
     "userUuid": "xxxxxxx",
     "description": "description",
     "image": "http://bufferfy.me/img.png"
+    "statement": "Lorem ipsum..."
 }
 ```
 

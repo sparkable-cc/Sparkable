@@ -165,6 +165,7 @@ describe('POST /links', () => {
     const image = 'http://image';
     const description = 'description';
     const category = await CategoryFactory.create('name', 'slug');
+    const statement = 'Lorem ipsum...';
 
     const res = await request(app)
       .post('/links')
@@ -176,6 +177,7 @@ describe('POST /links', () => {
         categories: [category],
         image: image,
         description: description,
+        statement: statement
       });
 
     expect(res.statusCode).toEqual(201);
@@ -184,6 +186,7 @@ describe('POST /links', () => {
     expect(total).toEqual(1);
     expect(links[0].image).toEqual(image);
     expect(links[0].description).toEqual(description);
+    expect(links[0].statement).toEqual(statement);
   });
 
 });
