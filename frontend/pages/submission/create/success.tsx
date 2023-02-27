@@ -1,5 +1,5 @@
 import { CreateSubmissionLayout } from "../../../layouts/CreateSubmissionLayout";
-import styles from '../../../styles/Submission.module.scss';
+import styles from "../../../styles/Submission.module.scss";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import classNames from "classnames";
@@ -8,8 +8,8 @@ const SuccessSubmission = () => {
   const router = useRouter();
 
   const onButtonClick = () => {
-    router.push("/")
-  }
+    router.push("/");
+  };
 
   return (
     <CreateSubmissionLayout
@@ -24,7 +24,7 @@ const SuccessSubmission = () => {
         <button className={classNames(styles.buttonPrimary, styles.sizeXl)} onClick={onButtonClick}>Back to Explore</button>
       </div>
     </CreateSubmissionLayout>
-  )
-}
+  );
+};
 
 export default SuccessSubmission;

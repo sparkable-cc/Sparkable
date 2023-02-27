@@ -1,6 +1,6 @@
-import { FormEvent, useMemo, useEffect, useState } from "react";
+import { FormEvent, useMemo, useEffect } from "react";
 import { CreateSubmissionLayout } from "../../../layouts/CreateSubmissionLayout";
-import styles from '../../../styles/Submission.module.scss';
+import styles from "../../../styles/Submission.module.scss";
 import { useRouter } from "next/router";
 import { FormInput } from "../../../components/FormInput";
 import { useAppSelector, useAppDispatch } from "../../../store/hooks";
@@ -28,8 +28,8 @@ const CreateSubmissionCategory = () => {
   const suggestedCategory = useAppSelector(selectSuggestedCategory);
 
   const onButtonClick = () => {
-    router.push("/submission/create/statement")
-  }
+    router.push("/submission/create/statement");
+  };
 
   const onInputChange = (event: FormEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
@@ -39,19 +39,19 @@ const CreateSubmissionCategory = () => {
 
   const onInputClear = () => {
     dispatch(setSuggestedCategory(""));
-  }
+  };
 
   const onSetCurrentCategory = (event: any) => {
     const param = event?.target?.getAttribute("data-param");
     if (!param) return;
 
     const category = categoriesData?.filter(item => item.slug === param);
-  
+
     let data;
     if (activeCategories?.find(item => item.slug === param)) {
       data = activeCategories.filter(item => item.slug !== param);
     } else {
-      data = [...activeCategories, ...category!];
+      data = [ ...activeCategories, ...category! ];
     }
 
     dispatch(setCategories(data));
@@ -69,7 +69,7 @@ const CreateSubmissionCategory = () => {
       submitButtonText="Continue"
       onSubmit={onButtonClick}
       isSubmitAvailable={Boolean(activeCategories?.length) && activeCategories?.length <= 2}
-      isCancelAvailable={true}
+      isCancelAvailable
     >
       <div className={styles.categoryDescription}>
         Please pick at least one category. This helps others find your content.
@@ -114,14 +114,14 @@ const CreateSubmissionCategory = () => {
         placeholder="Suggest a category"
         onChange={onInputChange}
         onClear={onInputClear}
-        errorMessage={""}
+        errorMessage=""
       />
       <div className={styles.inputNote}>
         Your suggestion helps Sparkable introduce new categories and will not be visible to others.
       </div>
     </CreateSubmissionLayout>
-  )
-}
+  );
+};
 
 export default CreateSubmissionCategory;
 

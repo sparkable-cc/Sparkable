@@ -1,9 +1,9 @@
 import { FormEvent, useCallback, useState, useEffect } from "react";
 import { CreateSubmissionLayout } from "../../../layouts/CreateSubmissionLayout";
-import styles from '../../../styles/Submission.module.scss';
+import styles from "../../../styles/Submission.module.scss";
 import { useRouter } from "next/router";
 import { useAppSelector, useAppDispatch } from "../../../store/hooks";
-import debounce from 'lodash/debounce';
+import debounce from "lodash/debounce";
 import { storageKeys } from "../../../utils/storageKeys";
 import { checkCredentials } from "../../../utils/checkCredentials";
 import { useLazyPostLinksQuery } from "../../../store/api/submissionApi";
@@ -23,19 +23,19 @@ const CreateSubmissionStatement = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const yourStatement = useAppSelector(selectYourStatement);
-  const [value, setValue] = useState(yourStatement);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [ value, setValue ] = useState(yourStatement);
+  const [ errorMessage, setErrorMessage ] = useState("");
 
   const activeCategories = useAppSelector(selectCategories);
   const suggestedCategory = useAppSelector(selectSuggestedCategory);
   const linkData = useAppSelector(selectLinkData);
 
-  const [triggerPostLinks, { isLoading, data }] = useLazyPostLinksQuery();
+  const [ triggerPostLinks, { isLoading, data }] = useLazyPostLinksQuery();
 
   const debounceSetLink = (value) => {
     dispatch(setYourStatement(value));
     sessionStorage.setItem(storageKeys.submissionYourStatement, value);
-  }
+  };
 
   const debouncedHandler = useCallback(debounce(debounceSetLink, 1000), []);
 
@@ -62,7 +62,7 @@ const CreateSubmissionStatement = () => {
       setErrorMessage("");
       return true;
     }
-  }
+  };
 
   const onSubmit = () => {
     const userId = sessionStorage.getItem(storageKeys.userId);
@@ -77,7 +77,7 @@ const CreateSubmissionStatement = () => {
         description: linkData?.ogDescription,
         image: linkData?.ogImage[0]?.url || "",
         statement: yourStatement
-      }
+      };
 
       try {
         triggerPostLinks(data).then((res: any) => {
@@ -89,21 +89,21 @@ const CreateSubmissionStatement = () => {
         toast.error(error?.message);
       }
     }
-  }
+  };
 
   useEffect(()=>{
     if(data){
       dispatch(resetSubmission());
       router.push("/submission/create/success");
     }
-  },[data])
+  },[data]);
 
   return (
     <CreateSubmissionLayout
       submitButtonText="Submit"
       onSubmit={onSubmit}
-      isSubmitAvailable={true}
-      isCancelAvailable={true}
+      isSubmitAvailable
+      isCancelAvailable
     >
       <div className={styles.statementDescription}>
         <p>
@@ -120,11 +120,11 @@ const CreateSubmissionStatement = () => {
           className={styles.textarea}
           placeholder="Text"
           onChange={onTextareaChange}
-        ></textarea>
+        />
         {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
       </div>
     </CreateSubmissionLayout>
-  )
-}
+  );
+};
 
 export default CreateSubmissionStatement;

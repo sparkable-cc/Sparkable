@@ -1,28 +1,28 @@
 import { useState, FormEvent, useCallback, useEffect } from "react";
 import { CreateSubmissionLayout } from "../../../layouts/CreateSubmissionLayout";
-import styles from '../../../styles/Submission.module.scss';
+import styles from "../../../styles/Submission.module.scss";
 import { useRouter } from "next/router";
 import { FormInput } from "../../../components/FormInput";
 import { useAppSelector, useAppDispatch } from "../../../store/hooks";
-import { setLink, selectLink, setLinkData, selectLinkData } from "../../../store/submissionSlice";
+import { setLink, selectLink, setLinkData } from "../../../store/submissionSlice";
 import { useLazyPostLinkPreviewQuery } from "../../../store/api/submissionApi";
-import debounce from 'lodash/debounce';
-import { LinkPreview } from '../../../components/LinkPreview';
+import debounce from "lodash/debounce";
+import { LinkPreview } from "../../../components/LinkPreview";
 import { ModalNote } from "../../../components/ModalNote";
 import Link from "next/link";
 import { storageKeys } from "../../../utils/storageKeys";
 import { toast } from "react-toastify";
 
 const CreateSubmissionLink = () => {
-  const link = useAppSelector(selectLink)
-  const [value, setValue] = useState(link);
+  const link = useAppSelector(selectLink);
+  const [ value, setValue ] = useState(link);
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [triggerPostLinkPreview, {isFetching, data}] = useLazyPostLinkPreviewQuery();
+  const [ triggerPostLinkPreview, { isFetching, data }] = useLazyPostLinkPreviewQuery();
 
   const onButtonClick = () => {
-    router.push("/submission/create/category")
-  }
+    router.push("/submission/create/category");
+  };
 
   const debounceSetLink = (value) => {
     dispatch(setLink(value));
@@ -37,7 +37,7 @@ const CreateSubmissionLink = () => {
     } catch (error: any) {
       toast.error(error?.message);
     }
-  }
+  };
 
   const debouncedHandler = useCallback(debounce(debounceSetLink, 1000), []);
 
@@ -48,9 +48,9 @@ const CreateSubmissionLink = () => {
   };
 
   const onInputClear = () => {
-    dispatch(setLink(value))
+    dispatch(setLink(value));
     setValue("");
-  }
+  };
 
   const isPreviewAvailable = (): boolean => {
     if (value && data) return true;
@@ -58,11 +58,11 @@ const CreateSubmissionLink = () => {
     else {
       return false;
     }
-  }
+  };
 
   useEffect(() => {
     if (link) {
-      debounceSetLink(link)
+      debounceSetLink(link);
     }
   }, []);
 
@@ -78,7 +78,7 @@ const CreateSubmissionLink = () => {
       submitButtonText="Continue"
       onSubmit={onButtonClick}
       isSubmitAvailable={isPreviewAvailable()}
-      isCancelAvailable={true}
+      isCancelAvailable
     >
       <FormInput
         value={value}
@@ -88,7 +88,7 @@ const CreateSubmissionLink = () => {
         placeholder="https://www.site.com"
         onChange={onInputChange}
         onClear={onInputClear}
-        errorMessage={""}
+        errorMessage=""
       />
       <div>
         <header className={styles.linkPreviewHeader}>
@@ -112,7 +112,7 @@ const CreateSubmissionLink = () => {
         </div>
       </div>
     </CreateSubmissionLayout>
-  )
-}
+  );
+};
 
 export default CreateSubmissionLink;

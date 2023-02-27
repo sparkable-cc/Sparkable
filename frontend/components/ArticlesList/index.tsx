@@ -10,7 +10,7 @@ import { usePrevious } from "../../utils/usePrevious";
 import isEqual from "lodash.isequal";
 import { UITypes } from "../../types";
 import uniqBy from "lodash.uniqby";
-import { MobileSubmitLink } from '../../components/MobileSubmitLink';
+import { MobileSubmitLink } from "../../components/MobileSubmitLink";
 import {
   selectSelectedFilters,
   selectSort,
@@ -26,7 +26,7 @@ interface Props {
 
 export const ArticlesList = ({ isPreviewPage }: Props) => {
   const dispatch = useAppDispatch();
-  const [trigger, { isLoading }] = useLazyGetArticlesQuery();
+  const [ trigger, { isLoading }] = useLazyGetArticlesQuery();
   const selectedFilters = useAppSelector(selectSelectedFilters);
   const sort = useAppSelector(selectSort);
   const total = useAppSelector(selectTotal);
@@ -44,11 +44,11 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
     };
 
     if (sorts) {
-      queryParams = { ...queryParams, ...{ sort: sorts } };
+      queryParams = { ...queryParams, ...{ sort: sorts }};
     }
 
     if (page) {
-      queryParams = { ...queryParams, ...{ page } };
+      queryParams = { ...queryParams, ...{ page }};
     }
 
     return queryParams;
@@ -66,7 +66,7 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
           if (res.data?.total < articles.length) {
             dispatch(setArticles(res.data?.links));
           } else {
-            dispatch(setArticles(uniqBy([...articles, ...res.data?.links], "id")));
+            dispatch(setArticles(uniqBy([ ...articles, ...res.data?.links ], "id")));
           }
 
         } else {
@@ -99,7 +99,7 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
     if (previousSort && !isEqual(sort, previousSort)) {
       onGetData();
     }
-  }, [selectedFilters, sort]);
+  }, [ selectedFilters, sort ]);
 
   return (
     <>
