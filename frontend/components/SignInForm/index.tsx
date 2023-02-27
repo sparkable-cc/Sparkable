@@ -35,17 +35,13 @@ export const SignInForm = () => {
     });
   };
 
-  // const onInputClear = (name: string) => {
-  //   setInputValues((prevState) => {
-  //     return { ...prevState, [name]: '' };
-  //   });
-  // };
+  const onInputClear = (name: string) => {
+    setInputValues((prevState) => {
+      return { ...prevState, [name]: '' };
+    });
+  };
 
   const togglePasswordVisibility = () => {
-    const eyeIcon = document.getElementById('eyeIcon');
-    if (eyeIcon) {
-      eyeIcon.classList.toggle('active');
-    }
     setIsPasswordVisible((prevState) => !prevState);
   };
 
@@ -110,12 +106,13 @@ export const SignInForm = () => {
           label="Username or email"
           placeholder="Your username or email"
           onChange={onInputChange}
-          onIconClick={() => {}}
+          onClear={onInputClear}
           errorMessage={
             validationError.field === 'login' ? validationError.message : ''
           }
         />
         <FormInput
+          // type="password"
           type={isPasswordVisible ? 'text' : 'password'}
           value={inputValues.password}
           name="password"
@@ -123,7 +120,8 @@ export const SignInForm = () => {
           label="Password"
           placeholder="Choose a secure password"
           onChange={onInputChange}
-          onIconClick={togglePasswordVisibility}
+          onClear={onInputClear}
+          onClick={togglePasswordVisibility}
           errorMessage={
             validationError.field === 'password' ? validationError.message : ''
           }

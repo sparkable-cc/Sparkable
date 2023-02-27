@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import styles from './index.module.scss';
 
 interface Props {
@@ -11,8 +11,8 @@ interface Props {
   placeholder: string;
   errorMessage?: string;
   onChange: (event: FormEvent<HTMLInputElement>) => void;
-  // onClear: (name: string) => void;
-  onIconClick: () => void;
+  onClear: (name: string) => void;
+  onClick?: () => void;
 }
 
 export const FormInput = ({
@@ -24,9 +24,15 @@ export const FormInput = ({
   placeholder,
   errorMessage,
   onChange,
-  // onClear,
-  onIconClick,
+  onClear,
+  onClick,
 }: Props) => {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  if (type === 'password') {
+    type = isPasswordVisible ? 'text' : 'password';
+  }
+
   return (
     <div className={styles.formInputWrapper}>
       <label className={styles.inputLabel} htmlFor={id}>
@@ -42,7 +48,17 @@ export const FormInput = ({
           value={value}
           onChange={onChange}
         />
-        {value && <span className={styles.eyeIcon} onClick={onIconClick} />}
+        {value && type !== 'password' ? (
+          <span className={styles.clearInput} onClick={() => onClear(name)} />
+        ) : (
+          <span
+            className={classNames({
+              [styles.eyeOpen]: isPasswordVisible,
+              [styles.eyeClose]: !isPasswordVisible,
+            })}
+            onClick={() => setIsPasswordVisible((prevState) => !prevState)}
+          />
+        )}
       </div>
       {errorMessage && (
         <div className={styles.errorMessage}>{errorMessage}</div>

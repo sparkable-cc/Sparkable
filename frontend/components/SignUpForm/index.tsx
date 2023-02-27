@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useState } from 'react';
-import { BiShow } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 import { useLazySignUpQuery } from '../../store/api';
 import { ApiTypes } from '../../types';
@@ -35,17 +34,13 @@ export const SignUpForm = () => {
     });
   };
 
-  // const onInputClear = (name: string) => {
-  //   setInputValues((prevState) => {
-  //     return { ...prevState, [name]: '' };
-  //   });
-  // };
+  const onInputClear = (name: string) => {
+    setInputValues((prevState) => {
+      return { ...prevState, [name]: '' };
+    });
+  };
 
   const togglePasswordVisibility = () => {
-    const eyeIcon = document.getElementById('eyeIcon');
-    if (eyeIcon) {
-      eyeIcon.classList.toggle('active');
-    }
     setIsPasswordVisible((prevState) => !prevState);
   };
 
@@ -104,7 +99,7 @@ export const SignUpForm = () => {
           label="Email"
           placeholder="Your email address"
           onChange={onInputChange}
-          onIconClick={() => {}}
+          onClear={onInputClear}
           errorMessage={
             validationError.field === 'email' ? validationError.message : ''
           }
@@ -116,12 +111,13 @@ export const SignUpForm = () => {
           label="Username"
           placeholder="Choose a username"
           onChange={onInputChange}
-          onIconClick={() => {}}
+          onClear={onInputClear}
           errorMessage={
             validationError.field === 'username' ? validationError.message : ''
           }
         />
         <FormInput
+          // type="password"
           type={isPasswordVisible ? 'text' : 'password'}
           value={inputValues.password}
           name="password"
@@ -129,7 +125,8 @@ export const SignUpForm = () => {
           label="Password"
           placeholder="Choose a secure password"
           onChange={onInputChange}
-          onIconClick={togglePasswordVisibility}
+          onClear={onInputClear}
+          onClick={togglePasswordVisibility}
           errorMessage={
             validationError.field === 'password' ? validationError.message : ''
           }

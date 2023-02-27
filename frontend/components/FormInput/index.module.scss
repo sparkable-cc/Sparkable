@@ -39,24 +39,32 @@
   font-family: $secondaryFont;
 }
 
-// .clearInput {
-//   position: absolute;
-//   right: 0;
-//   bottom: 0;
-//   cursor: pointer;
-//   content: url('../../public/svg/clearInput.svg');
-// }
-
-.eyeIcon {
+.clearInput {
   position: absolute;
   right: 0;
   bottom: 0;
   cursor: pointer;
-  content: url('../../public/svg/eye-open.svg');
+  content: url('../../public/svg/clearInput.svg');
+}
 
-  &:active {
-    content: url('../../public/svg/eye-closed.svg');
-  }
+.eyeOpen {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  cursor: pointer;
+  content: url('../../public/svg/eye-open.svg');
+}
+
+.eyeClose {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  cursor: pointer;
+  content: url('../../public/svg/eye-close.svg');
 }
 
 .errorMessage {
