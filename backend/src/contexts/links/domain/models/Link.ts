@@ -15,6 +15,7 @@ export class Link {
   uuid: string;
   username: string;
   userUuid: string;
+  statement: string;
 
   constructor(link: LinkDto) {
     if (Object.keys(link).length === 0) {
@@ -48,6 +49,7 @@ export class Link {
     this.date = new Date();
     this.username = link.username;
     this.uuid = uuidv4();
+    this.statement = link.statement;
   }
 
   public static factory(linkDto: LinkDto): Link {
@@ -65,7 +67,8 @@ export class Link {
       date: this.date,
       categories: this.categories,
       userUuid: this.userUuid,
-      username: this.username
+      username: this.username,
+      statement: this.statement
     };
   }
 
