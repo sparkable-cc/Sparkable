@@ -29,13 +29,7 @@ export const LinkPreview = ({
     );
   }
   if (!site && !title && !description) {
-    return (
-      <div className={styles.loadingWrapper}>
-        <div className={styles.loadingText}>
-          Data not found, you can try another link
-        </div>
-      </div>
-    );
+    return null;
   }
   else {
     return (
