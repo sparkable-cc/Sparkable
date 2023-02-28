@@ -3,9 +3,20 @@ import Joi from 'joi';
 export const signUpSchema = Joi.object({
   email: Joi.string()
     .email({ tlds: { allow: false } })
-    .required(),
+    .required()
+    .messages({
+      'string.email':
+        'This email is not valid. Please check for spelling errors and try again.',
+      'string.empty': 'Email is required',
+      'string.exists': 'This email is already in use. If this is you, sign in.',
+    }),
 
-  username: Joi.string().alphanum().min(3).max(30).required(),
+  username: Joi.string().alphanum().min(3).max(30).required().messages({
+    'string.empty': 'Username is required',
+    'string.length': 'Username must be at least 3 characters long',
+    'string.exists':
+      'This username is already in use. If this is you, sign in.',
+  }),
 
   password: Joi.string()
     .min(8)
@@ -14,13 +25,20 @@ export const signUpSchema = Joi.object({
     .messages({
       'string.pattern.base':
         'Password must contain at least one number and one letter',
+      'string.empty': 'Password is required',
+      'string.length':
+        'This password is too short. Please use at least 8 characters and try again.',
     }),
 });
 
 export const signInSchema = Joi.object({
-  login: Joi.string().required(),
+  login: Joi.string().required().messages({
+    'string.empty': 'Email or username is required',
+  }),
 
-  password: Joi.string().required(),
+  password: Joi.string().required().messages({
+    'string.empty': 'Password is required',
+  }),
 });
 
 export const validationInitialState = {
