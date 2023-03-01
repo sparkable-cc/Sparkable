@@ -25,6 +25,7 @@ export class UserRepositoryInMemory implements UserRepository {
     const keys = Object.keys(options);
     type ObjectKey = keyof typeof options;
     const propertyOptions = keys[0] as ObjectKey;
+
     const user = this.users.find((user) => {
       type ObjectKey = keyof typeof user;
       const propertyUser = keys[0] as ObjectKey;

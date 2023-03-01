@@ -17,7 +17,7 @@ export class Link {
   userUuid: string;
   statement: string;
 
-  constructor(link: LinkDto) {
+  constructor(link: any) {
     if (Object.keys(link).length === 0) {
       throw new MandatoryFieldEmptyException();
     }
@@ -30,7 +30,7 @@ export class Link {
       link.categories = JSON.parse(link.categories);
     }
 
-    link.categories.forEach(category => {
+    link.categories.forEach((category: any) => {
       if (!this.isACategoryDto(category)) {
         throw new MandatoryFieldEmptyException();
       }
