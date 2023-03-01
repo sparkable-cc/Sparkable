@@ -13,4 +13,12 @@ export class ViewedLinkByUserDataRepositoryInMemory implements ViewedLinkByUserD
     this.collection.push(data);
   }
 
+  findData(params: Object): Promise<ViewedLinkByUserDataDto | null> {
+    if (this.collection) {
+      return new Promise((resolve) => resolve(this.collection[0]));
+    } else {
+      return new Promise((resolve) => resolve(null));
+    }
+  }
+
 }
