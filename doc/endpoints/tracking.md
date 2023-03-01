@@ -33,7 +33,7 @@
 ### Error Response
 
 **Code** : `400 Bad request`
-**Code** : `400 User not fount`
-**Code** : `400 Link not fount`
+**Code** : `400 User not found`
+**Code** : `400 Link not found`
 **Code** : `403 Data already exists!`
 **Code** : `500 OK`
