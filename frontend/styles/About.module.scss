@@ -1,0 +1,221 @@
+@import "./common.scss";
+
+.about {
+  width: 100%;
+}
+
+// FIRST SCREEN
+.aboutWrapper {
+  padding-top: 140px;
+  max-width: 1024px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.mainTitle {
+  font-size: 4.3125rem;
+  font-weight: 600;
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.titleTag {
+  font-size: $size20;
+  color: $colorBlue;
+  width: 100px;
+  margin: 0 auto 10px;
+  text-align: center;
+}
+
+.squaresGradient {
+  display: block;
+  width: 100px;
+  margin: 40px auto 100px;
+}
+
+.textBlock {
+  display: flex;
+  justify-content: space-between;
+}
+
+.description {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 150px;
+
+  &.reverse {
+    flex-direction: row-reverse;
+  }
+}
+
+.descriptionText {
+  font-size: $size32;
+  max-width: 545px;
+
+  p {
+    margin-bottom: 16px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// CTA EXPLORE
+.ctaExplore {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 56px 0 84px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.ctaExploreTitle {
+  font-size: 3.25rem;
+  font-weight: 600;
+  position: relative;
+
+  &:before {
+    display: block;
+    max-width: 143px;
+    margin: 0 auto 30px;
+    content: url("../public/svg/three-stars.svg");
+  }
+}
+
+.buttonWrapper {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.ctaButton {
+  @extend .buttonPrimary;
+
+  height: 64px;
+  font-size: $size32;
+  font-weight: 400;
+  padding: 0 50px;
+  border-radius: 50px;
+
+  &::after {
+    display: inline-flex;
+    width: 39px;
+    height: 39px;
+    margin-left: 8px;
+    content: url("../public/svg/cta-arrow.svg");
+  }
+}
+
+// HOW IT WORKS
+.howItWorksWrapper {
+  padding: 84px 0;
+}
+
+.howItWorksContainer {
+  border: 1px solid #000000;
+  border-radius: 0px 24px 0px 0px;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.howItWorksHeader {
+  height: 75px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 25px;
+  border-bottom: 1px solid #000;
+}
+
+.howItWorksContent {
+  padding: 60px 25px 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  column-gap: 40px;
+  font-size: $size24;
+
+  strong {
+    font-style: italic;
+  }
+}
+
+.howItWorksTitle {
+  font-size: $size20;
+}
+
+.howItWorksStars {
+  
+}
+
+.howItWorksItem {
+  
+  &.notAvailable {
+    opacity: 0.4;
+  }
+}
+
+.howItWorksCounter {
+  margin-bottom: 8px;
+}
+
+// VALUES
+.valuesWrapper {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.valuesTag {
+  text-align: center;
+  font-size: $size20;
+  padding-top: 70px;
+  margin-bottom: 84px;
+}
+
+.valuesContainer {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.valuesItem {
+  text-align: center;
+  width: 450px;
+  margin-bottom: 130px;
+}
+
+.valuesTitle {
+  font-weight: 600;
+  font-size: $size32;
+  margin-bottom: 8px;
+}
+
+.valuesDescription {
+  font-size: $size24;
+}
+
+// CTA SUBMIT
+.ctaSubmit {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 84px 0 148px;
+}
+
+.ctaSubmitTitle {
+  font-size: 3.25rem;
+  font-weight: 600;
+  position: relative;
+
+  &:before {
+    display: block;
+    max-width: 143px;
+    text-align: center;
+    margin: 0 auto 30px;
+    content: url("../public/svg/two-stars.svg");
+  }
+}
