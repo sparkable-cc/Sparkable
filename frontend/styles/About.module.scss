@@ -10,6 +10,14 @@
   max-width: 1024px;
   width: 100%;
   margin: 0 auto;
+
+  @media only screen and (max-width: $laptop){
+    max-width: 90%;
+  }
+
+  @media only screen and (max-width: $tablet){
+    max-width: calc(100% - $gapXL);
+  }
 }
 
 .mainTitle {
@@ -18,6 +26,14 @@
   text-align: center;
   max-width: 760px;
   margin: 0 auto;
+
+  @media only screen and (max-width: $laptop){
+    font-size: 3.5rem;
+  }
+
+  @media only screen and (max-width: $tablet){
+    font-size: 3rem;
+  }
 }
 
 .titleTag {
@@ -26,12 +42,21 @@
   width: 100px;
   margin: 0 auto 10px;
   text-align: center;
+
+  @media only screen and (max-width: $tablet){
+    font-size: $size18;
+  }
 }
 
 .squaresGradient {
   display: block;
   width: 100px;
   margin: 40px auto 100px;
+
+  @media only screen and (max-width: $tablet){
+    width: 50px;
+    margin: 32px auto;
+  }
 }
 
 .textBlock {
@@ -48,6 +73,22 @@
   &.reverse {
     flex-direction: row-reverse;
   }
+
+  @media only screen and (max-width: $laptop) {
+    img {
+      max-width: 250px;
+    }
+  }
+
+  @media only screen and (max-width: $tablet){
+    flex-wrap: wrap;
+    margin-bottom: 0;
+
+    img {
+      max-width: 200px;
+      margin: 80px auto;
+    }
+  }
 }
 
 .descriptionText {
@@ -61,6 +102,16 @@
       margin-bottom: 0;
     }
   }
+
+  @media only screen and (max-width: $laptop){
+    font-size: $size24;
+    max-width: 60%;
+  }
+
+  @media only screen and (max-width: $tablet){
+    max-width: 100%;
+    width: 100%;
+  }
 }
 
 // CTA EXPLORE
@@ -70,12 +121,17 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+
+  @media only screen and (max-width: $tablet){
+    padding: 20px 0 65px;
+  }
 }
 
 .ctaExploreTitle {
   font-size: 3.25rem;
   font-weight: 600;
   position: relative;
+  text-align: center;
 
   &:before {
     display: block;
@@ -83,11 +139,35 @@
     margin: 0 auto 30px;
     content: url("../public/svg/three-stars.svg");
   }
+
+  @media only screen and (max-width: $laptop){
+    font-size: 2.5rem;
+
+    &::before {
+      transform: scale(0.8);
+      position: relative;
+      top: 20px;
+    }
+  }
+
+  @media only screen and (max-width: $tablet){
+    font-size: 2.25rem;
+
+    &::before {
+      transform: scale(0.7);
+      position: relative;
+      top: 30px;
+    }
+  }
 }
 
 .buttonWrapper {
   margin-top: 24px;
   text-align: center;
+
+  @media only screen and (max-width: $tablet){
+    margin-top: 16px;
+  }
 }
 
 .ctaButton {
@@ -106,11 +186,31 @@
     margin-left: 8px;
     content: url("../public/svg/cta-arrow.svg");
   }
+
+  @media only screen and (max-width: $laptop){
+    height: 55px;
+    padding: 0 40px;
+    font-size: $size24;
+  }
+
+  @media only screen and (max-width: $tablet){
+    height: 41px;
+    padding: 0 20px 0 $gapXL;
+    font-size: $size20;
+
+    &::after {
+      transform: scale(0.7);
+    }
+  }
 }
 
 // HOW IT WORKS
 .howItWorksWrapper {
   padding: 84px 0;
+
+  @media only screen and (max-width: $laptop) {
+    padding: 60px 0;
+  }
 }
 
 .howItWorksContainer {
@@ -119,6 +219,14 @@
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
+
+  @media only screen and (max-width: $laptop) {
+    max-width: 90%;
+  }
+
+  @media only screen and (max-width: $tablet){
+    max-width: calc(100% - $gapXL);
+  }
 }
 
 .howItWorksHeader {
@@ -128,6 +236,11 @@
   align-items: center;
   padding: 0 25px;
   border-bottom: 1px solid #000;
+
+  @media only screen and (max-width: $tablet){
+    height: 54px;
+    padding: 0 $gapS;
+  }
 }
 
 .howItWorksContent {
@@ -140,20 +253,50 @@
   strong {
     font-style: italic;
   }
+
+  @media only screen and (max-width: $laptop) {
+    font-size: $size20;
+    grid-template-columns: 1fr 1fr;
+    column-gap: $gapXL;
+    padding: 50px 25px;
+  }
+
+  @media only screen and (max-width: $tablet){
+    font-size: $size18;
+    display: block;
+  }
 }
 
 .howItWorksTitle {
   font-size: $size20;
+
+  @media only screen and (max-width: $tablet){
+    font-size: $size18;
+  }
 }
 
 .howItWorksStars {
-  
+  @media only screen and (max-width: $tablet){
+    transform: scale(0.8);
+    position: relative;
+    right: -10px;
+  }
 }
 
 .howItWorksItem {
   
   &.notAvailable {
     opacity: 0.4;
+  }
+
+  @media only screen and (max-width: $laptop){
+    margin-bottom: $gapXL;
+  }
+
+  @media only screen and (max-width: $tablet){
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -171,6 +314,17 @@
   font-size: $size20;
   padding-top: 70px;
   margin-bottom: 84px;
+
+  @media only screen and (max-width: $laptop){
+    padding-top: 60px;
+    margin-bottom: 55px;
+  }
+
+  @media only screen and (max-width: $tablet){
+    padding-top: $gapXL;
+    font-size: $size18;
+    margin-bottom: 32px;
+  }
 }
 
 .valuesContainer {
@@ -180,22 +334,53 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+
+  @media only screen and (max-width: $laptop) {
+    max-width: 90%;
+  }
+
+  @media only screen and (max-width: $tablet){
+    max-width: calc(100% - $gapXL);
+  }
 }
 
 .valuesItem {
   text-align: center;
   width: 450px;
   margin-bottom: 130px;
+
+  @media only screen and (max-width: $laptop) {
+    width: 45%;
+    margin-bottom: 80px;
+  }
+
+  @media only screen and (max-width: $tablet){
+    width: 100%;
+    margin-bottom: 48px;
+  }
 }
 
 .valuesTitle {
   font-weight: 600;
   font-size: $size32;
   margin-bottom: 8px;
+  font-style: italic;
+
+  @media only screen and (max-width: $laptop) {
+    font-size: $size24;
+  }
 }
 
 .valuesDescription {
   font-size: $size24;
+
+  @media only screen and (max-width: $laptop) {
+    font-size: $size20;
+  }
+
+  @media only screen and (max-width: $tablet){
+    font-size: $size18;
+  }
 }
 
 // CTA SUBMIT
@@ -204,12 +389,21 @@
   align-items: center;
   flex-direction: column;
   padding: 84px 0 148px;
+
+  @media only screen and (max-width: $laptop){
+    padding: 65px 0 120px;
+  }
+
+  @media only screen and (max-width: $tablet){
+    padding: 20px 0 65px;
+  }
 }
 
 .ctaSubmitTitle {
   font-size: 3.25rem;
   font-weight: 600;
   position: relative;
+  text-align: center;
 
   &:before {
     display: block;
@@ -217,5 +411,25 @@
     text-align: center;
     margin: 0 auto 30px;
     content: url("../public/svg/two-stars.svg");
+  }
+  
+  @media only screen and (max-width: $laptop){
+    font-size: 2.5rem;
+
+    &::before {
+      transform: scale(0.8);
+      position: relative;
+      top: 20px;
+    }
+  }
+
+  @media only screen and (max-width: $tablet){
+    font-size: 2.25rem;
+
+    &::before {
+      transform: scale(0.7);
+      position: relative;
+      top: 30px;
+    }
   }
 }

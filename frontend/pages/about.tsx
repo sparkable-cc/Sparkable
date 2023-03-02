@@ -12,7 +12,6 @@ const About: NextPage = () => {
         <meta name="description" content="Sparkable - About Us" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-
       <div className={styles.about}>
 
         {/* FIRST SCREEN */}
@@ -53,7 +52,6 @@ const About: NextPage = () => {
             />
           </div>
         </section>
-
         {/* CTA EXPLORE */}
         <section className={styles.ctaExplore}>
           <h2 className={styles.ctaExploreTitle}>Let’s spark change.</h2>
@@ -61,7 +59,6 @@ const About: NextPage = () => {
             <Link href="/" className={styles.ctaButton}>Start exploring</Link>
           </div>
         </section>
-
         {/* HOW IT WORKS */}
         <section className={styles.howItWorksWrapper}>
           <div className={styles.howItWorksContainer}>
@@ -97,7 +94,6 @@ const About: NextPage = () => {
             </div>
           </div>
         </section>
-
         {/* VALUES */}
         <section className={styles.valuesWrapper}>
           <div className={styles.valuesTag}>WHAT WE VALUE</div>
@@ -128,7 +124,6 @@ const About: NextPage = () => {
             </div>
           </div>
         </section>
-
         {/* CTA SUBMIT */}
         <section className={styles.ctaSubmit}>
           <h2 className={styles.ctaSubmitTitle}>Submit your first spark.</h2>
@@ -140,6 +135,6 @@ const About: NextPage = () => {
       </div>
     </>
   );
-}
+};
 
 export default About;
