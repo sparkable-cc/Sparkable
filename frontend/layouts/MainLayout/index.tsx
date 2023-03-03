@@ -28,7 +28,7 @@ export const MainLayout = ({ children }: PropsWithChildren) => {
     )
   }
   
-  if (/submission\/create/.test(router.route)) {
+  if (/submission\/create|legal/.test(router.route)) {
     return (
       <main className={styles.mainWrapper}>
         <Menu isForcedMobile={true} />

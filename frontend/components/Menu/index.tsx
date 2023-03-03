@@ -80,9 +80,9 @@ export const Menu = ({ isForcedMobile }: Props) => {
             Contact
           </Link>
           <Link
-            href=""
+            href="/legal/privacy-policy"
             onClick={onMenuHide}
-            className={classNames(styles.menuFooterLink, styles.disable)}
+            className={classNames(styles.menuFooterLink)}
           >
             Privacy Policy
           </Link>
