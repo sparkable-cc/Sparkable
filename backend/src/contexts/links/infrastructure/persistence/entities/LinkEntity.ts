@@ -26,7 +26,7 @@ export class LinkEntity implements LinkDto {
   @Column({nullable: true})
   image: string;
 
-  @Column({nullable: true})
+  @Column({type: "text", nullable: true})
   description: string;
 
   @CreateDateColumn({ type: 'timestamptz' })
@@ -37,6 +37,9 @@ export class LinkEntity implements LinkDto {
 
   @Column({nullable: true})
   username: string;
+
+  @Column({type: "text", nullable: true})
+  statement: string;
 
   @ManyToMany(() => CategoryEntity, (category) => category.links, {
     eager: true,

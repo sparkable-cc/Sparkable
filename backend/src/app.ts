@@ -29,6 +29,10 @@ import { LinkExistsException } from './contexts/links/domain/exceptions/LinkExis
 import { CategoryRestrictionException } from './contexts/links/domain/exceptions/CategoryRestrictionException';
 import { CategoryNotFoundException } from './contexts/links/domain/exceptions/CategoryNotFoundException';
 import ogs from 'ts-open-graph-scraper'
+import { CreateViewedLinkByUserDataAction } from './contexts/links/actions/CreateViewedLinkByUserDataAction';
+import { ViewedLinkByUserDataRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/ViewedLinkByUserDataRepositoryPG';
+import { LinkNotFoundException } from './contexts/links/domain/exceptions/LinkNotFoundException';
+import { DataDoesExistException } from './contexts/links/domain/exceptions/DataDoesExistException';
 
 const app: Express = express();
 
@@ -316,6 +320,42 @@ app.post('/link-preview-data', checkJwt,  async (req: Request, res: Response) =>
     );
     return res.status(500);
   });
+
+});
+
+app.post('/viewed-link-user', checkJwt,  async (req: Request, res: Response) => {
+  const createViewedLinkByUserDataAction = new CreateViewedLinkByUserDataAction(
+    new UserRepositoryPG(dataSource),
+    new LinkRepositoryPG(dataSource),
+    new ViewedLinkByUserDataRepositoryPG(dataSource)
+  );
+
+  createViewedLinkByUserDataAction
+    .execute(req.body.userUuid, req.body.linkUuid)
+    .then(() => {
+      res.status(201);
+      res.send({ message: 'Data created!' });
+    })
+    .catch((error) => {
+      switch (error.constructor) {
+        case MandatoryFieldEmptyException:
+          res.status(400);
+          res.send({ message: 'Bad request' });
+          break;
+        case UserNotFoundException:
+          res.status(400);
+          res.send({ message: 'User not found!' });
+          break;
+        case LinkNotFoundException:
+          res.status(400);
+          res.send({ message: 'Link not found!' });
+          break;
+        case DataDoesExistException:
+          res.status(403);
+          res.send({ message: 'Data already exists!' });
+          break;
+      }
+    });
 
 });
 

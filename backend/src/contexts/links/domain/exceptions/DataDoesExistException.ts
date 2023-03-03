@@ -1,0 +1,1 @@
+export class DataDoesExistException extends Error {}
