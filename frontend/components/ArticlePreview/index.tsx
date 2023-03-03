@@ -13,6 +13,7 @@ interface Props extends ApiTypes.Res.Article {
 
 export const ArticlePreview = ({
   title,
+  uuid,
   url,
   image,
   date,
@@ -31,7 +32,7 @@ export const ArticlePreview = ({
       />
       <div className={styles.contentWrapper}>
         <div>
-          <ArticleLink link={url} />
+          <ArticleLink link={url} uuid={uuid} />
         </div>
         <h2 className={styles.articleTitle}>
           {title}

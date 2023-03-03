@@ -28,7 +28,7 @@ export const ArticleItem = ({
         }}
       />}
       <div className={styles.articleInfoWrapper}>
-        <ArticleLink link={url} />
+        <ArticleLink link={url} uuid={uuid} />
         <Link className={styles.articleTitle} href={`/article/${id}`}>
           {title}
         </Link>

@@ -37,7 +37,7 @@ export const LinkPreview = ({
         <div className={styles.linkPreviewContent}>
           {
             site &&
-            <ArticleLink link={site} />
+            <ArticleLink link={site} uuid='' />
           }
           <h3 className={styles.linkTitle}>
             {title}
