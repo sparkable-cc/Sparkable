@@ -18,19 +18,23 @@ const inputValuesInitialState = {
 
 export const SignUpForm = () => {
   const [ triggerSignUp, { isLoading, data }] = useLazySignUpQuery();
-  const [ inputValues, setInputValues ] = useState<ApiTypes.Req.SignUp>(inputValuesInitialState);
-  const [ validationError, setValidationError ] = useState(validationInitialState);
+  const [ inputValues, setInputValues ] = useState<ApiTypes.Req.SignUp>(
+    inputValuesInitialState,
+  );
+  const [ validationError, setValidationError ] = useState(
+    validationInitialState,
+  );
   const router = useRouter();
 
   const onInputChange = (event: FormEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
-    setInputValues(prevState => {
+    setInputValues((prevState) => {
       return { ...prevState, [name]: value };
     });
   };
 
   const onInputClear = (name: string) => {
-    setInputValues(prevState => {
+    setInputValues((prevState) => {
       return { ...prevState, [name]: "" };
     });
   };
@@ -44,9 +48,8 @@ export const SignUpForm = () => {
 
       setValidationError({
         field: error?.path[0] as string,
-        message: error?.message
+        message: error?.message,
       });
-
     } else {
       setValidationError(validationInitialState);
 
@@ -59,7 +62,6 @@ export const SignUpForm = () => {
       } catch (error: any) {
         toast.error(error?.message);
       }
-
     }
   };
 
@@ -79,7 +81,9 @@ export const SignUpForm = () => {
         <h2 className={styles.authTitle}>Create Account</h2>
         <div className={styles.authNavWrapper}>
           <span className="">or</span>
-          <Link className={styles.authButtonLink} href="/auth/signin">Sign In</Link>
+          <Link className={styles.authButtonLink} href="/auth/signin">
+            Sign In
+          </Link>
         </div>
       </header>
       <div className={styles.authFields}>
@@ -91,7 +95,9 @@ export const SignUpForm = () => {
           placeholder="Your email address"
           onChange={onInputChange}
           onClear={onInputClear}
-          errorMessage={validationError.field === "email" ? validationError.message : ""}
+          errorMessage={
+            validationError.field === "email" ? validationError.message : ""
+          }
         />
         <FormInput
           value={inputValues.username}
@@ -101,7 +107,9 @@ export const SignUpForm = () => {
           placeholder="Choose a username"
           onChange={onInputChange}
           onClear={onInputClear}
-          errorMessage={validationError.field === "username" ? validationError.message : ""}
+          errorMessage={
+            validationError.field === "username" ? validationError.message : ""
+          }
         />
         <FormInput
           type="password"
@@ -112,7 +120,9 @@ export const SignUpForm = () => {
           placeholder="Choose a secure password"
           onChange={onInputChange}
           onClear={onInputClear}
-          errorMessage={validationError.field === "password" ? validationError.message : ""}
+          errorMessage={
+            validationError.field === "password" ? validationError.message : ""
+          }
         />
       </div>
       <footer className={styles.authFooter}>
@@ -121,12 +131,20 @@ export const SignUpForm = () => {
           onClick={onSubmit}
           className={classNames(styles.submitButton, styles.sizeXl)}
         >
-          {isLoading ? <Spiner color="#fff" sizeWidth="25" /> : "Create account"}
+          {isLoading ? (
+            <Spiner color="#fff" sizeWidth="25" />
+          ) : (
+            "Create account"
+          )}
         </button>
         <div className={styles.footerText}>
-          Click “Create account” to agree to the <Link href="/" className={styles.authLink}>Terms of Use</Link> of
-          Sparkable and acknowledge that the <Link href="/" className={styles.authLink}>Privacy Policy</Link> of
-          Sparkable applies to you.
+          Click “Create account” to agree to the
+          <Link href="/legal/terms-of-use">Terms of Use</Link>
+          of Sparkable and acknowledge that the
+          <Link href="/legal/privacy-policy" className={styles.authLink}>
+            Privacy Policy
+          </Link>
+          of Sparkable applies to you.
         </div>
       </footer>
     </form>
