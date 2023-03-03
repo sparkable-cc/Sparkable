@@ -1,4 +1,4 @@
-import styles from "./index.module.scss";
+import styles from './index.module.scss';
 
 export const AcceptableUsePolicy = () => {
   return (
@@ -8,7 +8,7 @@ export const AcceptableUsePolicy = () => {
       <p>
         This Acceptable Use Policy ("Policy") is part of our Terms of Use
         ("Legal Terms") and should therefore be read alongside our main Legal
-        Terms:{" "}
+        Terms:{' '}
         <a href="https://www.sparkable.cc/terms-of-use">
           https://www.sparkable.cc/terms
         </a>
@@ -146,7 +146,7 @@ export const AcceptableUsePolicy = () => {
         to provide the best platform possible, we need your help to ensure that
         this community is used to share experience rather than bully. Please
         help us to keep this community civil and a place you want to visit by
-        reporting any unsocial behavior you observe by emailing us at{" "}
+        reporting any unsocial behavior you observe by emailing us at{' '}
         <a href="mailto:">support@butterfy.me </a>.
       </p>
       <h3>Content & Voting Guidelines</h3>
@@ -219,7 +219,7 @@ export const AcceptableUsePolicy = () => {
       </ul>
       <p>
         You also agree that you will not post, transmit, or upload any (or any
-        part of a) Contribution that:{" "}
+        part of a) Contribution that:{' '}
       </p>
       <ul>
         <li>
@@ -309,14 +309,14 @@ export const AcceptableUsePolicy = () => {
       <p>If you consider that any Content or Contribution:</p>
       <ul>
         <li>
-          breach this Policy, please email us at report@butterfy.me, or refer to
-          the contact details at the bottom of this document to let us know
-          which Content or Contribution is in breach of this Policy and why; or
+          breach this Policy, please email us at{' '}
+          <a href="mailto:">report@butterfy.me </a>, or refer to the contact
+          details at the bottom of this document to let us know which Content or
+          Contribution is in breach of this Policy and why; or
         </li>
         <li>
           infringe any third-party intellectual property rights, please email us
-          at
-          <a href="mailto:">report@butterfy.me</a>.
+          at <a href="mailto:">report@butterfy.me</a>.
         </li>
       </ul>
       <p>
@@ -382,8 +382,7 @@ export const AcceptableUsePolicy = () => {
         problematic Content or Contribution, you may contact us by:
       </p>
       <p>
-        E-mail:
-        <a href="mailto:">support@butterfy.me</a>
+        E-mail: <a href="mailto:">support@butterfy.me</a>
       </p>
     </div>
   );

@@ -1,27 +1,27 @@
-import classNames from "classnames";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { FormEvent, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { useLazySignUpQuery } from "../../store/api/authApi";
-import { ApiTypes } from "../../types";
-import { signUpSchema, validationInitialState } from "../../utils/validations";
-import { FormInput } from "../FormInput";
-import { Spiner } from "../Spiner";
-import styles from "./index.module.scss";
+import classNames from 'classnames';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { FormEvent, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { useLazySignUpQuery } from '../../store/api/authApi';
+import { ApiTypes } from '../../types';
+import { signUpSchema, validationInitialState } from '../../utils/validations';
+import { FormInput } from '../FormInput';
+import { Spiner } from '../Spiner';
+import styles from './index.module.scss';
 
 const inputValuesInitialState = {
-  username: "",
-  email: "",
-  password: "",
+  username: '',
+  email: '',
+  password: '',
 };
 
 export const SignUpForm = () => {
-  const [ triggerSignUp, { isLoading, data }] = useLazySignUpQuery();
-  const [ inputValues, setInputValues ] = useState<ApiTypes.Req.SignUp>(
+  const [triggerSignUp, { isLoading, data }] = useLazySignUpQuery();
+  const [inputValues, setInputValues] = useState<ApiTypes.Req.SignUp>(
     inputValuesInitialState,
   );
-  const [ validationError, setValidationError ] = useState(
+  const [validationError, setValidationError] = useState(
     validationInitialState,
   );
   const router = useRouter();
@@ -35,7 +35,7 @@ export const SignUpForm = () => {
 
   const onInputClear = (name: string) => {
     setInputValues((prevState) => {
-      return { ...prevState, [name]: "" };
+      return { ...prevState, [name]: '' };
     });
   };
 
@@ -70,7 +70,7 @@ export const SignUpForm = () => {
       setInputValues(inputValuesInitialState);
       toast.success(data?.message);
       setTimeout(() => {
-        router.push("/auth/signin");
+        router.push('/auth/signin');
       }, 2500);
     }
   }, [data?.message]);
@@ -96,7 +96,7 @@ export const SignUpForm = () => {
           onChange={onInputChange}
           onClear={onInputClear}
           errorMessage={
-            validationError.field === "email" ? validationError.message : ""
+            validationError.field === 'email' ? validationError.message : ''
           }
         />
         <FormInput
@@ -108,7 +108,7 @@ export const SignUpForm = () => {
           onChange={onInputChange}
           onClear={onInputClear}
           errorMessage={
-            validationError.field === "username" ? validationError.message : ""
+            validationError.field === 'username' ? validationError.message : ''
           }
         />
         <FormInput
@@ -121,7 +121,7 @@ export const SignUpForm = () => {
           onChange={onInputChange}
           onClear={onInputClear}
           errorMessage={
-            validationError.field === "password" ? validationError.message : ""
+            validationError.field === 'password' ? validationError.message : ''
           }
         />
       </div>
@@ -134,15 +134,16 @@ export const SignUpForm = () => {
           {isLoading ? (
             <Spiner color="#fff" sizeWidth="25" />
           ) : (
-            "Create account"
+            'Create account'
           )}
         </button>
         <div className={styles.footerText}>
           Click “Create account” to agree to the
-          <Link href="/legal/terms-of-use">Terms of Use</Link>
+          <Link href="/legal/terms-of-use"> Terms of Use </Link>
           of Sparkable and acknowledge that the
           <Link href="/legal/privacy-policy" className={styles.authLink}>
-            Privacy Policy
+            {' '}
+            Privacy Policy{' '}
           </Link>
           of Sparkable applies to you.
         </div>

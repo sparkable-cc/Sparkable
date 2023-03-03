@@ -1,4 +1,4 @@
-import styles from "./index.module.scss";
+import styles from './index.module.scss';
 
 export const TermsOfUse = () => {
   return (
@@ -12,7 +12,7 @@ export const TermsOfUse = () => {
           number is CHE-180.177.924.
         </p>
         <p>
-          We operate the website{" "}
+          We operate the website{' '}
           <a href="https://www.sparkable.cc">https://www.sparkable.cc</a> (the
           "Site"), as well as any other related products and services that refer
           or link to these legal terms (the "Legal Terms") (collectively, the
@@ -212,7 +212,7 @@ export const TermsOfUse = () => {
             <p>
               If you wish to make any use of the Services, Content, or Marks
               other than as set out in this section or elsewhere in our Legal
-              Terms, please address your request to:
+              Terms, please address your request to:{' '}
               <a href="mailto:">support@butterfy.me</a>. If we ever grant you
               the permission to post, reproduce, or publicly display any part of
               our Services or Content, you must identify us as the owners or
@@ -231,10 +231,10 @@ export const TermsOfUse = () => {
             </p>
             <h2 id="2.3">Your submissions and contributions</h2>
             <p>
-              Please review this section and the
+              Please review this section and the{' '}
               <a href="https://app.termly.io/dashboard/website/90096b7c-f057-483e-8b96-e2a949e9235e#prohibited">
                 "PROHIBITED ACTIVITIES"
-              </a>
+              </a>{' '}
               section carefully prior to using our Services to understand the
               (a) rights you give us and (b) obligations you have when you post
               or upload any content through the Services.
@@ -273,10 +273,10 @@ export const TermsOfUse = () => {
             </p>
             <ul>
               <li>
-                confirm that you have read and agree with our{" "}
+                confirm that you have read and agree with our{' '}
                 <a href="https://app.termly.io/dashboard/website/90096b7c-f057-483e-8b96-e2a949e9235e#prohibited">
                   "PROHIBITED ACTIVITIES"
-                </a>{" "}
+                </a>{' '}
                 and will not post, send, publish, upload, or transmit through
                 the Services any Submission nor post any Contribution that is
                 illegal, harassing, hateful, harmful, defamatory, obscene,
@@ -321,10 +321,10 @@ export const TermsOfUse = () => {
               We respect the intellectual property rights of others. If you
               believe that any material available on or through the Services
               infringes upon any copyright you own or control, please
-              immediately refer to the
+              immediately refer to the{' '}
               <a href="https://app.termly.io/dashboard/website/90096b7c-f057-483e-8b96-e2a949e9235e#copyrightyes">
                 COPYRIGHT INFRINGEMENTS
-              </a>{" "}
+              </a>{' '}
               section below.
             </p>
           </section>
@@ -696,7 +696,7 @@ export const TermsOfUse = () => {
           <section>
             <h1 id="11">PRIVACY POLICY</h1>
             <p>
-              We care about data privacy and security. Please review our
+              We care about data privacy and security. Please review our{' '}
               <a href="/legal/privacy-policy">Privacy Policy</a>. By using the
               Services, you agree to be bound by our Privacy Policy, which is
               incorporated into these Legal Terms. Please be advised the
