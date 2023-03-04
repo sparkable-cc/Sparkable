@@ -1,0 +1,104 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.footerWrapper {
+  margin-top: 50px;
+  width: 100%;
+  padding: 56px 40px 50px;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), #F9F7F3;
+}
+
+.footerTopPart {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footerVersion {
+  font-size: $size18;
+}
+
+.footerColumnsWrapper {
+  margin-top: 40px;
+  display: flex;
+}
+
+.footerColumn {
+  width: 25%;
+  line-height: 1.7;
+}
+
+.footerColumnTitle {
+  color: $colorBlue;
+  margin-bottom: 8px;
+}
+
+.footerLink {
+  color: $colorBlack;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.footerSocialWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footerSocial {
+
+  &.slack {
+    content: url("../../public/svg/social-slack.svg")
+  }
+
+  &.linkedin {
+    content: url("../../public/svg/social-linkedin.svg")
+  }
+
+  &.github {
+    content: url("../../public/svg/social-github.svg")
+  }
+
+  &.twitter {
+    content: url("../../public/svg/social-twitter.svg")
+  }
+
+}
+
+.footerBottomPart {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.footerBottomColumn {
+  width: 50%;
+}
+
+.footerIframe {
+  height: 305px;
+  width: 100%;
+  margin-left: -20px;
+  margin-bottom: -32px;
+}
+
+.footerOpenSource {
+  margin-bottom: 35px;
+}
+
+.footerBottomTextWrapper {
+  display: flex; 
+  align-items: start;
+}
+
+.footerText {
+  font-size: $size12;
+  padding-left: $gapS;
+}
+
+.footerTextLink {
+  color: $colorBlack;
+  text-decoration: underline;
+}
