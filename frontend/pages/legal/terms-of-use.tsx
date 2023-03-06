@@ -1,6 +1,6 @@
-import type { NextPage } from "next";
-import styles from "../../styles/LegalPages.module.scss";
-import Link from "next/link";
+import type { NextPage } from 'next';
+import Link from 'next/link';
+import styles from '../../styles/LegalPages.module.scss';
 
 const TermsOfUsePage: NextPage = () => {
   return (
@@ -14,15 +14,22 @@ const TermsOfUsePage: NextPage = () => {
           number is CHE-180.177.924.
         </p>
         <p>
-          We operate the website{" "}
-          <a href="https://www.sparkable.cc">https://www.sparkable.cc</a> (the
-          "Site"), as well as any other related products and services that refer
-          or link to these legal terms (the "Legal Terms") (collectively, the
-          "Services").
+          We operate the website{' '}
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://www.sparkable.cc"
+          >
+            https://www.sparkable.cc
+          </a>{' '}
+          (the "Site"), as well as any other related products and services that
+          refer or link to these legal terms (the "Legal Terms") (collectively,
+          the "Services").
         </p>
         <p>
-          You can contact us by email at support@butterfy.me, or by mail to
-          Butterfy, Zurich 8000, Switzerland.
+          You can contact us by email at{' '}
+          <a href="mailto">support@butterfy.me</a>, or by mail to Butterfy,
+          Zurich 8000, Switzerland.
         </p>
         <p>
           These Legal Terms constitute a legally binding agreement made between
@@ -214,7 +221,7 @@ const TermsOfUsePage: NextPage = () => {
             <p>
               If you wish to make any use of the Services, Content, or Marks
               other than as set out in this section or elsewhere in our Legal
-              Terms, please address your request to:
+              Terms, please address your request to:{' '}
               <a href="mailto:">support@butterfy.me</a>. If we ever grant you
               the permission to post, reproduce, or publicly display any part of
               our Services or Content, you must identify us as the owners or
@@ -233,10 +240,14 @@ const TermsOfUsePage: NextPage = () => {
             </p>
             <h2 id="2.3">Your submissions and contributions</h2>
             <p>
-              Please review this section and the
-              <a href="https://app.termly.io/dashboard/website/90096b7c-f057-483e-8b96-e2a949e9235e#prohibited">
+              Please review this section and the{' '}
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://app.termly.io/dashboard/website/90096b7c-f057-483e-8b96-e2a949e9235e#prohibited"
+              >
                 "PROHIBITED ACTIVITIES"
-              </a>
+              </a>{' '}
               section carefully prior to using our Services to understand the
               (a) rights you give us and (b) obligations you have when you post
               or upload any content through the Services.
@@ -275,10 +286,14 @@ const TermsOfUsePage: NextPage = () => {
             </p>
             <ul>
               <li>
-                confirm that you have read and agree with our{" "}
-                <a href="https://app.termly.io/dashboard/website/90096b7c-f057-483e-8b96-e2a949e9235e#prohibited">
+                confirm that you have read and agree with our{' '}
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://app.termly.io/dashboard/website/90096b7c-f057-483e-8b96-e2a949e9235e#prohibited"
+                >
                   "PROHIBITED ACTIVITIES"
-                </a>{" "}
+                </a>{' '}
                 and will not post, send, publish, upload, or transmit through
                 the Services any Submission nor post any Contribution that is
                 illegal, harassing, hateful, harmful, defamatory, obscene,
@@ -323,10 +338,14 @@ const TermsOfUsePage: NextPage = () => {
               We respect the intellectual property rights of others. If you
               believe that any material available on or through the Services
               infringes upon any copyright you own or control, please
-              immediately refer to the
-              <a href="https://app.termly.io/dashboard/website/90096b7c-f057-483e-8b96-e2a949e9235e#copyrightyes">
+              immediately refer to the{' '}
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://app.termly.io/dashboard/website/90096b7c-f057-483e-8b96-e2a949e9235e#copyrightyes"
+              >
                 COPYRIGHT INFRINGEMENTS
-              </a>{" "}
+              </a>{' '}
               section below.
             </p>
           </section>
@@ -698,10 +717,10 @@ const TermsOfUsePage: NextPage = () => {
           <section>
             <h1 id="11">PRIVACY POLICY</h1>
             <p>
-              We care about data privacy and security. Please review our
-              <Link href="/legal/privacy-policy">Privacy Policy</Link>. By using the
-              Services, you agree to be bound by our Privacy Policy, which is
-              incorporated into these Legal Terms. Please be advised the
+              We care about data privacy and security. Please review our{' '}
+              <Link href="/legal/privacy-policy">Privacy Policy</Link>. By using
+              the Services, you agree to be bound by our Privacy Policy, which
+              is incorporated into these Legal Terms. Please be advised the
               Services are hosted in Switzerland and Germany. If you access the
               Services from any other region of the world with laws or other
               requirements governing personal data collection, use, or
@@ -1018,7 +1037,7 @@ const TermsOfUsePage: NextPage = () => {
               <strong>Butterfy </strong>
             </p>
             <p>
-              <strong>Zurich </strong>
+              <strong>8000 Zurich </strong>
             </p>
             <p>
               <strong>Switzerland</strong>

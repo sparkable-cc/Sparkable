@@ -1,5 +1,5 @@
-import type { NextPage } from "next";
-import styles from "../../styles/LegalPages.module.scss";
+import type { NextPage } from 'next';
+import styles from '../../styles/LegalPages.module.scss';
 
 const AcceptableUsePage: NextPage = () => {
   return (
@@ -9,8 +9,12 @@ const AcceptableUsePage: NextPage = () => {
       <p>
         This Acceptable Use Policy ("Policy") is part of our Terms of Use
         ("Legal Terms") and should therefore be read alongside our main Legal
-        Terms:{" "}
-        <a href="https://www.sparkable.cc/terms-of-use">
+        Terms:{' '}
+        <a
+          href="https://www.sparkable.cc/terms-of-use"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           https://www.sparkable.cc/terms
         </a>
         . If you do not agree with these Legal Terms, please refrain from using
@@ -147,7 +151,7 @@ const AcceptableUsePage: NextPage = () => {
         to provide the best platform possible, we need your help to ensure that
         this community is used to share experience rather than bully. Please
         help us to keep this community civil and a place you want to visit by
-        reporting any unsocial behavior you observe by emailing us at{" "}
+        reporting any unsocial behavior you observe by emailing us at{' '}
         <a href="mailto:">support@butterfy.me </a>.
       </p>
       <h3>Content & Voting Guidelines</h3>
@@ -220,7 +224,7 @@ const AcceptableUsePage: NextPage = () => {
       </ul>
       <p>
         You also agree that you will not post, transmit, or upload any (or any
-        part of a) Contribution that:{" "}
+        part of a) Contribution that:{' '}
       </p>
       <ul>
         <li>
@@ -316,8 +320,7 @@ const AcceptableUsePage: NextPage = () => {
         </li>
         <li>
           infringe any third-party intellectual property rights, please email us
-          at
-          <a href="mailto:">report@butterfy.me</a>.
+          at <a href="mailto:">report@butterfy.me</a>.
         </li>
       </ul>
       <p>
@@ -383,8 +386,7 @@ const AcceptableUsePage: NextPage = () => {
         problematic Content or Contribution, you may contact us by:
       </p>
       <p>
-        E-mail:
-        <a href="mailto:">support@butterfy.me</a>
+        E-mail: <a href="mailto:">support@butterfy.me</a>
       </p>
     </section>
   );
