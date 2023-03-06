@@ -6,6 +6,10 @@
   width: 100%;
   padding: 56px 40px 50px;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), #F9F7F3;
+
+  @media only screen and (max-width: $laptop){
+    padding: 40px $gapS;
+  }
 }
 
 .footerTopPart {
@@ -14,18 +18,43 @@
   align-items: center;
 }
 
+.footerLogo {
+  @media only screen and (max-width: $mobile){
+    max-width: 165px;
+  }
+}
+
 .footerVersion {
   font-size: $size18;
+
+  @media only screen and (max-width: $mobile){
+    font-size: 1rem;
+  }
 }
 
 .footerColumnsWrapper {
   margin-top: 40px;
   display: flex;
+  flex-wrap: wrap;
 }
 
 .footerColumn {
   width: 25%;
   line-height: 1.7;
+
+  @media only screen and (max-width: $laptop){
+    width: 50%;
+    margin-bottom: 20px;
+  }
+
+  @media only screen and (max-width: $mobile){
+    width: 100%;
+    margin-bottom: 40px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .footerColumnTitle {
@@ -71,17 +100,33 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  flex-wrap: wrap;
 }
 
 .footerBottomColumn {
   width: 50%;
+
+  @media only screen and (max-width: $laptop){
+    width: 100%;
+    margin-bottom: 30px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .footerIframe {
-  height: 305px;
+  height: 330px;
   width: 100%;
+  max-width: 540px;
   margin-left: -20px;
-  margin-bottom: -32px;
+  margin-bottom: -60px;
+
+  @media only screen and (max-width: $mobile){
+    height: 400px;
+    margin-left: 0;
+  }
 }
 
 .footerOpenSource {

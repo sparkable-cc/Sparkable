@@ -6,7 +6,7 @@ export const Footer = () => {
   return (
     <footer className={styles.footerWrapper}>
       <div className={styles.footerTopPart}>
-        <img src="/svg/sparkable-logo.svg" alt="sparkable-logo" />
+        <img className={styles.footerLogo} src="/svg/sparkable-logo.svg" alt="sparkable-logo" />
         <span className={styles.footerVersion}>v0.0.1</span>
       </div>
       <div className={styles.footerColumnsWrapper}>
