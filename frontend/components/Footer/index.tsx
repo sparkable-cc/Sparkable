@@ -60,7 +60,7 @@ export const Footer = () => {
       </div>
       <div className={styles.footerBottomPart}>
         <div className={styles.footerBottomColumn}>
-          <iframe className={styles.footerIframe} sandbox="allow-same-origin allow-scripts allow-popups allow-forms" src="https://f38488d3.sibforms.com/serve/MUIEACNqRKIRQkXfHinp_hTATxLTlYMnRXAZ_KOnLteXMgW6kO2PcyR67Puo_qlJnP-xQR3uuttWUHGoIMfZ4-3hGteAwWhFg0QQdN0p-9J4nuv0L3HLpE0lEwlsvNieW06jbq3vJ5h85lq-1Y3oQYijb_tYsLY7DIWsY-0M8BA-pJayFhNXFae9aIEiCxiXgwMSxGHPgqdiY6eh" scrolling="auto" />
+          <iframe className={styles.footerIframe} sandbox="allow-scripts allow-popups allow-forms" src="https://f38488d3.sibforms.com/serve/MUIEACNqRKIRQkXfHinp_hTATxLTlYMnRXAZ_KOnLteXMgW6kO2PcyR67Puo_qlJnP-xQR3uuttWUHGoIMfZ4-3hGteAwWhFg0QQdN0p-9J4nuv0L3HLpE0lEwlsvNieW06jbq3vJ5h85lq-1Y3oQYijb_tYsLY7DIWsY-0M8BA-pJayFhNXFae9aIEiCxiXgwMSxGHPgqdiY6eh" scrolling="auto" />
         </div>
         <div className={styles.footerBottomColumn}>
           <div>
