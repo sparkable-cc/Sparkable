@@ -24,7 +24,6 @@ export const ArticleLink = ({ link, uuid }: Props) => {
 
       triggerPostViewedLinkByUserData(data).then((res: any) => {
         if (res?.error) {
-          console.log('res', res)
           toast.error(res?.error?.data?.message);
         }
       });
