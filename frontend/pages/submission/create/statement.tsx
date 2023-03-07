@@ -15,7 +15,8 @@ import {
   selectCategories,
   selectSuggestedCategory,
   selectLinkData,
-  resetSubmission
+  resetSubmission,
+  selectLink
 } from "../../../store/submissionSlice";
 
 
@@ -29,6 +30,7 @@ const CreateSubmissionStatement = () => {
   const activeCategories = useAppSelector(selectCategories);
   const suggestedCategory = useAppSelector(selectSuggestedCategory);
   const linkData = useAppSelector(selectLinkData);
+  const link = useAppSelector(selectLink);
 
   const [ triggerPostLinks, { isLoading, data }] = useLazyPostLinksQuery();
 
@@ -68,10 +70,9 @@ const CreateSubmissionStatement = () => {
     const userId = sessionStorage.getItem(storageKeys.userId);
 
     if (onValidate() && linkData && userId) {
-
       const data: ApiTypes.Req.CreateLink = {
         title: linkData.ogTitle,
-        url: linkData?.ogUrl,
+        url: link,
         categories: activeCategories,
         userUuid: userId,
         description: linkData?.ogDescription,

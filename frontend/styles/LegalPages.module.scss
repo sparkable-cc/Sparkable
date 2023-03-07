@@ -1,0 +1,51 @@
+@import "./common.scss";
+
+.legalContainer {
+  max-width: 632px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 90px $gapS 0;
+  font-size: $size18;
+  line-height: 1.15;
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 600;
+    font-style: italic;
+    margin-bottom: $gapS;
+    margin-top: 30px;
+  }
+
+  h2 {
+    font-size: $size32;
+    font-weight: 600;
+    margin-bottom: $gapS;
+    font-style: italic;
+  }
+
+  p {
+    margin-bottom: $gapS;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  ul {
+    padding-left: $gapS;
+    list-style-type: disc;
+    margin-bottom: $gapS;
+  }
+
+  li {
+    margin-bottom: $gapS;
+  }
+
+  ol {
+    margin-bottom: $gapS;
+  }
+
+  blockquote {
+    margin-bottom: $gapS;
+  }
+}

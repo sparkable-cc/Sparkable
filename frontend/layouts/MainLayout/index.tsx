@@ -4,6 +4,7 @@ import { Menu } from "../../components/Menu";
 import { MobileHeader } from "../../components/MobileHeader";
 import { AuthButtons } from '../../components/AuthButtons';
 import { useRouter } from 'next/router';
+import { Footer } from '../../components/Footer';
 
 export const MainLayout = ({ children }: PropsWithChildren) => {
   const router = useRouter();
@@ -35,6 +36,18 @@ export const MainLayout = ({ children }: PropsWithChildren) => {
         <MobileHeader isForcedMobile={true} />
         <AuthButtons />
         {children}
+      </main>
+    )
+  }
+  
+  if (/legal|about/.test(router.route)) {
+    return (
+      <main className={styles.mainWrapper}>
+        <Menu isForcedMobile={true} />
+        <MobileHeader isForcedMobile={true} />
+        <AuthButtons />
+        {children}
+        <Footer/>
       </main>
     )
   }
