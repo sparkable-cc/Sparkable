@@ -50,9 +50,9 @@ export const Menu = ({ isForcedMobile }: Props) => {
             Explore
           </Link>
           <Link
-            href=""
+            href="/submission/create"
             onClick={onMenuHide}
-            className={classNames(styles.menuItem, styles.disable)}
+            className={classNames(styles.menuItem)}
           >
             Submit
           </Link>
