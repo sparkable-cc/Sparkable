@@ -33,9 +33,10 @@ describe('POST /signin', () => {
   });
 
   it('returns 200 when the user is signed in with email', async () => {
+    const username = 'admin';
     await request(app).post('/user').send({
       email: 'admin@butterfy.me',
-      username: 'admin',
+      username: username,
       password: 'password',
     });
 
@@ -49,6 +50,8 @@ describe('POST /signin', () => {
     expect(res.body).toHaveProperty('access_token');
     expect(res.body.expires_in).not.toEqual(86400);
     expect(new Date(res.body.expires_in)).toBeInstanceOf(Date);
+    expect(res.body).toHaveProperty('uuid');
+    expect(res.body.username).toEqual(username);
   });
 
   it('returns 401 when the username is not correct', async () => {
