@@ -70,6 +70,19 @@
   }
 }
 
+.buttonOutlined {
+  @extend .buttonTransparent;
+
+  background: transparent;
+  color: $colorBlack;
+  text-decoration: none;
+  border: 1px solid $colorBlack;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+
 .disable {
   cursor: not-allowed;
   opacity: 0.6;

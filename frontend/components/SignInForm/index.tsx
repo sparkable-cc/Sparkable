@@ -4,6 +4,8 @@ import Link from "next/link";
 import { FormInput } from "../FormInput";
 import classNames from "classnames";
 import { useLazySignInQuery } from "../../store/api/authApi";
+import { setUserName } from "../../store/UIslice";
+import { useAppDispatch } from "../../store/hooks";
 import { Spiner } from "../Spiner";
 import { signInSchema, validationInitialState } from "../../utils/validations";
 import { toast } from "react-toastify";
@@ -19,6 +21,7 @@ export const SignInForm = () => {
   const [ triggerSignIn, { isLoading, data }] = useLazySignInQuery();
   const [ validationError, setValidationError ] = useState(validationInitialState);
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const [ inputValues, setInputValues ] = useState({
     login: "",
@@ -77,9 +80,11 @@ export const SignInForm = () => {
       sessionStorage.setItem(storageKeys.token, data.access_token);
       sessionStorage.setItem(storageKeys.tokenExpires, data.expires_in);
       sessionStorage.setItem(storageKeys.userId, data.uuid);
+      sessionStorage.setItem(storageKeys.userName, data.username);
+      dispatch(setUserName(data.username))
       setTimeout(() => {
         router.push("/");
-      }, 2500);
+      }, 100);
     }
 
   }, [data]);

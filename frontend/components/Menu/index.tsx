@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import styles from "./index.module.scss";
 import Link from "next/link";
 import Image from "next/image";
@@ -7,6 +8,9 @@ import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { selectIsMenuVisible, setMenuVisible } from "../../store/UIslice";
 import { CSSTransition } from "react-transition-group";
 import { useRef } from "react";
+import { checkCredentials } from "../../utils/checkCredentials";
+import { selectUserName } from "../../store/UIslice";
+import Router from "next/router";
 
 interface Props {
   isForcedMobile?: boolean
@@ -14,8 +18,19 @@ interface Props {
 
 export const Menu = ({ isForcedMobile }: Props) => {
   const isVisible = useAppSelector(selectIsMenuVisible);
+  const userName = useAppSelector(selectUserName);
+  const [isAuth, setAuth] = useState(false);
   const dispatch = useAppDispatch();
   const nodeRef = useRef(null);
+
+  const onSignOut = () => {
+    sessionStorage.clear();
+    Router.reload();
+  }
+
+  useEffect(() => {
+    setAuth(checkCredentials());
+  }, [userName]);
 
   const onMenuHide = () => {
     dispatch(setMenuVisible(false));
@@ -63,13 +78,22 @@ export const Menu = ({ isForcedMobile }: Props) => {
           >
             About
           </Link>
-          <Link
-            href="/auth/signin"
-            onClick={onMenuHide}
-            className={classNames(styles.buttonPrimary, styles.sizeXl, styles.signin)}
-          >
-            Sign In
-          </Link>
+          <span className={styles.authButton}>
+            {isAuth ?
+              <button
+                className={styles.buttonOutlined}
+                onClick={onSignOut}>
+                Sign out
+              </button> :
+              <Link
+                href="/auth/signin"
+                onClick={onMenuHide}
+                className={classNames(styles.buttonPrimary, styles.sizeXl)}
+              >
+                Sign In
+              </Link>
+            }
+          </span>
         </nav>
         <footer className={styles.menuFooter}>
           <Link
