@@ -99,5 +99,6 @@ describe('signing in', () => {
     expect(res.access_token).toEqual('xxxx');
     expect(res).toHaveProperty('uuid');
     expect(res.uuid).not.toBeNull();
+    expect(res.username).toEqual(username);
   });
 });
