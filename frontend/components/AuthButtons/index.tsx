@@ -9,18 +9,18 @@ import classNames from "classnames";
 import { useOutsideClick } from "../../utils/useOutsideClick";
 
 export const AuthButtons = () => {
-  const [isAuth, setAuth] = useState(false);
-  const [isTooltipVisible, setTooltipVisible] = useState(false);
+  const [ isAuth, setAuth ] = useState(false);
+  const [ isTooltipVisible, setTooltipVisible ] = useState(false);
   const userName = useAppSelector(selectUserName);
   const nodeRef = useRef(null);
 
   const onSignOut = () => {
     sessionStorage.clear();
     Router.reload();
-  }
+  };
 
   useOutsideClick(nodeRef, () => {
-    setTooltipVisible(false)
+    setTooltipVisible(false);
   });
 
   useEffect(() => {
@@ -33,7 +33,8 @@ export const AuthButtons = () => {
         <div className={styles.buttonsWrapper} ref={nodeRef}>
           <span
             className={styles.userName}
-            onClick={() => setTooltipVisible(!isTooltipVisible)}>
+            onClick={() => setTooltipVisible(!isTooltipVisible)}
+          >
             {userName}
           </span>
           {
@@ -41,16 +42,17 @@ export const AuthButtons = () => {
               <div className={styles.tooltip}>
                 <button
                   className={styles.buttonOutlined}
-                  onClick={onSignOut}>
+                  onClick={onSignOut}
+                >
                   Sign out
                 </button>
               </div> :
               null
           }
-
           <button
             className={classNames(styles.buttonOutlined, styles.signOutDesktop)}
-            onClick={onSignOut}>
+            onClick={onSignOut}
+          >
             Sign out
           </button>
         </div>

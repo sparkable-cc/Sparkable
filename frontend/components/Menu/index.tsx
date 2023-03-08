@@ -19,14 +19,14 @@ interface Props {
 export const Menu = ({ isForcedMobile }: Props) => {
   const isVisible = useAppSelector(selectIsMenuVisible);
   const userName = useAppSelector(selectUserName);
-  const [isAuth, setAuth] = useState(false);
+  const [ isAuth, setAuth ] = useState(false);
   const dispatch = useAppDispatch();
   const nodeRef = useRef(null);
 
   const onSignOut = () => {
     sessionStorage.clear();
     Router.reload();
-  }
+  };
 
   useEffect(() => {
     setAuth(checkCredentials());
@@ -82,7 +82,8 @@ export const Menu = ({ isForcedMobile }: Props) => {
             {isAuth ?
               <button
                 className={styles.buttonOutlined}
-                onClick={onSignOut}>
+                onClick={onSignOut}
+              >
                 Sign out
               </button> :
               <Link

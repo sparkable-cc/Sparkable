@@ -1,5 +1,6 @@
 import { NextPage } from "next";
 import styles from "../../styles/LegalPages.module.scss";
+import Link from "next/link";
 
 const PrivacyPolicyPage: NextPage = () => {
   return (
@@ -26,7 +27,7 @@ const PrivacyPolicyPage: NextPage = () => {
         terms and conditions.
       </p>
       <p>
-        You can always <a href="/#footer ">contact</a> us and request insight
+        You can always <Link scroll={false} href="/legal/privacy-policy#footer ">contact</Link> us and request insight
         into and deletion of your data. Or help us improve our policies.
       </p>
       <h2>What data do we collect and why?</h2>
