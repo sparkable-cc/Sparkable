@@ -12,7 +12,7 @@ export const Footer = () => {
       <div className={styles.footerColumnsWrapper}>
         <div className={styles.footerColumn}>
           <h3 className={styles.footerColumnTitle}>CONTACT</h3>
-          <a href="mailto:support@butterfy.my" className={styles.footerLink}>support@butterfy.my</a><br />
+          <a href="mailto:support@butterfy.me" className={styles.footerLink}>support@butterfy.me</a><br />
           Butterfy (Association) <br />
           CH-8000 Zurich, Switzerland
         </div>
@@ -69,7 +69,7 @@ export const Footer = () => {
           <div className={styles.footerBottomTextWrapper}>
             <img src="/svg/surface.svg" alt="open source" className={styles.footerLogos} />
             <p className={styles.footerText}>
-              With the exception of the trademark (c) Sparkable, this work is licensed under a
+              <span>With the exception of the trademark (c) Sparkable, this work is licensed under a </span>
               <a
                 href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
                 target="_blank"
