@@ -13,6 +13,7 @@ COPY ./frontend/styles ./styles
 COPY ./frontend/tests ./tests
 COPY ./frontend/types ./types
 COPY ./frontend/utils ./utils
+COPY ./frontend/package.json ./frontend/tsconfig.json ./
 COPY ./frontend/.env.txt ./.env
 COPY ./types /usr/types
 RUN npm install
