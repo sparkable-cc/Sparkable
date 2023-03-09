@@ -91,6 +91,7 @@ export declare namespace ApiTypes.Res {
     expires_in: string,
     token_type: string
     uuid: string
+    username: string
   }
 
   interface SubmissionLinkPreview {

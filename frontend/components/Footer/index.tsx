@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export const Footer = () => {
   return (
-    <footer className={styles.footerWrapper}>
+    <footer className={styles.footerWrapper} id="footer">
       <div className={styles.footerTopPart}>
         <img className={styles.footerLogo} src="/svg/sparkable-logo.svg" alt="sparkable-logo" />
         <span className={styles.footerVersion}>v0.0.1</span>

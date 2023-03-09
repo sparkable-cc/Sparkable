@@ -7,13 +7,13 @@ import { store } from "../store/index";
 import { ToastContainer } from "react-toastify";
 import { NoAccess } from "../components/NoAccess";
 import { checkCredentials } from "../utils/checkCredentials";
-import Head from 'next/head';
+import Head from "next/head";
 
 export default function App({ Component, pageProps }: AppProps) {
   <Head>
     <link rel="shortcut icon" href="/public/favicon.ico" />
-  </Head>
-  
+  </Head>;
+
   if (pageProps.protected && !checkCredentials()) {
     return (
       <Provider store={store}>
