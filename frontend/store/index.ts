@@ -1,6 +1,7 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import { articlesApi } from "./api/articlesApi";
 import { authApi } from "./api/authApi";
+import { trackingApi } from "./api/trackingApi";
 import { submissionApi } from "./api/submissionApi";
 import UIReducer from "./UIslice";
 import submissionReducer from "./submissionSlice";
@@ -10,6 +11,7 @@ export const store = configureStore({
     [articlesApi.reducerPath]: articlesApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [submissionApi.reducerPath]: submissionApi.reducer,
+    [trackingApi.reducerPath]: trackingApi.reducer,
     UI: UIReducer,
     submission: submissionReducer
   },
@@ -19,7 +21,8 @@ export const store = configureStore({
     })
       .concat(articlesApi.middleware)
       .concat(authApi.middleware)
-      .concat(submissionApi.middleware);
+      .concat(submissionApi.middleware)
+      .concat(trackingApi.middleware);
   },
 });
 

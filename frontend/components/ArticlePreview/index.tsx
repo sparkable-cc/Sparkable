@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { Spiner } from "../Spiner";
+import { useLinkTracker } from "../../utils/useLinkTracker";
 
 interface Props extends ApiTypes.Res.Article {
   isLoading: boolean
@@ -13,6 +14,7 @@ interface Props extends ApiTypes.Res.Article {
 
 export const ArticlePreview = ({
   title,
+  uuid,
   url,
   image,
   date,
@@ -21,6 +23,9 @@ export const ArticlePreview = ({
   isLoading,
   onShareClick
 }: Props) => {
+
+  const onLinkTrack = useLinkTracker(uuid);
+
   return (
     <section className={styles.articlePreview}>
       <div
@@ -31,7 +36,7 @@ export const ArticlePreview = ({
       />
       <div className={styles.contentWrapper}>
         <div>
-          <ArticleLink link={url} />
+          <ArticleLink link={url} uuid={uuid} />
         </div>
         <h2 className={styles.articleTitle}>
           {title}
@@ -42,6 +47,7 @@ export const ArticlePreview = ({
         <nav className={styles.buttonsWrapper}>
           <a
             href={url}
+            onClick={onLinkTrack}
             className={styles.openButton}
             rel="noopener noreferrer"
             target="_blank"

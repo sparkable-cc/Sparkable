@@ -56,6 +56,11 @@ export declare namespace ApiTypes.Req {
     image: string
     statement?: string
   }
+
+  interface CreateViewedLinkByUserData {
+    userUuid: string
+    linkUuid: string
+  }
 }
 
 export declare namespace ApiTypes.Res {
@@ -86,6 +91,7 @@ export declare namespace ApiTypes.Res {
     expires_in: string,
     token_type: string
     uuid: string
+    username: string
   }
 
   interface SubmissionLinkPreview {
@@ -97,6 +103,10 @@ export declare namespace ApiTypes.Res {
   }
 
   interface CreateLink {
+    message: string
+  }
+
+  interface CreateViewedLinkByUserData {
     message: string
   }
 }

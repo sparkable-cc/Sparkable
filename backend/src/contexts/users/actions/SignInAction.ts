@@ -30,8 +30,12 @@ export class SignInAction {
     if (!match) throw new WrongPasswordException();
 
     const auth0 = await this.authService.getToken();
-    const uuid = { uuid: user.uuid };
 
-    return {...auth0, ...uuid};
+    const userInfo = {
+      uuid: user.uuid,
+      username: user.username
+    };
+
+    return {...auth0, ...userInfo};
   }
 }
