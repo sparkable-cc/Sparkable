@@ -1,6 +1,6 @@
-import { NextPage } from "next";
-import styles from "../../styles/LegalPages.module.scss";
-import Link from "next/link";
+import { NextPage } from 'next';
+import Link from 'next/link';
+import styles from '../../styles/LegalPages.module.scss';
 
 const PrivacyPolicyPage: NextPage = () => {
   return (
@@ -27,8 +27,12 @@ const PrivacyPolicyPage: NextPage = () => {
         terms and conditions.
       </p>
       <p>
-        You can always <Link scroll={false} href="/legal/privacy-policy#footer ">contact</Link> us and request insight
-        into and deletion of your data. Or help us improve our policies.
+        You can always{' '}
+        <Link scroll={false} href="/legal/privacy-policy#footer ">
+          contact
+        </Link>{' '}
+        us and request insight into and deletion of your data. Or help us
+        improve our policies.
       </p>
       <h2>What data do we collect and why?</h2>
       <p>
@@ -43,30 +47,30 @@ const PrivacyPolicyPage: NextPage = () => {
         as your submitted content links) is recorded in an anonymized way to
         ensure the integrity of the platform (e.g. preventing bad actors from
         flooding the platform with spam or harmful content). The data collected
-        during the sign-up process is stored on our servers. Butterfy is using{" "}
+        during the sign-up process is stored on our servers. Butterfy is using{' '}
         <a
           target="_blank"
           rel="noopener noreferrer"
           href="https://www.digitalocean.com/"
         >
           DigitalOcean
-        </a>{" "}
-        as a provider. For more information, check DigitalOcean's{" "}
+        </a>{' '}
+        as a provider. For more information, check DigitalOcean's{' '}
         <a
           target="_blank"
           rel="noopener noreferrer"
           href="https://www.digitalocean.com/legal"
         >
           legal
-        </a>{" "}
-        and{" "}
+        </a>{' '}
+        and{' '}
         <a
           target="_blank"
           rel="noopener noreferrer"
           href="https://www.digitalocean.com/security"
         >
           security
-        </a>{" "}
+        </a>{' '}
         statements.
       </p>
       <h3>Usage data</h3>
@@ -75,13 +79,13 @@ const PrivacyPolicyPage: NextPage = () => {
         the date and duration of your visit, information from the device (device
         type, operating system, screen resolution, language, country you are
         located in, and web browser type) you used during your visit, and more.
-        We process this usage data in{" "}
+        We process this usage data in{' '}
         <a target="_blank" rel="noopener noreferrer" href="https://matomo.org/">
           Matomo
-        </a>{" "}
+        </a>{' '}
         Analytics for statistical purposes, to improve your experience, to
         improve our site, and to recognize and stop any misuse. This tool works
-        in compliance with GDPR. For details, see{" "}
+        in compliance with GDPR. For details, see{' '}
         <a
           target="_blank"
           rel="noopener noreferrer"
@@ -100,7 +104,7 @@ const PrivacyPolicyPage: NextPage = () => {
       <h3>Subscribe to our newsletter</h3>
       <p>
         To keep you updated, we send newsletters at regular intervals. For this,
-        Butterfy uses the tool{" "}
+        Butterfy uses the tool{' '}
         <a
           target="_blank"
           rel="noopener noreferrer"
@@ -112,7 +116,7 @@ const PrivacyPolicyPage: NextPage = () => {
         Upon registration, Butterfy collects your e-mail address. This
         information is exclusively for the purpose of sending the newsletter.
         The Newsletter is only sent to those who have signed up for it
-        (double-op-in). You can unsubscribe at any time. For details, see{" "}
+        (double-op-in). You can unsubscribe at any time. For details, see{' '}
         <a
           target="_blank"
           rel="noopener noreferrer"
@@ -127,7 +131,7 @@ const PrivacyPolicyPage: NextPage = () => {
         We keep your provided data until the purpose no longer applies or you
         request us to delete it. You have a right to access, rectification,
         erasure, restrict processing, object to processing, and portability. To
-        do this please write an email to{" "}
+        do this please write an email to{' '}
         <a href="mailto:">support@butterfy.me </a>.
       </p>
       <h2>Embedded content from other websites.</h2>
@@ -143,7 +147,7 @@ const PrivacyPolicyPage: NextPage = () => {
       </p>
       <h2>Contact us!</h2>
       <p>
-        E-mail: <a href="mailto:">support@butterfy.me</a>
+        E-mail: <a href="mailto:support@butterfy.me">support@butterfy.me</a>
       </p>
     </section>
   );
