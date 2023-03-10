@@ -1,25 +1,27 @@
-import { useState, useEffect } from "react";
-import styles from "./index.module.scss";
-import Link from "next/link";
-import Image from "next/image";
-import logo from "../../public/svg/logo.svg";
-import classNames from "classnames";
-import { useAppSelector, useAppDispatch } from "../../store/hooks";
-import { selectIsMenuVisible, setMenuVisible } from "../../store/UIslice";
-import { CSSTransition } from "react-transition-group";
-import { useRef } from "react";
-import { checkCredentials } from "../../utils/checkCredentials";
-import { selectUserName } from "../../store/UIslice";
-import Router from "next/router";
+import classNames from 'classnames';
+import Image from 'next/image';
+import Link from 'next/link';
+import Router from 'next/router';
+import { useEffect, useRef, useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
+import logo from '../../public/svg/logo.svg';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import {
+  selectIsMenuVisible,
+  selectUserName,
+  setMenuVisible,
+} from '../../store/UIslice';
+import { checkCredentials } from '../../utils/checkCredentials';
+import styles from './index.module.scss';
 
 interface Props {
-  isForcedMobile?: boolean
+  isForcedMobile?: boolean;
 }
 
 export const Menu = ({ isForcedMobile }: Props) => {
   const isVisible = useAppSelector(selectIsMenuVisible);
   const userName = useAppSelector(selectUserName);
-  const [ isAuth, setAuth ] = useState(false);
+  const [isAuth, setAuth] = useState(false);
   const dispatch = useAppDispatch();
   const nodeRef = useRef(null);
 
@@ -38,21 +40,26 @@ export const Menu = ({ isForcedMobile }: Props) => {
 
   return (
     <CSSTransition
-      nodeRef={nodeRef} in={isVisible} timeout={400} classNames={{
+      nodeRef={nodeRef}
+      in={isVisible}
+      timeout={400}
+      classNames={{
         enterActive: styles.enterActive,
         enterDone: styles.enterDone,
         exitActive: styles.exitActive,
         exitDone: styles.exitDone,
       }}
     >
-      <aside ref={nodeRef} className={classNames(styles.menuWrapper, { [styles.forcedMobile]: isForcedMobile })}>
+      <aside
+        ref={nodeRef}
+        className={classNames(styles.menuWrapper, {
+          [styles.forcedMobile]: isForcedMobile,
+        })}
+      >
         <div className={styles.logoWrapper}>
           <button className={styles.closeButton} onClick={onMenuHide} />
           <Link href="/" className={styles.logo} onClick={onMenuHide}>
-            <Image
-              src={logo}
-              alt="Sparkable logo"
-            />
+            <Image src={logo} alt="Sparkable logo" />
           </Link>
         </div>
         <nav className="">
@@ -71,21 +78,15 @@ export const Menu = ({ isForcedMobile }: Props) => {
           >
             Submit
           </Link>
-          <Link
-            onClick={onMenuHide}
-            href="/about"
-            className={styles.menuItem}
-          >
+          <Link onClick={onMenuHide} href="/about" className={styles.menuItem}>
             About
           </Link>
           <span className={styles.authButton}>
-            {isAuth ?
-              <button
-                className={styles.buttonOutlined}
-                onClick={onSignOut}
-              >
+            {isAuth ? (
+              <button className={styles.buttonOutlined} onClick={onSignOut}>
                 Sign out
-              </button> :
+              </button>
+            ) : (
               <Link
                 href="/auth/signin"
                 onClick={onMenuHide}
@@ -93,14 +94,14 @@ export const Menu = ({ isForcedMobile }: Props) => {
               >
                 Sign In
               </Link>
-            }
+            )}
           </span>
         </nav>
         <footer className={styles.menuFooter}>
           <Link
-            href=""
+            href="/legal/privacy-policy#footer"
             onClick={onMenuHide}
-            className={classNames(styles.menuFooterLink, styles.disable)}
+            className={classNames(styles.menuFooterLink)}
           >
             Contact
           </Link>
