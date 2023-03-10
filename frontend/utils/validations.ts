@@ -41,6 +41,17 @@ export const signInSchema = Joi.object({
   }),
 });
 
+export const passwordRecoverySchema = Joi.object({
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .required()
+    .messages({
+      'string.email':
+        'This email is not valid. Please check for spelling errors and try again.',
+      'string.empty': 'Email is required',
+    })
+});
+
 export const validationInitialState = {
   field: '',
   message: '',
