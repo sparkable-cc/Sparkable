@@ -61,6 +61,14 @@ export declare namespace ApiTypes.Req {
     userUuid: string
     linkUuid: string
   }
+
+  interface PasswordRecovery {
+    email: string
+  }
+  
+  interface PasswordReset {
+    password: string
+  }
 }
 
 export declare namespace ApiTypes.Res {
@@ -107,6 +115,14 @@ export declare namespace ApiTypes.Res {
   }
 
   interface CreateViewedLinkByUserData {
+    message: string
+  }
+
+  interface PasswordRecovery {
+    message: string
+  }
+  
+  interface PasswordReset {
     message: string
   }
 }

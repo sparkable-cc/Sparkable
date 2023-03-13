@@ -1,6 +1,6 @@
-import classNames from 'classnames';
-import Link from 'next/link';
-import styles from './index.module.scss';
+import classNames from "classnames";
+import Link from "next/link";
+import styles from "./index.module.scss";
 
 export const Footer = () => {
   return (
@@ -102,7 +102,7 @@ export const Footer = () => {
             <p className={styles.footerText}>
               <span>
                 With the exception of the trademark (c) Sparkable, this work is
-                licensed under a{' '}
+                licensed under a{" "}
               </span>
               <a
                 href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
