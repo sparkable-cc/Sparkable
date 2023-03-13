@@ -2,21 +2,24 @@ import { useState, FormEvent } from "react";
 import styles from "./index.module.scss";
 import { FormInput } from "../FormInput";
 import classNames from "classnames";
-import { useLazyPasswordRecoveryQuery } from "../../store/api/authApi";
-import { passwordRecoverySchema, validationInitialState } from "../../utils/validations";
+import { useLazyPasswordResetQuery } from "../../store/api/authApi";
+import { passwordResetSchema, validationInitialState } from "../../utils/validations";
 import { toast } from "react-toastify";
-
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 const inputValuesInitialState = {
-  email: "",
+  password: "",
 };
 
-export const PasswordRecoveryForm = () => {
+export const PasswordResetForm = () => {
   const [ inputValues, setInputValues ] = useState({
-    email: "",
+    password: "",
   });
   const [ validationError, setValidationError ] = useState(validationInitialState);
-  const [ triggerPasswordRecovery, { isLoading }] = useLazyPasswordRecoveryQuery();
+  const [ triggerPasswordReset, { isLoading }] = useLazyPasswordResetQuery();
+  const router = useRouter();
+  const { token, userUuid } = router.query;
 
   const onInputChange = (event: FormEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
@@ -34,7 +37,14 @@ export const PasswordRecoveryForm = () => {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    const validationResult = passwordRecoverySchema.validate(inputValues);
+
+    const data = {
+      userUuid,
+      token,
+      password: inputValues.password
+    };
+
+    const validationResult = passwordResetSchema.validate(data);
 
     if (validationResult.error) {
       const error = validationResult?.error?.details[0];
@@ -47,12 +57,15 @@ export const PasswordRecoveryForm = () => {
     } else {
       setValidationError(validationInitialState);
       try {
-        triggerPasswordRecovery(inputValues).then((res: any) => {
+        triggerPasswordReset(data).then((res: any) => {
           if (res?.error) {
             toast.error(res?.error?.data?.message);
           } else {
             toast.success(res?.data?.message);
             setInputValues(inputValuesInitialState);
+            setTimeout(() => {
+              router.push("/");
+            }, 100);
           }
         });
       } catch (error: any) {
@@ -64,15 +77,20 @@ export const PasswordRecoveryForm = () => {
   return (
     <form className={styles.authForm} onSubmit={onSubmit}>
       <header className={styles.authHeader}>
-        <h2 className={styles.authTitle}>Recover Your Password</h2>
+        <h2 className={styles.authTitle}>Reset Password</h2>
+        <div className={styles.authNavWrapper}>
+          <span>or</span>
+          <Link className={styles.authButtonLink} href="/auth/signin">Sign in</Link>
+        </div>
       </header>
       <div className={styles.authFields}>
         <FormInput
-          value={inputValues.email}
-          id="email"
-          name="email"
-          label="Email"
-          placeholder="Your email address"
+          value={inputValues.password}
+          type="password"
+          id="password"
+          name="password"
+          label="Password"
+          placeholder="Your new password"
           onChange={onInputChange}
           onClear={onInputClear}
           errorMessage={validationError.message}

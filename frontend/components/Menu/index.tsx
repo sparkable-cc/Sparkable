@@ -1,18 +1,18 @@
-import classNames from 'classnames';
-import Image from 'next/image';
-import Link from 'next/link';
-import Router from 'next/router';
-import { useEffect, useRef, useState } from 'react';
-import { CSSTransition } from 'react-transition-group';
-import logo from '../../public/svg/logo.svg';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import classNames from "classnames";
+import Image from "next/image";
+import Link from "next/link";
+import Router from "next/router";
+import { useEffect, useRef, useState } from "react";
+import { CSSTransition } from "react-transition-group";
+import logo from "../../public/svg/logo.svg";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
   selectIsMenuVisible,
   selectUserName,
   setMenuVisible,
-} from '../../store/UIslice';
-import { checkCredentials } from '../../utils/checkCredentials';
-import styles from './index.module.scss';
+} from "../../store/UIslice";
+import { checkCredentials } from "../../utils/checkCredentials";
+import styles from "./index.module.scss";
 
 interface Props {
   isForcedMobile?: boolean;
@@ -21,7 +21,7 @@ interface Props {
 export const Menu = ({ isForcedMobile }: Props) => {
   const isVisible = useAppSelector(selectIsMenuVisible);
   const userName = useAppSelector(selectUserName);
-  const [isAuth, setAuth] = useState(false);
+  const [ isAuth, setAuth ] = useState(false);
   const dispatch = useAppDispatch();
   const nodeRef = useRef(null);
 

@@ -65,6 +65,10 @@ export declare namespace ApiTypes.Req {
   interface PasswordRecovery {
     email: string
   }
+  
+  interface PasswordReset {
+    password: string
+  }
 }
 
 export declare namespace ApiTypes.Res {
@@ -115,6 +119,10 @@ export declare namespace ApiTypes.Res {
   }
 
   interface PasswordRecovery {
+    message: string
+  }
+  
+  interface PasswordReset {
     message: string
   }
 }

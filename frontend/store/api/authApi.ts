@@ -27,6 +27,13 @@ export const authApi = createApi({
         body
       }),
     }),
+    passwordReset: builder.query<ApiTypes.Res.PasswordReset, ApiTypes.Req.PasswordReset>({
+      query: (body) => ({
+        url: `/reset-password`,
+        method: "POST",
+        body
+      }),
+    }),
   }),
 });
 
@@ -34,4 +41,5 @@ export const {
   useLazySignUpQuery,
   useLazySignInQuery,  
   useLazyPasswordRecoveryQuery,
+  useLazyPasswordResetQuery,
 } = authApi;
