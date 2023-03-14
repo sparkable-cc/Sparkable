@@ -1,32 +1,33 @@
-import { useEffect } from "react";
-import { ArticleItem } from "../ArticleItem";
-import { v4 as uuidv4 } from "uuid";
-import { Spiner } from "../Spiner";
-import classNames from "classnames";
-import styles from "./index.module.scss";
-import { useLazyGetArticlesQuery } from "../../store/api/articlesApi";
-import { useAppSelector, useAppDispatch } from "../../store/hooks";
-import { usePrevious } from "../../utils/usePrevious";
-import isEqual from "lodash.isequal";
-import { UITypes } from "../../types";
-import uniqBy from "lodash.uniqby";
-import { MobileSubmitLink } from "../../components/MobileSubmitLink";
+import classNames from 'classnames';
+import isEqual from 'lodash.isequal';
+import uniqBy from 'lodash.uniqby';
+import { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { MobileSubmitLink } from '../../components/MobileSubmitLink';
+import { useLazyGetArticlesQuery } from '../../store/api/articlesApi';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
+  selectArticles,
   selectSelectedFilters,
   selectSort,
+  selectTotal,
   setArticles,
   setTotal,
-  selectArticles,
-  selectTotal
-} from "../../store/UIslice";
+} from '../../store/UIslice';
+import { UITypes } from '../../types';
+import { usePrevious } from '../../utils/usePrevious';
+import { ArticleItem } from '../ArticleItem';
+import { Spiner } from '../Spiner';
+import styles from './index.module.scss';
 
 interface Props {
-  isPreviewPage?: boolean
+  isPreviewPage?: boolean;
 }
 
 export const ArticlesList = ({ isPreviewPage }: Props) => {
+  const [currentPage, setCurrentPage] = useState(1);
   const dispatch = useAppDispatch();
-  const [ trigger, { isLoading }] = useLazyGetArticlesQuery();
+  const [trigger, { isLoading }] = useLazyGetArticlesQuery();
   const selectedFilters = useAppSelector(selectSelectedFilters);
   const sort = useAppSelector(selectSort);
   const total = useAppSelector(selectTotal);
@@ -37,18 +38,18 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
 
   const setQueryParams = (page?: number) => {
     const filters = selectedFilters?.length ? selectedFilters : undefined;
-    const sorts = sort.value === "newest-first" ? "-date" : "";
+    const sorts = sort.value === 'newest-first' ? '-date' : '';
 
     let queryParams = {
-      categories: filters
+      categories: filters,
     };
 
     if (sorts) {
-      queryParams = { ...queryParams, ...{ sort: sorts }};
+      queryParams = { ...queryParams, ...{ sort: sorts } };
     }
 
     if (page) {
-      queryParams = { ...queryParams, ...{ page }};
+      queryParams = { ...queryParams, ...{ page } };
     }
 
     return queryParams;
@@ -58,17 +59,21 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
     const queryParams = setQueryParams(page);
 
     try {
-      trigger(queryParams).then(res => {
+      trigger(queryParams).then((res) => {
         if (!res.data) return;
 
-        if (sort.value === "newest-first" && previousSort && isEqual(sort, previousSort)) {
-
+        if (
+          sort.value === 'newest-first' &&
+          previousSort &&
+          isEqual(sort, previousSort)
+        ) {
           if (res.data?.total < articles.length) {
             dispatch(setArticles(res.data?.links));
           } else {
-            dispatch(setArticles(uniqBy([ ...articles, ...res.data?.links ], "id")));
+            dispatch(
+              setArticles(uniqBy([...articles, ...res.data?.links], 'id')),
+            );
           }
-
         } else {
           dispatch(setArticles(res.data?.links));
         }
@@ -80,12 +85,10 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
     }
   };
 
-  const calculatePageNumber = (total, itemIndex) => {
-    return Math.ceil(++itemIndex / total);
-  };
-
   const onLoadMore = () => {
-    onGetData(calculatePageNumber(total, PAGE_SIZE) + 1);
+    const nextPage = currentPage + 1;
+    onGetData(nextPage);
+    setCurrentPage(nextPage);
   };
 
   useEffect(() => {
@@ -99,42 +102,42 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
     if (previousSort && !isEqual(sort, previousSort)) {
       onGetData();
     }
-  }, [ selectedFilters, sort ]);
+  }, [selectedFilters, sort]);
 
   return (
     <>
-      <section className={classNames(styles.articlesList, { [styles.previewPage]: isPreviewPage })}>
+      <section
+        className={classNames(styles.articlesList, {
+          [styles.previewPage]: isPreviewPage,
+        })}
+      >
         {Boolean(articles?.length) &&
-          articles.map(item => <ArticleItem
-            {...item}
-            key={uuidv4()}
-          />)}
+          articles.map((item) => <ArticleItem {...item} key={uuidv4()} />)}
       </section>
       {isLoading && <Spiner wrapperClassName={styles.spinnerWrapper} />}
-      {
-        Boolean(articles?.length) &&
+      {Boolean(articles?.length) && (
         <div className={styles.loadMoreWrapper}>
-          {
-            sort.value === "random" ?
-              <button
-                disabled={isLoading}
-                className={classNames(styles.reshuffleButton)}
-                onClick={() => onGetData()}
-              >
-                Reshuffle
-              </button> :
-              total > articles.length ?
-                <button
-                  disabled={isLoading}
-                  onClick={onLoadMore}
-                  className={classNames(styles.loadMoreButton)}
-                >
-                  Load more
-                </button> :
-                ""
-          }
+          {sort.value === 'random' ? (
+            <button
+              disabled={isLoading}
+              className={classNames(styles.reshuffleButton)}
+              onClick={() => onGetData()}
+            >
+              Reshuffle
+            </button>
+          ) : total > articles.length ? (
+            <button
+              disabled={isLoading}
+              onClick={onLoadMore}
+              className={classNames(styles.loadMoreButton)}
+            >
+              Load more
+            </button>
+          ) : (
+            ''
+          )}
         </div>
-      }
+      )}
       <MobileSubmitLink />
     </>
   );
