@@ -6,7 +6,7 @@ const TermsOfUsePage: NextPage = () => {
   return (
     <section className={styles.legalContainer}>
       <div>
-        <h1>AGREEMENT TO OUR LEGAL TERMS</h1>
+        <h1>Agreement to our Legal Terms</h1>
         <p>Last updated February 19, 2023</p>
         <p>
           We are Butterfy (Association) ("Company," "we," "us," "our"), a
@@ -109,7 +109,7 @@ const TermsOfUsePage: NextPage = () => {
               <a href="#13">13. COPYRIGHT INFRINGEMENTS</a>
             </li>
             <li>
-              <a href="#14">14. TERM AND TERMINATION</a>
+              <a href="#14">14. TERMS AND TERMINATION</a>
             </li>
             <li>
               <a href="#15">15. MODIFICATIONS AND INTERRUPTIONS</a>
@@ -153,7 +153,7 @@ const TermsOfUsePage: NextPage = () => {
         </nav>
         <article>
           <section>
-            <h2 id="1">OUR SERVICES</h2>
+            <h2 id="1">Our Services</h2>
             <p>
               The information provided when using the Services is not intended
               for distribution to or use by any person or entity in any
@@ -175,7 +175,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="2">INTELLECTUAL PROPERTY RIGHTS</h1>
+            <h1 id="2">Intellectual Property Rights</h1>
             <h2 id="2.1">Our intellectual property</h2>
             <p>
               We are the owner or the licensee of all intellectual property
@@ -196,7 +196,7 @@ const TermsOfUsePage: NextPage = () => {
               IS" for your personal, non-commercial use or internal business
               purpose only.
             </p>
-            <h2 id="2.2">Your use of our Services</h2>
+            <h2 id="2.2">Your use of our services</h2>
             <p>
               Subject to your compliance with these Legal Terms, including the
               "PROHIBITED ACTIVITIES" section below, we grant you a
@@ -333,7 +333,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="3">USER REPRESENTATIONS</h1>
+            <h1 id="3">User Representations</h1>
             <p>
               By using the Services, you represent and warrant that: (1) all
               registration information you submit will be true, accurate,
@@ -355,7 +355,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="4">USER REGISTRATION</h1>
+            <h1 id="4">User Registration</h1>
             <p>
               You may be required to register with the Services. You agree to
               keep your password confidential and will be responsible for all
@@ -366,7 +366,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="5">PROHIBITED ACTIVITIES</h1>
+            <h1 id="5">Prohibited Activities</h1>
             <p>
               You may not access or use the Services for any purpose other than
               that for which we make the Services available. The Services may
@@ -494,7 +494,7 @@ const TermsOfUsePage: NextPage = () => {
             </ul>
           </section>
           <section>
-            <h1 id="6">USER GENERATED CONTRIBUTIONS</h1>
+            <h1 id="6">User Generated Contributions</h1>
             <p>
               The Services may invite you to chat, contribute to, or participate
               in blogs, message boards, online forums, and other functionality,
@@ -586,7 +586,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="7">CONTRIBUTION LICENSE</h1>
+            <h1 id="7">Contribution License</h1>
             <p>
               We do not assert any ownership over your Contributions. You retain
               full ownership of all of your Contributions and any intellectual
@@ -608,7 +608,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="8">GUIDELINES FOR REVIEWS</h1>
+            <h1 id="8">Guidelines for Reviews</h1>
             <p>
               We may provide you areas on the Services to leave reviews or
               ratings. When posting a review, you must comply with the following
@@ -641,7 +641,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="9">MOBILE APPLICATION LICENSE</h1>
+            <h1 id="9">Mobile Application License</h1>
             <p>
               The Services may contain (or you may be sent via the Site) links
               to other websites ("Third-Party Websites") as well as articles,
@@ -679,7 +679,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="10">SERVICES MANAGEMENT</h1>
+            <h1 id="10">Services Management</h1>
             <p>
               We reserve the right, but not the obligation, to: (1) monitor the
               Services for violations of these Legal Terms; (2) take appropriate
@@ -698,7 +698,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="11">PRIVACY POLICY</h1>
+            <h1 id="11">Privacy Policy</h1>
             <p>
               We care about data privacy and security. Please review our{' '}
               <Link href="/legal/privacy-policy">Privacy Policy</Link>. By using
@@ -715,7 +715,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="12">ACCEPTABLE USE POLICY</h1>
+            <h1 id="12">Acceptable Use Policy</h1>
             <p>
               The Acceptable Use Policy is an integral part of our Terms of Use.
               It includes our Community Guidelines as well as our Content &
@@ -727,7 +727,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="13">COPYRIGHT INFRINGEMENTS</h1>
+            <h1 id="13">Copyright Infringements</h1>
             <p>
               We respect the intellectual property rights of others. If you
               believe that any material available on or through the Services
@@ -743,7 +743,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="14">TERM AND TERMINATION</h1>
+            <h1 id="14">Terms and Termination</h1>
             <p>
               These Legal Terms shall remain in full force and effect while you
               use the Services. WITHOUT LIMITING ANY OTHER PROVISION OF THESE
@@ -768,7 +768,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="15">MODIFICATIONS AND INTERRUPTIONS</h1>
+            <h1 id="15">Modifications and Interruptions</h1>
             <p>
               We reserve the right to change, modify, or remove the contents of
               the Services at any time or for any reason at our sole discretion
@@ -793,7 +793,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="16">GOVERNING LAW</h1>
+            <h1 id="16">Governing Law</h1>
             <p>
               TThese Legal Terms are governed by and interpreted following the
               laws of Switzerland, and the use of the United Nations Convention
@@ -809,7 +809,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="17">DISPUTE RESOLUTION</h1>
+            <h1 id="17">Dispute Resolution</h1>
             <h2 id="17.1">Informal Negotiations</h2>
             <p>
               To expedite resolution and control the cost of any dispute,
@@ -866,7 +866,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="18">CORRECTIONS</h1>
+            <h1 id="18">Corrections</h1>
             <p>
               There may be information on the Services that contains
               typographical errors, inaccuracies, or omissions, including
@@ -877,7 +877,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="19">DISCLAIMER</h1>
+            <h1 id="19">Disclaimer</h1>
             <p>
               THE SERVICES ARE PROVIDED ON AN AS-IS AND AS-AVAILABLE BASIS. YOU
               AGREE THAT YOUR USE OF THE SERVICES WILL BE AT YOUR SOLE RISK. TO
@@ -913,7 +913,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="20">LIMITATIONS OF LIABILITY</h1>
+            <h1 id="20">Limitations of Liability</h1>
             <p>
               IN NO EVENT WILL WE OR OUR DIRECTORS, EMPLOYEES, OR AGENTS BE
               LIABLE TO YOU OR ANY THIRD PARTY FOR ANY DIRECT, INDIRECT,
@@ -924,7 +924,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="21">INDEMNIFICATION</h1>
+            <h1 id="21">Indemnification</h1>
             <p>
               You agree to defend, indemnify, and hold us harmless, including
               our subsidiaries, affiliates, and all of our respective officers,
@@ -947,7 +947,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="22">USER DATA</h1>
+            <h1 id="22">User Data</h1>
             <p>
               We will maintain certain data that you transmit to the Services
               for the purpose of managing the performance of the Services, as
@@ -962,7 +962,7 @@ const TermsOfUsePage: NextPage = () => {
           </section>
           <section>
             <h1 id="23">
-              ELECTRONIC COMMUNICATIONS, TRANSACTIONS, AND SIGNATURES
+              Electronic Communications, Transactions, and Signatures
             </h1>
             <p>
               Visiting the Services, sending us emails, and completing online
@@ -982,7 +982,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="24">CALIFORNIA USERS AND RESIDENTS</h1>
+            <h1 id="24">California Users and Residents</h1>
             <p>
               If any complaint with us is not satisfactorily resolved, you can
               contact the Complaint Assistance Unit of the Division of Consumer
@@ -993,7 +993,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="25">MISCELLANEOUS</h1>
+            <h1 id="25">Miscellaneous</h1>
             <p>
               These Legal Terms and any policies or operating rules posted by us
               on the Services or in respect to the Services constitute the
@@ -1019,7 +1019,7 @@ const TermsOfUsePage: NextPage = () => {
             </p>
           </section>
           <section>
-            <h1 id="26">CONTACT US</h1>
+            <h1 id="26">Contact us</h1>
             <p>
               In order to resolve a complaint regarding the Services or to
               receive further information regarding use of the Services, please
@@ -1038,9 +1038,7 @@ const TermsOfUsePage: NextPage = () => {
               <strong>Switzerland</strong>
             </p>
             <p>
-              <a href="mailto:support@butterfy.me" className="email">
-                support@butterfy.me
-              </a>
+              <a href="mailto:support@butterfy.me">support@butterfy.me</a>
             </p>
           </section>
         </article>
