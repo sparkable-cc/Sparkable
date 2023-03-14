@@ -7,7 +7,7 @@ describe('Get voting status', () => {
     const getVotingStatusAction = new GetVotingStatusAction();
     const date = new Date('Mar 27, 2023 00:00:00');
 
-    const votingStatus = getVotingStatusAction.execute(date);
+    const votingStatus = await getVotingStatusAction.execute(date);
 
     expect(votingStatus.openVoting).toBeFalsy();
     expect(votingStatus.round).toEqual(1);
@@ -20,7 +20,7 @@ describe('Get voting status', () => {
     const getVotingStatusAction = new GetVotingStatusAction();
     const date = new Date('Apr 06, 2023 00:00:00');
 
-    const votingStatus = getVotingStatusAction.execute(date);
+    const votingStatus = await getVotingStatusAction.execute(date);
 
     expect(votingStatus.openVoting).toBeTruthy();
     expect(votingStatus.round).toEqual(1);
@@ -33,7 +33,7 @@ describe('Get voting status', () => {
     const getVotingStatusAction = new GetVotingStatusAction();
     const date = new Date('Apr 11, 2023 00:00:00');
 
-    const votingStatus = getVotingStatusAction.execute(date);
+    const votingStatus = await getVotingStatusAction.execute(date);
 
     expect(votingStatus.openVoting).toBeFalsy();
     expect(votingStatus.round).toEqual(2);
@@ -46,7 +46,7 @@ describe('Get voting status', () => {
     const getVotingStatusAction = new GetVotingStatusAction();
     const date = new Date('Apr 22, 2023 00:00:00');
 
-    const votingStatus = getVotingStatusAction.execute(date);
+    const votingStatus = await getVotingStatusAction.execute(date);
 
     expect(votingStatus.openVoting).toBeTruthy();
     expect(votingStatus.round).toEqual(2);
