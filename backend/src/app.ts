@@ -33,6 +33,8 @@ import { CreateViewedLinkByUserDataAction } from './contexts/links/actions/Creat
 import { ViewedLinkByUserDataRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/ViewedLinkByUserDataRepositoryPG';
 import { LinkNotFoundException } from './contexts/links/domain/exceptions/LinkNotFoundException';
 import { DataDoesExistException } from './contexts/links/domain/exceptions/DataDoesExistException';
+import { DateNotValidException } from './contexts/voting/domain/exceptions/DateNotValidException';
+import { GetVotingStatusAction } from './contexts/voting/actions/GetVotingStatus';
 
 const app: Express = express();
 
@@ -354,6 +356,38 @@ app.post('/viewed-link-user', checkJwt,  async (req: Request, res: Response) => 
           res.status(403);
           res.send({ message: 'Data already exists!' });
           break;
+        default:
+          console.log(
+            'Failed to do something async with an unspecified error: ',
+            error,
+          );
+          return res.send(500);
+      }
+    });
+
+});
+
+app.post('/voting-status', async (req: Request, res: Response) => {
+  const getVotingStatusAction = new GetVotingStatusAction();
+
+  getVotingStatusAction
+    .execute(new Date(req.body.date))
+    .then((votingStatus) => {
+      res.status(200);
+      res.send(votingStatus);
+    })
+    .catch((error) => {
+      switch (error.constructor) {
+        case DateNotValidException:
+          res.status(400);
+          res.send({ message: 'Invalid date!' });
+          break;
+        default:
+          console.log(
+            'Failed to do something async with an unspecified error: ',
+            error,
+          );
+          return res.send(500);
       }
     });
 
