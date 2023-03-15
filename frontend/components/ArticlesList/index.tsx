@@ -34,7 +34,6 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
   const articles = useAppSelector(selectArticles);
   const previousSelectedFilters = usePrevious(selectedFilters);
   const previousSort: UITypes.Option | undefined = usePrevious(sort);
-  // const PAGE_SIZE = 6;
 
   const setQueryParams = (page?: number) => {
     const filters = selectedFilters?.length ? selectedFilters : undefined;
