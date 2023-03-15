@@ -15,7 +15,8 @@ export default class LinkFactory {
     description: 'description',
     categories: [],
     userUuid: 'userUuid',
-    date: new Date()
+    date: new Date(),
+    suggestion: 'Sports'
   };
 
   public static async create(
