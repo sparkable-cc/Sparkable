@@ -16,6 +16,7 @@ export class Link {
   username: string;
   userUuid: string;
   statement: string;
+  suggestionCategory: string;
 
   constructor(link: any) {
     if (Object.keys(link).length === 0) {
@@ -50,6 +51,7 @@ export class Link {
     this.username = link.username;
     this.uuid = uuidv4();
     this.statement = link.statement;
+    this.suggestionCategory = link.suggestionCategory;
   }
 
   public static factory(linkDto: LinkDto): Link {
@@ -68,7 +70,8 @@ export class Link {
       categories: this.categories,
       userUuid: this.userUuid,
       username: this.username,
-      statement: this.statement
+      statement: this.statement,
+      suggestionCategory: this.suggestionCategory
     };
   }
 
