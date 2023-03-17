@@ -1,0 +1,45 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.bannerWrapper {
+  background: $colorYellow;
+  padding: $gapXxs;
+  font-size: $size13;
+  text-align: center;
+  width: 100%;
+}
+
+.toggleButton {
+  margin-left: 28px;
+  padding-right: 24px;
+  position: relative;
+  cursor: pointer;
+
+  &:after {
+    display: block;
+    position: absolute;
+    top: -2px;
+    right: -4px;
+    content: url("../../public/svg/voting-arrow.svg");
+  }
+}
+
+.detailsWrapper {
+  padding-top: $gapS;
+  display: flex;
+  justify-content: center;
+}
+
+.detailsColumn {
+  width: 270px;
+  margin-right: $gapXxs;
+  text-align: left;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.detailsImage {
+  margin-right: $gapXxs;
+}

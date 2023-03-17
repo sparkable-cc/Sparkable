@@ -1,12 +1,6 @@
 @import "./variables.scss";
 
 // CONTAINERS
-.mainWrapper {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
 .container {
   width: calc(100% - 260px);
   padding-left: 40px;
