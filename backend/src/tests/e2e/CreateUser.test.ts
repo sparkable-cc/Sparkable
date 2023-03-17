@@ -52,6 +52,7 @@ describe('POST /user', () => {
     const [users, total] = await repository.findAndCount();
     expect(total).toEqual(1);
     expect(users[0].registrationDate).toBeInstanceOf(Date);
+    expect(users[0].cycle).toEqual(1);
   });
 
   it('returns 403 when one unique field exists with the same value', async () => {

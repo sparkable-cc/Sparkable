@@ -65,13 +65,26 @@ describe('POST /viewed-link-user', () => {
     expect(res.body.message).toEqual('Bad request');
   });
 
+  it('returns 400 when the cycle does not exist', async () => {
+    const res = await request(app)
+      .post(endpoint)
+      .auth(auth.body.access_token, { type: 'bearer' })
+      .send({
+        cycle: 5
+      });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toEqual('Cycle not found!');
+  });
+
   it('returns 400 when the user does not exist', async () => {
     const res = await request(app)
       .post(endpoint)
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         userUuid: 'xxx',
-        linkUuid: 'xxx'
+        linkUuid: 'xxx',
+        cycle: 1
       });
 
     expect(res.statusCode).toEqual(400);
@@ -84,7 +97,8 @@ describe('POST /viewed-link-user', () => {
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         userUuid: auth.body.uuid,
-        linkUuid: 'xxx'
+        linkUuid: 'xxx',
+        cycle: 1
       });
 
     expect(res.statusCode).toEqual(400);
@@ -92,12 +106,15 @@ describe('POST /viewed-link-user', () => {
   });
 
   it('returns 201 when data is created', async () => {
+    const cycle = 1;
+
     const res = await request(app)
       .post(endpoint)
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         userUuid: auth.body.uuid,
-        linkUuid: link.uuid
+        linkUuid: link.uuid,
+        cycle: cycle,
       });
 
     expect(res.statusCode).toEqual(201);
@@ -108,6 +125,7 @@ describe('POST /viewed-link-user', () => {
     expect(result[0][0].userUuid).toEqual(auth.body.uuid);
     expect(result[0][0].linkUuid).toEqual(link.uuid);
     expect(result[0][0].date).not.toEqual(null);
+    expect(result[0][0].cycle).toEqual(cycle);
   });
 
   it('returns 403 when data exists with the user and the link', async () => {
@@ -116,7 +134,8 @@ describe('POST /viewed-link-user', () => {
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         userUuid: auth.body.uuid,
-        linkUuid: link.uuid
+        linkUuid: link.uuid,
+        cycle: 1
       });
 
     const res = await request(app)

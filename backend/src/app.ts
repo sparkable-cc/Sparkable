@@ -35,6 +35,7 @@ import { LinkNotFoundException } from './contexts/links/domain/exceptions/LinkNo
 import { DataDoesExistException } from './contexts/links/domain/exceptions/DataDoesExistException';
 import { DateNotValidException } from './contexts/voting/domain/exceptions/DateNotValidException';
 import { GetVotingStatusAction } from './contexts/voting/actions/GetVotingStatus';
+import { VotingCycleDoesNotExistException } from './contexts/voting/domain/exceptions/VotingCycleDoesNotExistException';
 
 const app: Express = express();
 
@@ -333,7 +334,7 @@ app.post('/viewed-link-user', checkJwt,  async (req: Request, res: Response) => 
   );
 
   createViewedLinkByUserDataAction
-    .execute(req.body.userUuid, req.body.linkUuid)
+    .execute(req.body.userUuid, req.body.linkUuid, req.body.cycle)
     .then(() => {
       res.status(201);
       res.send({ message: 'Data created!' });
@@ -343,6 +344,10 @@ app.post('/viewed-link-user', checkJwt,  async (req: Request, res: Response) => 
         case MandatoryFieldEmptyException:
           res.status(400);
           res.send({ message: 'Bad request' });
+          break;
+        case VotingCycleDoesNotExistException:
+          res.status(400);
+          res.send({ message: 'Cycle not found!' });
           break;
         case UserNotFoundException:
           res.status(400);

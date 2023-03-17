@@ -3,6 +3,8 @@ import { MandatoryFieldEmptyException } from '../../users/domain/exceptions/Mand
 import { UserNotFoundException } from '../../users/domain/exceptions/UserNotFoundException';
 import { User } from '../../users/domain/models/User';
 import { UserRepositoryInMemory } from '../../users/infrastructure/persistence/repositories/UserRepositoryInMemory';
+import { VotingCycleDoesNotExistException } from '../../voting/domain/exceptions/VotingCycleDoesNotExistException';
+import { Cycle } from '../../voting/domain/models/Cycle';
 import { DataDoesExistException } from '../domain/exceptions/DataDoesExistException';
 import { LinkNotFoundException } from '../domain/exceptions/LinkNotFoundException';
 import { Link } from '../domain/models/Link';
@@ -13,6 +15,18 @@ import { CreateViewedLinkByUserDataAction } from './CreateViewedLinkByUserDataAc
 
 describe('Create viewed link by user data action', () => {
 
+  test('cant create viewed link by user data when the cycle does not exist', async () => {
+    const createViewedLinkByUserAction = new CreateViewedLinkByUserDataAction(
+      new UserRepositoryInMemory(),
+      new LinkRepositoryInMemory(),
+      new ViewedLinkByUserDataRepositoryInMemory()
+    );
+
+    await expect(createViewedLinkByUserAction.execute('', '', 0)).rejects.toThrow(
+      VotingCycleDoesNotExistException,
+    );
+  });
+
   test('cant create viewed link by user data without user', async () => {
     const createViewedLinkByUserAction = new CreateViewedLinkByUserDataAction(
       new UserRepositoryInMemory(),
@@ -20,7 +34,7 @@ describe('Create viewed link by user data action', () => {
       new ViewedLinkByUserDataRepositoryInMemory()
     );
 
-    await expect(createViewedLinkByUserAction.execute('', '')).rejects.toThrow(
+    await expect(createViewedLinkByUserAction.execute('', '', 1)).rejects.toThrow(
       MandatoryFieldEmptyException,
     );
   });
@@ -32,7 +46,7 @@ describe('Create viewed link by user data action', () => {
       new ViewedLinkByUserDataRepositoryInMemory()
     );
 
-    await expect(createViewedLinkByUserAction.execute('userUuid', '')).rejects.toThrow(
+    await expect(createViewedLinkByUserAction.execute('userUuid', '', 1)).rejects.toThrow(
       MandatoryFieldEmptyException,
     );
   });
@@ -44,7 +58,7 @@ describe('Create viewed link by user data action', () => {
       new ViewedLinkByUserDataRepositoryInMemory()
     );
 
-    await expect(createViewedLinkByUserAction.execute('userUuid', 'linkUuid')).rejects.toThrow(
+    await expect(createViewedLinkByUserAction.execute('userUuid', 'linkUuid', 1)).rejects.toThrow(
       UserNotFoundException,
     );
   });
@@ -59,7 +73,7 @@ describe('Create viewed link by user data action', () => {
       new ViewedLinkByUserDataRepositoryInMemory()
     );
 
-    await expect(createViewedLinkByUserAction.execute('userUuid', 'linkUuid')).rejects.toThrow(
+    await expect(createViewedLinkByUserAction.execute('userUuid', 'linkUuid', 1)).rejects.toThrow(
       LinkNotFoundException,
     );
   });
@@ -81,7 +95,7 @@ describe('Create viewed link by user data action', () => {
 
     const viewedLinkByUserDataRepositoryInMemory = new ViewedLinkByUserDataRepositoryInMemory();
     viewedLinkByUserDataRepositoryInMemory.store(
-      new ViewedLinkByUserData(userUuid, link.uuid)
+      new ViewedLinkByUserData(userUuid, link.uuid, new Cycle(1))
     );
 
     const createViewedLinkByUserAction = new CreateViewedLinkByUserDataAction(
@@ -90,7 +104,7 @@ describe('Create viewed link by user data action', () => {
       viewedLinkByUserDataRepositoryInMemory
     );
 
-    await expect(createViewedLinkByUserAction.execute(userUuid, link.uuid)).rejects.toThrow(
+    await expect(createViewedLinkByUserAction.execute(userUuid, link.uuid, 1)).rejects.toThrow(
       DataDoesExistException,
     );
   });
@@ -109,6 +123,7 @@ describe('Create viewed link by user data action', () => {
     };
     const link = new Link(linkDto);
     linkRepositoryInMemory.storeLink(link);
+    const cycle = 1;
 
     const viewedLinkByUserDataRepositoryInMemory = new ViewedLinkByUserDataRepositoryInMemory();
 
@@ -118,11 +133,12 @@ describe('Create viewed link by user data action', () => {
       viewedLinkByUserDataRepositoryInMemory
     );
 
-    await createViewedLinkByUserAction.execute(userUuid, link.uuid);
+    await createViewedLinkByUserAction.execute(userUuid, link.uuid, cycle);
 
     expect(viewedLinkByUserDataRepositoryInMemory.collection.length).toEqual(1);
     expect(viewedLinkByUserDataRepositoryInMemory.collection[0].userUuid).toEqual(userUuid);
     expect(viewedLinkByUserDataRepositoryInMemory.collection[0].linkUuid).toEqual(link.uuid);
+    expect(viewedLinkByUserDataRepositoryInMemory.collection[0].cycle).toEqual(cycle);
   });
 
 });
