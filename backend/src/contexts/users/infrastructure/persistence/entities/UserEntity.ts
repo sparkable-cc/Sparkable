@@ -18,6 +18,6 @@ export class UserEntity implements UserDto {
   @Column({nullable: true})
   uuid: string;
 
-  @CreateDateColumn({ type: 'timestamptz' })
+  @CreateDateColumn({ type: 'timestamptz', nullable: true })
   registrationDate: Date;
 }
