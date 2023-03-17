@@ -1,0 +1,1 @@
+export class UserHasNotOpenedAnyLinksException extends Error {}
