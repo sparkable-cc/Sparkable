@@ -13,4 +13,12 @@
   position: absolute;
   right: 20px;
   top: 20px;
+
+  &.withVoitingBanner {
+    top: 50px;
+  }
+
+  @media only screen and (max-width: $laptop) {
+    display: none;
+  }
 }
