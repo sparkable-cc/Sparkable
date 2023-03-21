@@ -10,7 +10,7 @@ export class User {
   private username: string;
   private password: string;
   private uuid: string;
-  private cycle: number;
+  private stage: number;
 
   constructor(email: string, username: string, password: string, uuid:string = uuidv4()) {
     if (!email || !username || !password) {
@@ -21,7 +21,7 @@ export class User {
     this.email = email;
     this.username = username;
     this.uuid = uuid;
-    this.cycle = 1;
+    this.stage = 1;
   }
 
   public setPassword(password:string) {
@@ -55,7 +55,7 @@ export class User {
       email: this.email,
       username: this.username,
       password: this.password,
-      cycle: this.cycle
+      stage: this.stage
     };
   }
 }

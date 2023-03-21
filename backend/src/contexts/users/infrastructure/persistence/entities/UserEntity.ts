@@ -18,9 +18,9 @@ export class UserEntity implements UserDto {
   @Column({nullable: true})
   uuid: string;
 
-  @Column({nullable: true})
-  cycle: number;
-
   @CreateDateColumn({ type: 'timestamptz', nullable: true })
   registrationDate: Date;
+
+  @Column({ nullable: true })
+  stage: number;
 }

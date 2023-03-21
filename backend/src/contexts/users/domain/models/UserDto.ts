@@ -4,5 +4,5 @@ export interface UserDto  {
     email:string;
     username:string;
     password:string;
-    cycle: number;
+    stage: number;
 }
