@@ -20,9 +20,6 @@ export class Link {
   stage: number;
 
   constructor(link: any) {
-
-    //console.log(link);
-
     if (Object.keys(link).length === 0) {
       throw new MandatoryFieldEmptyException();
     }
