@@ -20,4 +20,7 @@ export class UserEntity implements UserDto {
 
   @CreateDateColumn({ type: 'timestamptz', nullable: true })
   registrationDate: Date;
+
+  @Column({ nullable: true })
+  stage: number;
 }

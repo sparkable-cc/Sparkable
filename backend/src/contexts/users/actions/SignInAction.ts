@@ -33,7 +33,8 @@ export class SignInAction {
 
     const userInfo = {
       uuid: user.uuid,
-      username: user.username
+      username: user.username,
+      stage: user.stage
     };
 
     return {...auth0, ...userInfo};

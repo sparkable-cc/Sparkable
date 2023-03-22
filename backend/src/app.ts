@@ -35,6 +35,7 @@ import { LinkNotFoundException } from './contexts/links/domain/exceptions/LinkNo
 import { DataDoesExistException } from './contexts/links/domain/exceptions/DataDoesExistException';
 import { DateNotValidException } from './contexts/voting/domain/exceptions/DateNotValidException';
 import { GetVotingStatusAction } from './contexts/voting/actions/GetVotingStatus';
+import { StageDoesNotExistException } from './contexts/voting/domain/exceptions/StageDoesNotExistException';
 
 const app: Express = express();
 
@@ -333,7 +334,7 @@ app.post('/viewed-link-user', checkJwt,  async (req: Request, res: Response) => 
   );
 
   createViewedLinkByUserDataAction
-    .execute(req.body.userUuid, req.body.linkUuid)
+    .execute(req.body.userUuid, req.body.linkUuid, req.body.cycle)
     .then(() => {
       res.status(201);
       res.send({ message: 'Data created!' });

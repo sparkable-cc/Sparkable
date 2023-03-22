@@ -10,7 +10,7 @@ export class ViewedLinkByUserDataRepositoryInMemory implements ViewedLinkByUserD
   }
 
   store(data: ViewedLinkByUserData){
-    this.collection.push(data);
+    this.collection.push(data.toDto());
   }
 
   findData(params: Object): Promise<ViewedLinkByUserDataDto | null> {
