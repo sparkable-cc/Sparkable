@@ -50,4 +50,7 @@ export class LinkEntity implements LinkDto {
   })
   @JoinTable()
   categories: CategoryEntity[];
+
+  @Column({nullable: true})
+  stage: number;
 }

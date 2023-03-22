@@ -70,11 +70,12 @@ describe('POST /viewed-link-user', () => {
       .post(endpoint)
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
-        cycle: 5
+        userUuid: 'xxx',
+        linkUuid: 'xxx'
       });
 
     expect(res.statusCode).toEqual(400);
-    expect(res.body.message).toEqual('Cycle not found!');
+    expect(res.body.message).toEqual('Bad request');
   });
 
   it('returns 400 when the user does not exist', async () => {
@@ -126,6 +127,8 @@ describe('POST /viewed-link-user', () => {
     expect(result[0][0].linkUuid).toEqual(link.uuid);
     expect(result[0][0].date).not.toEqual(null);
     expect(result[0][0].cycle).toEqual(cycle);
+    expect(result[0][0].userStage).toEqual(1);
+    expect(result[0][0].linkStage).toEqual(2);
   });
 
   it('returns 403 when data exists with the user and the link', async () => {
@@ -143,7 +146,8 @@ describe('POST /viewed-link-user', () => {
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         userUuid: auth.body.uuid,
-        linkUuid: link.uuid
+        linkUuid: link.uuid,
+        cycle: 1
       });
 
     expect(res.statusCode).toEqual(403);

@@ -21,8 +21,9 @@ export class LinkRepositoryInMemory implements LinkRepository {
     return new Promise((resolve) => resolve(this.links[0]));
   }
 
-  storeLink(link: Link) {
+  storeLink(link: Link): Promise<LinkDto> {
     this.links.push(link.toDto());
+    return new Promise((resolve) => resolve(link.toDto()));
   }
 
   findLink(field: string, value: string): Promise<LinkDto | null> {

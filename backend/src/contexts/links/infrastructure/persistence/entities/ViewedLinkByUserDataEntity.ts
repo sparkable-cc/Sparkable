@@ -23,4 +23,10 @@ export class ViewedLinkByUserDataEntity implements ViewedLinkByUserDataDto {
 
   @CreateDateColumn({ type: 'timestamptz' })
   date: Date;
+
+  @Column({nullable: true})
+  userStage: number;
+
+  @Column({nullable: true})
+  linkStage: number;
 }

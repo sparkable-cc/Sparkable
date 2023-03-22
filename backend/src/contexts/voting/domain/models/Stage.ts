@@ -1,11 +1,11 @@
-import { VotingCycleDoesNotExistException } from "../exceptions/VotingCycleDoesNotExistException";
+import { StageDoesNotExistException } from "../exceptions/StageDoesNotExistException";
 
-export class Cycle {
+export class Stage {
   round: number;
 
   constructor(round: number) {
     if (round <= 0 || round > 4) {
-      throw new VotingCycleDoesNotExistException();
+      throw new StageDoesNotExistException();
     }
 
     this.round = round;

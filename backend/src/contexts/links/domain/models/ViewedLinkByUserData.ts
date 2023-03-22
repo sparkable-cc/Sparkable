@@ -1,26 +1,34 @@
 import { MandatoryFieldEmptyException } from "../../../users/domain/exceptions/MandatoryFieldEmptyException";
-import { Cycle } from "../../../voting/domain/models/Cycle";
+import { User } from "../../../users/domain/models/User";
+import { Stage } from "../../../voting/domain/models/Stage";
+import { Link } from "./Link";
 import { ViewedLinkByUserDataDto } from "./ViewedLinkByUserDataDto";
 
 export class ViewedLinkByUserData {
-  userUuid: string;
-  linkUuid: string;
+  user: User;
+  link: Link;
   cycle: number;
 
-  constructor(userUuid:string, linkUuid:string, cycle: Cycle) {
-    if (!userUuid || !linkUuid || !cycle) {
+  constructor(
+    user: User,
+    link: Link,
+    cycle: number
+  ) {
+    if (!user || !link || !cycle) {
       throw new MandatoryFieldEmptyException();
     }
-    this.userUuid = userUuid;
-    this.linkUuid = linkUuid;
-    this.cycle = cycle.toDto()
+    this.user = user;
+    this.link = link;
+    this.cycle = cycle;
   }
 
   public toDto(): ViewedLinkByUserDataDto {
     return {
-      userUuid: this.userUuid,
-      linkUuid: this.linkUuid,
-      cycle: this.cycle
+      userUuid: this.user.getUuid,
+      linkUuid: this.link.uuid,
+      cycle: this.cycle,
+      userStage: this.user.getStage,
+      linkStage: this.link.stage
     };
   }
 
