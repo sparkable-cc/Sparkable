@@ -11,7 +11,7 @@ export class GetVotingStatusAction {
     if (currentDate >= nextOpenVotingDate) {
       return {
         openVoting: true,
-        round: currentRound.round,
+        cycle: currentRound.round,
         nextOpenVotingDate: '',
         daysUntilNextVoting: 0,
         timeUntilNextVoting: ''
@@ -21,7 +21,7 @@ export class GetVotingStatusAction {
 
       return {
         openVoting: false,
-        round: currentRound.round,
+        cycle: currentRound.round,
         nextOpenVotingDate: nextOpenVotingDate.toISOString(),
         daysUntilNextVoting: this.getDayDiff(diff),
         timeUntilNextVoting: this.getTimeDiff(diff)
