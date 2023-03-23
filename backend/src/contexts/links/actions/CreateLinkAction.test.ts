@@ -1,5 +1,4 @@
 import { describe, expect, test } from '@jest/globals';
-import { stat } from 'fs';
 import { MandatoryFieldEmptyException } from '../../users/domain/exceptions/MandatoryFieldEmptyException';
 import { UserNotFoundException } from '../../users/domain/exceptions/UserNotFoundException';
 import { User } from '../../users/domain/models/User';
@@ -213,6 +212,7 @@ describe('Create link action', () => {
     const image = 'http://image';
     const description = '123';
     const statement =  'Lorem ipsum';
+    const suggestion = 'Sports';
 
     const categoryDto = {id:1, name:'name', slug:'name'};
     const categoryRepository = new CategoryRepositoryInMemory(
@@ -241,7 +241,8 @@ describe('Create link action', () => {
       image: image,
       description: description,
       userUuid: userUuid,
-      statement: statement
+      statement: statement,
+      suggestionCategory: suggestion
     });
 
     const [links, total] = await linkRepository.getAllLinks();
@@ -250,5 +251,7 @@ describe('Create link action', () => {
     expect(links[0].image).toEqual(image);
     expect(links[0].description).toEqual(description);
     expect(links[0].statement).toEqual(statement);
+    expect(links[0].suggestionCategory).toEqual(suggestion);
   });
+
 });

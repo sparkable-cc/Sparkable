@@ -26,6 +26,7 @@ describe('Create user action', () => {
 
     const user = await userRepository.findUser({ username: username });
     expect(user?.username).toEqual(username);
+    expect(user?.stage).toEqual(1);
   });
 
   test('cant create user because the username exists', async () => {

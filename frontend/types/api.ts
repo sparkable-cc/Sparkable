@@ -55,6 +55,7 @@ export declare namespace ApiTypes.Req {
     description: string
     image: string
     statement?: string
+    suggestionCategory?: string
   }
 
   interface CreateViewedLinkByUserData {
@@ -65,7 +66,7 @@ export declare namespace ApiTypes.Req {
   interface PasswordRecovery {
     email: string
   }
-  
+
   interface PasswordReset {
     password: string
   }
@@ -121,7 +122,7 @@ export declare namespace ApiTypes.Res {
   interface PasswordRecovery {
     message: string
   }
-  
+
   interface PasswordReset {
     message: string
   }

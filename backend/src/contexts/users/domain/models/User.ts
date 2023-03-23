@@ -10,8 +10,15 @@ export class User {
   private username: string;
   private password: string;
   private uuid: string;
+  private stage: number;
 
-  constructor(email: string, username: string, password: string, uuid:string = uuidv4()) {
+  constructor(
+    email: string,
+    username: string,
+    password: string,
+    uuid:string = uuidv4(),
+    stage:number = 1
+  ) {
     if (!email || !username || !password) {
       throw new MandatoryFieldEmptyException();
     }
@@ -20,6 +27,7 @@ export class User {
     this.email = email;
     this.username = username;
     this.uuid = uuid;
+    this.stage = stage;
   }
 
   public setPassword(password:string) {
@@ -42,8 +50,18 @@ export class User {
     return this.uuid;
   }
 
+  public get getStage(): number {
+    return this.stage;
+  }
+
   public static factory(userDto: UserDto): User {
-    return new User(userDto.email, userDto.username, userDto.password, userDto.uuid);
+    return new User(
+      userDto.email,
+      userDto.username,
+      userDto.password,
+      userDto.uuid,
+      userDto.stage
+    );
   }
 
   public toDto(): UserDto {
@@ -53,6 +71,7 @@ export class User {
       email: this.email,
       username: this.username,
       password: this.password,
+      stage: this.stage
     };
   }
 }

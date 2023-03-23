@@ -2,10 +2,10 @@ import { LinkDto } from '../contexts/links/domain/models/LinkDto';
 import { CategoryEntity } from '../contexts/links/infrastructure/persistence/entities/CategoryEntity';
 import { LinkEntity } from '../contexts/links/infrastructure/persistence/entities/LinkEntity';
 import dataSource from '../data-source';
-import CategoryFactory from './CategoryFactory';
 
 export default class LinkFactory {
-  private static readonly linkDto = {
+  private static readonly linkDto:LinkDto = {
+    id: 0,
     title: 'title',
     uuid: 'uuid',
     username: 'admin',
@@ -15,7 +15,10 @@ export default class LinkFactory {
     description: 'description',
     categories: [],
     userUuid: 'userUuid',
-    date: new Date()
+    date: new Date(),
+    statement: 'Statement ...',
+    suggestionCategory: 'Sports',
+    stage: 2
   };
 
   public static async create(
@@ -32,6 +35,8 @@ export default class LinkFactory {
     if (categories) {
       link.categories = categories;
     }
+
+    link.date = new Date();
 
     return await linkRepository.manager.save(link);
   }

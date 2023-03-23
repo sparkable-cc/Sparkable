@@ -77,7 +77,8 @@ const CreateSubmissionStatement = () => {
         userUuid: userId,
         description: linkData?.ogDescription,
         image: linkData?.ogImage[0]?.url || "",
-        statement: yourStatement
+        statement: yourStatement,
+        suggestionCategory: suggestedCategory
       };
 
       try {

@@ -100,5 +100,6 @@ describe('signing in', () => {
     expect(res).toHaveProperty('uuid');
     expect(res.uuid).not.toBeNull();
     expect(res.username).toEqual(username);
+    expect(res.stage).toEqual(1);
   });
 });

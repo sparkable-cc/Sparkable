@@ -52,6 +52,7 @@ describe('POST /signin', () => {
     expect(new Date(res.body.expires_in)).toBeInstanceOf(Date);
     expect(res.body).toHaveProperty('uuid');
     expect(res.body.username).toEqual(username);
+    expect(res.body.stage).toEqual(1);
   });
 
   it('returns 401 when the username is not correct', async () => {
