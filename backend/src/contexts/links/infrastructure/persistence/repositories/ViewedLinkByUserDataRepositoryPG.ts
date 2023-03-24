@@ -21,4 +21,8 @@ export class ViewedLinkByUserDataRepositoryPG implements ViewedLinkByUserDataRep
     return await this.repository.findOneBy(params);
   }
 
+  async getAllData(params: Object): Promise<[ViewedLinkByUserDataDto[], number]> {
+    return await this.repository.findAndCount(params);
+  }
+
 }

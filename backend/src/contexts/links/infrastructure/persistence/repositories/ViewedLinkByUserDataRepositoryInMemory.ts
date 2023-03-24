@@ -21,4 +21,8 @@ export class ViewedLinkByUserDataRepositoryInMemory implements ViewedLinkByUserD
     }
   }
 
+  getAllData(params: Object): Promise<[ViewedLinkByUserDataDto[], number]> {
+    return new Promise((resolve) => resolve([this.collection, this.collection.length]));
+  }
+
 }

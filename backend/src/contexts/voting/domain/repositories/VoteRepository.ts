@@ -1,5 +1,6 @@
+import { Vote } from "../models/Vote";
 import { VoteDto } from "../models/VoteDto";
 
 export interface VoteRepository {
-  findVote: (options:Object) => Promise<VoteDto | null>
+  storeVote: (vote:Vote) => Promise<VoteDto>
 }

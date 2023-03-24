@@ -35,6 +35,8 @@ import { LinkNotFoundException } from './contexts/links/domain/exceptions/LinkNo
 import { DataDoesExistException } from './contexts/links/domain/exceptions/DataDoesExistException';
 import { DateNotValidException } from './contexts/voting/domain/exceptions/DateNotValidException';
 import { GetVotingStatusAction } from './contexts/voting/actions/GetVotingStatus';
+import { CreateVoteAction } from './contexts/voting/actions/CreateVoteAction';
+import { VoteRepositoryPG } from './contexts/voting/infrastructure/persistence/repositories/VoteRepositoryPG';
 
 const app: Express = express();
 
@@ -382,6 +384,39 @@ app.post('/voting-status', async (req: Request, res: Response) => {
           res.status(400);
           res.send({ message: 'Invalid date!' });
           break;
+        default:
+          console.log(
+            'Failed to do something async with an unspecified error: ',
+            error,
+          );
+          return res.send(500);
+      }
+    });
+
+});
+
+app.post('/vote', async (req: Request, res: Response) => {
+  const createVoteAction = new CreateVoteAction(
+    new ViewedLinkByUserDataRepositoryPG(dataSource),
+    new VoteRepositoryPG(dataSource)
+  );
+
+  createVoteAction
+    .execute(
+      req.body.userUuid,
+      req.body.votes,
+      req.body.cycle
+    )
+    .then(() => {
+      res.status(200);
+      res.send('');
+    })
+    .catch((error) => {
+      switch (error.constructor) {
+        // case DateNotValidException:
+        //   res.status(400);
+        //   res.send({ message: 'Invalid date!' });
+        //   break;
         default:
           console.log(
             'Failed to do something async with an unspecified error: ',
