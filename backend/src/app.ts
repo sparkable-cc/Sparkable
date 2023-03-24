@@ -36,6 +36,7 @@ import { DataDoesExistException } from './contexts/links/domain/exceptions/DataD
 import { DateNotValidException } from './contexts/voting/domain/exceptions/DateNotValidException';
 import { GetVotingStatusAction } from './contexts/voting/actions/GetVotingStatus';
 import { StageDoesNotExistException } from './contexts/voting/domain/exceptions/StageDoesNotExistException';
+import { DateOutsideCycleException } from './contexts/voting/domain/exceptions/DateOutsideCycleException';
 
 const app: Express = express();
 
@@ -382,6 +383,10 @@ app.post('/voting-status', async (req: Request, res: Response) => {
         case DateNotValidException:
           res.status(400);
           res.send({ message: 'Invalid date!' });
+          break;
+        case DateOutsideCycleException:
+          res.status(400);
+          res.send({ message: 'Date outside of voting cycles' });
           break;
         default:
           console.log(

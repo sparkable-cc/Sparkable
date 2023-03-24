@@ -1,7 +1,17 @@
 import { DateNotValidException } from "../domain/exceptions/DateNotValidException";
+import { DateOutsideCycleException } from "../domain/exceptions/DateOutsideCycleException";
 import { GetVotingStatusAction } from "./GetVotingStatus";
 
 describe('Get voting status', () => {
+
+  test('cant get voting status when the date format is invalid', async () => {
+    const getVotingStatusAction = new GetVotingStatusAction();
+    const date = new Date('xxx');
+
+    await expect(getVotingStatusAction.execute(date)).rejects.toThrow(
+      DateNotValidException,
+    );
+  });
 
   test('Get voting status in an close day', async () => {
     const getVotingStatusAction = new GetVotingStatusAction();
@@ -10,7 +20,7 @@ describe('Get voting status', () => {
     const votingStatus = await getVotingStatusAction.execute(date);
 
     expect(votingStatus.openVoting).toBeFalsy();
-    expect(votingStatus.round).toEqual(1);
+    expect(votingStatus.cycle).toEqual(1);
     expect(votingStatus.nextOpenVotingDate).toEqual('2023-04-06T00:00:00.000Z');
     expect(votingStatus.daysUntilNextVoting).toEqual(10);
     expect(votingStatus.timeUntilNextVoting).toEqual('240:00:00');
@@ -23,44 +33,44 @@ describe('Get voting status', () => {
     const votingStatus = await getVotingStatusAction.execute(date);
 
     expect(votingStatus.openVoting).toBeTruthy();
-    expect(votingStatus.round).toEqual(1);
+    expect(votingStatus.cycle).toEqual(1);
     expect(votingStatus.nextOpenVotingDate).toEqual('');
     expect(votingStatus.daysUntilNextVoting).toEqual(0);
     expect(votingStatus.timeUntilNextVoting).toEqual('');
   });
 
-  test('Get voting status in an close day from the second round', async () => {
+  test('Get voting status in an close day from the second cycle', async () => {
     const getVotingStatusAction = new GetVotingStatusAction();
     const date = new Date('Apr 11, 2023 00:00:00');
 
     const votingStatus = await getVotingStatusAction.execute(date);
 
     expect(votingStatus.openVoting).toBeFalsy();
-    expect(votingStatus.round).toEqual(2);
+    expect(votingStatus.cycle).toEqual(2);
     expect(votingStatus.nextOpenVotingDate).toEqual('2023-04-20T00:00:00.000Z');
     expect(votingStatus.daysUntilNextVoting).toEqual(9);
     expect(votingStatus.timeUntilNextVoting).toEqual('216:00:00');
   });
 
-  test('Get voting status in an open day from the second round', async () => {
+  test('Get voting status in an open day from the second cycle', async () => {
     const getVotingStatusAction = new GetVotingStatusAction();
     const date = new Date('Apr 22, 2023 00:00:00');
 
     const votingStatus = await getVotingStatusAction.execute(date);
 
     expect(votingStatus.openVoting).toBeTruthy();
-    expect(votingStatus.round).toEqual(2);
+    expect(votingStatus.cycle).toEqual(2);
     expect(votingStatus.nextOpenVotingDate).toEqual('');
     expect(votingStatus.daysUntilNextVoting).toEqual(0);
     expect(votingStatus.timeUntilNextVoting).toEqual('');
   });
 
-  test('cant create link with only title', async () => {
+  test('cant get voting status when the date outside cycles', async () => {
     const getVotingStatusAction = new GetVotingStatusAction();
     const date = new Date('Apr 01, 2021 00:00:00');
 
     expect(getVotingStatusAction.execute(date)).rejects.toThrow(
-      DateNotValidException,
+      DateOutsideCycleException,
     );
   });
 
