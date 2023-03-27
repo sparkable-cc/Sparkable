@@ -22,7 +22,7 @@ export const VotingBanner = ({ isShort }: Props) => {
   const dispatch = useAppDispatch();
 
   const checkException = () => {
-    if (/article/.test(router.route)) {
+    if (/article|voting/.test(router.route)) {
       return false;
     }
     return true;
@@ -57,7 +57,7 @@ export const VotingBanner = ({ isShort }: Props) => {
                   <div className={styles.messageText}>
                     Voting is now open!
                   </div>
-                  <Link href="/voting/create" className={styles.voiteButton}>Vote Now</Link>
+                  <Link href="/voting/participate" className={styles.voiteButton}>Vote Now</Link>
                 </>
                 :
                 <>
