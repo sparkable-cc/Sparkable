@@ -29,7 +29,7 @@ const initialState: UIState = {
   articles: [],
   total: 0,
   userName: userName || "",
-  isVotingBannerVisible: true
+  isVotingBannerVisible: false
 };
 
 export const UISlice = createSlice({

@@ -70,6 +70,10 @@ export declare namespace ApiTypes.Req {
   interface PasswordReset {
     password: string
   }
+
+  interface VotingStatus {
+    date: string
+  }
 }
 
 export declare namespace ApiTypes.Res {
@@ -125,5 +129,13 @@ export declare namespace ApiTypes.Res {
 
   interface PasswordReset {
     message: string
+  }
+
+  interface VotingStatus {
+    openVoting: boolean
+    round: number
+    nextOpenVotingDate: string
+    daysUntilNextVoting: number
+    timeUntilNextVoting: string
   }
 }

@@ -1,10 +1,13 @@
 import styles from "./index.module.scss";
-import { useState, useRef } from "react";
-import { selectIsVotingBannerVisible } from "../../store/UIslice";
-import { useAppSelector } from "../../store/hooks";
+import { useState, useRef, useEffect } from "react";
 import classNames from "classnames";
 import { useRouter } from 'next/router';
 import { useOutsideClick } from "../../utils/useOutsideClick";
+import { useLazyVotingStatusQuery } from "../../store/api/votingApi";
+import dayjs from "dayjs";
+import { setVotingBannerVisible } from "../../store/UIslice";
+import { useAppDispatch } from "../../store/hooks";
+import Link from "next/link";
 
 interface Props {
   isShort?: boolean
@@ -12,9 +15,11 @@ interface Props {
 
 export const VotingBanner = ({ isShort }: Props) => {
   const [isOpen, setOpen] = useState(false);
-  const isVotingBannerVisible = useAppSelector(selectIsVotingBannerVisible);
+  const [timeArray, setTimeArray] = useState([]);
   const router = useRouter();
   const nodeRef = useRef(null);
+  const [triggerVotingStatus, { isLoading, data }] = useLazyVotingStatusQuery();
+  const dispatch = useAppDispatch();
 
   const checkException = () => {
     if (/article/.test(router.route)) {
@@ -27,19 +32,51 @@ export const VotingBanner = ({ isShort }: Props) => {
     setOpen(false);
   });
 
-  if (isVotingBannerVisible && checkException()) {
+  useEffect(() => {
+    const date = dayjs().format("YYYY-MM-DD hh:mm:s");
+    triggerVotingStatus({ date: date });
+  }, [])
+
+  useEffect(() => {
+    if (data?.timeUntilNextVoting) {
+      dispatch(setVotingBannerVisible(true));
+      setTimeArray(data?.timeUntilNextVoting.split(":") as never[])
+    } else {
+      dispatch(setVotingBannerVisible(false));
+    }
+  }, [data])
+
+  if (data?.daysUntilNextVoting && data?.daysUntilNextVoting <= 10 && checkException()) {
     return (
       <div className={classNames(styles.bannerWrapper, { [styles.short]: isShort })} ref={nodeRef}>
         <div className={styles.banner}>
           <div className={styles.messageWrapper}>
-            <div className={styles.messageText}>
-              <b>3</b> days until next voting round
-              {/* Voting is now open! */}
-            </div>
-            <span className={styles.toggleButton} onClick={() => setOpen(!isOpen)}>
-              {isOpen ? "Hide" : "What is this?"}
-            </span>
-            {/* <span className={styles.voiteButton}>Vote Now</span> */}
+            {
+              data?.openVoting ?
+                <>
+                  <div className={styles.messageText}>
+                    Voting is now open!
+                  </div>
+                  <Link href="/voting/create" className={styles.voiteButton}>Vote Now</Link>
+                </>
+                :
+                <>
+                  <div className={styles.messageText}>
+                    {
+                      data.daysUntilNextVoting <= 1 ?
+                        <>
+                          <b>{timeArray?.[0]}</b> hours <b>{timeArray?.[1]}</b> minutes until next voting round
+                        </> :
+                        <>
+                          <b>{data.daysUntilNextVoting}</b> days until next voting round
+                        </>
+                    }
+                  </div>
+                  <span className={styles.toggleButton} onClick={() => setOpen(!isOpen)}>
+                    {isOpen ? "Hide" : "What is this?"}
+                  </span>
+                </>
+            }
           </div>
           {
             isOpen && <div className={styles.detailsWrapper}>
