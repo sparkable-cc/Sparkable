@@ -1,6 +1,6 @@
 export interface VotingStatusDto {
   openVoting:boolean;
-  round:number;
+  cycle:number;
   nextOpenVotingDate:string;
   daysUntilNextVoting:number;
   timeUntilNextVoting:string;
