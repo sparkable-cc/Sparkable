@@ -1,7 +1,7 @@
 import styles from "./index.module.scss";
 import { useState, useRef, useEffect } from "react";
 import classNames from "classnames";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 import { useOutsideClick } from "../../utils/useOutsideClick";
 import { useLazyVotingStatusQuery } from "../../store/api/votingApi";
 import dayjs from "dayjs";
@@ -14,11 +14,11 @@ interface Props {
 }
 
 export const VotingBanner = ({ isShort }: Props) => {
-  const [isOpen, setOpen] = useState(false);
-  const [timeArray, setTimeArray] = useState([]);
+  const [ isOpen, setOpen ] = useState(false);
+  const [ timeArray, setTimeArray ] = useState([]);
   const router = useRouter();
   const nodeRef = useRef(null);
-  const [triggerVotingStatus, { isLoading, data }] = useLazyVotingStatusQuery();
+  const [ triggerVotingStatus, { isLoading, data }] = useLazyVotingStatusQuery();
   const dispatch = useAppDispatch();
 
   const checkException = () => {
@@ -26,7 +26,7 @@ export const VotingBanner = ({ isShort }: Props) => {
       return false;
     }
     return true;
-  }
+  };
 
   useOutsideClick(nodeRef, () => {
     setOpen(false);
@@ -34,17 +34,17 @@ export const VotingBanner = ({ isShort }: Props) => {
 
   useEffect(() => {
     const date = dayjs().format("YYYY-MM-DD hh:mm:s");
-    triggerVotingStatus({ date: date });
-  }, [])
+    triggerVotingStatus({ date });
+  }, []);
 
   useEffect(() => {
     if (data?.timeUntilNextVoting) {
       dispatch(setVotingBannerVisible(true));
-      setTimeArray(data?.timeUntilNextVoting.split(":") as never[])
+      setTimeArray(data?.timeUntilNextVoting.split(":") as never[]);
     } else {
       dispatch(setVotingBannerVisible(false));
     }
-  }, [data])
+  }, [data]);
 
   if (data?.daysUntilNextVoting && data?.daysUntilNextVoting <= 10 && checkException()) {
     return (
@@ -79,7 +79,8 @@ export const VotingBanner = ({ isShort }: Props) => {
             }
           </div>
           {
-            isOpen && <div className={styles.detailsWrapper}>
+            isOpen &&
+            <div className={styles.detailsWrapper}>
               <img className={styles.detailsImage} src="/svg/voting-details.svg" alt="voting-details" />
               <div className={styles.detailsColumn}>
                 <b>How it works:</b> Every 2 weeks everyone selects the submissions that were most insightful to them.
@@ -91,8 +92,8 @@ export const VotingBanner = ({ isShort }: Props) => {
           }
         </div>
       </div>
-    )
+    );
   } else {
     return null;
   }
-}
+};
