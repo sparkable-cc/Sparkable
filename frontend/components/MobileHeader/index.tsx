@@ -5,12 +5,13 @@ import Image from "next/image";
 import { useAppDispatch } from "../../store/hooks";
 import { setMenuVisible } from "../../store/UIslice";
 import classNames from "classnames";
+import { PropsWithChildren } from "react";
 
-interface Props {
+interface Props extends PropsWithChildren {
   isForcedMobile?: boolean
 }
 
-export const MobileHeader = ({ isForcedMobile }: Props) => {
+export const MobileHeader = ({ isForcedMobile, children }: Props) => {
   const dispatch = useAppDispatch();
 
   const onMenuShow = () => {
@@ -29,6 +30,7 @@ export const MobileHeader = ({ isForcedMobile }: Props) => {
           />
         </Link>
       </div>
+      {children}
     </header>
   );
 };

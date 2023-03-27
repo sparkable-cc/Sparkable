@@ -1,0 +1,24 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.topBarWrapper {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.authWrapper {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+
+  &.withVoitingBanner {
+    top: 50px;
+  }
+
+  @media only screen and (max-width: $laptop) {
+    display: none;
+  }
+}

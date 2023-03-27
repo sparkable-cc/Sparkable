@@ -1,0 +1,111 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.bannerWrapper {
+  background: $colorYellow;
+  
+  &.short {
+    display: flex;
+    justify-content: flex-end;
+
+    .banner {
+      width: calc(100% - 260px);
+    }
+  }
+
+  @media only screen and (max-width: $laptop) {
+    &.short {
+      display: block;
+
+      .banner {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.banner {
+  background: $colorYellow;
+  font-size: $size13;
+  text-align: center;
+  width: 100%;
+}
+
+.toggleButton {
+  padding-right: 24px;
+  position: relative;
+  cursor: pointer;
+
+  &:after {
+    display: block;
+    position: absolute;
+    top: -2px;
+    right: -4px;
+    content: url("../../public/svg/voting-arrow.svg");
+  }
+}
+
+.detailsWrapper {
+  padding: $gapS;
+  display: flex;
+  justify-content: center;
+
+  @media only screen and (max-width: $mobile) {
+    position: relative;
+    padding-left: 86px;  
+    display: block;
+  }
+}
+
+.detailsColumn {
+  width: 270px;
+  margin-right: $gapXxs;
+  text-align: left;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  @media only screen and (max-width: $mobile) {
+    margin-bottom: 8px;
+    width: 100%;
+  }
+}
+
+.detailsImage {
+  margin-right: $gapXxs;
+
+  @media only screen and (max-width: $mobile){
+    position: absolute;
+    left: 8px;
+    top: 28px;
+  }
+}
+
+.messageWrapper {
+  min-height: 32px;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  b {
+    margin-right: 3px;
+  }
+}
+
+.messageText {
+  margin-right: 28px;
+}
+
+.voiteButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 16px;
+  height: 26px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  font-size: $size14;
+  font-weight: 500;
+  color: $colorBlack;
+}
