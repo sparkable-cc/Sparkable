@@ -1,16 +1,18 @@
-import { ViewedLinkByUserData } from "../../../domain/models/ViewedLinkByUserData";
-import { ViewedLinkByUserDataDto } from "../../../domain/models/ViewedLinkByUserDataDto";
-import { ViewedLinkByUserDataRepository } from "../../../domain/repositories/ViewedLinkByUserDataRepository";
+import { ViewedLinkByUserData } from '../../../domain/models/ViewedLinkByUserData';
+import { ViewedLinkByUserDataDto } from '../../../domain/models/ViewedLinkByUserDataDto';
+import { ViewedLinkByUserDataRepository } from '../../../domain/repositories/ViewedLinkByUserDataRepository';
 
-export class ViewedLinkByUserDataRepositoryInMemory implements ViewedLinkByUserDataRepository {
+export class ViewedLinkByUserDataRepositoryInMemory
+  implements ViewedLinkByUserDataRepository
+{
   collection: ViewedLinkByUserDataDto[];
 
   constructor() {
     this.collection = [];
   }
 
-  store(data: ViewedLinkByUserData){
-    this.collection.push(data);
+  store(data: ViewedLinkByUserData) {
+    this.collection.push(data.toDto());
   }
 
   findData(params: Object): Promise<ViewedLinkByUserDataDto | null> {
@@ -21,4 +23,8 @@ export class ViewedLinkByUserDataRepositoryInMemory implements ViewedLinkByUserD
     }
   }
 
+  getAllDataByUserUuid(userUuid: string): Promise<ViewedLinkByUserDataDto[]> {
+    const data = this.collection.filter((data) => data.userUuid === userUuid);
+    return new Promise((resolve) => resolve(data));
+  }
 }

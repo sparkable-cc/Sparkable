@@ -2,39 +2,41 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Express, Request, Response } from 'express';
 import { auth } from 'express-oauth2-jwt-bearer';
+import ogs from 'ts-open-graph-scraper';
+import { CreateLinkAction } from './contexts/links/actions/CreateLinkAction';
+import { CreateViewedLinkByUserDataAction } from './contexts/links/actions/CreateViewedLinkByUserDataAction';
 import { GetAllCategoriesAction } from './contexts/links/actions/GetAllCategoriesAction';
 import { GetAllLinksAction } from './contexts/links/actions/GetAllLinksAction';
+import { GetAllMyViewedLinkAction } from './contexts/links/actions/GetAllMyViewedLinkAction';
 import { GetLinkByIdAction } from './contexts/links/actions/GetLinkByIdAction';
+import { CategoryNotFoundException } from './contexts/links/domain/exceptions/CategoryNotFoundException';
+import { CategoryRestrictionException } from './contexts/links/domain/exceptions/CategoryRestrictionException';
+import { DataDoesExistException } from './contexts/links/domain/exceptions/DataDoesExistException';
+import { LinkExistsException } from './contexts/links/domain/exceptions/LinkExistsException';
+import { LinkNotFoundException } from './contexts/links/domain/exceptions/LinkNotFoundException';
 import { CategoryRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/CategoryRepositoryPG';
 import { LinkRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/LinkRepositoryPG';
+import { ViewedLinkByUserDataRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/ViewedLinkByUserDataRepositoryPG';
 import { CreateUserAction } from './contexts/users/actions/CreateUserAction';
+import { RecoveryPasswordAction } from './contexts/users/actions/RecoveryPasswordAction';
+import { ResetPasswordAction } from './contexts/users/actions/ResetPasswordAction';
 import { SignInAction } from './contexts/users/actions/SignInAction';
 import { EmailExistsException } from './contexts/users/domain/exceptions/EmailExistsException';
 import { MandatoryFieldEmptyException } from './contexts/users/domain/exceptions/MandatoryFieldEmptyException';
 import { ShortPasswordException } from './contexts/users/domain/exceptions/ShortPasswordException';
+import { StageDoesNotExistException } from './contexts/users/domain/exceptions/StageDoesNotExistException';
+import { TokenIsExpiredException } from './contexts/users/domain/exceptions/TokenIsExpiredException';
+import { TokenNotFoundException } from './contexts/users/domain/exceptions/TokenNotFoundException';
 import { UsernameExistsException } from './contexts/users/domain/exceptions/UsernameExistsException';
 import { UserNotFoundException } from './contexts/users/domain/exceptions/UserNotFoundException';
 import { WrongPasswordException } from './contexts/users/domain/exceptions/WrongPasswordException';
-import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
-import dataSource from './data-source';
-import { AuthServiceAuth0 } from './contexts/users/infrastructure/services/AuthServiceAuth0';
-import { ResetPasswordAction } from './contexts/users/actions/ResetPasswordAction';
 import { ResetTokenRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/ResetTokenRepositoryPG';
+import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
+import { AuthServiceAuth0 } from './contexts/users/infrastructure/services/AuthServiceAuth0';
 import { MailerServiceGD } from './contexts/users/infrastructure/services/MailerServiceGD';
-import { RecoveryPasswordAction } from './contexts/users/actions/RecoveryPasswordAction';
-import { TokenNotFoundException } from './contexts/users/domain/exceptions/TokenNotFoundException';
-import { TokenIsExpiredException } from './contexts/users/domain/exceptions/TokenIsExpiredException';
-import { CreateLinkAction } from './contexts/links/actions/CreateLinkAction';
-import { LinkExistsException } from './contexts/links/domain/exceptions/LinkExistsException';
-import { CategoryRestrictionException } from './contexts/links/domain/exceptions/CategoryRestrictionException';
-import { CategoryNotFoundException } from './contexts/links/domain/exceptions/CategoryNotFoundException';
-import ogs from 'ts-open-graph-scraper'
-import { CreateViewedLinkByUserDataAction } from './contexts/links/actions/CreateViewedLinkByUserDataAction';
-import { ViewedLinkByUserDataRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/ViewedLinkByUserDataRepositoryPG';
-import { LinkNotFoundException } from './contexts/links/domain/exceptions/LinkNotFoundException';
-import { DataDoesExistException } from './contexts/links/domain/exceptions/DataDoesExistException';
-import { DateNotValidException } from './contexts/voting/domain/exceptions/DateNotValidException';
 import { GetVotingStatusAction } from './contexts/voting/actions/GetVotingStatus';
+import { DateNotValidException } from './contexts/voting/domain/exceptions/DateNotValidException';
+import dataSource from './data-source';
 
 const app: Express = express();
 
@@ -47,7 +49,7 @@ app.use(cors({ origin: process.env.CLIENT }));
 const checkJwt = auth({
   audience: process.env.AUTH0_AUDIENCE,
   issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
-  tokenSigningAlg: 'RS256'
+  tokenSigningAlg: 'RS256',
 });
 
 app.get('/', (req: Request, res: Response) => {
@@ -92,7 +94,7 @@ app.post('/user', async (req: Request, res: Response) => {
 app.post('/signin', async (req: Request, res: Response) => {
   const signInAction = new SignInAction(
     new UserRepositoryPG(dataSource),
-    new AuthServiceAuth0()
+    new AuthServiceAuth0(),
   );
   signInAction
     .execute(req.body.password, req.body.username, req.body.email)
@@ -129,7 +131,7 @@ app.post('/recovery-password', async (req: Request, res: Response) => {
       res.status(200);
       res.send({ message: 'The mail was sent!' });
     })
-    .catch((error: { constructor: any; }) => {
+    .catch((error: { constructor: any }) => {
       switch (error.constructor) {
         case MandatoryFieldEmptyException:
           res.status(400);
@@ -152,7 +154,7 @@ app.post('/recovery-password', async (req: Request, res: Response) => {
 app.post('/reset-password', async (req: Request, res: Response) => {
   const resetPasswordAction = new ResetPasswordAction(
     new UserRepositoryPG(dataSource),
-    new ResetTokenRepositoryPG(dataSource)
+    new ResetTokenRepositoryPG(dataSource),
   );
   resetPasswordAction
     .execute(req.body.userUuid, req.body.token, req.body.password)
@@ -260,7 +262,7 @@ app.post('/links', checkJwt, async (req: Request, res: Response) => {
   const createLinkAction = new CreateLinkAction(
     new LinkRepositoryPG(dataSource),
     new CategoryRepositoryPG(dataSource),
-    new UserRepositoryPG(dataSource)
+    new UserRepositoryPG(dataSource),
   );
 
   createLinkAction
@@ -301,35 +303,39 @@ app.post('/links', checkJwt, async (req: Request, res: Response) => {
     });
 });
 
-app.post('/link-preview-data', checkJwt,  async (req: Request, res: Response) => {
-  const url = req.body.url;
+app.post(
+  '/link-preview-data',
+  checkJwt,
+  async (req: Request, res: Response) => {
+    const url = req.body.url;
 
-  if (!url) {
-    res.status(400);
-    res.send({ message: 'Bad request' });
-    return;
-  }
+    if (!url) {
+      res.status(400);
+      res.send({ message: 'Bad request' });
+      return;
+    }
 
-  ogs(url).then((data:any) => {
-    const { response, ...result } = data;
-    res.status(200);
-    res.send(result);
-  })
-  .catch((error:any) => {
-    console.log(
-      'Failed to do something async with an unspecified error: ',
-      error,
-    );
-    return res.status(500);
-  });
+    ogs(url)
+      .then((data: any) => {
+        const { response, ...result } = data;
+        res.status(200);
+        res.send(result);
+      })
+      .catch((error: any) => {
+        console.log(
+          'Failed to do something async with an unspecified error: ',
+          error,
+        );
+        return res.status(500);
+      });
+  },
+);
 
-});
-
-app.post('/viewed-link-user', checkJwt,  async (req: Request, res: Response) => {
+app.post('/viewed-link-user', checkJwt, async (req: Request, res: Response) => {
   const createViewedLinkByUserDataAction = new CreateViewedLinkByUserDataAction(
     new UserRepositoryPG(dataSource),
     new LinkRepositoryPG(dataSource),
-    new ViewedLinkByUserDataRepositoryPG(dataSource)
+    new ViewedLinkByUserDataRepositoryPG(dataSource),
   );
 
   createViewedLinkByUserDataAction
@@ -364,7 +370,6 @@ app.post('/viewed-link-user', checkJwt,  async (req: Request, res: Response) => 
           return res.send(500);
       }
     });
-
 });
 
 app.post('/voting-status', async (req: Request, res: Response) => {
@@ -390,7 +395,38 @@ app.post('/voting-status', async (req: Request, res: Response) => {
           return res.send(500);
       }
     });
+});
 
+app.get('/viewed-link-user', checkJwt, async (req: Request, res: Response) => {
+  const getAllMyViewedLinkAction = new GetAllMyViewedLinkAction(
+    new ViewedLinkByUserDataRepositoryPG(dataSource),
+    new LinkRepositoryPG(dataSource),
+  );
+
+  let stage: number = 0;
+  if (req.query.stage) stage = +req.query.stage;
+
+  console.log(req.query);
+  getAllMyViewedLinkAction
+    .execute(req.query.userUuid as string, req.query.linkUuid as string, stage)
+    .then((result) => {
+      res.status(200);
+      res.send(result);
+    })
+    .catch((error) => {
+      switch (error.constructor) {
+        case MandatoryFieldEmptyException:
+          res.status(400);
+          res.send({ message: 'Bad request' });
+          break;
+        default:
+          console.log(
+            'Failed to do something async with an unspecified error: ',
+            error,
+          );
+          return res.send(500);
+      }
+    });
 });
 
 export default app;
