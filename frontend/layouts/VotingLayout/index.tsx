@@ -8,6 +8,7 @@ interface Props extends PropsWithChildren {
   isSubmitAvailable?: boolean
   isBackButtonAvailable?: boolean
   submitButtonText?: string
+  buttonCounter?: number
 }
 
 export const VotingLayout = ({
@@ -15,6 +16,7 @@ export const VotingLayout = ({
   submitButtonText,
   isSubmitAvailable,
   isBackButtonAvailable = true,
+  buttonCounter,
   onSubmit,
 }: Props) => {
 
@@ -24,7 +26,9 @@ export const VotingLayout = ({
         <header className={styles.votingHeader}>
           {isBackButtonAvailable && <BackButton>Back</BackButton>}
         </header>
-        {children}
+        <div className={styles.votingContent}>
+          {children}
+        </div>
         {submitButtonText &&
           <footer className={styles.votingFooter}>
             <button
@@ -33,10 +37,15 @@ export const VotingLayout = ({
               className={classNames(
                 styles.votingButton,
                 styles.sizeXl,
-                { [styles.start]: submitButtonText === "Start"},
+                { [styles.start]: submitButtonText === "Start" },
                 { [styles.disable]: !isSubmitAvailable },
               )}
-              >
+            >
+              {Boolean(buttonCounter) &&
+                <span className={styles.buttonCounter}>
+                  {buttonCounter}
+                </span>
+              }
               {submitButtonText}
             </button>
           </footer>

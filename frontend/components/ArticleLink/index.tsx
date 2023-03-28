@@ -4,11 +4,14 @@ import { useLinkTracker } from "../../utils/useLinkTracker";
 
 interface Props {
   link: string;
-  uuid: string;
+  uuid?: string;
 }
 
 export const ArticleLink = ({ link, uuid }: Props) => {
-  const onLinkTrack = useLinkTracker(uuid);
+  const onLinkTrack = () => {
+    if (!uuid) return;
+    useLinkTracker(uuid);
+  };
 
   return (
     <a

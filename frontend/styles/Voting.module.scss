@@ -29,3 +29,31 @@
   margin-bottom: $gapS;
 }
 
+// LIST
+.listHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 16px 0 8px;
+}
+
+.viewedCounter {
+  font-size: $size14;
+}
+
+.listTextWrapper {
+  text-align: center;
+  width: 310px;
+  margin: 40px auto 0;
+  padding-bottom: 40px;
+}
+
+.listText {
+  font-size: $size14;
+  margin-bottom: 10px;
+}
+
+.listBackButton {
+  @extend .buttonOutlined, .sizeXl;
+  margin-top: 16px;
+}

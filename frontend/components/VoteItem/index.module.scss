@@ -1,0 +1,63 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.voteItemWrapper {
+  position: relative;
+  margin-bottom: 10px;
+
+  &.selected {
+
+    .checkMark {
+      background: url("../../public/svg/checkMarkSelected.svg") no-repeat;
+    }
+
+    .voteItem {
+      border-color: $colorBlue;
+      background: rgba(65, 85, 245, 0.1);
+    }
+  }
+}
+
+.voteItem {
+  height: 80px;
+  width: calc(100% - 30px);
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  margin-left: 30px;
+  padding-left: $gapXxs;
+  display: flex;
+  align-items: center;
+}
+
+.voteTitleWrapper {
+  width: calc(100% - 100px);
+}
+
+.voteTitle {
+  font-weight: 500;
+  margin-top: -8px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.voteCover {
+  height: 100%;
+  width: 80px;
+  margin-left: auto;
+  background-size: cover;
+  background-position: center center;
+  cursor: pointer;
+}
+
+.checkMark {
+  display: block;
+  position: absolute;
+  cursor: pointer;
+  left: 0;
+  top: 27px;
+  width: 24px;
+  height: 24px;
+  background: url("../../public/svg/checkMark.svg") no-repeat;
+}
