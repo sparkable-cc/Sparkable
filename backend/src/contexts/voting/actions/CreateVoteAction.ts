@@ -3,7 +3,7 @@ import { ViewedLinkByUserDataRepository } from "../../links/domain/repositories/
 import { LinkNotOpenedByUserException } from "../domain/exceptions/LinkNotOpenedByUserException";
 import { NumberOfVotesExceededException } from "../domain/exceptions/NumberOfVotesExceededException";
 import { UserHasNotOpenedAnyLinksException } from "../domain/exceptions/UserHasNotOpenedAnyLinksException";
-import { Vote } from "../domain/models/Vote";
+import { Voting } from "../domain/models/Voting";
 import { VoteRepository } from "../domain/repositories/VoteRepository";
 
 export class CreateVoteAction {
@@ -28,7 +28,7 @@ export class CreateVoteAction {
     await this.checkUserHasOpenedALink(total);
     await this.checkLinksHaveOpened(votes, dataCollection);
 
-    const vote = new Vote(userUuid, cycle, votes);
+    const vote = new Voting(userUuid, cycle, votes);
 
     await this.voteRepository.storeVote(vote);
   }

@@ -1,20 +1,20 @@
 import { LinkDto } from "../../../links/domain/models/LinkDto";
-import { VoteDto } from "./VoteDto";
+import { VotingDto } from "./VotingDto";
 
-export class Vote {
+export class Voting {
   userUuid: string;
   cycle: number;
-  votes: LinkDto[];
+  votes: string[];
   count: number;
 
-  constructor(userUuid: string, cycle: number, votes: Array<LinkDto>) {
+  constructor(userUuid: string, cycle: number, votes: Array<string>) {
     this.userUuid = userUuid;
     this.cycle = cycle;
     this.votes = votes;
     this.count = votes.length;
   }
 
-  public toDto(): VoteDto {
+  public toDto(): VotingDto {
     return {
       userUuid: this.userUuid,
       cycle: this.cycle,

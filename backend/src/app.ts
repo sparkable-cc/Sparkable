@@ -395,7 +395,7 @@ app.post('/voting-status', async (req: Request, res: Response) => {
 
 });
 
-app.post('/vote', async (req: Request, res: Response) => {
+app.post('/votes', checkJwt, async (req: Request, res: Response) => {
   const createVoteAction = new CreateVoteAction(
     new ViewedLinkByUserDataRepositoryPG(dataSource),
     new VoteRepositoryPG(dataSource)

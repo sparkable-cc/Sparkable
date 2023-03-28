@@ -1,6 +1,6 @@
-import { Vote } from "../models/Vote";
-import { VoteDto } from "../models/VoteDto";
+import { Voting } from "../models/Voting";
+import { VotingDto } from "../models/VotingDto";
 
 export interface VoteRepository {
-  storeVote: (vote:Vote) => Promise<VoteDto>
+  storeVote: (vote:Voting) => Promise<VotingDto>
 }

@@ -1,16 +1,16 @@
-import { Vote } from "../../../domain/models/Vote";
-import { VoteDto } from "../../../domain/models/VoteDto";
+import { Voting } from "../../../domain/models/Voting";
+import { VotingDto } from "../../../domain/models/VotingDto";
 import { VoteRepository } from "../../../domain/repositories/VoteRepository";
 
 export class VoteRepositoryInMemory implements VoteRepository {
 
-  votes: VoteDto[];
+  votes: VotingDto[];
 
   constructor() {
     this.votes = [];
   }
 
-  storeVote(vote: Vote): Promise<VoteDto> {
+  storeVote(vote: Voting): Promise<VotingDto> {
     const voteDto = vote.toDto();
 
     this.votes.push(voteDto);
@@ -18,11 +18,11 @@ export class VoteRepositoryInMemory implements VoteRepository {
     return new Promise((resolve) => resolve(voteDto));
   }
 
-  getAllVotes(): Promise<VoteDto[] | null> {
+  getAllVotes(): Promise<VotingDto[] | null> {
     return new Promise((resolve) => resolve(this.votes));
   }
 
-  findVote(options: Object): Promise<VoteDto | null> {
+  findVote(options: Object): Promise<VotingDto | null> {
     return new Promise((resolve) => resolve(this.votes[0]));
   }
 

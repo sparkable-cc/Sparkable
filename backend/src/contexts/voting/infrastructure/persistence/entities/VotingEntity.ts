@@ -5,8 +5,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity('votes')
-export class VoteEntity {
+@Entity('voting')
+export class VotingEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -15,11 +15,15 @@ export class VoteEntity {
   userUuid: string;
 
   @Column()
-  linkUuid: string;
+  cycle: number;
 
   @Column()
-  cycle: number;
+  count: number;
+
+  @Column()
+  votes: string;
 
   @CreateDateColumn({ type: 'timestamptz' })
   date: Date;
+
 }

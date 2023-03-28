@@ -5,9 +5,8 @@ import { UserEntity } from '../../contexts/users/infrastructure/persistence/enti
 import dataSource from '../../data-source';
 import UserFactory from '../../factories/UserFactory';
 
-describe('POST /vote', () => {
+describe('POST /votes', () => {
   let auth: { body: { access_token: string; uuid: string; } };
-  let username: string;
 
   beforeAll(async () => {
     await dataSource.initialize();
@@ -18,9 +17,10 @@ describe('POST /vote', () => {
   });
 
   beforeEach(async () => {
+    // Create user and login
     const email = 'admin@butterfy.me';
     const password = 'password';
-    username = 'admin';
+    const username = 'admin';
     await UserFactory.create(request, app, email, password, username);
     auth = await UserFactory.signIn(request, app, email, password);
   });
@@ -42,15 +42,15 @@ describe('POST /vote', () => {
     expect(res.statusCode).toEqual(401);
   });
 
-  // it('returns 400 when the mandatory field is empty', async () => {
-  //   const res = await request(app)
-  //     .post('/links')
-  //     .auth(auth.body.access_token, { type: 'bearer' })
-  //     .send({});
+  it('returns 400 when the mandatory field is empty', async () => {
+    const res = await request(app)
+      .post('/votes')
+      .auth(auth.body.access_token, { type: 'bearer' })
+      .send({});
 
-  //   expect(res.statusCode).toEqual(400);
-  //   expect(res.body.message).toEqual('Bad request');
-  // });
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toEqual('Bad request');
+  });
 
   // it('returns 400 when the category limit is reached', async () => {
   //   const res = await request(app)
