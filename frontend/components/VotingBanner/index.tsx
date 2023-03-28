@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import { useOutsideClick } from "../../utils/useOutsideClick";
-import { useLazyVotingStatusQuery } from "../../store/api/votingApi";
+import { useLazyGetVotingStatusQuery } from "../../store/api/votingApi";
 import dayjs from "dayjs";
 import { setVotingBannerVisible } from "../../store/UIslice";
 import { useAppDispatch } from "../../store/hooks";
@@ -18,7 +18,7 @@ export const VotingBanner = ({ isShort }: Props) => {
   const [ timeArray, setTimeArray ] = useState([]);
   const router = useRouter();
   const nodeRef = useRef(null);
-  const [ triggerVotingStatus, { isLoading, data }] = useLazyVotingStatusQuery();
+  const [ triggerGetVotingStatus, { isLoading, data }] = useLazyGetVotingStatusQuery();
   const dispatch = useAppDispatch();
 
   const checkException = () => {
@@ -34,7 +34,7 @@ export const VotingBanner = ({ isShort }: Props) => {
 
   useEffect(() => {
     const date = dayjs().format("YYYY-MM-DD hh:mm:s");
-    triggerVotingStatus({ date });
+    triggerGetVotingStatus({ date });
   }, []);
 
   useEffect(() => {

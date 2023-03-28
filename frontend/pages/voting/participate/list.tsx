@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { VotingLayout } from "../../../layouts/VotingLayout";
 import styles from "../../../styles/Voting.module.scss";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { VoteItem } from '../../../components/VoteItem';
 import { v4 as uuidv4 } from "uuid";
+import { checkCredentials } from '../../../utils/checkCredentials';
+import { UnloggedMessage } from "../../../components/UnloggedMessage";
+
+// TO-DO:
+// 1. SortsSelect rework
+// 3. Wire up to the endpoints
+// 4. The dummyDuta delete
+
 
 const dummyData = [
   {
@@ -42,6 +50,7 @@ const dummyData = [
 const VotingStart = () => {
   const [selectedIds, selectId] = useState([]);
   const router = useRouter();
+  const [isLogged, setLogged] = useState(false);
 
   const onSelectItem = (id: string) => {
     if (selectedIds?.some(item => item === id)) {
@@ -60,6 +69,12 @@ const VotingStart = () => {
     router.push("/voting/participate/result");
   }
 
+  useEffect(() => {
+    if (checkCredentials()) {
+      setLogged(true);
+    }
+  }, [])
+
   return (
     <VotingLayout
       isSubmitAvailable={Boolean(selectedIds.length)}
@@ -67,37 +82,44 @@ const VotingStart = () => {
       onSubmit={onSubmit}
       buttonCounter={selectedIds.length}
     >
-      <h2 className={styles.title}>Time to vote!</h2>
-      <p className={styles.text}>Which of these submissions did you find insightful?</p>
-      <p className={styles.text}>You have 7 votes, but you don’t have to use all of them.</p>
-      <div className={styles.listHeader}>
-        <span className={styles.viewedCounter}>6 viewed submissions</span>
-        <span className="">Sorts here</span>
-      </div>
-      <section className="">
-        {
-          dummyData?.map(item => (
-            <VoteItem
-              {...item}
-              key={uuidv4()}
-              isSelected={checkIsSelected(item.uuid)}
-              onSelect={() => onSelectItem(item.uuid)} />
-          ))
-        }
-      </section>
-      <div className={styles.listTextWrapper}>
-        <div className={styles.listText}>
-          Your list seems a bit empty?
-        </div>
-        <div className={styles.listText}>
-          These are all the submissions which you’ve viewed so far. To increase your selection, explore more submissions.
-        </div>
-        <Link
-          href="/"
-          className={styles.listBackButton}>
-          Back to Explore
-        </Link>
-      </div>
+      {
+        isLogged ?
+          <>
+            <h2 className={styles.title}>Time to vote!</h2>
+            <p className={styles.text}>Which of these submissions did you find insightful?</p>
+            <p className={styles.text}>You have 7 votes, but you don’t have to use all of them.</p>
+            <div className={styles.listHeader}>
+              <span className={styles.viewedCounter}>6 viewed submissions</span>
+              <span className="">Sorts here</span>
+            </div>
+            <section className="">
+              {
+                dummyData?.map(item => (
+                  <VoteItem
+                    {...item}
+                    key={uuidv4()}
+                    isSelected={checkIsSelected(item.uuid)}
+                    onSelect={() => onSelectItem(item.uuid)} />
+                ))
+              }
+            </section>
+            <div className={styles.listTextWrapper}>
+              <div className={styles.listText}>
+                Your list seems a bit empty?
+              </div>
+              <div className={styles.listText}>
+                These are all the submissions which you’ve viewed so far. To increase your selection, explore more submissions.
+              </div>
+              <Link
+                href="/#explore"
+                className={styles.listBackButton}>
+                Back to Explore
+              </Link>
+            </div>
+          </> :
+          <UnloggedMessage />
+      }
+
     </VotingLayout>
   );
 };

@@ -6,7 +6,7 @@ export const votingApi = createApi({
   tagTypes: ["voting"],
   baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BASE_URL_API }),
   endpoints: (builder) => ({
-    votingStatus: builder.query<ApiTypes.Res.VotingStatus, ApiTypes.Req.VotingStatus>({
+    getVotingStatus: builder.query<ApiTypes.Res.VotingStatus, ApiTypes.Req.VotingStatus>({
       query: (body) => ({
         url: `/voting-status`,
         method: "POST",
@@ -17,5 +17,7 @@ export const votingApi = createApi({
 });
 
 export const {
-  useLazyVotingStatusQuery,
+  useLazyGetVotingStatusQuery,
 } = votingApi;
+
+export const getVotingStatus = votingApi.endpoints.getVotingStatus;
