@@ -36,6 +36,7 @@ import { AuthServiceAuth0 } from './contexts/users/infrastructure/services/AuthS
 import { MailerServiceGD } from './contexts/users/infrastructure/services/MailerServiceGD';
 import { GetVotingStatusAction } from './contexts/voting/actions/GetVotingStatus';
 import { DateNotValidException } from './contexts/voting/domain/exceptions/DateNotValidException';
+import { DateOutsideCycleException } from './contexts/voting/domain/exceptions/DateOutsideCycleException';
 import dataSource from './data-source';
 
 const app: Express = express();
@@ -339,7 +340,7 @@ app.post('/viewed-link-user', checkJwt, async (req: Request, res: Response) => {
   );
 
   createViewedLinkByUserDataAction
-    .execute(req.body.userUuid, req.body.linkUuid)
+    .execute(req.body.userUuid, req.body.linkUuid, req.body.cycle)
     .then(() => {
       res.status(201);
       res.send({ message: 'Data created!' });
@@ -386,6 +387,10 @@ app.post('/voting-status', async (req: Request, res: Response) => {
         case DateNotValidException:
           res.status(400);
           res.send({ message: 'Invalid date!' });
+          break;
+        case DateOutsideCycleException:
+          res.status(400);
+          res.send({ message: 'Date outside of voting cycles' });
           break;
         default:
           console.log(

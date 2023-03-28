@@ -1,17 +1,23 @@
 import { DateNotValidException } from "../domain/exceptions/DateNotValidException";
+import { DateOutsideCycleException } from "../domain/exceptions/DateOutsideCycleException";
+import { CycleDto } from "../domain/models/CycleDto";
 import { VotingStatusDto } from "../domain/models/VotingStatusDto";
-import roundCollection from "../infrastructure/persistence/VotingRounds.json";
+import cycleCollection from "../infrastructure/persistence/VotingCycles.json";
 
 export class GetVotingStatusAction {
 
   async execute(currentDate: Date): Promise<VotingStatusDto> {
-    const currentRound = this.getCurrentRound(roundCollection, currentDate);
-    const nextOpenVotingDate = new Date(currentRound.openVotingDate);
+    if (currentDate.toString() === 'Invalid Date' ) {
+      throw new DateNotValidException();
+    }
+
+    const currentCycle = this.getCurrentCycle(cycleCollection, currentDate);
+    const nextOpenVotingDate = new Date(currentCycle.openVotingDate);
 
     if (currentDate >= nextOpenVotingDate) {
       return {
         openVoting: true,
-        round: currentRound.round,
+        cycle: currentCycle.cycle,
         nextOpenVotingDate: '',
         daysUntilNextVoting: 0,
         timeUntilNextVoting: ''
@@ -21,7 +27,7 @@ export class GetVotingStatusAction {
 
       return {
         openVoting: false,
-        round: currentRound.round,
+        cycle: currentCycle.cycle,
         nextOpenVotingDate: nextOpenVotingDate.toISOString(),
         daysUntilNextVoting: this.getDayDiff(diff),
         timeUntilNextVoting: this.getTimeDiff(diff)
@@ -29,26 +35,26 @@ export class GetVotingStatusAction {
     }
   }
 
-  private getCurrentRound(roundCollection: { round: number; openVotingDate: string; start: string; end: string; }[], currentDate: Date) {
-    let currentRound = {
-      round: 0,
+  private getCurrentCycle(cycleCollection: CycleDto[], currentDate: Date): CycleDto {
+    let currentCycle = {
+      cycle: 0,
       openVotingDate: '',
       start: '',
       end: ''
     };
 
-    roundCollection.some(round => {
-      if (currentDate >= new Date(round.start) && currentDate <= new Date(round.end)) {
-        currentRound = round;
+    cycleCollection.some(cycle => {
+      if (currentDate >= new Date(cycle.start) && currentDate <= new Date(cycle.end)) {
+        currentCycle = cycle;
         return;
       }
     });
 
-    if (!currentRound.start) {
-      throw new DateNotValidException();
+    if (!currentCycle.start) {
+      throw new DateOutsideCycleException();
     }
 
-    return currentRound;
+    return currentCycle;
   }
 
   private getDateDiff(endDate: Date, startDate: Date): number {

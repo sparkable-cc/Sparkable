@@ -14,16 +14,18 @@ describe('POST /links', () => {
 
   beforeAll(async () => {
     await dataSource.initialize();
+  });
 
+  afterAll(async () => {
+    await dataSource.destroy();
+  });
+
+  beforeEach(async () => {
     const email = 'admin@butterfy.me';
     const password = 'password';
     username = 'admin';
     await UserFactory.create(request, app, email, password, username);
     auth = await UserFactory.signIn(request, app, email, password);
-  });
-
-  afterAll(async () => {
-    await dataSource.destroy();
   });
 
   afterEach(async () => {
@@ -166,6 +168,7 @@ describe('POST /links', () => {
     const description = 'description';
     const category = await CategoryFactory.create('name', 'slug');
     const statement = 'Lorem ipsum...';
+    const suggestionCategory = 'Sports';
 
     const res = await request(app)
       .post('/links')
@@ -177,7 +180,8 @@ describe('POST /links', () => {
         categories: [category],
         image: image,
         description: description,
-        statement: statement
+        statement: statement,
+        suggestionCategory: suggestionCategory
       });
 
     expect(res.statusCode).toEqual(201);
@@ -187,6 +191,7 @@ describe('POST /links', () => {
     expect(links[0].image).toEqual(image);
     expect(links[0].description).toEqual(description);
     expect(links[0].statement).toEqual(statement);
+    expect(links[0].suggestionCategory).toEqual(suggestionCategory);
   });
 
 });

@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import { AuthButtons } from "../components/AuthButtons";
 import { Welcome } from "../components/Welcome";
 import { Filters } from "../components/Filters";
 import { MobileFilters } from "../components/MobileFilters";
@@ -15,7 +14,6 @@ const HomePage: NextPage = () => {
 
   return (
     <section className={styles.container}>
-      <AuthButtons />
       <Welcome />
       <div className={styles.contentWrapper}>
         <section className={styles.articlesWrapper} id="explore">

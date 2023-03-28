@@ -1,26 +1,29 @@
 import { MandatoryFieldEmptyException } from '../../../users/domain/exceptions/MandatoryFieldEmptyException';
+import { User } from '../../../users/domain/models/User';
+import { Link } from './Link';
 import { ViewedLinkByUserDataDto } from './ViewedLinkByUserDataDto';
 
 export class ViewedLinkByUserData {
-  userUuid: string;
-  linkUuid: string;
-  stage: number;
+  user: User;
+  link: Link;
+  cycle: number;
 
-  constructor(userUuid: string, linkUuid: string) {
-    if (!userUuid || !linkUuid) {
+  constructor(user: User, link: Link, cycle: number) {
+    if (!user || !link || !cycle) {
       throw new MandatoryFieldEmptyException();
     }
-
-    this.userUuid = userUuid;
-    this.linkUuid = linkUuid;
-    this.stage = 1;
+    this.user = user;
+    this.link = link;
+    this.cycle = cycle;
   }
 
   public toDto(): ViewedLinkByUserDataDto {
     return {
-      userUuid: this.userUuid,
-      linkUuid: this.linkUuid,
-      stage: this.stage,
+      userUuid: this.user.getUuid,
+      linkUuid: this.link.uuid,
+      cycle: this.cycle,
+      userStage: this.user.getStage,
+      linkStage: this.link.stage,
     };
   }
 }

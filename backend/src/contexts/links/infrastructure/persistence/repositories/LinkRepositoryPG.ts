@@ -37,10 +37,10 @@ export class LinkRepositoryPG implements LinkRepository {
     return this.repository.findOneBy({ id: id });
   }
 
-  async storeLink(link: Link) {
+  async storeLink(link: Link): Promise<LinkDto> {
     let linkDto = link.toDto();
     const linkEntity = this.repository.create(linkDto);
-    await this.repository.save(linkEntity);
+    return this.repository.save(linkEntity);
   }
 
   async findLink(field: string, value: string): Promise<LinkDto | null> {

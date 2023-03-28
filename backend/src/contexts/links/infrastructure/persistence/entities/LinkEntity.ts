@@ -41,10 +41,16 @@ export class LinkEntity implements LinkDto {
   @Column({type: "text", nullable: true})
   statement: string;
 
+  @Column({type: "text", nullable: true})
+  suggestionCategory: string;
+
   @ManyToMany(() => CategoryEntity, (category) => category.links, {
     eager: true,
     cascade: ["insert"],
   })
   @JoinTable()
   categories: CategoryEntity[];
+
+  @Column({nullable: true})
+  stage: number;
 }

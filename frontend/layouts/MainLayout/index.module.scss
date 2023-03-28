@@ -1,2 +1,9 @@
 @import "../../styles/variables";
 @import "../../styles/common";
+
+.mainWrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  position: relative;
+}

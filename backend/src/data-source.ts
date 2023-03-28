@@ -31,7 +31,7 @@ switch (process.env.NODE_ENV) {
                 username: process.env.DB_USERNAME,
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_DATABASE,
-                synchronize: true,
+                synchronize: false,
                 logging: true,
                 entities: [__dirname + '/contexts/**/infrastructure/persistence/entities/*.{ts,js}'],
                 subscribers: [],

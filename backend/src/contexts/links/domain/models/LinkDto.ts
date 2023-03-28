@@ -12,4 +12,6 @@ export interface LinkDto {
   userUuid: string;
   username: string;
   statement: string;
+  suggestionCategory: string;
+  stage: number;
 }

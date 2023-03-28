@@ -18,8 +18,14 @@ export class ViewedLinkByUserDataEntity implements ViewedLinkByUserDataDto {
   linkUuid: string;
 
   @Column({ nullable: true })
-  stage: number;
+  cycle: number;
 
   @CreateDateColumn({ type: 'timestamptz' })
   date: Date;
+
+  @Column({ nullable: true })
+  userStage: number;
+
+  @Column({ nullable: true })
+  linkStage: number;
 }

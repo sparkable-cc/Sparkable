@@ -1,5 +1,7 @@
 export class ViewedLinkByUserDataDto {
   userUuid: string;
   linkUuid: string;
-  stage: number;
+  cycle: number;
+  userStage: number;
+  linkStage: number;
 }
