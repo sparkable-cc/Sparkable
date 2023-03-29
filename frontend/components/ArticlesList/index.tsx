@@ -33,7 +33,7 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
   const total = useAppSelector(selectTotal);
   const articles = useAppSelector(selectArticles);
   const previousSelectedFilters = usePrevious(selectedFilters);
-  const previousSort: UITypes.Option | undefined = usePrevious(sort);
+  const previousSort: UITypes.SortOption | undefined = usePrevious(sort);
 
   const setQueryParams = (page?: number) => {
     const filters = selectedFilters?.length ? selectedFilters : undefined;

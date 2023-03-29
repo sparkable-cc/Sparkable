@@ -7,12 +7,15 @@ import { VoteItem } from '../../../components/VoteItem';
 import { v4 as uuidv4 } from "uuid";
 import { checkCredentials } from '../../../utils/checkCredentials';
 import { UnloggedMessage } from "../../../components/UnloggedMessage";
+import { Select } from "../../../components/Select";
+import { UITypes } from "../../../types";
+import isEqual from "lodash.isequal";
+import { usePrevious } from "../../../utils/usePrevious";
+
 
 // TO-DO:
-// 1. SortsSelect rework
 // 3. Wire up to the endpoints
 // 4. The dummyDuta delete
-
 
 const dummyData = [
   {
@@ -47,10 +50,27 @@ const dummyData = [
   },
 ];
 
-const VotingStart = () => {
+const options: UITypes.SortOption[] = [
+  {
+    label: "Random",
+    value: "random",
+  },
+  {
+    label: "Newest First",
+    value: "newest-first",
+  },
+];
+
+const VotingList = () => {
   const [selectedIds, selectId] = useState([]);
   const router = useRouter();
   const [isLogged, setLogged] = useState(false);
+  const [currentSort, setCurrentSort] = useState<UITypes.SortOption>({
+    label: "Newest First",
+    value: "newest-first",
+  });
+  
+  const previousSort: UITypes.SortOption | undefined = usePrevious(currentSort);
 
   const onSelectItem = (id: string) => {
     if (selectedIds?.some(item => item === id)) {
@@ -62,6 +82,10 @@ const VotingStart = () => {
 
   const checkIsSelected = (id: string): boolean => {
     return selectedIds?.some(item => item === id) ? true : false;
+  }
+
+  const onApplySort = () => {
+    // sending request here
   }
 
   const onSubmit = () => {
@@ -90,7 +114,14 @@ const VotingStart = () => {
             <p className={styles.text}>You have 7 votes, but you don’t have to use all of them.</p>
             <div className={styles.listHeader}>
               <span className={styles.viewedCounter}>6 viewed submissions</span>
-              <span className="">Sorts here</span>
+              <Select
+                options={options}
+                selectedOption={currentSort}
+                isBordered={true}
+                isApplyButtonVisible={previousSort && !isEqual(previousSort, currentSort)}
+                onApply={onApplySort}
+                onSelect={setCurrentSort}
+              />
             </div>
             <section className="">
               {
@@ -119,9 +150,8 @@ const VotingStart = () => {
           </> :
           <UnloggedMessage />
       }
-
     </VotingLayout>
   );
 };
 
-export default VotingStart;
+export default VotingList;
