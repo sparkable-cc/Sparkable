@@ -23,7 +23,7 @@ export const Select = ({
   onSelect,
   onApply
 }: Props) => {
-  const [isOpen, setOpen] = useState(false);
+  const [ isOpen, setOpen ] = useState(false);
 
   const onOptionClick = (option: UITypes.SortOption) => {
     onSelect(option);
@@ -32,11 +32,12 @@ export const Select = ({
 
   return (
     <div className={styles.selectContainer}>
-      <section className={classNames(styles.selectWrapper, {[styles.forcedMobile]: isForcedMobile })}>
-        <div className={classNames(styles.select, { 
+      <section className={classNames(styles.selectWrapper, { [styles.forcedMobile]: isForcedMobile })}>
+        <div className={classNames(styles.select, {
           [styles.open]: isOpen,
           [styles.rounded]: isBordered,
-          })} >
+        })}
+        >
           <div className={styles.currentOption} onClick={() => setOpen(!isOpen)}>
             {selectedOption.label}
           </div>

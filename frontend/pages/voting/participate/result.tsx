@@ -8,12 +8,12 @@ import { Spiner } from "../../../components/Spiner";
 
 const VotingResult = () => {
   const date = dayjs().format("YYYY-MM-DD hh:mm:s");
-  const [currentTime, setCurrentTime] = useState({
+  const [ currentTime, setCurrentTime ] = useState({
     days: 0,
     hours: 0,
     minutes: 0
   });
-  const [triggerGetVotingStatus, { isLoading, data }] = useLazyGetVotingStatusQuery();
+  const [ triggerGetVotingStatus, { isLoading, data }] = useLazyGetVotingStatusQuery();
 
   useEffect(() => {
     triggerGetVotingStatus({ date });
@@ -26,7 +26,7 @@ const VotingResult = () => {
         days: data?.daysUntilNextVoting || 0,
         hours: timeArray?.[0] && Number(timeArray?.[0]) % 24 || 0,
         minutes: Number(timeArray?.[1]) || 0
-      })
+      });
     }
   }, [data]);
 

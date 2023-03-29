@@ -1,5 +1,5 @@
-import styles from './index.module.scss';
-import classNames from 'classnames';
+import styles from "./index.module.scss";
+import classNames from "classnames";
 import { ArticleLink } from "../ArticleLink";
 
 interface Props {
@@ -36,11 +36,13 @@ export const VoteItem = ({
         </div>
         {
           image &&
-          <div onClick={onItemSelect} className={styles.voteCover} style={{
-            backgroundImage: `url(${image})`
-          }} />
+          <div
+            onClick={onItemSelect} className={styles.voteCover} style={{
+              backgroundImage: `url(${image})`
+            }}
+          />
         }
       </div>
     </section>
-  )
-}
+  );
+};

@@ -3,9 +3,9 @@ import { VotingLayout } from "../../../layouts/VotingLayout";
 import styles from "../../../styles/Voting.module.scss";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { VoteItem } from '../../../components/VoteItem';
+import { VoteItem } from "../../../components/VoteItem";
 import { v4 as uuidv4 } from "uuid";
-import { checkCredentials } from '../../../utils/checkCredentials';
+import { checkCredentials } from "../../../utils/checkCredentials";
 import { UnloggedMessage } from "../../../components/UnloggedMessage";
 import { Select } from "../../../components/Select";
 import { UITypes } from "../../../types";
@@ -62,42 +62,42 @@ const options: UITypes.SortOption[] = [
 ];
 
 const VotingList = () => {
-  const [selectedIds, selectId] = useState([]);
+  const [ selectedIds, selectId ] = useState([]);
   const router = useRouter();
-  const [isLogged, setLogged] = useState(false);
-  const [currentSort, setCurrentSort] = useState<UITypes.SortOption>({
+  const [ isLogged, setLogged ] = useState(false);
+  const [ currentSort, setCurrentSort ] = useState<UITypes.SortOption>({
     label: "Newest First",
     value: "newest-first",
   });
-  
+
   const previousSort: UITypes.SortOption | undefined = usePrevious(currentSort);
 
   const onSelectItem = (id: string) => {
     if (selectedIds?.some(item => item === id)) {
       selectId(selectedIds.filter(item => item !== id));
     } else {
-      selectId([...selectedIds, ...[id as never]]);
+      selectId([ ...selectedIds, ...[id as never] ]);
     }
-  }
+  };
 
   const checkIsSelected = (id: string): boolean => {
     return selectedIds?.some(item => item === id) ? true : false;
-  }
+  };
 
   const onApplySort = () => {
     // sending request here
-  }
+  };
 
   const onSubmit = () => {
     // sending request here
     router.push("/voting/participate/result");
-  }
+  };
 
   useEffect(() => {
     if (checkCredentials()) {
       setLogged(true);
     }
-  }, [])
+  }, []);
 
   return (
     <VotingLayout
@@ -117,7 +117,7 @@ const VotingList = () => {
               <Select
                 options={options}
                 selectedOption={currentSort}
-                isBordered={true}
+                isBordered
                 isApplyButtonVisible={previousSort && !isEqual(previousSort, currentSort)}
                 onApply={onApplySort}
                 onSelect={setCurrentSort}
@@ -130,7 +130,8 @@ const VotingList = () => {
                     {...item}
                     key={uuidv4()}
                     isSelected={checkIsSelected(item.uuid)}
-                    onSelect={() => onSelectItem(item.uuid)} />
+                    onSelect={() => onSelectItem(item.uuid)}
+                  />
                 ))
               }
             </section>
@@ -143,7 +144,8 @@ const VotingList = () => {
               </div>
               <Link
                 href="/#explore"
-                className={styles.listBackButton}>
+                className={styles.listBackButton}
+              >
                 Back to Explore
               </Link>
             </div>

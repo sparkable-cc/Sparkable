@@ -10,7 +10,7 @@ interface Props {
 export const ArticleLink = ({ link, uuid }: Props) => {
   const onLinkTrack = () => {
     if (!uuid) return;
-    useLinkTracker(uuid);
+    useLinkTracker(uuid); // eslint-disable-line
   };
 
   return (

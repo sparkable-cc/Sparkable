@@ -23,7 +23,7 @@ interface Props {
 
 export const SortsSelect = ({ isForcedMobile }: Props) => {
   const sort = useAppSelector(selectSort);
-  const [currentSort, setCurrentSort] = useState(sort);
+  const [ currentSort, setCurrentSort ] = useState(sort);
   const dispatch = useAppDispatch();
 
   const onApply = () => {
