@@ -38,19 +38,7 @@ export class LinkRepositoryInMemory implements LinkRepository {
     }
   }
 
-  findLinks(field: string, values: string[]): Promise<LinkDto[]> {
-    const newCollections: LinkDto[] = [];
-    let url = field as keyof LinkDto;
-
-    for (const link of this.links) {
-      if (link[url] && values.includes(String(link[url]))) {
-        newCollections.push(link);
-      }
-    }
-    if (newCollections.length > 0) {
-      return new Promise((resolve) => resolve(newCollections));
-    } else {
-      return new Promise((resolve) => resolve([]));
-    }
+  getLinkCollectionNotOwned(uuidCollection: string[], userUuid: string): Promise<LinkDto[]> {
+    return new Promise((resolve) => resolve(this.links));
   }
 }
