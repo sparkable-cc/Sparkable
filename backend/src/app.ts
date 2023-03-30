@@ -7,7 +7,7 @@ import { CreateLinkAction } from './contexts/links/actions/CreateLinkAction';
 import { CreateViewedLinkByUserDataAction } from './contexts/links/actions/CreateViewedLinkByUserDataAction';
 import { GetAllCategoriesAction } from './contexts/links/actions/GetAllCategoriesAction';
 import { GetAllLinksAction } from './contexts/links/actions/GetAllLinksAction';
-import { GetAllMyViewedLinkAction } from './contexts/links/actions/GetAllMyViewedLinkAction';
+import { GetViewedLinksInCurrentCycleAction } from './contexts/links/actions/GetViewedLinksInCurrentCycleAction';
 import { GetLinkByIdAction } from './contexts/links/actions/GetLinkByIdAction';
 import { CategoryNotFoundException } from './contexts/links/domain/exceptions/CategoryNotFoundException';
 import { CategoryRestrictionException } from './contexts/links/domain/exceptions/CategoryRestrictionException';
@@ -402,18 +402,14 @@ app.post('/voting-status', async (req: Request, res: Response) => {
     });
 });
 
-app.get('/viewed-link-user', checkJwt, async (req: Request, res: Response) => {
-  const getAllMyViewedLinkAction = new GetAllMyViewedLinkAction(
+app.get('/viewed-links-in-current-cycle', checkJwt, async (req: Request, res: Response) => {
+  const getAllMyViewedLinkAction = new GetViewedLinksInCurrentCycleAction(
     new ViewedLinkByUserDataRepositoryPG(dataSource),
     new LinkRepositoryPG(dataSource),
   );
 
-  let stage: number = 0;
-  if (req.query.stage) stage = +req.query.stage;
-
-  console.log(req.query);
   getAllMyViewedLinkAction
-    .execute(req.query.userUuid as string, req.query.linkUuid as string, stage)
+    .execute(req.query.userUuid as string)
     .then((result) => {
       res.status(200);
       res.send(result);

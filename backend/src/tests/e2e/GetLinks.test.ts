@@ -80,7 +80,7 @@ describe('GET /links', () => {
 
   it('returns 200 returns empty filtering for something does not exist', async () => {
     const category = await CategoryFactory.create('Environment');
-    await LinkFactory.create([category]);
+    await LinkFactory.create({ categories: [category] });
 
     const res = await request(app).get('/links?categories=technology');
 
@@ -91,7 +91,7 @@ describe('GET /links', () => {
   it('returns 200 filtering for something does exist', async () => {
     const slug = 'environment';
     const category = await CategoryFactory.create('Environment', slug);
-    await LinkFactory.create([category]);
+    await LinkFactory.create({ categories: [category] });
 
     const res = await request(app).get('/links?categories=' + slug);
 
@@ -102,13 +102,13 @@ describe('GET /links', () => {
 
   it('returns 200 sorting by date and filtering by multiple categories', async () => {
     const category1 = await CategoryFactory.create('Environment', 'env1');
-    await LinkFactory.create([category1]);
+    await LinkFactory.create({ categories: [category1] });
 
     const category2 = await CategoryFactory.create('Environment2', 'env2');
-    await LinkFactory.create([category2]);
+    await LinkFactory.create({ categories: [category2] });
 
     const category3 = await CategoryFactory.create('Environment3', 'env3');
-    await LinkFactory.create([category3]);
+    await LinkFactory.create({ categories: [category3] });
 
     const filter = category1.slug + ',' + category3.slug;
     const res = await request(app).get(

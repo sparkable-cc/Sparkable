@@ -1,6 +1,7 @@
 import { LinkDto } from '../contexts/links/domain/models/LinkDto';
 import { CategoryEntity } from '../contexts/links/infrastructure/persistence/entities/CategoryEntity';
 import { LinkEntity } from '../contexts/links/infrastructure/persistence/entities/LinkEntity';
+import { v4 as uuidv4 } from 'uuid';
 import dataSource from '../data-source';
 
 export default class LinkFactory {
@@ -18,24 +19,24 @@ export default class LinkFactory {
     date: new Date(),
     statement: 'Statement ...',
     suggestionCategory: 'Sports',
-    stage: 2
+    stage: 1
   };
 
   public static async create(
-    categories?: Array<CategoryEntity>,
-    title?: string,
+    params?: {
+      title?: string;
+      categories?: Array<CategoryEntity>;
+      userUuid?: string;
+    }
   ): Promise<LinkDto> {
     const linkRepository = dataSource.getRepository(LinkEntity);
     const link = linkRepository.create({ ...this.linkDto });
 
-    if (title) {
-      link.title = title;
-    }
+    if (params?.title) link.title = params.title;
+    if (params?.categories) link.categories = params.categories;
+    if (params?.userUuid) link.userUuid = params.userUuid;
 
-    if (categories) {
-      link.categories = categories;
-    }
-
+    link.uuid = uuidv4();
     link.date = new Date();
 
     return await linkRepository.manager.save(link);
@@ -43,7 +44,10 @@ export default class LinkFactory {
 
   public static async createX(x: number, categories?: Array<CategoryEntity>) {
     for (let index = 0; index < x; index++) {
-      await LinkFactory.create(categories, this.linkDto.title + index);
+      await LinkFactory.create({
+        categories,
+        title: this.linkDto.title + index
+      });
     }
   }
 

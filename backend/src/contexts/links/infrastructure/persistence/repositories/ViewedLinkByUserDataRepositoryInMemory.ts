@@ -23,7 +23,7 @@ export class ViewedLinkByUserDataRepositoryInMemory
     }
   }
 
-  getAllDataByUserUuid(userUuid: string): Promise<ViewedLinkByUserDataDto[]> {
+  getAllDataByUserByCycleNotVoted(userUuid: string, cycle: number): Promise<ViewedLinkByUserDataDto[]> {
     const data = this.collection.filter((data) => data.userUuid === userUuid);
     return new Promise((resolve) => resolve(data));
   }

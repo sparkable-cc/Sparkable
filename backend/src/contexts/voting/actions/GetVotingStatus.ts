@@ -2,6 +2,7 @@ import { DateNotValidException } from "../domain/exceptions/DateNotValidExceptio
 import { DateOutsideCycleException } from "../domain/exceptions/DateOutsideCycleException";
 import { CycleDto } from "../domain/models/CycleDto";
 import { VotingStatusDto } from "../domain/models/VotingStatusDto";
+import { GetCurrentCycleService } from "../domain/services/GetCurrentCycleService";
 import cycleCollection from "../infrastructure/persistence/VotingCycles.json";
 
 export class GetVotingStatusAction {
@@ -11,7 +12,7 @@ export class GetVotingStatusAction {
       throw new DateNotValidException();
     }
 
-    const currentCycle = this.getCurrentCycle(cycleCollection, currentDate);
+    const currentCycle = GetCurrentCycleService.execute(currentDate);
     const nextOpenVotingDate = new Date(currentCycle.openVotingDate);
 
     if (currentDate >= nextOpenVotingDate) {
@@ -33,28 +34,6 @@ export class GetVotingStatusAction {
         timeUntilNextVoting: this.getTimeDiff(diff)
       }
     }
-  }
-
-  private getCurrentCycle(cycleCollection: CycleDto[], currentDate: Date): CycleDto {
-    let currentCycle = {
-      cycle: 0,
-      openVotingDate: '',
-      start: '',
-      end: ''
-    };
-
-    cycleCollection.some(cycle => {
-      if (currentDate >= new Date(cycle.start) && currentDate <= new Date(cycle.end)) {
-        currentCycle = cycle;
-        return;
-      }
-    });
-
-    if (!currentCycle.start) {
-      throw new DateOutsideCycleException();
-    }
-
-    return currentCycle;
   }
 
   private getDateDiff(endDate: Date, startDate: Date): number {

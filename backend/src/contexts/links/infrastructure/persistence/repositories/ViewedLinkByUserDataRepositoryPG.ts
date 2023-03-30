@@ -22,11 +22,16 @@ export class ViewedLinkByUserDataRepositoryPG
     return await this.repository.findOneBy(params);
   }
 
-  async getAllDataByUserUuid(
+  async getAllDataByUserByCycleNotVoted(
     userUuid: string,
+    cycle: number
   ): Promise<ViewedLinkByUserDataDto[]> {
     return await this.repository.find({
-      where: { userUuid: userUuid },
+      where: {
+        userUuid: userUuid,
+        cycle: cycle,
+        voted: false
+      },
     });
   }
 }

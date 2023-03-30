@@ -28,4 +28,7 @@ export class ViewedLinkByUserDataEntity implements ViewedLinkByUserDataDto {
 
   @Column({ nullable: true })
   linkStage: number;
+
+  @Column({ type: 'boolean', default: false})
+  voted: boolean;
 }

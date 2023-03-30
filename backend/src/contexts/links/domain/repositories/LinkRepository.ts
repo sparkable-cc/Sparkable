@@ -10,5 +10,8 @@ export interface LinkRepository {
   getLinkById: (id: number) => Promise<LinkDto | null>;
   storeLink: (link: Link) => Promise<LinkDto>;
   findLink: (field: string, value: string) => Promise<LinkDto | null>;
-  findLinks: (field: string, values: string[]) => Promise<LinkDto[]>;
+  getLinkCollectionNotOwned: (
+    uuidCollection: Array<string>,
+    userUuid: string
+  ) => Promise<LinkDto[]>;
 }

@@ -1,4 +1,4 @@
-import { Any, DataSource } from 'typeorm';
+import { Any, DataSource, In } from 'typeorm';
 import { Link } from '../../../domain/models/Link';
 import { LinkDto } from '../../../domain/models/LinkDto';
 import { ViewedLinkByUserData } from '../../../domain/models/ViewedLinkByUserData';
@@ -48,6 +48,16 @@ export class LinkRepositoryPG implements LinkRepository {
       where: { [field]: value },
       relations: ['categories'],
     });
+  }
+
+  async getLinkCollectionNotOwned(uuidCollection: Array<string>, userUuid: string): Promise<LinkDto[]> {
+    return await this.repository.createQueryBuilder('links')
+      .where(
+        'links.uuid IN (:...uuidCollection)',
+        { uuidCollection }
+      )
+      .andWhere('links.userUuid != :userUuid', {userUuid})
+      .getMany();
   }
 
   private addQueryFilterByCategories(
@@ -107,16 +117,4 @@ export class LinkRepositoryPG implements LinkRepository {
     return array;
   }
 
-  async findLinks(field: string, values: string[]): Promise<LinkDto[]> {
-    return await this.repository.find({
-      where: { [field]: Any(values) },
-      relations: ['categories'],
-    });
-  }
-
-  store: (data: ViewedLinkByUserData) => void;
-  findData: (params: Object) => Promise<ViewedLinkByUserDataDto | null>;
-  getAllDataByUserUuid: (
-    userUuid: string,
-  ) => Promise<ViewedLinkByUserDataDto[]>;
 }

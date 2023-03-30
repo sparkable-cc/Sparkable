@@ -24,6 +24,7 @@ export class ViewedLinkByUserData {
       cycle: this.cycle,
       userStage: this.user.getStage,
       linkStage: this.link.stage,
+      voted: false
     };
   }
 }
