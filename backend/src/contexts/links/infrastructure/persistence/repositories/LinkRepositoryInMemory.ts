@@ -12,7 +12,7 @@ export class LinkRepositoryInMemory implements LinkRepository {
   getAllLinks(
     sort?: string | undefined,
     categories?: string | undefined,
-    page?:number
+    page?: number,
   ): Promise<[LinkDto[], number]> {
     return new Promise((resolve) => resolve([this.links, this.links.length]));
   }
@@ -36,5 +36,9 @@ export class LinkRepositoryInMemory implements LinkRepository {
     } else {
       return new Promise((resolve) => resolve(null));
     }
+  }
+
+  getLinkCollectionNotOwned(uuidCollection: string[], userUuid: string): Promise<LinkDto[]> {
+    return new Promise((resolve) => resolve(this.links));
   }
 }

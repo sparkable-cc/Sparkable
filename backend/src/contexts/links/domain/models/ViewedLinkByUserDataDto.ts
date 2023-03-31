@@ -4,4 +4,5 @@ export class ViewedLinkByUserDataDto {
   cycle: number;
   userStage: number;
   linkStage: number;
+  voted: boolean;
 }
