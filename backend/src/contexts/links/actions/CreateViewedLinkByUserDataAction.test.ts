@@ -81,7 +81,7 @@ describe('Create viewed link by user data action', () => {
 
     const viewedLinkByUserDataRepositoryInMemory = new ViewedLinkByUserDataRepositoryInMemory();
     viewedLinkByUserDataRepositoryInMemory.store(
-      new ViewedLinkByUserData(userUuid, link.uuid)
+      new ViewedLinkByUserData(userUuid, link.uuid, 1)
     );
 
     const createViewedLinkByUserAction = new CreateViewedLinkByUserDataAction(

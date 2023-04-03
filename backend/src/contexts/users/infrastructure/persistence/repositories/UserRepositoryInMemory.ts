@@ -35,4 +35,15 @@ export class UserRepositoryInMemory implements UserRepository {
     if (user) return new Promise((resolve, rejects) => resolve(user));
     else return new Promise((resolve, rejects) => resolve(null));
   }
+
+  createWithOne(userUuid:string) {
+    this.users = [{
+      id:0,
+      uuid: userUuid,
+      email: 'email',
+      username: 'username',
+      password: 'password',
+      stage: 1
+    }];
+  }
 }

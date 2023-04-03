@@ -35,7 +35,7 @@ import { LinkNotFoundException } from './contexts/links/domain/exceptions/LinkNo
 import { DataDoesExistException } from './contexts/links/domain/exceptions/DataDoesExistException';
 import { DateNotValidException } from './contexts/voting/domain/exceptions/DateNotValidException';
 import { GetVotingStatusAction } from './contexts/voting/actions/GetVotingStatus';
-import { CreateVoteAction } from './contexts/voting/actions/CreateVoteAction';
+import { CreateVotingAction } from './contexts/voting/actions/CreateVotingAction';
 import { VoteRepositoryPG } from './contexts/voting/infrastructure/persistence/repositories/VoteRepositoryPG';
 
 const app: Express = express();
@@ -396,7 +396,7 @@ app.post('/voting-status', async (req: Request, res: Response) => {
 });
 
 app.post('/votes', checkJwt, async (req: Request, res: Response) => {
-  const createVoteAction = new CreateVoteAction(
+  const createVoteAction = new CreateVotingAction(
     new ViewedLinkByUserDataRepositoryPG(dataSource),
     new VoteRepositoryPG(dataSource)
   );

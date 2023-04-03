@@ -1,6 +1,7 @@
 import { DateNotValidException } from "../domain/exceptions/DateNotValidException";
+import { CycleDto } from "../domain/models/CycleDto";
 import { VotingStatusDto } from "../domain/models/VotingStatusDto";
-import roundCollection from "../infrastructure/persistence/VotingRounds.json";
+import roundCollection from "../infrastructure/persistence/VotingCycles.json";
 
 export class GetVotingStatusAction {
 
@@ -11,7 +12,7 @@ export class GetVotingStatusAction {
     if (currentDate >= nextOpenVotingDate) {
       return {
         openVoting: true,
-        cycle: currentRound.round,
+        cycle: currentRound.cycle,
         nextOpenVotingDate: '',
         daysUntilNextVoting: 0,
         timeUntilNextVoting: ''
@@ -21,7 +22,7 @@ export class GetVotingStatusAction {
 
       return {
         openVoting: false,
-        cycle: currentRound.round,
+        cycle: currentRound.cycle,
         nextOpenVotingDate: nextOpenVotingDate.toISOString(),
         daysUntilNextVoting: this.getDayDiff(diff),
         timeUntilNextVoting: this.getTimeDiff(diff)
@@ -29,9 +30,9 @@ export class GetVotingStatusAction {
     }
   }
 
-  private getCurrentRound(roundCollection: { round: number; openVotingDate: string; start: string; end: string; }[], currentDate: Date) {
+  private getCurrentRound(roundCollection: CycleDto[], currentDate: Date) {
     let currentRound = {
-      round: 0,
+      cycle: 0,
       openVotingDate: '',
       start: '',
       end: ''

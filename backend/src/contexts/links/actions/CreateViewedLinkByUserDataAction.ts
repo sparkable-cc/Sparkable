@@ -23,7 +23,7 @@ export class CreateViewedLinkByUserDataAction {
   }
 
   async execute(userUuid: string, linkUuid: string) {
-    const data = new ViewedLinkByUserData(userUuid, linkUuid);
+    const data = new ViewedLinkByUserData(userUuid, linkUuid, 1);
     await this.checkUserDoesExist(userUuid);
     await this.checkLinkDoesExist(linkUuid);
     await this.checkDataIsNew(userUuid, linkUuid);

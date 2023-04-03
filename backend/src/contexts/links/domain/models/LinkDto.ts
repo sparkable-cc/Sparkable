@@ -13,4 +13,5 @@ export interface LinkDto {
   username: string;
   statement: string;
   suggestionCategory: string;
+  stage: number;
 }
