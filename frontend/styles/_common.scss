@@ -1,4 +1,4 @@
-@import "./variables.scss";
+@import './variables.scss';
 
 // CONTAINERS
 .container {
@@ -24,7 +24,7 @@
   font-weight: 500;
   padding: 0 $gapS;
   height: 32px;
-  border-radius: 2px;
+  border-radius: 24px;
   color: $colorWhite;
   transition: 0.2s;
   font-size: 1rem;
@@ -135,7 +135,7 @@
 }
 
 .authLink {
-  color: #264F80;
+  color: #264f80;
   text-decoration: underline;
   font-size: $size14;
 

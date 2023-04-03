@@ -1,5 +1,5 @@
-@import "../../styles/variables";
-@import "../../styles/common";
+@import '../../styles/variables';
+@import '../../styles/common';
 
 .welcomeWrapper {
   display: flex;
@@ -15,9 +15,11 @@
 }
 
 .title {
-  font-size: 5.25rem;
-  font-weight: 500;
+  font-size: 4rem;
+  font-weight: 600;
   line-height: 1.1;
+  font-style: normal;
+  letter-spacing: -2px;
 
   br {
     display: none;
@@ -57,7 +59,7 @@
     margin-left: 10px;
     position: relative;
     top: 2px;
-    content: url("../../public/svg/arrow-down.svg");
+    content: url('../../public/svg/arrow-down.svg');
   }
 }
 

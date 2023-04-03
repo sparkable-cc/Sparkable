@@ -1,5 +1,5 @@
-@import "../../styles/variables";
-@import "../../styles/common";
+@import '../../styles/variables';
+@import '../../styles/common';
 
 .modalViewport {
   width: 100%;
@@ -18,11 +18,11 @@
   background: $colorWhite;
   width: 100%;
   max-width: 450px;
-  box-shadow: 0px 2px 25px rgba(0, 48, 75, 0.2);
-  border-radius: 2px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
   padding: $gapS;
 
-  @media only screen and (max-width: $mobile){
+  @media only screen and (max-width: $mobile) {
     width: calc(100% - 80px);
   }
 }
@@ -42,23 +42,22 @@
   &.titleIcon {
     position: relative;
     padding-left: 28px;
-    
+
     &:before {
       display: inline-flex;
       position: absolute;
       left: 0;
       top: -1px;
-      content: url("../../public/svg/question.svg")
+      content: url('../../public/svg/question.svg');
     }
   }
 }
-
 
 .cancelButton {
   @extend .buttonWhite;
 
   &:before {
-    content: url("../../public/svg/cros.svg");
+    content: url('../../public/svg/cros.svg');
     top: 2px;
     right: 2px;
     position: relative;

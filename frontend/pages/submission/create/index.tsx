@@ -1,12 +1,12 @@
-import { CreateSubmissionLayout } from "../../../layouts/CreateSubmissionLayout";
-import styles from "../../../styles/Submission.module.scss";
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
+import { CreateSubmissionLayout } from '../../../layouts/CreateSubmissionLayout';
+import styles from '../../../styles/Submission.module.scss';
 
 const CreateSubmissionStart = () => {
   const router = useRouter();
 
   const onButtonClick = () => {
-    router.push("/submission/create/link");
+    router.push('/submission/create/link');
   };
 
   return (
@@ -15,14 +15,27 @@ const CreateSubmissionStart = () => {
       submitButtonText="Start"
       onSubmit={onButtonClick}
     >
-      <h2 className={styles.title}>Make a submission</h2>
-      <p className={styles.text}>You can submit a link to any type of content: written pieces, videos, podcasts, websites, or anything else.</p>
-      <p className={styles.text}>Please make sure you submit content which contributes to Sparkable’s goals:</p>
+      <h2 className={styles.title}>
+        What is the most insightful <br />
+        piece of content you have <br /> encountered recently?
+      </h2>
+      <p className={styles.text}>Sparkable is looking for:</p>
       <div className={styles.quote}>
-        <p className={styles.quoteText}>Sparkable aims to become an environment <strong>that broadens horizons, induces personal growth</strong> and <strong>brings lasting insight.</strong></p>
+        <p className={styles.quoteText}>
+          <strong>
+            Links that broaden horizons, bring lasting insight, <br />
+            and create more mutual understanding.{' '}
+          </strong>
+        </p>
       </div>
-      <p className={styles.text}>Thank you!</p>
-      <p className={styles.note}>Submitting something takes 2-5 minutes.</p>
+      <p className={styles.text}>
+        <a href="/">See Content Guidelines {'>'}</a>
+      </p>
+      <p className={styles.text}>
+        You can submit a link to any type of content: websites, podcasts,
+        videos, or anything else.
+      </p>
+      <p className={styles.note}>This process will take 2-5 minutes.</p>
     </CreateSubmissionLayout>
   );
 };
