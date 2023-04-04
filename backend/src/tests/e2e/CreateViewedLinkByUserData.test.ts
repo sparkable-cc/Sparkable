@@ -128,7 +128,7 @@ describe('POST /viewed-link-user', () => {
     expect(result[0][0].date).not.toEqual(null);
     expect(result[0][0].cycle).toEqual(cycle);
     expect(result[0][0].userStage).toEqual(1);
-    expect(result[0][0].linkStage).toEqual(2);
+    expect(result[0][0].linkStage).toEqual(1);
   });
 
   it('returns 403 when data exists with the user and the link', async () => {

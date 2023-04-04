@@ -6,7 +6,6 @@ import {
 } from 'typeorm';
 import { ViewedLinkByUserDataDto } from '../../../domain/models/ViewedLinkByUserDataDto';
 
-
 @Entity('viewed_links_by_user')
 export class ViewedLinkByUserDataEntity implements ViewedLinkByUserDataDto {
   @PrimaryGeneratedColumn()
@@ -18,15 +17,18 @@ export class ViewedLinkByUserDataEntity implements ViewedLinkByUserDataDto {
   @Column()
   linkUuid: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   cycle: number;
 
   @CreateDateColumn({ type: 'timestamptz' })
   date: Date;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   userStage: number;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   linkStage: number;
+
+  @Column({ type: 'boolean', default: false})
+  voted: boolean;
 }
