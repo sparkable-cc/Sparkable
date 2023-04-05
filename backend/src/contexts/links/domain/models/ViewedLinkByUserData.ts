@@ -1,30 +1,42 @@
 import { MandatoryFieldEmptyException } from '../../../users/domain/exceptions/MandatoryFieldEmptyException';
-import { User } from '../../../users/domain/models/User';
-import { Link } from './Link';
 import { ViewedLinkByUserDataDto } from './ViewedLinkByUserDataDto';
 
 export class ViewedLinkByUserData {
-  user: User;
-  link: Link;
+  userUuid: string;
+  linkUuid: string;
   cycle: number;
+  userStage: number;
+  linkStage: number;
+  voted: boolean;
 
-  constructor(user: User, link: Link, cycle: number) {
-    if (!user || !link || !cycle) {
+  constructor(
+    userUuid:string,
+    linkUuid:string,
+    cycle: number,
+    voted: boolean = false,
+    userStage: number = 1,
+    linkStage: number = 1,
+  ) {
+    if (!userUuid || !linkUuid || !cycle) {
       throw new MandatoryFieldEmptyException();
     }
-    this.user = user;
-    this.link = link;
+
+    this.userUuid = userUuid;
+    this.linkUuid = linkUuid;
     this.cycle = cycle;
+    this.userStage = userStage;
+    this.linkStage = linkStage;
+    this.voted = voted
   }
 
   public toDto(): ViewedLinkByUserDataDto {
     return {
-      userUuid: this.user.getUuid,
-      linkUuid: this.link.uuid,
+      userUuid: this.userUuid,
+      linkUuid: this.linkUuid,
       cycle: this.cycle,
-      userStage: this.user.getStage,
-      linkStage: this.link.stage,
-      voted: false
+      userStage: this.userStage,
+      linkStage: this.linkStage,
+      voted: this.voted
     };
   }
 }

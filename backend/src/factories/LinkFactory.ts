@@ -27,17 +27,18 @@ export default class LinkFactory {
       title?: string;
       categories?: Array<CategoryEntity>;
       userUuid?: string;
+      uuid?: string;
     }
   ): Promise<LinkDto> {
     const linkRepository = dataSource.getRepository(LinkEntity);
     const link = linkRepository.create({ ...this.linkDto });
 
+    link.uuid = uuidv4();
+    link.date = new Date();
     if (params?.title) link.title = params.title;
     if (params?.categories) link.categories = params.categories;
     if (params?.userUuid) link.userUuid = params.userUuid;
-
-    link.uuid = uuidv4();
-    link.date = new Date();
+    if (params?.uuid) link.uuid = params.uuid;
 
     return await linkRepository.manager.save(link);
   }

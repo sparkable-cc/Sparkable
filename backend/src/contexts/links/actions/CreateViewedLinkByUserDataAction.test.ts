@@ -13,7 +13,6 @@ import { CreateViewedLinkByUserDataAction } from './CreateViewedLinkByUserDataAc
 
 describe('Create viewed link by user data action', () => {
 
-
   test('cant create viewed link by user data without user', async () => {
     const createViewedLinkByUserAction = new CreateViewedLinkByUserDataAction(
       new UserRepositoryInMemory(),
@@ -21,7 +20,7 @@ describe('Create viewed link by user data action', () => {
       new ViewedLinkByUserDataRepositoryInMemory()
     );
 
-    await expect(createViewedLinkByUserAction.execute('', '', 1)).rejects.toThrow(
+    await expect(createViewedLinkByUserAction.execute('', '')).rejects.toThrow(
       MandatoryFieldEmptyException,
     );
   });
@@ -33,19 +32,7 @@ describe('Create viewed link by user data action', () => {
       new ViewedLinkByUserDataRepositoryInMemory()
     );
 
-    await expect(createViewedLinkByUserAction.execute('userUuid', '', 1)).rejects.toThrow(
-      MandatoryFieldEmptyException,
-    );
-  });
-
-  test('cant create viewed link by user data when the cycle does not exist', async () => {
-    const createViewedLinkByUserAction = new CreateViewedLinkByUserDataAction(
-      new UserRepositoryInMemory(),
-      new LinkRepositoryInMemory(),
-      new ViewedLinkByUserDataRepositoryInMemory()
-    );
-
-    await expect(createViewedLinkByUserAction.execute('userUuid', 'linkUuid', 0)).rejects.toThrow(
+    await expect(createViewedLinkByUserAction.execute('userUuid', '')).rejects.toThrow(
       MandatoryFieldEmptyException,
     );
   });
@@ -57,7 +44,7 @@ describe('Create viewed link by user data action', () => {
       new ViewedLinkByUserDataRepositoryInMemory()
     );
 
-    await expect(createViewedLinkByUserAction.execute('userUuid', 'linkUuid', 1)).rejects.toThrow(
+    await expect(createViewedLinkByUserAction.execute('userUuid', 'linkUuid')).rejects.toThrow(
       UserNotFoundException,
     );
   });
@@ -72,7 +59,7 @@ describe('Create viewed link by user data action', () => {
       new ViewedLinkByUserDataRepositoryInMemory()
     );
 
-    await expect(createViewedLinkByUserAction.execute('userUuid', 'linkUuid', 1)).rejects.toThrow(
+    await expect(createViewedLinkByUserAction.execute('userUuid', 'linkUuid')).rejects.toThrow(
       LinkNotFoundException,
     );
   });
@@ -95,7 +82,7 @@ describe('Create viewed link by user data action', () => {
 
     const viewedLinkByUserDataRepositoryInMemory = new ViewedLinkByUserDataRepositoryInMemory();
     viewedLinkByUserDataRepositoryInMemory.store(
-      new ViewedLinkByUserData(user, link, 1)
+      new ViewedLinkByUserData(user.getUuid, link.uuid, 1)
     );
 
     const createViewedLinkByUserAction = new CreateViewedLinkByUserDataAction(
@@ -104,7 +91,7 @@ describe('Create viewed link by user data action', () => {
       viewedLinkByUserDataRepositoryInMemory
     );
 
-    await expect(createViewedLinkByUserAction.execute(userUuid, link.uuid, 1)).rejects.toThrow(
+    await expect(createViewedLinkByUserAction.execute(userUuid, link.uuid)).rejects.toThrow(
       DataDoesExistException,
     );
   });
@@ -112,13 +99,13 @@ describe('Create viewed link by user data action', () => {
   test('create viewed link by user data successfully', async () => {
     const userUuid = 'userUuid';
     const userRepositoryInMemory = new UserRepositoryInMemory();
-    const userStage = 2;
+    const userStage = 1;
     await userRepositoryInMemory.storeUser(
       new User('email', 'username', 'password', userUuid, userStage)
     );
 
     const linkRepositoryInMemory = new LinkRepositoryInMemory();
-    const linkStage = 2;
+    const linkStage = 1;
     const linkDto = {
       title: 'title',
       url: 'url',
@@ -138,7 +125,7 @@ describe('Create viewed link by user data action', () => {
     );
 
     const cycle = 1;
-    await createViewedLinkByUserAction.execute(userUuid, link.uuid, cycle);
+    await createViewedLinkByUserAction.execute(userUuid, link.uuid);
 
     expect(viewedLinkByUserDataRepositoryInMemory.collection.length).toEqual(1);
     expect(viewedLinkByUserDataRepositoryInMemory.collection[0].userUuid).toEqual(userUuid);

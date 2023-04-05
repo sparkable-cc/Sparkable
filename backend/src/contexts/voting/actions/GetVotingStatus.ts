@@ -36,6 +36,28 @@ export class GetVotingStatusAction {
     }
   }
 
+  private getCurrentRound(roundCollection: CycleDto[], currentDate: Date) {
+    let currentRound = {
+      cycle: 0,
+      openVotingDate: '',
+      start: '',
+      end: ''
+    };
+
+    roundCollection.some(round => {
+      if (currentDate >= new Date(round.start) && currentDate <= new Date(round.end)) {
+        currentRound = round;
+        return;
+      }
+    });
+
+    if (!currentRound.start) {
+      throw new DateNotValidException();
+    }
+
+    return currentRound;
+  }
+
   private getDateDiff(endDate: Date, startDate: Date): number {
     return endDate.getTime() - startDate.getTime();
   }

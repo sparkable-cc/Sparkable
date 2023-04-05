@@ -14,22 +14,32 @@ export class ViewedLinkByUserDataRepositoryPG
   }
 
   async store(data: ViewedLinkByUserData) {
-    const dataEntity = this.repository.create(data.toDto());
-    await this.repository.save(dataEntity);
+    const dataDto = data.toDto();
+    const params = {
+      userUuid: dataDto.userUuid,
+      linkUuid: dataDto.linkUuid
+    };
+
+    if (await this.findData(params)) {
+      await this.repository.update(params, {voted: dataDto.voted});
+    } else {
+      const dataEntity = this.repository.create(dataDto);
+      await this.repository.insert(dataEntity);
+    }
   }
 
   async findData(params: Object): Promise<ViewedLinkByUserDataDto | null> {
     return await this.repository.findOneBy(params);
   }
 
-  async getAllDataByUserByCycleNotVoted(
-    userUuid: string,
-    cycle: number
-  ): Promise<ViewedLinkByUserDataDto[]> {
-    return await this.repository.find({
+  async getAllData(params: Object): Promise<[ViewedLinkByUserDataDto[], number]> {
+    return await this.repository.findAndCount({ where:params });
+  }
+
+  async getAllDataByUserNotVoted(userUuid: string): Promise<[ViewedLinkByUserDataDto[], number]> {
+    return await this.repository.findAndCount({
       where: {
         userUuid: userUuid,
-        cycle: cycle,
         voted: false
       },
     });

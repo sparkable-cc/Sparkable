@@ -6,7 +6,7 @@ export class LinkRepositoryInMemory implements LinkRepository {
   links: LinkDto[];
 
   constructor() {
-    this.links = [];
+    this.links = []
   }
 
   getAllLinks(
@@ -36,6 +36,24 @@ export class LinkRepositoryInMemory implements LinkRepository {
     } else {
       return new Promise((resolve) => resolve(null));
     }
+  }
+
+  createOneLink(linkUuid:string, userUuid:string) {
+    this.links.push({
+      id: 0,
+      uuid: linkUuid,
+      userUuid: userUuid,
+      title: 'title',
+      url: 'url',
+      image: 'image',
+      description: 'description',
+      date: new Date(),
+      categories: [],
+      username: 'username',
+      statement: 'statement',
+      suggestionCategory: 'Other',
+      stage: 1
+    });
   }
 
   getLinkCollectionNotOwned(uuidCollection: string[], userUuid: string): Promise<LinkDto[]> {

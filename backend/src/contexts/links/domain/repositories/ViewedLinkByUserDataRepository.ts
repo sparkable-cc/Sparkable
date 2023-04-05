@@ -3,9 +3,7 @@ import { ViewedLinkByUserDataDto } from '../models/ViewedLinkByUserDataDto';
 
 export interface ViewedLinkByUserDataRepository {
   store: (data: ViewedLinkByUserData) => void;
-  findData: (params: Object) => Promise<ViewedLinkByUserDataDto | null>;
-  getAllDataByUserByCycleNotVoted: (
-    userUuid: string,
-    cycle: number
-  ) => Promise<ViewedLinkByUserDataDto[]>;
+  findData: (params:Object) => Promise<ViewedLinkByUserDataDto | null>;
+  getAllData: (params:Object) => Promise<[ViewedLinkByUserDataDto[], number]>;
+  getAllDataByUserNotVoted: (userUuid: string) => Promise<[ViewedLinkByUserDataDto[], number]>;
 }
