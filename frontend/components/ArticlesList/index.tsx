@@ -1,11 +1,11 @@
-import classNames from 'classnames';
-import isEqual from 'lodash.isequal';
-import uniqBy from 'lodash.uniqby';
-import { useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import { MobileSubmitLink } from '../../components/MobileSubmitLink';
-import { useLazyGetArticlesQuery } from '../../store/api/articlesApi';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import classNames from "classnames";
+import isEqual from "lodash.isequal";
+import uniqBy from "lodash.uniqby";
+import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { MobileSubmitLink } from "../../components/MobileSubmitLink";
+import { useLazyGetArticlesQuery } from "../../store/api/articlesApi";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
   selectArticles,
   selectSelectedFilters,
@@ -13,21 +13,21 @@ import {
   selectTotal,
   setArticles,
   setTotal,
-} from '../../store/UIslice';
-import { UITypes } from '../../types';
-import { usePrevious } from '../../utils/usePrevious';
-import { ArticleItem } from '../ArticleItem';
-import { Spiner } from '../Spiner';
-import styles from './index.module.scss';
+} from "../../store/UIslice";
+import { UITypes } from "../../types";
+import { usePrevious } from "../../utils/usePrevious";
+import { ArticleItem } from "../ArticleItem";
+import { Spiner } from "../Spiner";
+import styles from "./index.module.scss";
 
 interface Props {
   isPreviewPage?: boolean;
 }
 
 export const ArticlesList = ({ isPreviewPage }: Props) => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [ currentPage, setCurrentPage ] = useState(1);
   const dispatch = useAppDispatch();
-  const [trigger, { isLoading }] = useLazyGetArticlesQuery();
+  const [ trigger, { isLoading }] = useLazyGetArticlesQuery();
   const selectedFilters = useAppSelector(selectSelectedFilters);
   const sort = useAppSelector(selectSort);
   const total = useAppSelector(selectTotal);
@@ -37,18 +37,18 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
 
   const setQueryParams = (page?: number) => {
     const filters = selectedFilters?.length ? selectedFilters : undefined;
-    const sorts = sort.value === 'newest-first' ? '-date' : '';
+    const sorts = sort.value === "newest-first" ? "-date" : "";
 
     let queryParams = {
       categories: filters,
     };
 
     if (sorts) {
-      queryParams = { ...queryParams, ...{ sort: sorts } };
+      queryParams = { ...queryParams, ...{ sort: sorts }};
     }
 
     if (page) {
-      queryParams = { ...queryParams, ...{ page } };
+      queryParams = { ...queryParams, ...{ page }};
     }
 
     return queryParams;
@@ -62,7 +62,7 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
         if (!res.data) return;
 
         if (
-          sort.value === 'newest-first' &&
+          sort.value === "newest-first" &&
           previousSort &&
           isEqual(sort, previousSort)
         ) {
@@ -70,7 +70,7 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
             dispatch(setArticles(res.data?.links));
           } else {
             dispatch(
-              setArticles(uniqBy([...articles, ...res.data?.links], 'id')),
+              setArticles(uniqBy([ ...articles, ...res.data?.links ], "id")),
             );
           }
         } else {
@@ -100,7 +100,7 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
     if (previousSort && !isEqual(sort, previousSort)) {
       onGetData();
     }
-  }, [selectedFilters, sort]);
+  }, [ selectedFilters, sort ]);
 
   return (
     <>
@@ -115,7 +115,7 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
       {isLoading && <Spiner wrapperClassName={styles.spinnerWrapper} />}
       {Boolean(articles?.length) && (
         <div className={styles.loadMoreWrapper}>
-          {sort.value === 'random' ? (
+          {sort.value === "random" ? (
             <button
               disabled={isLoading}
               className={classNames(styles.reshuffleButton)}
@@ -132,7 +132,7 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
               Load more
             </button>
           ) : (
-            ''
+            ""
           )}
         </div>
       )}

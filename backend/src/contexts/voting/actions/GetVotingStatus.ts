@@ -1,18 +1,24 @@
 import { DateNotValidException } from "../domain/exceptions/DateNotValidException";
+import { DateOutsideCycleException } from "../domain/exceptions/DateOutsideCycleException";
 import { CycleDto } from "../domain/models/CycleDto";
 import { VotingStatusDto } from "../domain/models/VotingStatusDto";
-import roundCollection from "../infrastructure/persistence/VotingCycles.json";
+import { GetCurrentCycleService } from "../domain/services/GetCurrentCycleService";
+import cycleCollection from "../infrastructure/persistence/VotingCycles.json";
 
 export class GetVotingStatusAction {
 
   async execute(currentDate: Date): Promise<VotingStatusDto> {
-    const currentRound = this.getCurrentRound(roundCollection, currentDate);
-    const nextOpenVotingDate = new Date(currentRound.openVotingDate);
+    if (currentDate.toString() === 'Invalid Date' ) {
+      throw new DateNotValidException();
+    }
+
+    const currentCycle = GetCurrentCycleService.execute(currentDate);
+    const nextOpenVotingDate = new Date(currentCycle.openVotingDate);
 
     if (currentDate >= nextOpenVotingDate) {
       return {
         openVoting: true,
-        cycle: currentRound.cycle,
+        cycle: currentCycle.cycle,
         nextOpenVotingDate: '',
         daysUntilNextVoting: 0,
         timeUntilNextVoting: ''
@@ -22,7 +28,7 @@ export class GetVotingStatusAction {
 
       return {
         openVoting: false,
-        cycle: currentRound.cycle,
+        cycle: currentCycle.cycle,
         nextOpenVotingDate: nextOpenVotingDate.toISOString(),
         daysUntilNextVoting: this.getDayDiff(diff),
         timeUntilNextVoting: this.getTimeDiff(diff)

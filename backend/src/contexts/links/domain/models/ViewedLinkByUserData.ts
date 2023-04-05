@@ -1,5 +1,7 @@
-import { MandatoryFieldEmptyException } from "../../../users/domain/exceptions/MandatoryFieldEmptyException";
-import { ViewedLinkByUserDataDto } from "./ViewedLinkByUserDataDto";
+import { MandatoryFieldEmptyException } from '../../../users/domain/exceptions/MandatoryFieldEmptyException';
+import { User } from '../../../users/domain/models/User';
+import { Link } from './Link';
+import { ViewedLinkByUserDataDto } from './ViewedLinkByUserDataDto';
 
 export class ViewedLinkByUserData {
   userUuid: string;
@@ -33,5 +35,4 @@ export class ViewedLinkByUserData {
       voted: this.voted
     };
   }
-
 }

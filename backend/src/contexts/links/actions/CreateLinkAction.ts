@@ -27,7 +27,7 @@ export class CreateLinkAction {
     const user = await this.checkUserExists(link);
     await this.checkUrlIsNew(link);
     link.username = user.username;
-    this.linkRepository.storeLink(link);
+    await this.linkRepository.storeLink(link);
   }
 
   private async checkUrlIsNew(linkData: any) {

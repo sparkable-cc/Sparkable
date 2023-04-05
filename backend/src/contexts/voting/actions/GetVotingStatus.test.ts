@@ -1,7 +1,17 @@
 import { DateNotValidException } from "../domain/exceptions/DateNotValidException";
+import { DateOutsideCycleException } from "../domain/exceptions/DateOutsideCycleException";
 import { GetVotingStatusAction } from "./GetVotingStatus";
 
 describe('Get voting status', () => {
+
+  test('cant get voting status when the date format is invalid', async () => {
+    const getVotingStatusAction = new GetVotingStatusAction();
+    const date = new Date('xxx');
+
+    await expect(getVotingStatusAction.execute(date)).rejects.toThrow(
+      DateNotValidException,
+    );
+  });
 
   test('Get voting status in an close day', async () => {
     const getVotingStatusAction = new GetVotingStatusAction();
@@ -29,7 +39,7 @@ describe('Get voting status', () => {
     expect(votingStatus.timeUntilNextVoting).toEqual('');
   });
 
-  test('Get voting status in an close day from the second round', async () => {
+  test('Get voting status in an close day from the second cycle', async () => {
     const getVotingStatusAction = new GetVotingStatusAction();
     const date = new Date('Apr 11, 2023 00:00:00');
 
@@ -42,7 +52,7 @@ describe('Get voting status', () => {
     expect(votingStatus.timeUntilNextVoting).toEqual('216:00:00');
   });
 
-  test('Get voting status in an open day from the second round', async () => {
+  test('Get voting status in an open day from the second cycle', async () => {
     const getVotingStatusAction = new GetVotingStatusAction();
     const date = new Date('Apr 22, 2023 00:00:00');
 
@@ -55,12 +65,12 @@ describe('Get voting status', () => {
     expect(votingStatus.timeUntilNextVoting).toEqual('');
   });
 
-  test('cant create link with only title', async () => {
+  test('cant get voting status when the date outside cycles', async () => {
     const getVotingStatusAction = new GetVotingStatusAction();
     const date = new Date('Apr 01, 2021 00:00:00');
 
     expect(getVotingStatusAction.execute(date)).rejects.toThrow(
-      DateNotValidException,
+      DateOutsideCycleException,
     );
   });
 

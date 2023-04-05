@@ -15,7 +15,8 @@ export interface UIState {
   sort: UITypes.Option
   articles: ApiTypes.Model.Link[]
   total: number,
-  userName: string
+  userName: string,
+  isVotingBannerVisible: boolean
 }
 
 const initialState: UIState = {
@@ -28,6 +29,7 @@ const initialState: UIState = {
   articles: [],
   total: 0,
   userName: userName || "",
+  isVotingBannerVisible: false
 };
 
 export const UISlice = createSlice({
@@ -52,6 +54,9 @@ export const UISlice = createSlice({
     setUserName: (state, action: PayloadAction<string>) => {
       state.userName = action.payload;
     },
+    setVotingBannerVisible: (state, action: PayloadAction<boolean>) => {
+      state.isVotingBannerVisible = action.payload;
+    },
   },
 });
 
@@ -62,6 +67,7 @@ export const {
   setArticles,
   setTotal,
   setUserName,
+  setVotingBannerVisible,
 } = UISlice.actions;
 
 export const selectIsMenuVisible = (state: RootState) => state.UI.isMenuVisible;
@@ -70,5 +76,6 @@ export const selectSort = (state: RootState) => state.UI.sort;
 export const selectArticles = (state: RootState) => state.UI.articles;
 export const selectTotal = (state: RootState) => state.UI.total;
 export const selectUserName = (state: RootState) => state.UI.userName;
+export const selectIsVotingBannerVisible = (state: RootState) => state.UI.isVotingBannerVisible;
 
 export default UISlice.reducer;

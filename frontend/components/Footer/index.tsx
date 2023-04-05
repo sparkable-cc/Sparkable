@@ -39,7 +39,10 @@ export const Footer = () => {
             Terms of use
           </Link>
           <br />
-          <Link href="/legal/terms-of-use" className={styles.footerLink}>
+          <Link
+            href="/legal/acceptable-use-policy"
+            className={styles.footerLink}
+          >
             Acceptable use policy
           </Link>
         </div>

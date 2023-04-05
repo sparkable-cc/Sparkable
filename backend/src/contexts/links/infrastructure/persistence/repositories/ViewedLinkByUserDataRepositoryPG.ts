@@ -1,11 +1,12 @@
 import { DataSource } from 'typeorm';
-import { ViewedLinkByUserDataRepository } from '../../../domain/repositories/ViewedLinkByUserDataRepository';
 import { ViewedLinkByUserData } from '../../../domain/models/ViewedLinkByUserData';
-import { ViewedLinkByUserDataEntity } from '../entities/ViewedLinkByUserDataEntity';
 import { ViewedLinkByUserDataDto } from '../../../domain/models/ViewedLinkByUserDataDto';
+import { ViewedLinkByUserDataRepository } from '../../../domain/repositories/ViewedLinkByUserDataRepository';
+import { ViewedLinkByUserDataEntity } from '../entities/ViewedLinkByUserDataEntity';
 
-
-export class ViewedLinkByUserDataRepositoryPG implements ViewedLinkByUserDataRepository {
+export class ViewedLinkByUserDataRepositoryPG
+  implements ViewedLinkByUserDataRepository
+{
   private repository;
 
   constructor(dataSource: DataSource) {
@@ -35,4 +36,16 @@ export class ViewedLinkByUserDataRepositoryPG implements ViewedLinkByUserDataRep
     return await this.repository.findAndCount({ where:params });
   }
 
+  async getAllDataByUserByCycleNotVoted(
+    userUuid: string,
+    cycle: number
+  ): Promise<ViewedLinkByUserDataDto[]> {
+    return await this.repository.find({
+      where: {
+        userUuid: userUuid,
+        cycle: cycle,
+        voted: false
+      },
+    });
+  }
 }

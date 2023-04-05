@@ -33,7 +33,7 @@ const AcceptableUsePage: NextPage = () => {
         chatrooms, reviews, and to any interactive services associated with it
         ("Contribution").
       </p>
-      <h2>USE OF THE SERVICES</h2>
+      <h2>Use Of The Services</h2>
       <p>
         When you use the Services you warrant that you will comply with this
         Policy and with all applicable laws.
@@ -143,7 +143,7 @@ const AcceptableUsePage: NextPage = () => {
         </li>
         <li>Sell or otherwise transfer your profile.</li>
       </ul>
-      <h2>COMMUNITY/CONTENT GUIDELINES</h2>
+      <h2>Community/Content Guidelines</h2>
       <h3>Community Guidelines</h3>
       <p>
         We try to build a supportive community allowing us all to share our
@@ -171,7 +171,7 @@ const AcceptableUsePage: NextPage = () => {
         <li>It challenges existing beliefs</li>
         <li>It brings lasting new insight</li>
       </ul>
-      <h2>CONTRIBUTIONS</h2>
+      <h2>Contributions</h2>
       <p>In this Policy, the term "Contributions" means:</p>
       <ul>
         <li>
@@ -281,7 +281,7 @@ const AcceptableUsePage: NextPage = () => {
         </li>
         <li>misrepresents your identity or who the Contribution is from.</li>
       </ul>
-      <h2>REVIEWS AND RATINGS</h2>
+      <h2>Reviews And Ratings</h2>
       <p>When your Contribution is a review or rating, you also agree that:</p>
       <ul>
         <li>
@@ -304,7 +304,7 @@ const AcceptableUsePage: NextPage = () => {
           reviews, whether positive or negative.
         </li>
       </ul>
-      <h2>REPORTING A BREACH OF THIS POLICY</h2>
+      <h2>Reporting A Breach Of This Policy</h2>
       <p>
         We may but are under no obligation to review or moderate the
         Contributions made on the Services and we expressly exclude our
@@ -380,7 +380,7 @@ const AcceptableUsePage: NextPage = () => {
         into an agreement with Butterfy (Association) for the use of the
         Services.
       </p>
-      <h2>HOW CAN YOU CONTACT US ABOUT THIS POLICY?</h2>
+      <h2>How Can You Contact Us About This Policy?</h2>
       <p>
         If you have any further questions or comments or wish to report any
         problematic Content or Contribution, you may contact us by:

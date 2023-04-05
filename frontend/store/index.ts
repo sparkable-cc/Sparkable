@@ -3,6 +3,7 @@ import { articlesApi } from "./api/articlesApi";
 import { authApi } from "./api/authApi";
 import { trackingApi } from "./api/trackingApi";
 import { submissionApi } from "./api/submissionApi";
+import { votingApi } from './api/votingApi';
 import UIReducer from "./UIslice";
 import submissionReducer from "./submissionSlice";
 
@@ -12,6 +13,7 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [submissionApi.reducerPath]: submissionApi.reducer,
     [trackingApi.reducerPath]: trackingApi.reducer,
+    [votingApi.reducerPath]: votingApi.reducer,
     UI: UIReducer,
     submission: submissionReducer
   },
@@ -22,7 +24,8 @@ export const store = configureStore({
       .concat(articlesApi.middleware)
       .concat(authApi.middleware)
       .concat(submissionApi.middleware)
-      .concat(trackingApi.middleware);
+      .concat(trackingApi.middleware)
+      .concat(votingApi.middleware);
   },
 });
 

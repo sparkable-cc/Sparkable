@@ -1,8 +1,10 @@
-import { ViewedLinkByUserData } from "../../../domain/models/ViewedLinkByUserData";
-import { ViewedLinkByUserDataDto } from "../../../domain/models/ViewedLinkByUserDataDto";
-import { ViewedLinkByUserDataRepository } from "../../../domain/repositories/ViewedLinkByUserDataRepository";
+import { ViewedLinkByUserData } from '../../../domain/models/ViewedLinkByUserData';
+import { ViewedLinkByUserDataDto } from '../../../domain/models/ViewedLinkByUserDataDto';
+import { ViewedLinkByUserDataRepository } from '../../../domain/repositories/ViewedLinkByUserDataRepository';
 
-export class ViewedLinkByUserDataRepositoryInMemory implements ViewedLinkByUserDataRepository {
+export class ViewedLinkByUserDataRepositoryInMemory
+  implements ViewedLinkByUserDataRepository
+{
   collection: ViewedLinkByUserDataDto[];
 
   constructor() {
@@ -25,4 +27,8 @@ export class ViewedLinkByUserDataRepositoryInMemory implements ViewedLinkByUserD
     return new Promise((resolve) => resolve([this.collection, this.collection.length]));
   }
 
+  getAllDataByUserByCycleNotVoted(userUuid: string, cycle: number): Promise<ViewedLinkByUserDataDto[]> {
+    const data = this.collection.filter((data) => data.userUuid === userUuid);
+    return new Promise((resolve) => resolve(data));
+  }
 }

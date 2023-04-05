@@ -69,6 +69,7 @@ describe('GET /links', () => {
 
   it('returns 200 sorted by newest first', async () => {
     await LinkFactory.create();
+    await new Promise(f => setTimeout(f, 1000));
     await LinkFactory.create();
 
     const res = await request(app).get('/links?sort=-date');

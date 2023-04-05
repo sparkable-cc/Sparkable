@@ -7,6 +7,8 @@ import { useRouter } from 'next/router';
 import { resetSubmission } from '../../store/submissionSlice';
 import { useAppDispatch } from "../../store/hooks";
 import { storageKeys } from '../../utils/storageKeys';
+import { selectIsVotingBannerVisible } from "../../store/UIslice";
+import { useAppSelector } from "../../store/hooks";
 
 interface Props extends PropsWithChildren {
   onSubmit?: () => void
@@ -26,6 +28,7 @@ export const CreateSubmissionLayout = ({
 }: Props) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const isVotingBannerVisible = useAppSelector(selectIsVotingBannerVisible);
 
   const onCancel = () => {
     router.push("/");
@@ -38,7 +41,7 @@ export const CreateSubmissionLayout = ({
   }
 
   return (
-    <div className={styles.createWrapper}>
+    <div className={classNames(styles.createWrapper, {[styles.withVoitingBanner]: isVotingBannerVisible})}>
       <div className={styles.submissionWrapper}>
         <header className={styles.submissionHeader}>
           {isBackButtonAvailable && <BackButton>Back</BackButton>}

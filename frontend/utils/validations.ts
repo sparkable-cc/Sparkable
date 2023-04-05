@@ -20,7 +20,7 @@ export const signUpSchema = Joi.object({
 
   password: Joi.string()
     .min(8)
-    .pattern(new RegExp('^[a-zA-Z0-9!@#$%&*,]{3,30}$'))
+    .pattern(new RegExp('^[a-zA-Z0-9!@#$%&*,?)(~`\\/><. ]{3,30}$'))
     .required()
     .messages({
       'string.pattern.base':
@@ -49,13 +49,13 @@ export const passwordRecoverySchema = Joi.object({
       'string.email':
         'This email is not valid. Please check for spelling errors and try again.',
       'string.empty': 'Email is required',
-    })
+    }),
 });
 
 export const passwordResetSchema = Joi.object({
   password: Joi.string()
     .min(8)
-    .pattern(new RegExp('^[a-zA-Z0-9!@#$%&*,]{3,30}$'))
+    .pattern(new RegExp('^[a-zA-Z0-9!@#$%&*,?)(~`\\/><. ]{3,30}$'))
     .required()
     .messages({
       'string.pattern.base':

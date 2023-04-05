@@ -36,6 +36,7 @@
 #### Error Response
 
 **Code** : `400 INVALID DATE`
+**Code** : `400 DATE OUTSIDE OF VOTING CYCLES`
 **Code** : `500 INTERNAL SERVER ERROR`
 
 

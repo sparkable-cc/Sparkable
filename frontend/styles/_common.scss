@@ -1,12 +1,6 @@
-@import "./variables.scss";
+@import './variables.scss';
 
 // CONTAINERS
-.mainWrapper {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
 .container {
   width: calc(100% - 260px);
   padding-left: 40px;
@@ -30,7 +24,7 @@
   font-weight: 500;
   padding: 0 $gapS;
   height: 32px;
-  border-radius: 2px;
+  border-radius: 24px;
   color: $colorWhite;
   transition: 0.2s;
   font-size: 1rem;
@@ -94,7 +88,7 @@
   flex-direction: column;
 
   @media only screen and (max-width: $mobile) {
-    min-height: calc(100vh - 140px);
+    min-height: calc(100vh - 170px);
   }
 }
 
@@ -141,7 +135,7 @@
 }
 
 .authLink {
-  color: #264F80;
+  color: #264f80;
   text-decoration: underline;
   font-size: $size14;
 

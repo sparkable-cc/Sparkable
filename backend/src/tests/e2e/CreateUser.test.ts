@@ -47,6 +47,12 @@ describe('POST /user', () => {
 
     expect(req.statusCode).toEqual(201);
     expect(req.body.message).toEqual('User created!');
+
+    const repository = dataSource.getRepository(UserEntity);
+    const [users, total] = await repository.findAndCount();
+    expect(total).toEqual(1);
+    expect(users[0].registrationDate).toBeInstanceOf(Date);
+    expect(users[0].stage).toEqual(1);
   });
 
   it('returns 403 when one unique field exists with the same value', async () => {

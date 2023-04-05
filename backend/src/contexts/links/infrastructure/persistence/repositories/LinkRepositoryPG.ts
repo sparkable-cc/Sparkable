@@ -1,9 +1,10 @@
+import { Any, DataSource, In } from 'typeorm';
+import { Link } from '../../../domain/models/Link';
+import { LinkDto } from '../../../domain/models/LinkDto';
+import { ViewedLinkByUserData } from '../../../domain/models/ViewedLinkByUserData';
+import { ViewedLinkByUserDataDto } from '../../../domain/models/ViewedLinkByUserDataDto';
 import { LinkRepository } from '../../../domain/repositories/LinkRepository';
 import { LinkEntity } from '../entities/LinkEntity';
-import { DataSource, Any } from 'typeorm';
-import { LinkDto } from '../../../domain/models/LinkDto';
-import { Link } from '../../../domain/models/Link';
-
 
 export class LinkRepositoryPG implements LinkRepository {
   private repository;
@@ -15,7 +16,11 @@ export class LinkRepositoryPG implements LinkRepository {
     this.repository = dataSource.getRepository(LinkEntity);
   }
 
-  async getAllLinks(sort?:string, categories?:string, page?:number): Promise<[LinkDto[], number]> {
+  async getAllLinks(
+    sort?: string,
+    categories?: string,
+    page?: number,
+  ): Promise<[LinkDto[], number]> {
     let query: Record<string, any> = {};
 
     const categoriesToFilter = categories?.split(',');
@@ -28,14 +33,14 @@ export class LinkRepositoryPG implements LinkRepository {
     }
   }
 
-  async getLinkById(id:number): Promise<LinkDto | null> {
-    return this.repository.findOneBy({id:id});
+  async getLinkById(id: number): Promise<LinkDto | null> {
+    return this.repository.findOneBy({ id: id });
   }
 
-  async storeLink(link: Link) {
+  async storeLink(link: Link): Promise<LinkDto> {
     let linkDto = link.toDto();
     const linkEntity = this.repository.create(linkDto);
-    await this.repository.save(linkEntity);
+    return this.repository.save(linkEntity);
   }
 
   async findLink(field: string, value: string): Promise<LinkDto | null> {
@@ -45,11 +50,24 @@ export class LinkRepositoryPG implements LinkRepository {
     });
   }
 
-  private addQueryFilterByCategories(categoriesToFilter: string[] | undefined, query: Record<string, any>) {
+  async getLinkCollectionNotOwned(uuidCollection: Array<string>, userUuid: string): Promise<LinkDto[]> {
+    return await this.repository.createQueryBuilder('links')
+      .where(
+        'links.uuid IN (:...uuidCollection)',
+        { uuidCollection }
+      )
+      .andWhere('links.userUuid != :userUuid', {userUuid})
+      .getMany();
+  }
+
+  private addQueryFilterByCategories(
+    categoriesToFilter: string[] | undefined,
+    query: Record<string, any>,
+  ) {
     if (categoriesToFilter) {
-      const categoriesFilter: { categories: { slug: string; }; }[] = [];
-      categoriesToFilter.forEach(category => {
-          categoriesFilter.push({ categories: { slug: category } });
+      const categoriesFilter: { categories: { slug: string } }[] = [];
+      categoriesToFilter.forEach((category) => {
+        categoriesFilter.push({ categories: { slug: category } });
       });
 
       query.relations = { categories: true };
@@ -59,18 +77,23 @@ export class LinkRepositoryPG implements LinkRepository {
     return query;
   }
 
-  private async findSortingByDate(query: Record<string, any>, page?:number): Promise<[LinkDto[], number]> {
-    query.order = { date: "DESC" };
+  private async findSortingByDate(
+    query: Record<string, any>,
+    page?: number,
+  ): Promise<[LinkDto[], number]> {
+    query.order = { date: 'DESC' };
     query.take = this.PAGINATION;
 
     if (page) {
-        query.skip = (page-1)*this.PAGINATION;
+      query.skip = (page - 1) * this.PAGINATION;
     }
 
     return await this.repository.findAndCount(query);
   }
 
-  private async findSortingRandom(query: Record<string, any>): Promise<[LinkDto[], number]> {
+  private async findSortingRandom(
+    query: Record<string, any>,
+  ): Promise<[LinkDto[], number]> {
     const result = await this.repository.findAndCount(query);
     //improve this in the future... poor performance with lots of data
     this.shuffle(result[0]);
@@ -78,16 +101,20 @@ export class LinkRepositoryPG implements LinkRepository {
     return result;
   }
 
-  private shuffle(array:any) {
-    let currentIndex = array.length, randomIndex;
+  private shuffle(array: any) {
+    let currentIndex = array.length,
+      randomIndex;
     while (currentIndex != 0) {
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
 
       [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex], array[currentIndex]];
+        array[randomIndex],
+        array[currentIndex],
+      ];
     }
 
     return array;
   }
+
 }
