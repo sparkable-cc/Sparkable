@@ -1,6 +1,7 @@
 import styles from "./index.module.scss";
 import React from "react";
-import { useLinkTracker } from "../../utils/useLinkTracker";
+import { useLazyPostViewedLinkByUserDataQuery } from "../../store/api/trackingApi";
+import { storageKeys } from "../../utils/storageKeys";
 
 interface Props {
   link: string;
@@ -8,9 +9,19 @@ interface Props {
 }
 
 export const ArticleLink = ({ link, uuid }: Props) => {
+  const [triggerPostViewedLinkByUserData] = useLazyPostViewedLinkByUserDataQuery();
+
   const onLinkTrack = () => {
-    if (!uuid) return;
-    useLinkTracker(uuid); // eslint-disable-line
+    const userUuid = sessionStorage.getItem(storageKeys.userId);
+
+    if (!userUuid || !uuid) return;
+
+    const data = {
+      userUuid,
+      linkUuid: uuid
+    };
+
+    triggerPostViewedLinkByUserData(data);
   };
 
   return (
