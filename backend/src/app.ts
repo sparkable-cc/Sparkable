@@ -7,7 +7,7 @@ import { CreateLinkAction } from './contexts/links/actions/CreateLinkAction';
 import { CreateViewedLinkByUserDataAction } from './contexts/links/actions/CreateViewedLinkByUserDataAction';
 import { GetAllCategoriesAction } from './contexts/links/actions/GetAllCategoriesAction';
 import { GetAllLinksAction } from './contexts/links/actions/GetAllLinksAction';
-import { GetViewedLinksInCurrentCycleAction } from './contexts/links/actions/GetViewedLinksInCurrentCycleAction';
+import { GetViewedLinksAction } from './contexts/links/actions/GetViewedLinksAction';
 import { GetLinkByIdAction } from './contexts/links/actions/GetLinkByIdAction';
 import { CategoryNotFoundException } from './contexts/links/domain/exceptions/CategoryNotFoundException';
 import { CategoryRestrictionException } from './contexts/links/domain/exceptions/CategoryRestrictionException';
@@ -35,6 +35,12 @@ import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/re
 import { AuthServiceAuth0 } from './contexts/users/infrastructure/services/AuthServiceAuth0';
 import { MailerServiceGD } from './contexts/users/infrastructure/services/MailerServiceGD';
 import { GetVotingStatusAction } from './contexts/voting/actions/GetVotingStatus';
+import { CreateVotingAction } from './contexts/voting/actions/CreateVotingAction';
+import { VoteRepositoryPG } from './contexts/voting/infrastructure/persistence/repositories/VoteRepositoryPG';
+import { VotingRepositoryPG } from './contexts/voting/infrastructure/persistence/repositories/VotingRepositoryPG';
+import { NumberOfVotesExceededException } from './contexts/voting/domain/exceptions/NumberOfVotesExceededException';
+import { UserHasNotOpenedAnyLinksException } from './contexts/voting/domain/exceptions/UserHasNotOpenedAnyLinksException';
+import { LinkNotOpenedByUserException } from './contexts/voting/domain/exceptions/LinkNotOpenedByUserException';
 import { DateNotValidException } from './contexts/voting/domain/exceptions/DateNotValidException';
 import { DateOutsideCycleException } from './contexts/voting/domain/exceptions/DateOutsideCycleException';
 import dataSource from './data-source';
@@ -340,7 +346,7 @@ app.post('/viewed-link-user', checkJwt, async (req: Request, res: Response) => {
   );
 
   createViewedLinkByUserDataAction
-    .execute(req.body.userUuid, req.body.linkUuid, req.body.cycle)
+    .execute(req.body.userUuid, req.body.linkUuid)
     .then(() => {
       res.status(201);
       res.send({ message: 'Data created!' });
@@ -403,7 +409,7 @@ app.post('/voting-status', async (req: Request, res: Response) => {
 });
 
 app.get('/viewed-links-in-current-cycle', checkJwt, async (req: Request, res: Response) => {
-  const getAllMyViewedLinkAction = new GetViewedLinksInCurrentCycleAction(
+  const getAllMyViewedLinkAction = new GetViewedLinksAction(
     new ViewedLinkByUserDataRepositoryPG(dataSource),
     new LinkRepositoryPG(dataSource),
   );
@@ -428,6 +434,53 @@ app.get('/viewed-links-in-current-cycle', checkJwt, async (req: Request, res: Re
           return res.send(500);
       }
     });
+});
+
+app.post('/votes', checkJwt, async (req: Request, res: Response) => {
+  const createVoteAction = new CreateVotingAction(
+    new ViewedLinkByUserDataRepositoryPG(dataSource),
+    new VoteRepositoryPG(dataSource),
+    new VotingRepositoryPG(dataSource),
+    new UserRepositoryPG(dataSource),
+    new LinkRepositoryPG(dataSource)
+  );
+
+  createVoteAction
+    .execute(
+      req.body.userUuid,
+      req.body.votes
+    )
+    .then(() => {
+      res.status(200);
+      res.send({ message: 'Voting created!' });
+    })
+    .catch((error) => {
+      switch (error.constructor) {
+        case MandatoryFieldEmptyException:
+          res.status(400);
+          res.send({ message: 'Bad request' });
+          break;
+        case NumberOfVotesExceededException:
+          res.status(400);
+          res.send({ message: 'Number of votes exceeded' });
+          break;
+        case UserHasNotOpenedAnyLinksException:
+          res.status(403);
+          res.send({ message: 'User has not opened any link' });
+          break;
+        case LinkNotOpenedByUserException:
+          res.status(403);
+          res.send({ message: 'User has not opened any of these link' });
+          break;
+        default:
+          console.log(
+            'Failed to do something async with an unspecified error: ',
+            error,
+          );
+          return res.send(500);
+      }
+    });
+
 });
 
 export default app;

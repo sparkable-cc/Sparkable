@@ -1,0 +1,1 @@
+export class LinkNotOpenedByUserException extends Error {}

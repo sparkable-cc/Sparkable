@@ -5,13 +5,13 @@ import dataSource from '../data-source';
 export default class ViewedLinkByUserDataFactory {
 
   public static async store(
-    params: { userUuid: string; linkUuid: string; cycle: number; voted?: boolean }
+    params: { userUuid: string; linkUuid: string; cycle?: number; voted?: boolean }
   ): Promise<ViewedLinkByUserDataDto> {
     const viewLinkByUserDataRepository = dataSource.getRepository(ViewedLinkByUserDataEntity);
     return await viewLinkByUserDataRepository.save({
       userUuid: params.userUuid,
       linkUuid: params.linkUuid,
-      cycle: params.cycle,
+      cycle: params.cycle || 1,
       userStage: 1,
       linkStage: 1,
       voted: params.voted || false

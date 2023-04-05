@@ -11,20 +11,24 @@ export class ViewedLinkByUserDataRepositoryInMemory
     this.collection = [];
   }
 
-  store(data: ViewedLinkByUserData) {
+  store(data: ViewedLinkByUserData){
     this.collection.push(data.toDto());
   }
 
   findData(params: Object): Promise<ViewedLinkByUserDataDto | null> {
-    if (this.collection) {
+    if (this.collection.length) {
       return new Promise((resolve) => resolve(this.collection[0]));
     } else {
       return new Promise((resolve) => resolve(null));
     }
   }
 
-  getAllDataByUserByCycleNotVoted(userUuid: string, cycle: number): Promise<ViewedLinkByUserDataDto[]> {
+  getAllData(params: Object): Promise<[ViewedLinkByUserDataDto[], number]> {
+    return new Promise((resolve) => resolve([this.collection, this.collection.length]));
+  }
+
+  getAllDataByUserNotVoted(userUuid: string): Promise<[ViewedLinkByUserDataDto[], number]> {
     const data = this.collection.filter((data) => data.userUuid === userUuid);
-    return new Promise((resolve) => resolve(data));
+    return new Promise((resolve) => resolve([data, data.length]));
   }
 }

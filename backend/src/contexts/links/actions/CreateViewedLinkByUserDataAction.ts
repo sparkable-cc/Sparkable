@@ -24,20 +24,11 @@ export class CreateViewedLinkByUserDataAction {
     this.viewedLinkByUserDataRepository = viewedLinkByUserDataRepository;
   }
 
-  async execute(userUuid: string, linkUuid: string, cycle: number) {
-    if (!userUuid || !linkUuid || !cycle) {
-      throw new MandatoryFieldEmptyException();
-    }
-
-    const userDto = await this.checkUserDoesExist(userUuid);
-    const linkDto = await this.checkLinkDoesExist(linkUuid);
-
-    const user = User.factory(userDto);
-    const link = Link.factory(linkDto);
-
-    const data = new ViewedLinkByUserData(user, link, cycle);
-
-    await this.checkDataIsNew(userUuid, linkUuid, user.getStage, link.stage);
+  async execute(userUuid: string, linkUuid: string) {
+    const data = new ViewedLinkByUserData(userUuid, linkUuid, 1);
+    await this.checkUserDoesExist(userUuid);
+    await this.checkLinkDoesExist(linkUuid);
+    await this.checkDataIsNew(userUuid, linkUuid);
     this.viewedLinkByUserDataRepository.store(data);
   }
 
@@ -57,12 +48,10 @@ export class CreateViewedLinkByUserDataAction {
     return link;
   }
 
-  private async checkDataIsNew(userUuid: string, linkUuid: string, userStage: number, linkStage: number) {
+  private async checkDataIsNew(userUuid: string, linkUuid: string) {
     const dataInDatabase = await this.viewedLinkByUserDataRepository.findData({
       userUuid: userUuid,
-      linkUuid: linkUuid,
-      userStage: userStage,
-      linkStage: linkStage
+      linkUuid: linkUuid
     });
     if (dataInDatabase)
       throw new DataDoesExistException();
