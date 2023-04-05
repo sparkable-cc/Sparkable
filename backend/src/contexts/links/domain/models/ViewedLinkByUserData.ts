@@ -1,19 +1,14 @@
-import { MandatoryFieldEmptyException } from "../../../users/domain/exceptions/MandatoryFieldEmptyException";
-import { User } from "../../../users/domain/models/User";
-import { Stage } from "../../../voting/domain/models/Stage";
-import { Link } from "./Link";
-import { ViewedLinkByUserDataDto } from "./ViewedLinkByUserDataDto";
+import { MandatoryFieldEmptyException } from '../../../users/domain/exceptions/MandatoryFieldEmptyException';
+import { User } from '../../../users/domain/models/User';
+import { Link } from './Link';
+import { ViewedLinkByUserDataDto } from './ViewedLinkByUserDataDto';
 
 export class ViewedLinkByUserData {
   user: User;
   link: Link;
   cycle: number;
 
-  constructor(
-    user: User,
-    link: Link,
-    cycle: number
-  ) {
+  constructor(user: User, link: Link, cycle: number) {
     if (!user || !link || !cycle) {
       throw new MandatoryFieldEmptyException();
     }
@@ -28,8 +23,8 @@ export class ViewedLinkByUserData {
       linkUuid: this.link.uuid,
       cycle: this.cycle,
       userStage: this.user.getStage,
-      linkStage: this.link.stage
+      linkStage: this.link.stage,
+      voted: false
     };
   }
-
 }
