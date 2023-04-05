@@ -1,9 +1,14 @@
-import { beforeEach } from 'node:test';
 import request from 'supertest';
 import app from '../../app';
+import { ViewedLinkByUserDataEntity } from '../../contexts/links/infrastructure/persistence/entities/ViewedLinkByUserDataEntity';
 import { UserEntity } from '../../contexts/users/infrastructure/persistence/entities/UserEntity';
+import { VoteEntity } from '../../contexts/voting/infrastructure/persistence/entities/VoteEntity';
+import { VotingEntity } from '../../contexts/voting/infrastructure/persistence/entities/VotingEntity';
 import dataSource from '../../data-source';
 import UserFactory from '../../factories/UserFactory';
+import LinkFactory from '../../factories/LinkFactory';
+import ViewedLinkByUserDataFactory from '../../factories/ViewedLinkByUserDataFactory';
+import { LinkEntity } from '../../contexts/links/infrastructure/persistence/entities/LinkEntity';
 
 describe('POST /votes', () => {
   let auth: { body: { access_token: string; uuid: string; } };
@@ -17,7 +22,6 @@ describe('POST /votes', () => {
   });
 
   beforeEach(async () => {
-    // Create user and login
     const email = 'admin@butterfy.me';
     const password = 'password';
     const username = 'admin';
@@ -26,11 +30,17 @@ describe('POST /votes', () => {
   });
 
   afterEach(async () => {
-    // const repository = dataSource.getRepository(LinkEntity);
-    // await repository.delete({});
+    const repository = dataSource.getRepository(LinkEntity);
+    await repository.delete({});
 
-    // const categoryRepository = dataSource.getRepository(CategoryEntity);
-    // await categoryRepository.delete({});
+    const voteRepository = dataSource.getRepository(VoteEntity);
+    await voteRepository.delete({});
+
+    const votingRepository = dataSource.getRepository(VotingEntity);
+    await votingRepository.delete({});
+
+    const dataRepository = dataSource.getRepository(ViewedLinkByUserDataEntity);
+    await dataRepository.delete({});
 
     const userRepository = dataSource.getRepository(UserEntity);
     await userRepository.delete({});
@@ -52,143 +62,141 @@ describe('POST /votes', () => {
     expect(res.body.message).toEqual('Bad request');
   });
 
-  // it('returns 400 when the category limit is reached', async () => {
-  //   const res = await request(app)
-  //     .post('/links')
-  //     .auth(auth.body.access_token, { type: 'bearer' })
-  //     .send({
-  //       title: 'title',
-  //       url: 'http://example',
-  //       userUuid: 'xxxxxx',
-  //       categories: [
-  //         {id:1, name:'name', slug:'name'},
-  //         {id:2, name:'name2', slug:'name2'},
-  //         {id:3, name:'name3', slug:'name3'}
-  //       ],
-  //     });
+  it('returns 400 when the number of votes exceeded', async () => {
+    const res = await request(app)
+      .post('/votes')
+      .auth(auth.body.access_token, { type: 'bearer' })
+      .send({
+        userUuid: auth.body.uuid,
+        votes: [
+          {linkUuid: 'linkUuid'},
+          {linkUuid: 'linkUuid2'},
+          {linkUuid: 'linkUuid3'},
+          {linkUuid: 'linkUuid4'},
+          {linkUuid: 'linkUuid5'},
+          {linkUuid: 'linkUuid6'},
+          {linkUuid: 'linkUuid7'},
+          {linkUuid: 'linkUuid8'}
+        ]
+      });
 
-  //   expect(res.statusCode).toEqual(400);
-  //   expect(res.body.message).toEqual('Category limit restriction!');
-  // });
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toEqual('Number of votes exceeded');
+  });
 
-  // it('returns 400 when the category does not exist', async () => {
-  //   const res = await request(app)
-  //     .post('/links')
-  //     .auth(auth.body.access_token, { type: 'bearer' })
-  //     .send({
-  //       title: 'title',
-  //       url: 'http://example',
-  //       userUuid: 'xxxxxx',
-  //       categories: [
-  //         {id:1, name:'name', slug:'name'}
-  //       ],
-  //     });
+  it('returns 403 when a user has not opened any link', async () => {
+    const res = await request(app)
+      .post('/votes')
+      .auth(auth.body.access_token, { type: 'bearer' })
+      .send({
+        userUuid: auth.body.uuid,
+        votes: [
+          {linkUuid: 'linkUuid'}
+        ]
+      });
 
-  //   expect(res.statusCode).toEqual(400);
-  //   expect(res.body.message).toEqual('Category not found!');
-  // });
+    expect(res.statusCode).toEqual(403);
+    expect(res.body.message).toEqual('User has not opened any link');
+  });
 
-  // it('returns 400 when the user does not exist', async () => {
-  //   const category = await CategoryFactory.create('Environment', 'environment');
+  it('returns 403 when user try to vote a link has not opened by him', async () => {
+    ViewedLinkByUserDataFactory.store({
+      userUuid: auth.body.uuid,
+      linkUuid: 'linkUuid'
+    });
+    ViewedLinkByUserDataFactory.store({
+      userUuid: 'otherUserId',
+      linkUuid: 'linkUuid'
+    });
 
-  //   const res = await request(app)
-  //     .post('/links')
-  //     .auth(auth.body.access_token, { type: 'bearer' })
-  //     .send({
-  //       title: 'title',
-  //       url: 'http://example',
-  //       categories: [category],
-  //       userUuid: 'xxxxxx'
-  //     });
+    const res = await request(app)
+      .post('/votes')
+      .auth(auth.body.access_token, { type: 'bearer' })
+      .send({
+        userUuid: auth.body.uuid,
+        votes: [
+          {linkUuid: 'linkUuid'}, {linkUuid: 'linkUuidSecond'}
+        ]
+      });
 
-  //   expect(res.statusCode).toEqual(400);
-  //   expect(res.body.message).toEqual('User not found!');
-  // });
+    expect(res.statusCode).toEqual(403);
+    expect(res.body.message).toEqual('User has not opened any of these link');
+  });
 
-  // it('returns 403 when link exist', async () => {
-  //   const category = await CategoryFactory.create('Environment', 'environment');
+  it('returns 200 voting with an empty selection', async () => {
+    ViewedLinkByUserDataFactory.store({
+      userUuid: auth.body.uuid,
+      linkUuid: 'linkUuid'
+    });
 
-  //   await request(app)
-  //     .post('/links')
-  //     .auth(auth.body.access_token, { type: 'bearer' })
-  //     .send({
-  //       title: 'title',
-  //       url: 'http://example',
-  //       categories: [category],
-  //       userUuid: auth.body.uuid
-  //     });
+    const res = await request(app)
+      .post('/votes')
+      .auth(auth.body.access_token, { type: 'bearer' })
+      .send({
+        userUuid: auth.body.uuid,
+        votes: []
+      });
 
-  //   const res = await request(app)
-  //     .post('/links')
-  //     .auth(auth.body.access_token, { type: 'bearer' })
-  //     .send({
-  //       title: 'title2',
-  //       url: 'http://example',
-  //       categories: [category],
-  //       userUuid: auth.body.uuid
-  //     });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.message).toEqual('Voting created!');
 
-  //   expect(res.statusCode).toEqual(403);
-  // });
+    const votingRepository = dataSource.getRepository(VotingEntity);
+    const [voting, total] = await votingRepository.findAndCount();
+    expect(total).toEqual(1);
+    expect(voting[0].userUuid).toEqual(auth.body.uuid);
+    expect(voting[0].countVotes).toEqual(0);
+    expect(voting[0].cycle).toEqual(1);
+  });
 
-  // it('returns 201 when the link is created with the mandatory fields', async () => {
-  //   const title = 'title';
-  //   const url = 'http://example2';
-  //   const category = await CategoryFactory.create('name', 'slug');
+  it('returns 200 voting with multiple selection', async () => {
+    const linkUuid = 'linkUuid';
+    const linkUuidSecond = 'linkUuidSecond';
+    LinkFactory.create({ uuid:linkUuid });
+    LinkFactory.create({ uuid:linkUuidSecond });
+    ViewedLinkByUserDataFactory.store({
+      userUuid: auth.body.uuid,
+      linkUuid: linkUuid
+    });
+    ViewedLinkByUserDataFactory.store({
+      userUuid: auth.body.uuid,
+      linkUuid: linkUuidSecond
+    });
 
-  //   const res = await request(app)
-  //     .post('/links')
-  //     .auth(auth.body.access_token, { type: 'bearer' })
-  //     .send({
-  //       title: title,
-  //       url: url,
-  //       categories: [category],
-  //       userUuid: auth.body.uuid
-  //     });
+    const res = await request(app)
+      .post('/votes')
+      .auth(auth.body.access_token, { type: 'bearer' })
+      .send({
+        userUuid: auth.body.uuid,
+        votes: [
+          {linkUuid: linkUuid}, {linkUuid: linkUuidSecond}
+        ]
+      });
 
-  //   expect(res.statusCode).toEqual(201);
-  //   const linkRepository = new LinkRepositoryPG(dataSource);
-  //   const [links, total] = await linkRepository.getAllLinks();
-  //   expect(total).toEqual(1);
-  //   expect(links[0].uuid).not.toBeNull();
-  //   expect(links[0].date).not.toBeNull();
-  //   expect(links[0].title).toEqual(title);
-  //   expect(links[0].url).toEqual(url);
-  //   expect(links[0].userUuid).toEqual(auth.body.uuid);
-  //   expect(links[0].username).toEqual(username);
-  // });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.message).toEqual('Voting created!');
 
-  // it('returns 201 when the link is created with all the fields', async () => {
-  //   const title = 'title';
-  //   const url = 'http://example';
-  //   const image = 'http://image';
-  //   const description = 'description';
-  //   const category = await CategoryFactory.create('name', 'slug');
-  //   const statement = 'Lorem ipsum...';
-  //   const suggestionCategory = 'Sports';
+    const votingRepository = dataSource.getRepository(VotingEntity);
+    const [voting, total] = await votingRepository.findAndCount();
+    expect(total).toEqual(1);
+    expect(voting[0].userUuid).toEqual(auth.body.uuid);
+    expect(voting[0].countVotes).toEqual(2);
+    expect(voting[0].cycle).toEqual(1);
 
-  //   const res = await request(app)
-  //     .post('/links')
-  //     .auth(auth.body.access_token, { type: 'bearer' })
-  //     .send({
-  //       title: title,
-  //       url: url,
-  //       userUuid: auth.body.uuid,
-  //       categories: [category],
-  //       image: image,
-  //       description: description,
-  //       statement: statement,
-  //       suggestionCategory: suggestionCategory
-  //     });
+    const voteRepository = dataSource.getRepository(VoteEntity);
+    const [votes, totalVotes] = await voteRepository.findAndCount();
+    expect(totalVotes).toEqual(2);
+    expect(votes[0].userUuid).toEqual(auth.body.uuid);
+    expect(votes[0].linkUuid).toEqual(linkUuid);
+    expect(votes[0].cycle).toEqual(1);
+    expect(votes[1].userUuid).toEqual(auth.body.uuid);
+    expect(votes[1].linkUuid).toEqual(linkUuidSecond);
 
-  //   expect(res.statusCode).toEqual(201);
-  //   const linkRepository = new LinkRepositoryPG(dataSource);
-  //   const [links, total] = await linkRepository.getAllLinks();
-  //   expect(total).toEqual(1);
-  //   expect(links[0].image).toEqual(image);
-  //   expect(links[0].description).toEqual(description);
-  //   expect(links[0].statement).toEqual(statement);
-  //   expect(links[0].suggestionCategory).toEqual(suggestionCategory);
-  // });
+    const dataRepository = dataSource.getRepository(ViewedLinkByUserDataEntity);
+    const [data, totalData] = await dataRepository.findAndCount();
+
+    expect(totalData).toEqual(2);
+    expect(data[0].voted).toEqual(true);
+    expect(data[1].voted).toEqual(true);
+  });
 
 });

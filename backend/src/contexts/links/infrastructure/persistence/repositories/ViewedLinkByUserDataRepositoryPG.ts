@@ -13,8 +13,18 @@ export class ViewedLinkByUserDataRepositoryPG implements ViewedLinkByUserDataRep
   }
 
   async store(data: ViewedLinkByUserData) {
-    const dataEntity = this.repository.create(data.toDto());
-    await this.repository.save(dataEntity);
+    const dataDto = data.toDto();
+    const params = {
+      userUuid: dataDto.userUuid,
+      linkUuid: dataDto.linkUuid
+    };
+
+    if (await this.findData(params)) {
+      await this.repository.update(params, {voted: dataDto.voted});
+    } else {
+      const dataEntity = this.repository.create(dataDto);
+      await this.repository.insert(dataEntity);
+    }
   }
 
   async findData(params: Object): Promise<ViewedLinkByUserDataDto | null> {
@@ -22,7 +32,7 @@ export class ViewedLinkByUserDataRepositoryPG implements ViewedLinkByUserDataRep
   }
 
   async getAllData(params: Object): Promise<[ViewedLinkByUserDataDto[], number]> {
-    return await this.repository.findAndCount(params);
+    return await this.repository.findAndCount({ where:params });
   }
 
 }

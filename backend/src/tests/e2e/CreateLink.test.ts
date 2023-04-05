@@ -14,16 +14,18 @@ describe('POST /links', () => {
 
   beforeAll(async () => {
     await dataSource.initialize();
+  });
 
+  afterAll(async () => {
+    await dataSource.destroy();
+  });
+
+  beforeEach(async () => {
     const email = 'admin@butterfy.me';
     const password = 'password';
     username = 'admin';
     await UserFactory.create(request, app, email, password, username);
     auth = await UserFactory.signIn(request, app, email, password);
-  });
-
-  afterAll(async () => {
-    await dataSource.destroy();
   });
 
   afterEach(async () => {

@@ -1,26 +1,18 @@
 import { DataSource } from 'typeorm';
-import { Voting } from "../../../domain/models/Voting";
-import { VotingDto } from "../../../domain/models/VotingDto";
-import { VotingRepository } from "../../../domain/repositories/VotingRepository";
-import { VotingEntity } from '../entities/VotingEntity';
+import { Vote } from '../../../domain/models/Vote';
+import { VoteDto } from '../../../domain/models/VoteDto';
+import { VoteRepository } from '../../../domain/repositories/VoteRepository';
+import { VoteEntity } from '../entities/VoteEntity';
 
-export class VoteRepositoryPG implements VotingRepository {
+export class VoteRepositoryPG implements VoteRepository {
   private repository;
 
   constructor(dataSource: DataSource) {
-    this.repository = dataSource.getRepository(VotingEntity);
+    this.repository = dataSource.getRepository(VoteEntity);
   }
 
-  storeVoting(vote: Voting): Promise<VotingDto> {
-    return new Promise((resolve) => resolve(vote.toDto()));
-  }
-
-  getAllVotes(): Promise<VotingDto[] | null> {
-    return new Promise((resolve) => resolve(null));
-  }
-
-  findVote(options: Object): Promise<VotingDto | null> {
-    return new Promise((resolve) => resolve(null));
+  storeVote(vote: Vote): Promise<VoteDto> {
+    return this.repository.save(vote.toDto());
   }
 
 }

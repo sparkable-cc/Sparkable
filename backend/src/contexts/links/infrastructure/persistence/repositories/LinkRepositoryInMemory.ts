@@ -38,7 +38,7 @@ export class LinkRepositoryInMemory implements LinkRepository {
   }
 
   createOneLink(linkUuid:string, userUuid:string) {
-    this.links = [{
+    this.links.push({
       id: 0,
       uuid: linkUuid,
       userUuid: userUuid,
@@ -52,6 +52,6 @@ export class LinkRepositoryInMemory implements LinkRepository {
       statement: 'statement',
       suggestionCategory: 'Other',
       stage: 1
-    }];
+    });
   }
 }

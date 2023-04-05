@@ -1,4 +1,3 @@
-import { rejects } from 'assert';
 import { User } from '../../../domain/models/User';
 import { UserDto } from '../../../domain/models/UserDto';
 import { UserRepository } from '../../../domain/repositories/UserRepository';

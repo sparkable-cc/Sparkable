@@ -37,6 +37,10 @@ import { DateNotValidException } from './contexts/voting/domain/exceptions/DateN
 import { GetVotingStatusAction } from './contexts/voting/actions/GetVotingStatus';
 import { CreateVotingAction } from './contexts/voting/actions/CreateVotingAction';
 import { VoteRepositoryPG } from './contexts/voting/infrastructure/persistence/repositories/VoteRepositoryPG';
+import { VotingRepositoryPG } from './contexts/voting/infrastructure/persistence/repositories/VotingRepositoryPG';
+import { NumberOfVotesExceededException } from './contexts/voting/domain/exceptions/NumberOfVotesExceededException';
+import { UserHasNotOpenedAnyLinksException } from './contexts/voting/domain/exceptions/UserHasNotOpenedAnyLinksException';
+import { LinkNotOpenedByUserException } from './contexts/voting/domain/exceptions/LinkNotOpenedByUserException';
 
 const app: Express = express();
 
@@ -398,25 +402,39 @@ app.post('/voting-status', async (req: Request, res: Response) => {
 app.post('/votes', checkJwt, async (req: Request, res: Response) => {
   const createVoteAction = new CreateVotingAction(
     new ViewedLinkByUserDataRepositoryPG(dataSource),
-    new VoteRepositoryPG(dataSource)
+    new VoteRepositoryPG(dataSource),
+    new VotingRepositoryPG(dataSource),
+    new UserRepositoryPG(dataSource),
+    new LinkRepositoryPG(dataSource)
   );
 
   createVoteAction
     .execute(
       req.body.userUuid,
-      req.body.votes,
-      req.body.cycle
+      req.body.votes
     )
     .then(() => {
       res.status(200);
-      res.send('');
+      res.send({ message: 'Voting created!' });
     })
     .catch((error) => {
       switch (error.constructor) {
-        // case DateNotValidException:
-        //   res.status(400);
-        //   res.send({ message: 'Invalid date!' });
-        //   break;
+        case MandatoryFieldEmptyException:
+          res.status(400);
+          res.send({ message: 'Bad request' });
+          break;
+        case NumberOfVotesExceededException:
+          res.status(400);
+          res.send({ message: 'Number of votes exceeded' });
+          break;
+        case UserHasNotOpenedAnyLinksException:
+          res.status(403);
+          res.send({ message: 'User has not opened any link' });
+          break;
+        case LinkNotOpenedByUserException:
+          res.status(403);
+          res.send({ message: 'User has not opened any of these link' });
+          break;
         default:
           console.log(
             'Failed to do something async with an unspecified error: ',

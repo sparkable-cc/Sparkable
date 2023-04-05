@@ -1,4 +1,3 @@
-import { Link } from "../../links/domain/models/Link";
 import { LinkUuidDto } from "../../links/domain/models/LinkUuidDto";
 import { ViewedLinkByUserData } from "../../links/domain/models/ViewedLinkByUserData";
 import { ViewedLinkByUserDataRepository } from "../../links/domain/repositories/ViewedLinkByUserDataRepository";
@@ -15,23 +14,23 @@ import { CreateVotingAction } from "./CreateVotingAction";
 
 describe('Create voting action', () => {
   let viewedLinkByUserDataRepository: ViewedLinkByUserDataRepository;
+  let voteRepository: VoteRepositoryInMemory;
   let votingRepository: VotingRepositoryInMemory;
-  let voteRepository: VoteRepositoryInMemory
   let createVotingAction: CreateVotingAction;
   let userRepository: UserRepositoryInMemory;
   let linkRepository: LinkRepositoryInMemory;
 
   beforeEach(async () => {
     viewedLinkByUserDataRepository = new ViewedLinkByUserDataRepositoryInMemory();
-    votingRepository = new VotingRepositoryInMemory();
     voteRepository = new VoteRepositoryInMemory();
+    votingRepository = new VotingRepositoryInMemory();
     userRepository = new UserRepositoryInMemory();
     linkRepository = new LinkRepositoryInMemory();
 
     createVotingAction = new CreateVotingAction(
       viewedLinkByUserDataRepository,
-      votingRepository,
       voteRepository,
+      votingRepository,
       userRepository,
       linkRepository
     );
@@ -148,6 +147,7 @@ describe('Create voting action', () => {
     viewedLinkByUserDataRepository.store(new ViewedLinkByUserData(userUuid, linkUuidSecond, 1));
     userRepository.createWithOne(userUuid);
     linkRepository.createOneLink(linkUuid, userUuid);
+    linkRepository.createOneLink(linkUuidSecond, 'otherUserUuid');
 
     const votes = [{linkUuid: linkUuid}, {linkUuid: linkUuidSecond}];
     await createVotingAction.execute(userUuid, votes);

@@ -1,11 +1,11 @@
-import { count } from "console";
-import { link } from "fs";
+import { LinkDto } from "../../links/domain/models/LinkDto";
 import { LinkUuidDto } from "../../links/domain/models/LinkUuidDto";
 import { ViewedLinkByUserData } from "../../links/domain/models/ViewedLinkByUserData";
 import { ViewedLinkByUserDataDto } from "../../links/domain/models/ViewedLinkByUserDataDto";
 import { LinkRepository } from "../../links/domain/repositories/LinkRepository";
 import { ViewedLinkByUserDataRepository } from "../../links/domain/repositories/ViewedLinkByUserDataRepository";
 import { MandatoryFieldEmptyException } from "../../users/domain/exceptions/MandatoryFieldEmptyException";
+import { UserDto } from "../../users/domain/models/UserDto";
 import { UserRepository } from "../../users/domain/repositories/UserRepository";
 import { LinkNotOpenedByUserException } from "../domain/exceptions/LinkNotOpenedByUserException";
 import { NumberOfVotesExceededException } from "../domain/exceptions/NumberOfVotesExceededException";
@@ -18,21 +18,21 @@ import { GetCurrentCycleService } from "../domain/services/GetCurrentCycleServic
 
 export class CreateVotingAction {
   viewedLinkByUserDataRepository: ViewedLinkByUserDataRepository;
-  votingRepository: VotingRepository;
   voteRepository: VoteRepository;
+  votingRepository: VotingRepository;
   userRepository: UserRepository;
   linkRepository: LinkRepository;
 
   constructor(
     viewedLinkByUserDataRepository: ViewedLinkByUserDataRepository,
-    votingRepository: VotingRepository,
     voteRepository: VoteRepository,
+    votingRepository: VotingRepository,
     userRepository: UserRepository,
     linkRepository: LinkRepository
   ) {
     this.viewedLinkByUserDataRepository = viewedLinkByUserDataRepository;
-    this.votingRepository = votingRepository;
     this.voteRepository = voteRepository;
+    this.votingRepository = votingRepository;
     this.userRepository = userRepository;
     this.linkRepository = linkRepository;
   }
@@ -48,59 +48,13 @@ export class CreateVotingAction {
     await this.checkUserHasOpenedALink(total);
     await this.checkLinksHaveOpened(votes, dataCollection);
 
-    // STORE VOTES
-
-    //REFACTORING SERVICES GET THE USER INSTANCE
-    const user = await this.userRepository.findUser({uuid: userUuid});
-
     const currentCycle = GetCurrentCycleService.execute().cycle;
+    let countVotes = await this.storeVotes(userUuid, votes, currentCycle);
 
-    let countVotes = 0;
-    for (let index = 0; index < votes.length; index++) {
-      const vote = votes[index];
-
-      //REFACTORING SERVICES GET THE LINK INSTANCE
-      const link = await this.linkRepository.findLink('uuid', vote.linkUuid);
-
-      // console.log(link?.userUuid);
-      // console.log(user?.uuid);
-      // console.log(link?.userUuid !== user?.uuid);
-
-      //IGNORE VOTE IF YOU ARE THE OWNER
-      if (link?.userUuid !== user?.uuid) {
-        countVotes++;
-        await this.voteRepository.storeVote(
-          new Vote({
-            userUuid,
-            linkUuid: vote.linkUuid,
-            cycle: currentCycle,
-            userStage: user?.stage || 0,
-            linkStage: link?.stage || 0,
-          })
-        );
-      }
-    };
-
-    // STORE VOTING
     const voting = new Voting(userUuid, currentCycle, countVotes);
     await this.votingRepository.storeVoting(voting);
 
-    //UPDATES VIEWEDLINKSDATA - TEST E2E
-    const votedLinkUuidCollection = votes.map(vote => {
-      return vote.linkUuid ;
-    });
-    dataCollection.forEach(async data => {
-      if (votedLinkUuidCollection.includes(data.linkUuid)) {
-        await this.viewedLinkByUserDataRepository.store(
-          new ViewedLinkByUserData(
-            data.userUuid,
-            data.linkUuid,
-            data.cycle,
-            true
-          )
-        );
-      }
-    });
+    this.updateAsVotedViewedLinksData(votes, dataCollection);
   }
 
   private userUuidIsNotEmpty(userUuid: string) {
@@ -128,6 +82,53 @@ export class CreateVotingAction {
     votes.forEach(vote => {
       if (!linkUuidCollection.includes(vote.linkUuid)) {
         throw new LinkNotOpenedByUserException;
+      }
+    });
+  }
+
+  private async storeVotes(userUuid: string, votes: LinkUuidDto[], currentCycle: number) {
+    const userDto = await this.userRepository.findUser({ uuid: userUuid });
+
+    let countVotes = 0;
+    for (let index = 0; index < votes.length; index++) {
+      const vote = votes[index];
+      const linkDto = await this.linkRepository.findLink('uuid', vote.linkUuid);
+
+      if (linkDto && userDto && this.isUserNotOwnerTheLink(linkDto, userDto)) {
+        countVotes++;
+        await this.voteRepository.storeVote(
+          new Vote({
+            userUuid,
+            linkUuid: vote.linkUuid,
+            cycle: currentCycle,
+            userStage: userDto?.stage || 0,
+            linkStage: linkDto?.stage || 0,
+          })
+        );
+      }
+    };
+
+    return countVotes;
+  }
+
+  private isUserNotOwnerTheLink(link:LinkDto, user:UserDto) {
+    return link?.userUuid !== user?.uuid;
+  }
+
+  private updateAsVotedViewedLinksData(votes: LinkUuidDto[], dataCollection: ViewedLinkByUserDataDto[]) {
+    const votedLinkUuidCollection = votes.map(vote => {
+      return vote.linkUuid;
+    });
+    dataCollection.forEach(async (data) => {
+      if (votedLinkUuidCollection.includes(data.linkUuid)) {
+        await this.viewedLinkByUserDataRepository.store(
+          new ViewedLinkByUserData(
+            data.userUuid,
+            data.linkUuid,
+            data.cycle,
+            true
+          )
+        );
       }
     });
   }
