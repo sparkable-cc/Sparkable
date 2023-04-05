@@ -1,4 +1,4 @@
-@import "./common.scss";
+@import './common.scss';
 
 // INDEX
 .title {
@@ -98,14 +98,14 @@
     margin-left: 4px;
     position: relative;
     top: 2px;
-    content: url("../public/svg/plus-black.svg");
+    content: url('../public/svg/plus-black.svg');
   }
 
   &.active {
-    background: rgba(0, 108, 123, 0.4);
+    background: rgba(65, 85, 245, 0.1);
 
     &:after {
-      content: url("../public/svg/cros.svg");
+      content: url('../public/svg/cros.svg');
     }
   }
 }
@@ -153,7 +153,7 @@
   text-align: center;
   padding-top: 40px;
 
-  @media only screen and (max-width: $mobile){
+  @media only screen and (max-width: $mobile) {
     padding-top: 0;
   }
 }
@@ -165,7 +165,7 @@
 
   &:before {
     display: block;
-    content: "✨";
+    content: '✨';
     font-size: 90px;
   }
 }
@@ -181,7 +181,7 @@
 }
 
 .successLink {
-  color: #264F80;
+  color: #264f80;
   text-decoration: underline;
   cursor: pointer;
 
