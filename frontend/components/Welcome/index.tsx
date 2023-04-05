@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import Link from 'next/link';
-// import { ReactSVG } from 'react-svg';
 import styles from './index.module.scss';
 
 export const Welcome = () => {
@@ -32,23 +31,6 @@ export const Welcome = () => {
           </Link>
         </div>
       </div>
-      {/* <div className={styles.benefitsWrapper}>
-        <div className={styles.benefit}>
-          <ReactSVG className={styles.benefitIcon} src="/svg/lens.svg" />
-          <h3 className={styles.benefitTitle}>Discover and submit</h3>
-          <p className={styles.benefitDescription}>View and send in links that had a lasting impact.</p>
-        </div>
-        <div className={styles.benefit}>
-          <ReactSVG className={styles.benefitIcon} src="/svg/page.svg" />
-          <h3 className={styles.benefitTitle}>Vote monthly</h3>
-          <p className={styles.benefitDescription}>Select the most insightful and constructive content.</p>
-        </div>
-        <div className={styles.benefit}>
-          <ReactSVG className={styles.benefitIcon} src="/svg/stars.svg" />
-          <h3 className={styles.benefitTitle}>Reward and get rewarded</h3>
-          <p className={styles.benefitDescription}>Earn rewards for providing new insight.</p>
-        </div>
-      </div> */}
     </div>
   );
 };
