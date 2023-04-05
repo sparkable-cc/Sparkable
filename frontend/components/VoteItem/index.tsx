@@ -1,12 +1,9 @@
 import styles from "./index.module.scss";
 import classNames from "classnames";
 import { ArticleLink } from "../ArticleLink";
+import { ApiTypes } from "../../types";
 
-interface Props {
-  title: string;
-  uuid: string
-  link: string
-  image?: string
+interface Props extends ApiTypes.Res.Article {
   isSelected?: boolean
   onSelect: () => void;
 }
@@ -14,7 +11,7 @@ interface Props {
 export const VoteItem = ({
   title,
   uuid,
-  link,
+  url,
   image,
   isSelected,
   onSelect,
@@ -29,7 +26,7 @@ export const VoteItem = ({
       <span className={styles.checkMark} onClick={onItemSelect} />
       <div className={styles.voteItem}>
         <div className={styles.voteTitleWrapper}>
-          <ArticleLink link={link} uuid={uuid} />
+          <ArticleLink link={url} uuid={uuid} />
           <h3 className={styles.voteTitle} onClick={onItemSelect}>
             {title}
           </h3>

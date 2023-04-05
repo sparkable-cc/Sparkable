@@ -2,11 +2,16 @@
 @import '../../styles/common';
 
 .createWrapper {
-  width: 100%;
+  width: calc(100% - 260px);
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+
+  @media only screen and (max-width: $laptop){
+    width: 100%;
+  }
+
 
   @media only screen and (max-width: $mobile) {
     align-items: start;
