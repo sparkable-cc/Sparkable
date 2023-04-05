@@ -65,27 +65,13 @@ describe('POST /viewed-link-user', () => {
     expect(res.body.message).toEqual('Bad request');
   });
 
-  it('returns 400 when the cycle does not exist', async () => {
-    const res = await request(app)
-      .post(endpoint)
-      .auth(auth.body.access_token, { type: 'bearer' })
-      .send({
-        userUuid: 'xxx',
-        linkUuid: 'xxx'
-      });
-
-    expect(res.statusCode).toEqual(400);
-    expect(res.body.message).toEqual('Bad request');
-  });
-
   it('returns 400 when the user does not exist', async () => {
     const res = await request(app)
       .post(endpoint)
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         userUuid: 'xxx',
-        linkUuid: 'xxx',
-        cycle: 1
+        linkUuid: 'xxx'
       });
 
     expect(res.statusCode).toEqual(400);
@@ -98,8 +84,7 @@ describe('POST /viewed-link-user', () => {
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         userUuid: auth.body.uuid,
-        linkUuid: 'xxx',
-        cycle: 1
+        linkUuid: 'xxx'
       });
 
     expect(res.statusCode).toEqual(400);
@@ -114,8 +99,7 @@ describe('POST /viewed-link-user', () => {
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         userUuid: auth.body.uuid,
-        linkUuid: link.uuid,
-        cycle: cycle,
+        linkUuid: link.uuid
       });
 
     expect(res.statusCode).toEqual(201);
@@ -137,8 +121,7 @@ describe('POST /viewed-link-user', () => {
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         userUuid: auth.body.uuid,
-        linkUuid: link.uuid,
-        cycle: 1
+        linkUuid: link.uuid
       });
 
     const res = await request(app)
@@ -146,8 +129,7 @@ describe('POST /viewed-link-user', () => {
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         userUuid: auth.body.uuid,
-        linkUuid: link.uuid,
-        cycle: 1
+        linkUuid: link.uuid
       });
 
     expect(res.statusCode).toEqual(403);

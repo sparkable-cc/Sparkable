@@ -36,14 +36,10 @@ export class ViewedLinkByUserDataRepositoryPG
     return await this.repository.findAndCount({ where:params });
   }
 
-  async getAllDataByUserByCycleNotVoted(
-    userUuid: string,
-    cycle: number
-  ): Promise<ViewedLinkByUserDataDto[]> {
-    return await this.repository.find({
+  async getAllDataByUserNotVoted(userUuid: string): Promise<[ViewedLinkByUserDataDto[], number]> {
+    return await this.repository.findAndCount({
       where: {
         userUuid: userUuid,
-        cycle: cycle,
         voted: false
       },
     });

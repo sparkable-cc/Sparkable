@@ -7,7 +7,7 @@ import { CreateLinkAction } from './contexts/links/actions/CreateLinkAction';
 import { CreateViewedLinkByUserDataAction } from './contexts/links/actions/CreateViewedLinkByUserDataAction';
 import { GetAllCategoriesAction } from './contexts/links/actions/GetAllCategoriesAction';
 import { GetAllLinksAction } from './contexts/links/actions/GetAllLinksAction';
-import { GetViewedLinksInCurrentCycleAction } from './contexts/links/actions/GetViewedLinksInCurrentCycleAction';
+import { GetViewedLinksAction } from './contexts/links/actions/GetViewedLinksAction';
 import { GetLinkByIdAction } from './contexts/links/actions/GetLinkByIdAction';
 import { CategoryNotFoundException } from './contexts/links/domain/exceptions/CategoryNotFoundException';
 import { CategoryRestrictionException } from './contexts/links/domain/exceptions/CategoryRestrictionException';
@@ -346,7 +346,7 @@ app.post('/viewed-link-user', checkJwt, async (req: Request, res: Response) => {
   );
 
   createViewedLinkByUserDataAction
-    .execute(req.body.userUuid, req.body.linkUuid, req.body.cycle)
+    .execute(req.body.userUuid, req.body.linkUuid)
     .then(() => {
       res.status(201);
       res.send({ message: 'Data created!' });
@@ -409,7 +409,7 @@ app.post('/voting-status', async (req: Request, res: Response) => {
 });
 
 app.get('/viewed-links-in-current-cycle', checkJwt, async (req: Request, res: Response) => {
-  const getAllMyViewedLinkAction = new GetViewedLinksInCurrentCycleAction(
+  const getAllMyViewedLinkAction = new GetViewedLinksAction(
     new ViewedLinkByUserDataRepositoryPG(dataSource),
     new LinkRepositoryPG(dataSource),
   );

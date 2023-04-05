@@ -1,19 +1,21 @@
 import { MandatoryFieldEmptyException } from '../../../users/domain/exceptions/MandatoryFieldEmptyException';
-import { User } from '../../../users/domain/models/User';
-import { Link } from './Link';
 import { ViewedLinkByUserDataDto } from './ViewedLinkByUserDataDto';
 
 export class ViewedLinkByUserData {
   userUuid: string;
   linkUuid: string;
   cycle: number;
+  userStage: number;
+  linkStage: number;
   voted: boolean;
 
   constructor(
     userUuid:string,
     linkUuid:string,
     cycle: number,
-    voted: boolean = false
+    voted: boolean = false,
+    userStage: number = 1,
+    linkStage: number = 1,
   ) {
     if (!userUuid || !linkUuid || !cycle) {
       throw new MandatoryFieldEmptyException();
@@ -22,6 +24,8 @@ export class ViewedLinkByUserData {
     this.userUuid = userUuid;
     this.linkUuid = linkUuid;
     this.cycle = cycle;
+    this.userStage = userStage;
+    this.linkStage = linkStage;
     this.voted = voted
   }
 
@@ -30,8 +34,8 @@ export class ViewedLinkByUserData {
       userUuid: this.userUuid,
       linkUuid: this.linkUuid,
       cycle: this.cycle,
-      userStage: 1,
-      linkStage: 1,
+      userStage: this.userStage,
+      linkStage: this.linkStage,
       voted: this.voted
     };
   }

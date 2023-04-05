@@ -1,10 +1,9 @@
 import { MandatoryFieldEmptyException } from '../../users/domain/exceptions/MandatoryFieldEmptyException';
-import { GetCurrentCycleService } from '../../voting/domain/services/GetCurrentCycleService';
 import { LinkDto } from '../domain/models/LinkDto';
 import { LinkRepository } from '../domain/repositories/LinkRepository';
 import { ViewedLinkByUserDataRepository } from '../domain/repositories/ViewedLinkByUserDataRepository';
 
-export class GetViewedLinksInCurrentCycleAction {
+export class GetViewedLinksAction {
   viewedLinkByUserDataRepository: ViewedLinkByUserDataRepository;
   linkRepository: LinkRepository;
 
@@ -21,16 +20,15 @@ export class GetViewedLinksInCurrentCycleAction {
       throw new MandatoryFieldEmptyException();
     }
 
-    const viewedLinks =
-      await this.viewedLinkByUserDataRepository.getAllDataByUserByCycleNotVoted(
-        userUuid,
-        GetCurrentCycleService.execute().cycle
+    const [viewedLinksNotVoted, total] =
+      await this.viewedLinkByUserDataRepository.getAllDataByUserNotVoted(
+        userUuid
       );
 
     let links: LinkDto[] = [];
-    if (viewedLinks.length !== 0) {
+    if (total !== 0) {
       links = await this.linkRepository.getLinkCollectionNotOwned(
-        viewedLinks.map((viewedLink) => viewedLink.linkUuid),
+        viewedLinksNotVoted.map((viewedLink) => viewedLink.linkUuid),
         userUuid
       );
     }

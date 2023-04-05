@@ -4,7 +4,7 @@ import { Link } from '../domain/models/Link';
 import { ViewedLinkByUserData } from '../domain/models/ViewedLinkByUserData';
 import { LinkRepositoryInMemory } from '../infrastructure/persistence/repositories/LinkRepositoryInMemory';
 import { ViewedLinkByUserDataRepositoryInMemory } from '../infrastructure/persistence/repositories/ViewedLinkByUserDataRepositoryInMemory';
-import { GetViewedLinksInCurrentCycleAction } from './GetViewedLinksInCurrentCycleAction';
+import { GetViewedLinksAction } from './GetViewedLinksAction';
 
 let linkDto = {
   title: 'title',
@@ -14,10 +14,10 @@ let linkDto = {
   stage: 1,
 };
 
-describe('Get viewed links in current cycle action', () => {
+describe('Get viewed links action', () => {
 
   test('cant get viewed links without user', async () => {
-    const getViewedLinkByUserDataAction = new GetViewedLinksInCurrentCycleAction(
+    const getViewedLinkByUserDataAction = new GetViewedLinksAction(
       new ViewedLinkByUserDataRepositoryInMemory(),
       new LinkRepositoryInMemory(),
     );
@@ -28,7 +28,7 @@ describe('Get viewed links in current cycle action', () => {
   });
 
   test('returns empty links if there are no links', async () => {
-    const getAllMyViewedLinkAction = new GetViewedLinksInCurrentCycleAction(
+    const getAllMyViewedLinkAction = new GetViewedLinksAction(
       new ViewedLinkByUserDataRepositoryInMemory(),
       new LinkRepositoryInMemory(),
     );
@@ -51,10 +51,10 @@ describe('Get viewed links in current cycle action', () => {
     const viewedLinkByUserDataRepositoryInMemory = new ViewedLinkByUserDataRepositoryInMemory();
 
     viewedLinkByUserDataRepositoryInMemory.store(
-      new ViewedLinkByUserData(user, link, 1)
+      new ViewedLinkByUserData(user.getUuid, link.uuid, 1)
     );
 
-    const getAllMyViewedLinkAction = new GetViewedLinksInCurrentCycleAction(
+    const getAllMyViewedLinkAction = new GetViewedLinksAction(
       viewedLinkByUserDataRepositoryInMemory,
       linkRepoInMemory,
     );
@@ -80,13 +80,13 @@ describe('Get viewed links in current cycle action', () => {
     const viewedLinkByUserDataRepositoryInMemory = new ViewedLinkByUserDataRepositoryInMemory();
 
     viewedLinkByUserDataRepositoryInMemory.store(
-      new ViewedLinkByUserData(user, link, 1)
+      new ViewedLinkByUserData(user.getUuid, link.uuid, 1)
     );
     viewedLinkByUserDataRepositoryInMemory.store(
-      new ViewedLinkByUserData(user, link2, 1)
+      new ViewedLinkByUserData(user.getUuid, link2.uuid, 1)
     );
 
-    const getAllMyViewedLinkAction = new GetViewedLinksInCurrentCycleAction(
+    const getAllMyViewedLinkAction = new GetViewedLinksAction(
       viewedLinkByUserDataRepositoryInMemory,
       linkRepoInMemory,
     );

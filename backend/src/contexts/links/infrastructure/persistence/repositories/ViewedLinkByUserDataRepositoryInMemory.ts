@@ -27,8 +27,8 @@ export class ViewedLinkByUserDataRepositoryInMemory
     return new Promise((resolve) => resolve([this.collection, this.collection.length]));
   }
 
-  getAllDataByUserByCycleNotVoted(userUuid: string, cycle: number): Promise<ViewedLinkByUserDataDto[]> {
+  getAllDataByUserNotVoted(userUuid: string): Promise<[ViewedLinkByUserDataDto[], number]> {
     const data = this.collection.filter((data) => data.userUuid === userUuid);
-    return new Promise((resolve) => resolve(data));
+    return new Promise((resolve) => resolve([data, data.length]));
   }
 }
