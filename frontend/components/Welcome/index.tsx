@@ -1,6 +1,6 @@
-import classNames from 'classnames';
-import Link from 'next/link';
-import styles from './index.module.scss';
+import classNames from "classnames";
+import Link from "next/link";
+import styles from "./index.module.scss";
 
 export const Welcome = () => {
   return (

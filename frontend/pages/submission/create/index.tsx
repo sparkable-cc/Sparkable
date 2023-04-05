@@ -1,12 +1,12 @@
-import { useRouter } from 'next/router';
-import { CreateSubmissionLayout } from '../../../layouts/CreateSubmissionLayout';
-import styles from '../../../styles/Submission.module.scss';
+import { useRouter } from "next/router";
+import { CreateSubmissionLayout } from "../../../layouts/CreateSubmissionLayout";
+import styles from "../../../styles/Submission.module.scss";
 
 const CreateSubmissionStart = () => {
   const router = useRouter();
 
   const onButtonClick = () => {
-    router.push('/submission/create/link');
+    router.push("/submission/create/link");
   };
 
   return (
@@ -24,12 +24,12 @@ const CreateSubmissionStart = () => {
         <p className={styles.quoteText}>
           <strong>
             Links that broaden horizons, bring lasting insight, <br />
-            and create more mutual understanding.{' '}
+            and create more mutual understanding.{" "}
           </strong>
         </p>
       </div>
       <p className={styles.text}>
-        <a href="/">See Content Guidelines {'>'}</a>
+        <a href="/">See Content Guidelines {">"}</a>
       </p>
       <p className={styles.text}>
         You can submit a link to any type of content: websites, podcasts,
