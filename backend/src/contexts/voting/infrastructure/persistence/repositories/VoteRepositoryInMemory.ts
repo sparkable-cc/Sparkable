@@ -20,8 +20,4 @@ export class VoteRepositoryInMemory implements VoteRepository {
     return new Promise((resolve) => resolve(this.votes));
   }
 
-  // findVote(options: Object): Promise<VotingDto | null> {
-  //   return new Promise((resolve) => resolve(this.votes[0]));
-  // }
-
 }
