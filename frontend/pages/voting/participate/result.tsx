@@ -39,18 +39,23 @@ const VotingResult = () => {
           alt="vote"
         />
         <h2 className={styles.title}>Thank you for voting!</h2>
-        <p className={styles.text}>The voting round closes in</p>
-        <p className={styles.text}>
-          {
-            isLoading ?
-              <Spiner sizeWidth="20" /> :
-              <>
-                <b>{currentTime.days}</b> day {" "}
-                <b>{currentTime.hours}</b> hours {" "}
-                <b>{currentTime.minutes}</b> min
-              </>
-          }
-        </p>
+        {
+          data?.timeUntilNextVoting &&
+          <>
+            <p className={styles.text}>The voting round closes in</p>
+            <p className={styles.text}>
+              {
+                isLoading ?
+                  <Spiner sizeWidth="20" /> :
+                  <>
+                    <b>{currentTime.days}</b> day {" "}
+                    <b>{currentTime.hours}</b> hours {" "}
+                    <b>{currentTime.minutes}</b> min
+                  </>
+              }
+            </p>
+          </>
+        }
         <p className={styles.text}>When everyone has voted, you will be able to explore the submissions that made it to the next stage.</p>
         <Link className={styles.resultBackButton} href="/#explore">Back to Explore</Link>
       </div>

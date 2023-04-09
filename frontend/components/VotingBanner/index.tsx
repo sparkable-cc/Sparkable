@@ -46,7 +46,7 @@ export const VotingBanner = ({ isShort }: Props) => {
     }
   }, [data]);
 
-  if (data?.daysUntilNextVoting && data?.daysUntilNextVoting <= 10 && checkException()) {
+  if (data?.daysUntilNextVoting !== undefined && data?.daysUntilNextVoting <= 10 && checkException()) {
     return (
       <div className={classNames(styles.bannerWrapper, { [styles.short]: isShort })} ref={nodeRef}>
         <div className={styles.banner}>

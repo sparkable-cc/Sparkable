@@ -32,6 +32,7 @@
     "no-unsafe-optional-chaining": "warn", 
     "unused-imports/no-unused-imports": "warn",
     "react/no-adjacent-inline-elements": "off",
+    "@next/next/no-html-link-for-pages": "off",
     "quotes": [
       "warn",
       "double",
