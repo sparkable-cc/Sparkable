@@ -13,9 +13,7 @@ import { UITypes } from "../../../types";
 import { usePrevious } from "../../../utils/usePrevious";
 import { useLazyGetLinksInCurrentCycleQuery } from "../../../store/api/votingApi";
 import { storageKeys } from "../../../utils/storageKeys";
-
-// TO-DO:
-// 3. Wire up to the endpoints
+import { Spiner } from "../../../components/Spiner";
 
 const options: UITypes.SortOption[] = [
   {
@@ -96,14 +94,16 @@ const VotingList = () => {
             </div>
             <section className="">
               {
-                Boolean(data?.length) && data?.map(item => (
-                  <VoteItem
-                    {...item}
-                    key={uuidv4()}
-                    isSelected={checkIsSelected(item.uuid)}
-                    onSelect={() => onSelectItem(item.uuid)}
-                  />
-                ))
+                isLoading ?
+                  <Spiner sizeWidth="30" /> :
+                  Boolean(data?.length) && data?.map(item => (
+                    <VoteItem
+                      {...item}
+                      key={uuidv4()}
+                      isSelected={checkIsSelected(item.uuid)}
+                      onSelect={() => onSelectItem(item.uuid)}
+                    />
+                  ))
               }
             </section>
             <div className={styles.listTextWrapper}>
