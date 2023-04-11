@@ -1,4 +1,4 @@
-name: Backend CI (unit & E2E tests)
+name: Backend CI (unit tests)
 
 on:
   push:
