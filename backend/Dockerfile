@@ -6,7 +6,7 @@ WORKDIR /usr/app
 COPY ./backend/package.json ./backend/tsconfig.json ./
 COPY ./backend/.env.txt ./.env
 COPY ./backend/src ./src
-#COPY ./backend/src/contexts/voting/infrastructure/persistence/VotingCycles.txt ./src/contexts/voting/infrastructure/persistence/VotingCycles.json
+COPY ./backend/src/contexts/voting/infrastructure/persistence/VotingCycles.txt ./src/contexts/voting/infrastructure/persistence/VotingCycles.json
 RUN ls -la ./src/contexts/voting/infrastructure/persistence/
 COPY ./types /usr/types
 RUN npm install
