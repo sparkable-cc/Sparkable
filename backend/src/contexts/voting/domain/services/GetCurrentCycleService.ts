@@ -1,5 +1,5 @@
 import { CycleDto } from "../models/CycleDto";
-import cycleCollection from "../../infrastructure/persistence/VotingCycles.json";
+import cycleCollection from "../../infrastructure/persistence/votingCycles.json";
 import { DateOutsideCycleException } from "../exceptions/DateOutsideCycleException";
 
 export class GetCurrentCycleService {

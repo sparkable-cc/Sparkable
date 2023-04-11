@@ -1,9 +1,6 @@
 import { DateNotValidException } from "../domain/exceptions/DateNotValidException";
-import { DateOutsideCycleException } from "../domain/exceptions/DateOutsideCycleException";
-import { CycleDto } from "../domain/models/CycleDto";
 import { VotingStatusDto } from "../domain/models/VotingStatusDto";
 import { GetCurrentCycleService } from "../domain/services/GetCurrentCycleService";
-import cycleCollection from "../infrastructure/persistence/VotingCycles.json";
 
 export class GetVotingStatusAction {
 
