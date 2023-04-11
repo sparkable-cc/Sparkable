@@ -4,3 +4,4 @@ dist
 postgresdata
 app
 .env
+src/contexts/voting/infrastructure/persistence/VotingCycles.json
