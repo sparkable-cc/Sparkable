@@ -8,6 +8,7 @@ COPY ./backend/.env.txt ./.env
 COPY ./backend/src ./src
 COPY ./types /usr/types
 RUN mv ./src/contexts/voting/infrastructure/persistence/votingCycles.txt ./src/contexts/voting/infrastructure/persistence/votingCycles.json
+RUN ls -la ./src/contexts/voting/infrastructure/persistence/
 RUN npm install
 RUN npm run build
 
