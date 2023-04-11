@@ -5,6 +5,7 @@ import { VotingBanner } from "../VotingBanner";
 import { selectIsVotingBannerVisible } from "../../store/UIslice";
 import { useAppSelector } from "../../store/hooks";
 import classNames from "classnames";
+import { useRouter } from "next/router";
 
 interface Props {
   isForcedMobile?: boolean;
@@ -14,6 +15,14 @@ interface Props {
 
 export const TopBar = ({ isForcedMobile, isAuthButtonsVisible, isShortVoitingBanner }: Props) => {
   const isVotingBannerVisible = useAppSelector(selectIsVotingBannerVisible);
+  const router = useRouter();
+
+  const checkException = () => {
+    if (!/voting/.test(router.route) && isVotingBannerVisible) {
+      return true;
+    }
+    return false;
+  };
 
   return (
     <header className={styles.topBarWrapper}>
@@ -22,7 +31,7 @@ export const TopBar = ({ isForcedMobile, isAuthButtonsVisible, isShortVoitingBan
         {isAuthButtonsVisible && <AuthButtons />}
       </MobileHeader>
       {!isForcedMobile && isAuthButtonsVisible &&
-        <div className={classNames(styles.authWrapper, { [styles.withVoitingBanner]: isVotingBannerVisible })}>
+        <div className={classNames(styles.authWrapper, { [styles.withVoitingBanner]: checkException() })}>
           <AuthButtons />
         </div>
       }

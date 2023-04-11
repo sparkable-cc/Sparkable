@@ -5,7 +5,8 @@ import { v4 as uuidv4 } from "uuid";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { Spiner } from "../Spiner";
-import { useLinkTracker } from "../../utils/useLinkTracker";
+import { useLazyPostViewedLinkByUserDataQuery } from "../../store/api/trackingApi";
+import { storageKeys } from "../../utils/storageKeys";
 
 interface Props extends ApiTypes.Res.Article {
   isLoading: boolean
@@ -23,8 +24,19 @@ export const ArticlePreview = ({
   isLoading,
   onShareClick
 }: Props) => {
+  const [triggerPostViewedLinkByUserData] = useLazyPostViewedLinkByUserDataQuery();
 
-  const onLinkTrack = useLinkTracker(uuid);
+  const onLinkTrack = () => {
+    const userUuid = sessionStorage.getItem(storageKeys.userId);
+    if (!userUuid || !uuid) return;
+
+    const data = {
+      userUuid,
+      linkUuid: uuid
+    };
+
+    triggerPostViewedLinkByUserData(data);
+  };
 
   return (
     <section className={styles.articlePreview}>

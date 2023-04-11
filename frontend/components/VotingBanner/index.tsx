@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import { useOutsideClick } from "../../utils/useOutsideClick";
-import { useLazyVotingStatusQuery } from "../../store/api/votingApi";
+import { useLazyGetVotingStatusQuery } from "../../store/api/votingApi";
 import dayjs from "dayjs";
 import { setVotingBannerVisible } from "../../store/UIslice";
 import { useAppDispatch } from "../../store/hooks";
@@ -18,11 +18,11 @@ export const VotingBanner = ({ isShort }: Props) => {
   const [ timeArray, setTimeArray ] = useState([]);
   const router = useRouter();
   const nodeRef = useRef(null);
-  const [ triggerVotingStatus, { isLoading, data }] = useLazyVotingStatusQuery();
+  const [ triggerGetVotingStatus, { isLoading, data }] = useLazyGetVotingStatusQuery();
   const dispatch = useAppDispatch();
 
   const checkException = () => {
-    if (/article/.test(router.route)) {
+    if (/article|voting/.test(router.route)) {
       return false;
     }
     return true;
@@ -34,7 +34,7 @@ export const VotingBanner = ({ isShort }: Props) => {
 
   useEffect(() => {
     const date = dayjs().format("YYYY-MM-DD hh:mm:s");
-    triggerVotingStatus({ date });
+    triggerGetVotingStatus({ date });
   }, []);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export const VotingBanner = ({ isShort }: Props) => {
     }
   }, [data]);
 
-  if (data?.daysUntilNextVoting && data?.daysUntilNextVoting <= 10 && checkException()) {
+  if (data?.daysUntilNextVoting !== undefined && data?.daysUntilNextVoting <= 10 && checkException()) {
     return (
       <div className={classNames(styles.bannerWrapper, { [styles.short]: isShort })} ref={nodeRef}>
         <div className={styles.banner}>
@@ -57,7 +57,7 @@ export const VotingBanner = ({ isShort }: Props) => {
                   <div className={styles.messageText}>
                     Voting is now open!
                   </div>
-                  <Link href="/voting/create" className={styles.voiteButton}>Vote Now</Link>
+                  <Link href="/voting/participate" className={styles.voiteButton}>Vote Now</Link>
                 </>
                 :
                 <>

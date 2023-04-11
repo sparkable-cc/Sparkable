@@ -12,7 +12,7 @@ if (typeof window !== 'undefined') {
 export interface UIState {
   isMenuVisible: boolean;
   selectedFilters: string[]
-  sort: UITypes.Option
+  sort: UITypes.SortOption
   articles: ApiTypes.Model.Link[]
   total: number,
   userName: string,
@@ -42,7 +42,7 @@ export const UISlice = createSlice({
     setFilters: (state, action: PayloadAction<string[]>) => {
       state.selectedFilters = action.payload
     },
-    setSort: (state, action: PayloadAction<UITypes.Option>) => {
+    setSort: (state, action: PayloadAction<UITypes.SortOption>) => {
       state.sort = action.payload;
     },
     setArticles: (state, action: PayloadAction<ApiTypes.Model.Link[]>) => {

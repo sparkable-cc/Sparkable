@@ -1,13 +1,12 @@
 import { useState } from "react";
 import styles from "./index.module.scss";
-import classNames from "classnames";
-import { v4 as uuidv4 } from "uuid";
 import { UITypes } from "../../types";
 import { setSort, selectSort } from "../../store/UIslice";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import isEqual from "lodash.isequal";
+import { Select } from "../Select";
 
-const options: UITypes.Option[] = [
+const options: UITypes.SortOption[] = [
   {
     label: "Random",
     value: "random",
@@ -23,42 +22,24 @@ interface Props {
 }
 
 export const SortsSelect = ({ isForcedMobile }: Props) => {
-  const [ isOpen, setOpen ] = useState(false);
   const sort = useAppSelector(selectSort);
   const [ currentSort, setCurrentSort ] = useState(sort);
   const dispatch = useAppDispatch();
-
-  const onOptionClick = (option: UITypes.Option) => {
-    setCurrentSort(option);
-    setOpen(false);
-  };
 
   const onApply = () => {
     dispatch(setSort(currentSort));
   };
 
   return (
-    <section className={classNames(styles.sortWrapper, { [styles.forcedMobile]: isForcedMobile })}>
-      <div className={classNames(styles.selectWrapper, { [styles.open]: isOpen })} >
-        <div className={styles.currentOption} onClick={() => setOpen(!isOpen)}>
-          {currentSort.label}
-        </div>
-        {isOpen &&
-          <ul className={styles.optionsList}>
-            {
-              options?.filter(item => item.value !== currentSort.value).map(item =>
-                <li key={uuidv4()} className={styles.option} onClick={() => onOptionClick(item)}>
-                  {item.label}
-                </li>
-              )
-            }
-          </ul>
-        }
-      </div>
-      {
-        !isEqual(sort, currentSort) &&
-        <button className={styles.applyButton} onClick={onApply} />
-      }
-    </section>
+    <div className={styles.selectWrapper}>
+      <Select
+        options={options}
+        isForcedMobile={isForcedMobile}
+        selectedOption={currentSort}
+        isApplyButtonVisible={!isEqual(sort, currentSort)}
+        onSelect={setCurrentSort}
+        onApply={onApply}
+      />
+    </div>
   );
 };

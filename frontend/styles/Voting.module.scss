@@ -1,0 +1,85 @@
+@import "./common.scss";
+
+// INDEX
+.title {
+  font-size: $size32;
+  font-weight: 500;
+  margin-bottom: $gapS;
+
+  @media only screen and (max-width: $mobile) {
+    font-size: $size24;
+  }
+}
+
+.text {
+  margin-bottom: $gapS;
+}
+
+.link {
+   text-decoration: underline;
+   color: $colorBlack;
+
+   &:hover {
+    text-decoration: none;
+   }
+}
+
+.note {
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: $gapS;
+}
+
+// LIST
+.listHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 16px 0 8px;
+}
+
+.viewedCounter {
+  font-size: $size14;
+}
+
+.listTextWrapper {
+  text-align: center;
+  width: 310px;
+  margin: 40px auto 0;
+  padding-bottom: 40px;
+}
+
+.listText {
+  font-size: $size14;
+  margin-bottom: 10px;
+}
+
+.listBackButton {
+  @extend .buttonOutlined, .sizeXl;
+  margin-top: 16px;
+}
+
+// RESULT
+.resultContentWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  height: 450px;
+  text-align: center;
+  max-width: 460px;
+  margin:auto;
+
+  @media only screen and (max-width: $mobile) {
+    height: calc(100vh - 200px);
+  }
+}
+
+.resultBackButton {
+  @extend .buttonPrimary, .sizeXl;
+  margin-top: 16px;
+}
+
+.voteResultImage {
+  margin-bottom: 16px;
+}
