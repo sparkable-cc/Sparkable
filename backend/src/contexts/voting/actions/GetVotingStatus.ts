@@ -1,9 +1,6 @@
 import { DateNotValidException } from "../domain/exceptions/DateNotValidException";
-import { DateOutsideCycleException } from "../domain/exceptions/DateOutsideCycleException";
-import { CycleDto } from "../domain/models/CycleDto";
 import { VotingStatusDto } from "../domain/models/VotingStatusDto";
 import { GetCurrentCycleService } from "../domain/services/GetCurrentCycleService";
-import cycleCollection from "../infrastructure/persistence/VotingCycles.json";
 
 export class GetVotingStatusAction {
 
@@ -34,28 +31,6 @@ export class GetVotingStatusAction {
         timeUntilNextVoting: this.getTimeDiff(diff)
       }
     }
-  }
-
-  private getCurrentRound(roundCollection: CycleDto[], currentDate: Date) {
-    let currentRound = {
-      cycle: 0,
-      openVotingDate: '',
-      start: '',
-      end: ''
-    };
-
-    roundCollection.some(round => {
-      if (currentDate >= new Date(round.start) && currentDate <= new Date(round.end)) {
-        currentRound = round;
-        return;
-      }
-    });
-
-    if (!currentRound.start) {
-      throw new DateNotValidException();
-    }
-
-    return currentRound;
   }
 
   private getDateDiff(endDate: Date, startDate: Date): number {
