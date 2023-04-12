@@ -1,5 +1,4 @@
 FROM node:lts
-LABEL Tony Morellá Llácer <hynnot@gmail.com>
 LABEL repo=https://github.com/hynnot/PERN-stack-boilerplate
 
 RUN mkdir -p /usr/app

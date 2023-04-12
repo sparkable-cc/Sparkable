@@ -20,6 +20,10 @@ describe('Create voting action', () => {
   let userRepository: UserRepositoryInMemory;
   let linkRepository: LinkRepositoryInMemory;
 
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   beforeEach(async () => {
     viewedLinkByUserDataRepository = new ViewedLinkByUserDataRepositoryInMemory();
     voteRepository = new VoteRepositoryInMemory();
@@ -81,6 +85,8 @@ describe('Create voting action', () => {
     viewedLinkByUserDataRepository.store(new ViewedLinkByUserData(userUuid, 'linkUuid', 1));
     const votes: LinkUuidDto[] = [];
 
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date(2023, 3, 7));
     await createVotingAction.execute(userUuid, votes);
 
     const votings = await votingRepository.getAllVotings();

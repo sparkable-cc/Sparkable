@@ -24,7 +24,6 @@ import { SignInAction } from './contexts/users/actions/SignInAction';
 import { EmailExistsException } from './contexts/users/domain/exceptions/EmailExistsException';
 import { MandatoryFieldEmptyException } from './contexts/users/domain/exceptions/MandatoryFieldEmptyException';
 import { ShortPasswordException } from './contexts/users/domain/exceptions/ShortPasswordException';
-import { StageDoesNotExistException } from './contexts/users/domain/exceptions/StageDoesNotExistException';
 import { TokenIsExpiredException } from './contexts/users/domain/exceptions/TokenIsExpiredException';
 import { TokenNotFoundException } from './contexts/users/domain/exceptions/TokenNotFoundException';
 import { UsernameExistsException } from './contexts/users/domain/exceptions/UsernameExistsException';
