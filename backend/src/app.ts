@@ -382,7 +382,7 @@ app.post('/voting-status', async (req: Request, res: Response) => {
   const getVotingStatusAction = new GetVotingStatusAction();
 
   getVotingStatusAction
-    .execute(new Date(req.body.date))
+    .execute()
     .then((votingStatus) => {
       res.status(200);
       res.send(votingStatus);
