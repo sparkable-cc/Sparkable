@@ -4,20 +4,19 @@ import { GetVotingStatusAction } from "./GetVotingStatus";
 
 describe('Get voting status', () => {
 
-  test('cant get voting status when the date format is invalid', async () => {
-    const getVotingStatusAction = new GetVotingStatusAction();
-    const date = new Date('xxx');
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
 
-    await expect(getVotingStatusAction.execute(date)).rejects.toThrow(
-      DateNotValidException,
-    );
+  afterAll(() => {
+    jest.useRealTimers();
   });
 
   test('Get voting status in an close day', async () => {
     const getVotingStatusAction = new GetVotingStatusAction();
-    const date = new Date('Mar 27, 2023 00:00:00');
 
-    const votingStatus = await getVotingStatusAction.execute(date);
+    jest.setSystemTime(new Date('Mar 27, 2023 00:00:00'));
+    const votingStatus = await getVotingStatusAction.execute();
 
     expect(votingStatus.openVoting).toBeFalsy();
     expect(votingStatus.cycle).toEqual(1);
@@ -28,9 +27,9 @@ describe('Get voting status', () => {
 
   test('Get voting status in an open day', async () => {
     const getVotingStatusAction = new GetVotingStatusAction();
-    const date = new Date('Apr 06, 2023 00:00:00');
 
-    const votingStatus = await getVotingStatusAction.execute(date);
+    jest.setSystemTime(new Date('Apr 06, 2023 00:00:00'));
+    const votingStatus = await getVotingStatusAction.execute();
 
     expect(votingStatus.openVoting).toBeTruthy();
     expect(votingStatus.cycle).toEqual(1);
@@ -41,9 +40,9 @@ describe('Get voting status', () => {
 
   test('Get voting status in an close day from the second cycle', async () => {
     const getVotingStatusAction = new GetVotingStatusAction();
-    const date = new Date('Apr 11, 2023 00:00:00');
 
-    const votingStatus = await getVotingStatusAction.execute(date);
+    jest.setSystemTime(new Date('Apr 11, 2023 00:00:00'));
+    const votingStatus = await getVotingStatusAction.execute();
 
     expect(votingStatus.openVoting).toBeFalsy();
     expect(votingStatus.cycle).toEqual(2);
@@ -54,9 +53,9 @@ describe('Get voting status', () => {
 
   test('Get voting status in an open day from the second cycle', async () => {
     const getVotingStatusAction = new GetVotingStatusAction();
-    const date = new Date('Apr 22, 2023 00:00:00');
 
-    const votingStatus = await getVotingStatusAction.execute(date);
+    jest.setSystemTime(new Date('Apr 22, 2023 00:00:00'));
+    const votingStatus = await getVotingStatusAction.execute();
 
     expect(votingStatus.openVoting).toBeTruthy();
     expect(votingStatus.cycle).toEqual(2);
@@ -67,9 +66,9 @@ describe('Get voting status', () => {
 
   test('cant get voting status when the date outside cycles', async () => {
     const getVotingStatusAction = new GetVotingStatusAction();
-    const date = new Date('Apr 01, 2021 00:00:00');
 
-    expect(getVotingStatusAction.execute(date)).rejects.toThrow(
+    jest.setSystemTime(new Date('Apr 01, 2021 00:00:00'));
+    expect(getVotingStatusAction.execute()).rejects.toThrow(
       DateOutsideCycleException,
     );
   });

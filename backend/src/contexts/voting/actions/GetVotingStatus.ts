@@ -4,11 +4,8 @@ import { GetCurrentCycleService } from "../domain/services/GetCurrentCycleServic
 
 export class GetVotingStatusAction {
 
-  async execute(currentDate: Date): Promise<VotingStatusDto> {
-    if (currentDate.toString() === 'Invalid Date' ) {
-      throw new DateNotValidException();
-    }
-
+  async execute(): Promise<VotingStatusDto> {
+    const currentDate = new Date();
     const currentCycle = GetCurrentCycleService.execute(currentDate);
     const nextOpenVotingDate = new Date(currentCycle.openVotingDate);
 
