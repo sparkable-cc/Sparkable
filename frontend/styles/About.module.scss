@@ -1,4 +1,4 @@
-@import "./common.scss";
+@import './common.scss';
 
 .about {
   width: 100%;
@@ -11,11 +11,11 @@
   width: 100%;
   margin: 0 auto;
 
-  @media only screen and (max-width: $laptop){
+  @media only screen and (max-width: $laptop) {
     max-width: 90%;
   }
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     max-width: calc(100% - $gapXL);
   }
 }
@@ -27,11 +27,11 @@
   max-width: 760px;
   margin: 0 auto;
 
-  @media only screen and (max-width: $laptop){
+  @media only screen and (max-width: $laptop) {
     font-size: 3.5rem;
   }
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     font-size: 3rem;
   }
 }
@@ -43,7 +43,7 @@
   margin: 0 auto 10px;
   text-align: center;
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     font-size: $size18;
   }
 }
@@ -53,7 +53,7 @@
   width: 100px;
   margin: 40px auto 100px;
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     width: 50px;
     margin: 32px auto;
   }
@@ -80,7 +80,7 @@
     }
   }
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     flex-wrap: wrap;
     margin-bottom: 0;
 
@@ -103,12 +103,12 @@
     }
   }
 
-  @media only screen and (max-width: $laptop){
+  @media only screen and (max-width: $laptop) {
     font-size: $size24;
     max-width: 60%;
   }
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     max-width: 100%;
     width: 100%;
   }
@@ -122,7 +122,7 @@
   align-items: center;
   flex-direction: column;
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     padding: 20px 0 65px;
   }
 }
@@ -137,10 +137,10 @@
     display: block;
     max-width: 143px;
     margin: 0 auto 30px;
-    content: url("../public/svg/three-stars.svg");
+    content: url('../public/svg/three-stars.svg');
   }
 
-  @media only screen and (max-width: $laptop){
+  @media only screen and (max-width: $laptop) {
     font-size: 2.5rem;
 
     &::before {
@@ -150,7 +150,7 @@
     }
   }
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     font-size: 2.25rem;
 
     &::before {
@@ -165,7 +165,7 @@
   margin-top: 24px;
   text-align: center;
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     margin-top: 16px;
   }
 }
@@ -184,16 +184,16 @@
     width: 39px;
     height: 39px;
     margin-left: 8px;
-    content: url("../public/svg/cta-arrow.svg");
+    content: url('../public/svg/cta-arrow.svg');
   }
 
-  @media only screen and (max-width: $laptop){
+  @media only screen and (max-width: $laptop) {
     height: 55px;
     padding: 0 40px;
     font-size: $size24;
   }
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     height: 41px;
     padding: 0 20px 0 $gapXL;
     font-size: $size20;
@@ -224,7 +224,7 @@
     max-width: 90%;
   }
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     max-width: calc(100% - $gapXL);
   }
 }
@@ -237,7 +237,7 @@
   padding: 0 25px;
   border-bottom: 1px solid #000;
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     height: 54px;
     padding: 0 $gapS;
   }
@@ -261,7 +261,7 @@
     padding: 50px 25px;
   }
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     font-size: $size18;
     display: block;
   }
@@ -270,13 +270,13 @@
 .howItWorksTitle {
   font-size: $size20;
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     font-size: $size18;
   }
 }
 
 .howItWorksStars {
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     transform: scale(0.8);
     position: relative;
     right: -10px;
@@ -284,16 +284,15 @@
 }
 
 .howItWorksItem {
-  
   &.notAvailable {
     opacity: 0.4;
   }
 
-  @media only screen and (max-width: $laptop){
+  @media only screen and (max-width: $laptop) {
     margin-bottom: $gapXL;
   }
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     &:last-child {
       margin-bottom: 0;
     }
@@ -302,6 +301,96 @@
 
 .howItWorksCounter {
   margin-bottom: 8px;
+}
+
+// CTA COMMUNITY
+.ctaCommunity {
+  // background: rgba(0, 0, 0, 0.05);
+  padding: 56px 0 84px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  @media only screen and (max-width: $tablet) {
+    padding: 20px 0 65px;
+  }
+}
+
+.ctaCommunityTitle {
+  font-size: 3.25rem;
+  font-weight: 600;
+  position: relative;
+  text-align: center;
+
+  &:before {
+    display: block;
+    max-width: 143px;
+    margin: 0 auto 30px;
+    // content: url('../public/svg/three-stars.svg');
+  }
+
+  @media only screen and (max-width: $laptop) {
+    font-size: 2.5rem;
+
+    &::before {
+      transform: scale(0.8);
+      position: relative;
+      top: 20px;
+    }
+  }
+
+  @media only screen and (max-width: $tablet) {
+    font-size: 2.25rem;
+
+    &::before {
+      transform: scale(0.7);
+      position: relative;
+      top: 30px;
+    }
+  }
+}
+
+.buttonWrapper {
+  margin-top: 24px;
+  text-align: center;
+
+  @media only screen and (max-width: $tablet) {
+    margin-top: 16px;
+  }
+}
+
+.ctaSlackButton {
+  @extend .buttonPrimary;
+
+  height: 64px;
+  font-size: $size32;
+  font-weight: 400;
+  padding: 0 50px;
+  border-radius: 50px;
+
+  &::after {
+    display: inline-flex;
+    width: 39px;
+    height: 39px;
+    margin-left: 8px;
+    content: url('../public/svg/vector.svg');
+  }
+
+  @media only screen and (max-width: $laptop) {
+    height: 55px;
+    padding: 0 40px;
+    font-size: $size24;
+  }
+
+  @media only screen and (max-width: $tablet) {
+    height: 41px;
+    padding: 0 20px 0 $gapXL;
+    font-size: $size20;
+
+    &::after {
+      transform: scale(0.7);
+    }
+  }
 }
 
 // VALUES
@@ -314,13 +403,14 @@
   font-size: $size20;
   padding-top: 70px;
   margin-bottom: 84px;
+  color: #4155f5;
 
-  @media only screen and (max-width: $laptop){
+  @media only screen and (max-width: $laptop) {
     padding-top: 60px;
     margin-bottom: 55px;
   }
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     padding-top: $gapXL;
     font-size: $size18;
     margin-bottom: 32px;
@@ -339,7 +429,7 @@
     max-width: 90%;
   }
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     max-width: calc(100% - $gapXL);
   }
 }
@@ -354,7 +444,7 @@
     margin-bottom: 80px;
   }
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     width: 100%;
     margin-bottom: 48px;
   }
@@ -378,7 +468,7 @@
     font-size: $size20;
   }
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     font-size: $size18;
   }
 }
@@ -390,18 +480,18 @@
   flex-direction: column;
   padding: 84px 0 148px;
 
-  @media only screen and (max-width: $laptop){
+  @media only screen and (max-width: $laptop) {
     padding: 65px 0 120px;
   }
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     padding: 20px 0 65px;
   }
 }
 
 .ctaSubmitTitle {
   font-size: 3.25rem;
-  font-weight: 600;
+  font-weight: 400;
   position: relative;
   text-align: center;
 
@@ -410,10 +500,10 @@
     max-width: 143px;
     text-align: center;
     margin: 0 auto 30px;
-    content: url("../public/svg/two-stars.svg");
+    // content: url("../public/svg/two-stars.svg");
   }
-  
-  @media only screen and (max-width: $laptop){
+
+  @media only screen and (max-width: $laptop) {
     font-size: 2.5rem;
 
     &::before {
@@ -423,7 +513,7 @@
     }
   }
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     font-size: 2.25rem;
 
     &::before {
