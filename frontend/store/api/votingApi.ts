@@ -36,6 +36,7 @@ export const votingApi = createApi({
 export const {
   useLazyGetVotingStatusQuery,
   useLazyGetLinksInCurrentCycleQuery,
+  useLazyCreateVotesQuery,
 } = votingApi;
 
 export const getVotingStatus = votingApi.endpoints.getVotingStatus;

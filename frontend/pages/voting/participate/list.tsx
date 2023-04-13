@@ -11,9 +11,10 @@ import { UnloggedMessage } from "../../../components/UnloggedMessage";
 import { UITypes } from "../../../types";
 // import isEqual from "lodash.isequal";
 import { usePrevious } from "../../../utils/usePrevious";
-import { useLazyGetLinksInCurrentCycleQuery } from "../../../store/api/votingApi";
+import { useLazyGetLinksInCurrentCycleQuery, useLazyCreateVotesQuery } from "../../../store/api/votingApi";
 import { storageKeys } from "../../../utils/storageKeys";
 import { Spiner } from "../../../components/Spiner";
+import { toast } from "react-toastify";
 
 const options: UITypes.SortOption[] = [
   {
@@ -36,6 +37,7 @@ const VotingList = () => {
   });
 
   const [ triggerGetLinksInCurrentCycle, { isLoading, data }] = useLazyGetLinksInCurrentCycleQuery();
+  const [triggerCreateVotes] = useLazyCreateVotesQuery();
 
   const previousSort: UITypes.SortOption | undefined = usePrevious(currentSort);
 
@@ -56,8 +58,28 @@ const VotingList = () => {
   };
 
   const onSubmit = () => {
-    // sending request here
-    router.push("/voting/participate/result");
+    const userId = sessionStorage.getItem(storageKeys.userId);
+
+    if (!userId) return;
+
+    const data = {
+      userUuid: userId,
+      votes: selectedIds?.map(item => {
+        return {
+          linkUuid: item
+        };
+      })
+    };
+
+    triggerCreateVotes(data).then((res: any) => {
+      if (res?.isSuccess) {
+        res?.data?.message && toast.success(res?.data?.message);
+        router.push("/voting/participate/result");
+      }
+      if (res?.error) {
+        toast.error(res?.error?.data?.message);
+      }
+    });
   };
 
   useEffect(() => {
