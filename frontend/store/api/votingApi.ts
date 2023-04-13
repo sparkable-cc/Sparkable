@@ -23,12 +23,20 @@ export const votingApi = createApi({
         },
       }),
     }),
+    createVotes: builder.query<ApiTypes.Res.Message, ApiTypes.Req.CreateVotes>({
+      query: (data) => ({
+        url: `/votes`,
+        method: "POST",
+        body: data
+      }),
+    }),
   }),
 });
 
 export const {
   useLazyGetVotingStatusQuery,
   useLazyGetLinksInCurrentCycleQuery,
+  useLazyCreateVotesQuery,
 } = votingApi;
 
 export const getVotingStatus = votingApi.endpoints.getVotingStatus;
