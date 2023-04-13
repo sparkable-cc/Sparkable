@@ -23,6 +23,13 @@ export const votingApi = createApi({
         },
       }),
     }),
+    createVotes: builder.query<ApiTypes.Res.Message, ApiTypes.Req.CreateVotes>({
+      query: (data) => ({
+        url: `/votes`,
+        method: "POST",
+        body: data
+      }),
+    }),
   }),
 });
 

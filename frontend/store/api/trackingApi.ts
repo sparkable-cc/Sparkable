@@ -7,7 +7,7 @@ export const trackingApi = createApi({
   tagTypes: ["trackingApi"],
   baseQuery: baseQueryWithAuth,
   endpoints: (builder) => ({
-    postViewedLinkByUserData: builder.query<ApiTypes.Res.CreateViewedLinkByUserData, ApiTypes.Req.CreateViewedLinkByUserData>({
+    postViewedLinkByUserData: builder.query<ApiTypes.Res.Message, ApiTypes.Req.CreateViewedLinkByUserData>({
       query: (data) => {
         return {
           url: `/viewed-link-user`,

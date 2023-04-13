@@ -16,7 +16,7 @@ export const submissionApi = createApi({
         }
       }),
     }),
-    postLinks: builder.query<ApiTypes.Res.CreateLink, ApiTypes.Req.CreateLink>({
+    postLinks: builder.query<ApiTypes.Res.Message, ApiTypes.Req.CreateLink>({
       query: (data) => ({
         url: `/links`,
         method: "POST",

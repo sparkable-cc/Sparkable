@@ -25,6 +25,10 @@ export declare namespace ApiTypes.Model {
     height: number
     type: string
   }
+
+  interface Vote {
+    linkUuid: string
+  }
 }
 
 export declare namespace ApiTypes.Req {
@@ -74,6 +78,11 @@ export declare namespace ApiTypes.Req {
   interface VotingStatus {
     date: string
   }
+
+  interface CreateVotes {
+    userUuid: string
+    votes: ApiTypes.Model.Vote[]
+  }
 }
 
 export declare namespace ApiTypes.Res {
@@ -115,19 +124,7 @@ export declare namespace ApiTypes.Res {
     ogImage: ApiTypes.Model.SubmissionLinkImage[]
   }
 
-  interface CreateLink {
-    message: string
-  }
-
-  interface CreateViewedLinkByUserData {
-    message: string
-  }
-
-  interface PasswordRecovery {
-    message: string
-  }
-
-  interface PasswordReset {
+  interface Message {
     message: string
   }
 
