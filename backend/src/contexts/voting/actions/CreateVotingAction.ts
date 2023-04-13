@@ -9,6 +9,7 @@ import { UserDto } from "../../users/domain/models/UserDto";
 import { UserRepository } from "../../users/domain/repositories/UserRepository";
 import { LinkNotOpenedByUserException } from "../domain/exceptions/LinkNotOpenedByUserException";
 import { NumberOfVotesExceededException } from "../domain/exceptions/NumberOfVotesExceededException";
+import { UserHasAlreadyVotedException } from "../domain/exceptions/UserHasAlreadyVotedException";
 import { UserHasNotOpenedAnyLinksException } from "../domain/exceptions/UserHasNotOpenedAnyLinksException";
 import { Vote } from "../domain/models/Vote";
 import { Voting } from "../domain/models/Voting";
@@ -41,6 +42,11 @@ export class CreateVotingAction {
     this.userUuidIsNotEmpty(userUuid);
     this.checkNumberOfVotesMaximum(votes);
 
+    const currentCycle = GetCurrentCycleService.execute().cycle;
+
+    const hasVotedThisCycle = await this.votingRepository.findVoting({cycle: currentCycle});
+    if (hasVotedThisCycle) throw new UserHasAlreadyVotedException();
+
     const [dataCollection, total] = await this.viewedLinkByUserDataRepository.getAllData({
       userUuid: userUuid,
       voted: false
@@ -48,7 +54,6 @@ export class CreateVotingAction {
     await this.checkUserHasOpenedALink(total);
     await this.checkLinksHaveOpened(votes, dataCollection);
 
-    const currentCycle = GetCurrentCycleService.execute().cycle;
     let countVotes = await this.storeVotes(userUuid, votes, currentCycle);
 
     const voting = new Voting(userUuid, currentCycle, countVotes);

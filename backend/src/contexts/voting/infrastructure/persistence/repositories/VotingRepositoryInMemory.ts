@@ -4,26 +4,25 @@ import { VotingRepository } from "../../../domain/repositories/VotingRepository"
 
 export class VotingRepositoryInMemory implements VotingRepository {
 
-  votes: VotingDto[];
+  voting: VotingDto[];
 
   constructor() {
-    this.votes = [];
+    this.voting = [];
   }
 
-  storeVoting(vote: Voting): Promise<VotingDto> {
-    const voteDto = vote.toDto();
+  storeVoting(voting: Voting): Promise<VotingDto> {
+    const votingDto = voting.toDto();
+    this.voting.push(votingDto);
 
-    this.votes.push(voteDto);
-
-    return new Promise((resolve) => resolve(voteDto));
+    return new Promise((resolve) => resolve(votingDto));
   }
 
   getAllVotings(): Promise<VotingDto[] | null> {
-    return new Promise((resolve) => resolve(this.votes));
+    return new Promise((resolve) => resolve(this.voting));
   }
 
-  findVote(options: Object): Promise<VotingDto | null> {
-    return new Promise((resolve) => resolve(this.votes[0]));
+  findVoting(options: Object): Promise<VotingDto | null> {
+    return new Promise((resolve) => resolve(this.voting[0]));
   }
 
 }

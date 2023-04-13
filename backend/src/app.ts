@@ -43,6 +43,7 @@ import { LinkNotOpenedByUserException } from './contexts/voting/domain/exception
 import { DateNotValidException } from './contexts/voting/domain/exceptions/DateNotValidException';
 import { DateOutsideCycleException } from './contexts/voting/domain/exceptions/DateOutsideCycleException';
 import dataSource from './data-source';
+import { UserHasAlreadyVotedException } from './contexts/voting/domain/exceptions/UserHasAlreadyVotedException';
 
 const app: Express = express();
 
@@ -462,6 +463,10 @@ app.post('/votes', checkJwt, async (req: Request, res: Response) => {
         case NumberOfVotesExceededException:
           res.status(400);
           res.send({ message: 'Number of votes exceeded' });
+          break;
+        case UserHasAlreadyVotedException:
+          res.status(403);
+          res.send({ message: 'User has voted in this cycle' });
           break;
         case UserHasNotOpenedAnyLinksException:
           res.status(403);

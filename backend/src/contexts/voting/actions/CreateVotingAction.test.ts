@@ -7,7 +7,9 @@ import { MandatoryFieldEmptyException } from "../../users/domain/exceptions/Mand
 import { UserRepositoryInMemory } from "../../users/infrastructure/persistence/repositories/UserRepositoryInMemory";
 import { LinkNotOpenedByUserException } from "../domain/exceptions/LinkNotOpenedByUserException";
 import { NumberOfVotesExceededException } from "../domain/exceptions/NumberOfVotesExceededException";
+import { UserHasAlreadyVotedException } from "../domain/exceptions/UserHasAlreadyVotedException";
 import { UserHasNotOpenedAnyLinksException } from "../domain/exceptions/UserHasNotOpenedAnyLinksException";
+import { Voting } from "../domain/models/Voting";
 import { VoteRepositoryInMemory } from "../infrastructure/persistence/repositories/VoteRepositoryInMemory";
 import { VotingRepositoryInMemory } from "../infrastructure/persistence/repositories/VotingRepositoryInMemory";
 import { CreateVotingAction } from "./CreateVotingAction";
@@ -63,6 +65,17 @@ describe('Create voting action', () => {
     );
   });
 
+  test('Cant vote when user has voted in this cycle', async () => {
+    const userUuid = 'userUuid';
+    const linkUuid = 'linkUuid';
+    viewedLinkByUserDataRepository.store(new ViewedLinkByUserData(userUuid, linkUuid, 1));
+    const votes = [{linkUuid: linkUuid}, {linkUuid: 'linkUuid2'}];
+
+    await expect(createVotingAction.execute(userUuid, votes)).rejects.toThrow(
+      LinkNotOpenedByUserException
+    );
+  });
+
   test('Cant vote when a user has not opened any link', async () => {
     await expect(createVotingAction.execute('xxxx', [])).rejects.toThrow(
       UserHasNotOpenedAnyLinksException
@@ -71,12 +84,11 @@ describe('Create voting action', () => {
 
   test('Cant vote when user try to vote a link has not opened by him', async () => {
     const userUuid = 'userUuid';
-    const linkUuid = 'linkUuid';
-    viewedLinkByUserDataRepository.store(new ViewedLinkByUserData(userUuid, linkUuid, 1));
-    const votes = [{linkUuid: linkUuid}, {linkUuid: 'linkUuid2'}];
+    votingRepository.storeVoting(new Voting(userUuid, 1, 0));
+    const votes: LinkUuidDto[] = [];
 
     await expect(createVotingAction.execute(userUuid, votes)).rejects.toThrow(
-      LinkNotOpenedByUserException
+      UserHasAlreadyVotedException
     );
   });
 
