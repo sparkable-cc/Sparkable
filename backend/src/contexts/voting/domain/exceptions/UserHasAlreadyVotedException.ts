@@ -1,0 +1,1 @@
+export class UserHasAlreadyVotedException extends Error {}

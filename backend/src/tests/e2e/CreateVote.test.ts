@@ -15,9 +15,11 @@ describe('POST /votes', () => {
 
   beforeAll(async () => {
     await dataSource.initialize();
+    jest.useFakeTimers();
   });
 
   afterAll(async () => {
+    jest.useRealTimers();
     await dataSource.destroy();
   });
 
@@ -84,6 +86,33 @@ describe('POST /votes', () => {
     expect(res.body.message).toEqual('Number of votes exceeded');
   });
 
+  it('returns 403 when user has voted in this cycle', async () => {
+    ViewedLinkByUserDataFactory.store({
+      userUuid: auth.body.uuid,
+      linkUuid: 'linkUuid'
+    });
+    await request(app)
+      .post('/votes')
+      .auth(auth.body.access_token, { type: 'bearer' })
+      .send({
+        userUuid: auth.body.uuid,
+        votes: []
+      });
+
+    const res = await request(app)
+      .post('/votes')
+      .auth(auth.body.access_token, { type: 'bearer' })
+      .send({
+        userUuid: auth.body.uuid,
+        votes: [
+          {linkUuid: 'linkUuid'}
+        ]
+      });
+
+    expect(res.statusCode).toEqual(403);
+    expect(res.body.message).toEqual('User has voted in this cycle');
+  });
+
   it('returns 403 when a user has not opened any link', async () => {
     const res = await request(app)
       .post('/votes')
@@ -129,6 +158,7 @@ describe('POST /votes', () => {
       linkUuid: 'linkUuid'
     });
 
+    jest.setSystemTime(new Date('2023-04-07'));
     const res = await request(app)
       .post('/votes')
       .auth(auth.body.access_token, { type: 'bearer' })
@@ -162,6 +192,7 @@ describe('POST /votes', () => {
       linkUuid: linkUuidSecond
     });
 
+    jest.setSystemTime(new Date('2023-04-07'));
     const res = await request(app)
       .post('/votes')
       .auth(auth.body.access_token, { type: 'bearer' })
