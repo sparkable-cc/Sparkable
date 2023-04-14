@@ -1,16 +1,16 @@
-import { useState, FormEvent, useEffect } from "react";
-import styles from "./index.module.scss";
-import Link from "next/link";
-import { FormInput } from "../FormInput";
 import classNames from "classnames";
-import { useLazySignInQuery } from "../../store/api/authApi";
-import { setUserName } from "../../store/UIslice";
-import { useAppDispatch } from "../../store/hooks";
-import { Spiner } from "../Spiner";
-import { signInSchema, validationInitialState } from "../../utils/validations";
-import { toast } from "react-toastify";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import { FormEvent, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useLazySignInQuery } from "../../store/api/authApi";
+import { useAppDispatch } from "../../store/hooks";
+import { setUserName } from "../../store/UIslice";
 import { storageKeys } from "../../utils/storageKeys";
+import { signInSchema, validationInitialState } from "../../utils/validations";
+import { FormInput } from "../FormInput";
+import { Spiner } from "../Spiner";
+import styles from "./index.module.scss";
 
 const inputValuesInitialState = {
   login: "",
@@ -19,7 +19,9 @@ const inputValuesInitialState = {
 
 export const SignInForm = () => {
   const [ triggerSignIn, { isLoading, data }] = useLazySignInQuery();
-  const [ validationError, setValidationError ] = useState(validationInitialState);
+  const [ validationError, setValidationError ] = useState(
+    validationInitialState,
+  );
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -31,13 +33,13 @@ export const SignInForm = () => {
   const onInputChange = (event: FormEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
 
-    setInputValues(prevState => {
+    setInputValues((prevState) => {
       return { ...prevState, [name]: value };
     });
   };
 
   const onInputClear = (name: string) => {
-    setInputValues(prevState => {
+    setInputValues((prevState) => {
       return { ...prevState, [name]: "" };
     });
   };
@@ -51,16 +53,16 @@ export const SignInForm = () => {
 
       setValidationError({
         field: error?.path[0] as string,
-        message: error?.message
+        message: error?.message,
       });
-
     } else {
       setValidationError(validationInitialState);
 
       try {
         triggerSignIn({
           password: inputValues.password,
-          [inputValues.login.includes("@") ? "email" : "username"]: inputValues.login
+          [inputValues.login.includes("@") ? "email" : "username"]:
+            inputValues.login,
         }).then((res: any) => {
           if (res?.error) {
             toast.error(res?.error?.data?.message);
@@ -69,7 +71,6 @@ export const SignInForm = () => {
       } catch (error: any) {
         toast.error(error?.message);
       }
-
     }
   };
 
@@ -83,10 +84,9 @@ export const SignInForm = () => {
       sessionStorage.setItem(storageKeys.userName, data.username);
       dispatch(setUserName(data.username));
       setTimeout(() => {
-        router.push("/");
+        router.back();
       }, 100);
     }
-
   }, [data]);
 
   return (
@@ -95,7 +95,9 @@ export const SignInForm = () => {
         <h2 className={styles.authTitle}>Sign In</h2>
         <div className={styles.authNavWrapper}>
           <span>or</span>
-          <Link className={styles.authButtonLink} href="/auth/signup">Create a new account</Link>
+          <Link className={styles.authButtonLink} href="/auth/signup">
+            Create a new account
+          </Link>
         </div>
       </header>
       <div className={styles.authFields}>
@@ -107,7 +109,9 @@ export const SignInForm = () => {
           placeholder="Your username or email"
           onChange={onInputChange}
           onClear={onInputClear}
-          errorMessage={validationError.field === "login" ? validationError.message : ""}
+          errorMessage={
+            validationError.field === "login" ? validationError.message : ""
+          }
         />
         <FormInput
           type="password"
@@ -118,9 +122,13 @@ export const SignInForm = () => {
           placeholder="Choose a secure password"
           onChange={onInputChange}
           onClear={onInputClear}
-          errorMessage={validationError.field === "password" ? validationError.message : ""}
+          errorMessage={
+            validationError.field === "password" ? validationError.message : ""
+          }
         />
-        <Link href="/auth/password-recovery" className={styles.authLink}>Forgot your password?</Link>
+        <Link href="/auth/password-recovery" className={styles.authLink}>
+          Forgot your password?
+        </Link>
       </div>
       <footer className={styles.authFooter}>
         <button
