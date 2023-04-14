@@ -1,16 +1,17 @@
 /* eslint-disable */
 export declare namespace ApiTypes.Model {
   interface Link {
-    id: number,
-    uuid: string,
-    title: string,
-    url: string,
-    image: string,
-    date: Date
-    username: string
-    description: string
-    userUuid: string
-    categories: Category[]
+    id: number;
+    uuid: string;
+    title: string;
+    url: string;
+    image: string;
+    date: Date;
+    username: string;
+    description: string;
+    userUuid: string;
+    statement?: string;
+    categories: Category[];
   }
 
   interface Category {
@@ -28,7 +29,6 @@ export declare namespace ApiTypes.Model {
 }
 
 export declare namespace ApiTypes.Req {
-
   interface LinksQueryParams {
     sort?: "-date",
     categories?: string[]
@@ -48,14 +48,14 @@ export declare namespace ApiTypes.Req {
   }
 
   interface CreateLink {
-    title: string
-    url: string
-    categories: ApiTypes.Model.Category[]
-    userUuid: string
-    description: string
-    image: string
-    statement?: string
-    suggestionCategory?: string
+    title: string;
+    url: string;
+    categories: ApiTypes.Model.Category[];
+    userUuid: string;
+    description: string;
+    image: string;
+    statement?: string;
+    suggestionCategory?: string;
   }
 
   interface CreateViewedLinkByUserData {
@@ -87,16 +87,17 @@ export declare namespace ApiTypes.Res {
   }
 
   interface Article {
-    id: number
-    uuid: string
-    title: string
-    url: string
-    image: string
-    description?: string
-    date: string
-    username: string
-    userUuid: string
-    categories: ApiTypes.Model.Category[]
+    id: number;
+    uuid: string;
+    title: string;
+    url: string;
+    image: string;
+    description?: string;
+    date: string;
+    username: string;
+    userUuid: string;
+    statement?: string;
+    categories: ApiTypes.Model.Category[];
   }
 
   interface Token {

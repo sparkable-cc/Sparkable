@@ -20,7 +20,9 @@ export const ArticlePreview = ({
   image,
   date,
   description,
+  statement,
   categories,
+  username,
   isLoading,
   onShareClick,
 }: Props) => {
@@ -53,6 +55,7 @@ export const ArticlePreview = ({
           <ArticleLink link={url} uuid={uuid} />
         </div>
         <h2 className={styles.articleTitle}>{title}</h2>
+        <p className={styles.articleDescription}>{description}</p>
         <nav className={styles.buttonsWrapper}>
           <a
             href={url}
@@ -76,8 +79,10 @@ export const ArticlePreview = ({
               Submitted on {dayjs(date).format("D MMM YYYY")}
             </span>
           </header>
+          <div>
+            <p className={styles.articleStatement}>@{username}: {statement}</p>
+          </div>
           <div className={styles.categories}>
-            <p className={styles.articleDescription}>{description}</p>
             {Boolean(categories?.length) &&
               categories.map((item) => (
                 <button key={uuidv4()} className={styles.categoryTag}>
