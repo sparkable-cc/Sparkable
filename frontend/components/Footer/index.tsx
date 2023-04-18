@@ -95,7 +95,7 @@ export const Footer = () => {
             <p>
             <a href="https://engagement.migros.ch/en/" target="_blank" rel="noopener noreferrer">
               <img
-                src="/svg/migros.png"
+                src="/svg/migros-2.png"
                 alt="Migros Pioneer Fund"
                 className={styles.footerMigros}
               />
