@@ -90,6 +90,26 @@ export const Footer = () => {
         </div>
         <div className={styles.footerBottomColumn}>
           <div>
+            <br></br>
+            <br></br>
+            <p>
+            <a href="https://engagement.migros.ch/en/" target="_blank" rel="noopener noreferrer">
+              <img
+                src="/svg/migros-small.png"
+                alt="Migros Pioner Fund"
+                className={styles.footerOpenSource}
+              />
+            </a>
+            </p>
+            <p><b>About Migros Pioneer Fund</b></p>
+            <p>
+            The Migros Pioneer Fund looks for and supports ideas with social potential. It enables pioneering projects that break new ground and seek out forward-looking solutions. Its impact-oriented funding approach combines financial support with coaching services. The Migros Pioneer Fund is part of the Migros Group's social commitment and is enabled by the Migros Group with around CHF 15 million annually. For further information: <a href="https://www.migros-pionierfonds.ch/en" target="_blank" rel="noopener noreferrer">www.migros-pionierfonds.ch/en</a>
+            </p>
+          </div>
+          <br></br>
+          <br></br>
+          <br></br>
+          <div>
             <img
               src="/svg/open-source.svg"
               alt="open source"
