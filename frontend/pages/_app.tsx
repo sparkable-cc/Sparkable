@@ -17,15 +17,13 @@ export default function App({ Component, pageProps }: AppProps) {
       name="description"
       content="Discover links that spark new understanding."
     />
-
-  <!-- Facebook Meta Tags -->
+    {/* <!-- Facebook Meta Tags --> */}
     <meta property="og:url" content="https://www.sparkable.cc" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Sparkable" />
     <meta property="og:description" content="Discover links that spark new understanding." />
     <meta property="og:image" content="https://sparkable.cc/public/og-image.png" />
-
-  <!-- Twitter Meta Tags -->
+    {/* <!-- Twitter Meta Tags --> */}
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="twitter:domain" content="sparkable.cc" />
     <meta property="twitter:url" content="https://www.sparkable.cc" />
