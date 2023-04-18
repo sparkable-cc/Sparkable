@@ -159,7 +159,7 @@ const About: NextPage = () => {
               />
               <br />
               <a
-                href="https://www.linkedin.com/company/butterfy/"
+                href="https://www.linkedin.com/company/sparkable-cc/"
                 className={classNames(styles.socialItem, styles.linkedin)}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -173,7 +173,7 @@ const About: NextPage = () => {
               />
               <br />
               <a
-                href="https://twitter.com/ButterfyMe"
+                href="https://twitter.com/sparkable_cc"
                 className={classNames(styles.socialItem, styles.twitter)}
                 target="_blank"
                 rel="noopener noreferrer"
