@@ -2,7 +2,7 @@
 @import "../../styles/common";
 
 .selectContainer {
- position: relative; 
+ position: relative;
  height: 32px;
  width: 250px;
 }
@@ -21,7 +21,7 @@
       display: flex;
       right: auto;
       left: 0;
-    }  
+    }
   }
 }
 
@@ -44,7 +44,7 @@
     .selectedOption {
      &:after {
       transform: rotate(0deg);
-     } 
+     }
     }
   }
 }
@@ -99,7 +99,7 @@
   justify-content: center;
 
   &::before {
-    content: url("../../public/svg/sort-apply.svg");
+    content: url("../../public/svg/checkMarkIcon.svg");
     width: 20px;
     height: 20px;
   }
