@@ -13,7 +13,7 @@ import {
   setMenuVisible,
 } from "../../store/UIslice";
 import { checkCredentials } from "../../utils/checkCredentials";
-import { SubmitLink } from '../SubmitLink';
+import { SubmitLink } from "../SubmitLink";
 import styles from "./index.module.scss";
 
 interface Props {
@@ -23,7 +23,7 @@ interface Props {
 export const Menu = ({ isForcedMobile }: Props) => {
   const isVisible = useAppSelector(selectIsMenuVisible);
   const userName = useAppSelector(selectUserName);
-  const [isAuth, setAuth] = useState(false);
+  const [ isAuth, setAuth ] = useState(false);
   const dispatch = useAppDispatch();
   const nodeRef = useRef(null);
   const overlayRef = useRef(null);
@@ -79,7 +79,6 @@ export const Menu = ({ isForcedMobile }: Props) => {
             >
               About
             </ActiveLink>
-
             {/* TEMPORARY HIDEN */}
             {/* {
               isAuth &&
@@ -146,7 +145,7 @@ export const Menu = ({ isForcedMobile }: Props) => {
           exitDone: styles.exitDone,
         }}
       >
-        <div ref={overlayRef} onClick={onMenuHide} className={styles.overlay}></div>
+        <div ref={overlayRef} onClick={onMenuHide} className={styles.overlay} />
       </CSSTransition>
     </>
   );

@@ -1,5 +1,5 @@
-import styles from './index.module.scss';
-import Link from 'next/link';
+import styles from "./index.module.scss";
+import Link from "next/link";
 
 export const SubmitLink = () => (
   <div className={styles.submitLinkWrapper}>
@@ -8,4 +8,4 @@ export const SubmitLink = () => (
     </div>
     <Link className={styles.buttonPrimary} href="/submission/create">Submit a link</Link>
   </div>
-)
+);

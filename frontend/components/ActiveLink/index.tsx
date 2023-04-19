@@ -1,6 +1,6 @@
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import Link, { LinkProps } from "next/link";
-import { PropsWithChildren, useState, useEffect } from 'react'
+import { PropsWithChildren, useState, useEffect } from "react";
 
 type ActiveLinkProps = LinkProps & {
   className?: string
@@ -13,8 +13,8 @@ export const ActiveLink = ({
   className,
   ...props
 }: PropsWithChildren<ActiveLinkProps>) => {
-  const { asPath, isReady } = useRouter()
-  const [computedClassName, setComputedClassName] = useState(className)
+  const { asPath, isReady } = useRouter();
+  const [ computedClassName, setComputedClassName ] = useState(className);
 
   useEffect(() => {
     // Check if the router fields are updated client-side
@@ -23,19 +23,19 @@ export const ActiveLink = ({
       // Static route will be matched via props.href
       const linkPathname = new URL(
         (props.as || props.href) as string,
-        location.href
-      ).pathname
+        location.href // eslint-disable-line 
+      ).pathname;
 
       // Using URL().pathname to get rid of query and hash
-      const activePathname = new URL(asPath, location.href).pathname
+      const activePathname = new URL(asPath, location.href).pathname; // eslint-disable-line 
 
       const newClassName =
         linkPathname === activePathname
           ? `${className} ${activeClassName}`.trim()
-          : className
+          : className;
 
       if (newClassName !== computedClassName) {
-        setComputedClassName(newClassName)
+        setComputedClassName(newClassName);
       }
     }
   }, [
@@ -55,5 +55,5 @@ export const ActiveLink = ({
     >
       {children}
     </Link>
-  )
+  );
 };
