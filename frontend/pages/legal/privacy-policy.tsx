@@ -132,7 +132,7 @@ const PrivacyPolicyPage: NextPage = () => {
         request us to delete it. You have a right to access, rectification,
         erasure, restrict processing, object to processing, and portability. To
         do this please write an email to{" "}
-        <a href="mailto:">support@butterfy.me </a>.
+        <a href="mailto:support@sparkable.cc">support@sparkable.cc</a>.
       </p>
       <h2>Embedded content from other websites.</h2>
       <p>
@@ -147,7 +147,7 @@ const PrivacyPolicyPage: NextPage = () => {
       </p>
       <h2>Contact us!</h2>
       <p>
-        E-mail: <a href="mailto:support@butterfy.me">support@butterfy.me</a>
+        E-mail: <a href="mailto:support@sparkable.cc">support@sparkable.cc</a>
       </p>
     </section>
   );

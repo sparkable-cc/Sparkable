@@ -16,8 +16,8 @@ export const Footer = () => {
       <div className={styles.footerColumnsWrapper}>
         <div className={styles.footerColumn}>
           <h3 className={styles.footerColumnTitle}>CONTACT</h3>
-          <a href="mailto:support@butterfy.me" className={styles.footerLink}>
-            support@butterfy.me
+          <a href="mailto:support@sparkable.cc" className={styles.footerLink}>
+            support@sparkable.cc
           </a>
           <br />
           Butterfy (Association) <br />
