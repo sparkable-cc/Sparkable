@@ -7,10 +7,12 @@
   justify-content: center;
   height: calc(100vh - 50px);
   min-height: 680px;
+  background: url("../../public/star-bg.png") no-repeat center right;
 
   @media only screen and (max-width: $tablet) {
     height: auto;
     padding-top: 120px;
+    background: none;
   }
 }
 
