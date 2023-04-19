@@ -8,7 +8,7 @@ export const Welcome = () => {
       <div className={styles.titleWrapper}>
         <h1 className={styles.title}>
           What on the internet <br />
-          really sparks new <br />
+          sparks new <br />
           understanding?
         </h1>
         <h2 className={styles.subtitle}>
