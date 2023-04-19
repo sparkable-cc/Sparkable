@@ -20,7 +20,7 @@ export const Footer = () => {
             support@sparkable.cc
           </a>
           <br />
-          Butterfy (Association) <br />
+          Sparkable (Association) <br />
           CH-8000 Zurich, Switzerland
         </div>
         <div className={styles.footerColumn}>
