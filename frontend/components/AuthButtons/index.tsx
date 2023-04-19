@@ -6,11 +6,9 @@ import { selectUserName } from "../../store/UIslice";
 import { useAppSelector } from "../../store/hooks";
 import Router from "next/router";
 import classNames from "classnames";
-import { useOutsideClick } from "../../utils/useOutsideClick";
 
 export const AuthButtons = () => {
   const [ isAuth, setAuth ] = useState(false);
-  const [ isTooltipVisible, setTooltipVisible ] = useState(false);
   const userName = useAppSelector(selectUserName);
   const nodeRef = useRef(null);
 
@@ -19,38 +17,19 @@ export const AuthButtons = () => {
     Router.reload();
   };
 
-  useOutsideClick(nodeRef, () => {
-    setTooltipVisible(false);
-  });
-
   useEffect(() => {
     setAuth(checkCredentials());
-  }, []);
+  }, [userName]);
 
   return (
     <div className={styles.authButtons}>
       {isAuth ? (
         <div className={styles.buttonsWrapper} ref={nodeRef}>
-          <span
-            className={styles.userName}
-            onClick={() => setTooltipVisible(!isTooltipVisible)}
-          >
+          <span className={styles.userName}>
             {userName}
           </span>
-          {
-            isTooltipVisible ?
-              <div className={styles.tooltip}>
-                <button
-                  className={styles.buttonOutlined}
-                  onClick={onSignOut}
-                >
-                  Sign out
-                </button>
-              </div> :
-              null
-          }
           <button
-            className={classNames(styles.buttonOutlined, styles.signOutDesktop)}
+            className={classNames(styles.buttonSecondary, styles.signOutDesktop)}
             onClick={onSignOut}
           >
             Sign out

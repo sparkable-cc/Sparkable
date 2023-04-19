@@ -7,9 +7,9 @@
 }
 
 .logInButton {
-  @extend .buttonTransparent;
+  @extend .buttonSecondary;
 
-  margin-right: 16px;
+  margin-right: 8px;
 }
 
 @media only screen and (max-width: $mobile) {
@@ -23,15 +23,20 @@
   display: inline-block;
   font-family: $secondaryFont;
   font-size: $size14;
-  display: inline-flex;
   align-items: center;
   text-decoration: none;
   margin-right: $gapS;
+  max-width: 120px;
+  height: 32px;
+  line-height: 32px;
+  text-overflow: ellipsis;
+  overflow: hidden; 
+  white-space: nowrap;
 
   &:before {
     content: url("../../public/svg/user.svg");
     position: relative;
-    top: 2px;
+    top: 4px;
     margin-right: 4px;
   }
 }
