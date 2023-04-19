@@ -13,14 +13,14 @@ export default function App({ Component, pageProps }: AppProps) {
   <Head>
     <link rel="shortcut icon" href="/public/favicon.ico" />
     <title>Sparkable</title>
-    <meta property="og:title" content="Sparkable" />
     <meta
       name="description"
       content="Discover links that spark new understanding."
     />
+    <meta property="og:title" content="Sparkable" />
     <meta property="og:url" content="https://www.sparkable.cc" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/public/og-image.png" />
+    <meta property="og:image" content="https://sparkable.cc/public/og-image.png" />
   </Head>;
 
   if (pageProps.protected && !checkCredentials()) {
