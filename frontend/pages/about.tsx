@@ -11,6 +11,19 @@ const About: NextPage = () => {
         <title>Sparkable - About</title>
         <meta name="description" content="Sparkable - About Us" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        {/* <!-- Facebook Meta Tags --> */}
+        <meta property="og:url" content="https://www.sparkable.cc" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Sparkable" />
+        <meta property="og:description" content="Discover links that spark new understanding." />
+        <meta property="og:image" content="https://www.sparkable.cc/og-image.png" />
+        {/* <!-- Twitter Meta Tags --> */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:domain" content="sparkable.cc" />
+        <meta property="twitter:url" content="https://www.sparkable.cc" />
+        <meta name="twitter:title" content="Sparkable" />
+        <meta name="twitter:description" content="Discover links that spark new understanding." />
+        <meta name="twitter:image" content="https://www.sparkable.cc/og-image.png" />
       </Head>
       <div className={styles.about}>
 
