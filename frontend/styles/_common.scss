@@ -2,7 +2,7 @@
 
 // CONTAINERS
 .container {
-  width: calc(100% - 260px);
+  width: calc(100% - 270px);
   padding-left: 40px;
 
   @media only screen and (max-width: $laptop) {
@@ -37,6 +37,17 @@
   &.sizeXl {
     font-size: $size18;
     height: 40px;
+  }
+}
+
+.buttonSecondary {
+  @extend .buttonPrimary;
+
+  background: #0000000d;
+  color: $colorBlack;
+
+  &:hover {
+    background: #00000026;
   }
 }
 

@@ -63,9 +63,9 @@ export const VotingBanner = ({ isShort }: Props) => {
                 <>
                   <div className={styles.messageText}>
                     {
-                      data.daysUntilNextVoting <= 1 ?
+                      data.daysUntilNextVoting < 1 ?
                         <>
-                          <b>{timeArray?.[0]}</b> hours <b>{timeArray?.[1]}</b> minutes until next voting round
+                          Next voting round in <b>{timeArray?.[0]}</b> h <b>{timeArray?.[1]}</b> min
                         </> :
                         <>
                           <b>{data.daysUntilNextVoting}</b> days until next voting round
