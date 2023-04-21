@@ -131,6 +131,8 @@ export class CreateVotingAction {
             data.userUuid,
             data.linkUuid,
             data.cycle,
+            data.userStage,
+            data.linkStage,
             true
           )
         );
