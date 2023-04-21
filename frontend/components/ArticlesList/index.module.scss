@@ -4,8 +4,6 @@
 .articlesList {
   columns: 2;
   column-gap: $gapS;
-  display: inline-flex;
-  flex-wrap: wrap;
 
   @media only screen and (min-width: $desktop) {
     columns: 3;
