@@ -1,7 +1,6 @@
 import styles from "./index.module.scss";
 import { ApiTypes } from "../../types";
 import { ArticleLink } from "../ArticleLink";
-import Link from "next/link";
 import { useRouter } from "next/router";
 
 type Props = ApiTypes.Model.Link
@@ -18,20 +17,24 @@ export const ArticleItem = ({
 }: Props) => {
   const router = useRouter();
 
+  const onItemClick = () => {
+    router.push(`/article/${id}`, undefined, { shallow: true });
+  };
+
   return (
     <article className={styles.articleItem}>
       {image && <div
         className={styles.articleCover}
-        onClick={() => { router.push(`/article/${id}`); }}
+        onClick={onItemClick}
         style={{
           backgroundImage: `url(${image})`
         }}
       />}
       <div className={styles.articleInfoWrapper}>
         <ArticleLink link={url} uuid={uuid} />
-        <Link className={styles.articleTitle} href={`/article/${id}`}>
+        <h3 className={styles.articleTitle} onClick={onItemClick}>
           {title}
-        </Link>
+        </h3>
       </div>
     </article>
   );
