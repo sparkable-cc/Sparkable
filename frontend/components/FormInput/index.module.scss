@@ -51,3 +51,18 @@
     display: none;
   }
 }
+
+.eye {
+  position: absolute;
+  right: 0;
+  bottom: 0px;
+  cursor: pointer;
+}
+
+.eyeOpen {
+  content: url("../../public/svg/eye-open.svg")
+}
+
+.eyeClose {
+  content: url("../../public/svg/eye-close.svg")
+}
