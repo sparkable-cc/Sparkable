@@ -7,39 +7,48 @@ import { VoteItem } from "../../../components/VoteItem";
 import { v4 as uuidv4 } from "uuid";
 import { checkCredentials } from "../../../utils/checkCredentials";
 import { UnloggedMessage } from "../../../components/UnloggedMessage";
-// import { Select } from "../../../components/Select";
-import { UITypes } from "../../../types";
-// import isEqual from "lodash.isequal";
-import { usePrevious } from "../../../utils/usePrevious";
 import { useLazyGetLinksInCurrentCycleQuery, useLazyCreateVotesQuery } from "../../../store/api/votingApi";
 import { storageKeys } from "../../../utils/storageKeys";
 import { Spiner } from "../../../components/Spiner";
 import { toast } from "react-toastify";
+import { ModalNote } from "../../../components/ModalNote";
+import { ModalLayout } from "../../../layouts/ModalLayout";
+import classNames from "classnames";
 
-const options: UITypes.SortOption[] = [
-  {
-    label: "Random",
-    value: "random",
-  },
-  {
-    label: "Newest First",
-    value: "newest-first",
-  },
-];
+// import { UITypes } from "../../../types";
+// import { Select } from "../../../components/Select";
+// import isEqual from "lodash.isequal";
+// import { usePrevious } from "../../../utils/usePrevious";
+
+// const options: UITypes.SortOption[] = [
+//   {
+//     label: "Random",
+//     value: "random",
+//   },
+//   {
+//     label: "Newest First",
+//     value: "newest-first",
+//   },
+// ];
 
 const VotingList = () => {
   const [ selectedIds, selectId ] = useState([]);
   const router = useRouter();
   const [ isLogged, setLogged ] = useState(false);
-  const [ currentSort, setCurrentSort ] = useState<UITypes.SortOption>({
-    label: "Newest First",
-    value: "newest-first",
-  });
-
+  const [ isSubmitAlertVisible, setSubmitAlert ] = useState(false);
   const [ triggerGetLinksInCurrentCycle, { isLoading, data }] = useLazyGetLinksInCurrentCycleQuery();
-  const [triggerCreateVotes] = useLazyCreateVotesQuery();
+  const [ triggerCreateVotes, createVotesResult ] = useLazyCreateVotesQuery();
 
-  const previousSort: UITypes.SortOption | undefined = usePrevious(currentSort);
+  // const [currentSort, setCurrentSort] = useState<UITypes.SortOption>({
+  //   label: "Newest First",
+  //   value: "newest-first",
+  // });
+
+  // const previousSort: UITypes.SortOption | undefined = usePrevious(currentSort);
+
+  // const onApplySort = () => {
+  //   // sending request here
+  // };
 
   const onSelectItem = (id: string) => {
     if (selectedIds?.some(item => item === id)) {
@@ -49,16 +58,17 @@ const VotingList = () => {
     }
   };
 
+  const onCancel = () => {
+    setSubmitAlert(false);
+  };
+
   const checkIsSelected = (id: string): boolean => {
     return selectedIds?.some(item => item === id) ? true : false;
   };
 
-  const onApplySort = () => {
-    // sending request here
-  };
-
   const onSubmit = () => {
     const userId = sessionStorage.getItem(storageKeys.userId);
+    setSubmitAlert(false);
 
     if (!userId) return;
 
@@ -94,7 +104,7 @@ const VotingList = () => {
     <VotingLayout
       isSubmitAvailable={Boolean(selectedIds.length)}
       submitButtonText="Submit"
-      onSubmit={onSubmit}
+      onSubmit={() => setSubmitAlert(true)}
       buttonCounter={selectedIds.length}
     >
       {
@@ -104,7 +114,13 @@ const VotingList = () => {
             <p className={styles.text}>Which of these submissions did you find insightful?</p>
             <p className={styles.text}>You have 7 votes, but you don’t have to use all of them.</p>
             <div className={styles.listHeader}>
-              <span className={styles.viewedCounter}>{data?.length || 0} viewed submissions</span>
+              <div className={styles.viewedCounterWrapper}>
+                <span className={styles.viewedCounter}>{data?.length || 0} viewed submissions</span>
+                <ModalNote title="Viewed submissions">
+                  <div className={styles.modalText}>You can only vote on submissions which you have viewed before.</div>
+                  <div className={styles.modalText}>When you open the link of a submission it is counted as a view.</div>
+                </ModalNote>
+              </div>
               {/* <Select
                 options={options}
                 selectedOption={currentSort}
@@ -145,6 +161,40 @@ const VotingList = () => {
           </> :
           <UnloggedMessage />
       }
+      <ModalLayout
+        title="Submit vote?"
+        withTitleIcon
+        cancelButtonLabel="Close"
+        onCancel={() => setSubmitAlert(false)}
+        isVisible={isSubmitAlertVisible}
+      >
+        <div className={styles.modalText}>You selected {selectedIds?.length} submissions:</div>
+        <ul className={styles.modalList}>
+          {
+            Boolean(data?.length) && data?.filter(item => selectedIds.some(id => id === item.uuid)).map(item => (
+              <li className={styles.modalListItem} key={uuidv4()}>
+                {item.title}
+              </li>
+            ))
+          }
+        </ul>
+        <div className={styles.modalText}>You will not be able to change your selection.</div>
+        <div className={styles.modalButtonsWrapper}>
+          <button
+            className={styles.buttonOutlined}
+            onClick={onCancel}
+          >
+            Cancel
+          </button>
+          <button
+            disabled={createVotesResult.isLoading}
+            className={classNames(styles.buttonPrimary)}
+            onClick={onSubmit}
+          >
+              Yes, submit
+          </button>
+        </div>
+      </ModalLayout>
     </VotingLayout>
   );
 };
