@@ -93,13 +93,13 @@ export const Footer = () => {
             <br />
             <br />
             <p>
-            <a href="https://engagement.migros.ch/en/" target="_blank" rel="noopener noreferrer">
-              <img
-                src="/svg/migros-2.png"
-                alt="Migros Pioneer Fund"
-                className={styles.footerMigros}
-              />
-            </a>
+              <a href="https://engagement.migros.ch/en/" target="_blank" rel="noopener noreferrer">
+                <img
+                  src="/svg/migros-2.png"
+                  alt="Migros Pioneer Fund"
+                  className={styles.footerMigros}
+                />
+              </a>
             </p>
             <p><b>About Migros Pioneer Fund</b></p>
             <p>

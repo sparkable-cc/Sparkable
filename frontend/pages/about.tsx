@@ -65,7 +65,6 @@ const About: NextPage = () => {
             />
           </div>
         </section>
-
         {/* HOW IT WORKS */}
         <section className={styles.howItWorksWrapper}>
           <div className={styles.howItWorksContainer}>
@@ -101,7 +100,6 @@ const About: NextPage = () => {
             </div>
           </div>
         </section>
-
         {/* TEAM */}
         <section className={styles.teamWrapper}>
           <span className={styles.titleTag}>OUR TEAM</span>
@@ -152,7 +150,6 @@ const About: NextPage = () => {
             </div>
           </div>
         </section>
-
         {/* CTA COMMUNITY */}
         <section className={styles.ctaCommunity}>
           <span className={styles.titleTag}>OUR COMMUNITY</span>
@@ -194,7 +191,6 @@ const About: NextPage = () => {
             </div>
           </div>
         </section>
-
         {/* VALUES */}
         <section className={styles.valuesWrapper}>
           <span className={styles.valuesTag}>OUR COMMUNITY</span>
@@ -225,7 +221,6 @@ const About: NextPage = () => {
             </div>
           </div>
         </section>
-
         {/* CTA MISSION */}
         <section className={styles.ctaMission}>
           <span className={styles.titleTag}>OUR MISSION</span>
