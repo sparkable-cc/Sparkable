@@ -2,6 +2,7 @@
 import styles from "./index.module.scss";
 import { FormEvent } from "react";
 import classNames from "classnames";
+import { useState } from 'react';
 
 interface Props {
   type?: string;
@@ -26,6 +27,7 @@ export const FormInput = ({
   onChange,
   onClear,
 }: Props) => {
+  const [isPasswordVisible, setPaswordVisible] = useState(false);
 
   return (
     <div className={styles.formInputWrapper}>
@@ -37,12 +39,25 @@ export const FormInput = ({
           id={id}
           name={name}
           className={classNames(styles.input, { [styles.error]: errorMessage })}
-          type={type}
+          type={type === "password" ? isPasswordVisible ? "text" : "password" : "text"}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
         />
-        <span className={classNames(styles.clearInput, { [styles.hidden]: !value })} onClick={() => onClear(name)} />
+        {
+          type !== "password" ?
+            <span
+              className={classNames(styles.clearInput, { [styles.hidden]: !value })}
+              onClick={() => onClear(name)}
+            /> :
+            <span className={classNames(
+              styles.eye,
+              {
+              [styles.eyeOpen]: !isPasswordVisible,
+              [styles.eyeClose]: isPasswordVisible,
+            })} onClick={() => setPaswordVisible(!isPasswordVisible)}
+            />
+        }
       </div>
       {errorMessage &&
         <div className={styles.errorMessage}>
