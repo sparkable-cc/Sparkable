@@ -84,6 +84,7 @@ describe('Create viewed link by user data action', () => {
       new ViewedLinkByUserData(user.getUuid, link.uuid, 1)
     );
 
+    jest.setSystemTime(new Date(2023, 3, 7));
     await expect(createViewedLinkByUserAction.execute(userUuid, link.uuid)).rejects.toThrow(
       DataDoesExistException,
     );
