@@ -39,6 +39,7 @@
 
 .viewedCounter {
   font-size: $size14;
+  margin-right: 10px;
 }
 
 .listTextWrapper {
@@ -56,6 +57,40 @@
 .listBackButton {
   @extend .buttonOutlined, .sizeXl;
   margin-top: 16px;
+}
+
+.viewedCounterWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.modalText {
+  margin-bottom: 10px;
+}
+
+.modalButtonsWrapper {
+  display: flex;
+  justify-content: flex-end;
+
+  button:first-child {
+    margin-right: 8px;
+  }
+}
+
+.modalList {
+  font-size: $size13;
+}
+
+.modalListItem {
+  margin-bottom: 10px;
+  padding-left: 20px;
+  position: relative;
+
+  &:before {
+    position: absolute;
+    left: 6px;
+    content: '∙';
+  }
 }
 
 // RESULT
