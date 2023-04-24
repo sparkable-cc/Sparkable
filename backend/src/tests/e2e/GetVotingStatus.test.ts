@@ -16,10 +16,10 @@ describe('POST /voting-status', () => {
     await dataSource.destroy();
   });
 
-  // afterEach(async () => {
-  //   const votingRepository = dataSource.getRepository(VotingEntity);
-  //   await votingRepository.delete({});
-  // });
+  afterEach(async () => {
+    const votingRepository = dataSource.getRepository(VotingEntity);
+    await votingRepository.delete({});
+  });
 
   it('returns 200 when date is between one cycle in open voting', async () => {
     jest.setSystemTime(new Date('2023-04-06 12:00:00'));
@@ -60,25 +60,23 @@ describe('POST /voting-status', () => {
 
   it('returns 200 in an open day when user has voted', async () => {
     const userUuid = 'userUuid';
-    //const votingRepository = dataSource.getRepository(VotingEntity);
-    // const [voting, total] = await votingRepository.findAndCount();
-    // console.log(voting);
+    const votingRepository = dataSource.getRepository(VotingEntity);
+    const [voting, total] = await votingRepository.findAndCount();
 
-    // const votingEntity = votingRepository.create({
-    //   userUuid: userUuid,
-    //   cycle: 1,
-    //   countVotes: 0,
-    // });
-    // await votingRepository.insert(votingEntity);
+    const votingEntity = votingRepository.create({
+      userUuid: userUuid,
+      cycle: 1,
+      countVotes: 0,
+    });
+    await votingRepository.insert(votingEntity);
 
-    //jest.setSystemTime(new Date('2023-04-06 12:00:00'));
+    jest.setSystemTime(new Date('2023-04-06 12:00:00'));
     const res = await request(app)
       .post(endpoint)
       .send({
         userUuid: userUuid
       });
 
-    console.log(res.body.userHasVoted);
     expect(res.body.userHasVoted).toBeTruthy();
   });
 

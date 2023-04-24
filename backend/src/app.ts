@@ -450,7 +450,7 @@ app.post('/votes', checkJwt, async (req: Request, res: Response) => {
   createVoteAction
     .execute(
       req.body.userUuid,
-      req.body.votes
+      JSON.parse(req.body.votes)
     )
     .then(() => {
       res.status(200);

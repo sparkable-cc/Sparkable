@@ -16,14 +16,9 @@ export class VotingRepositoryPG implements VotingRepository {
   }
 
   findVoting(options: Object): Promise<VotingDto | null> {
-    console.log(options);
-
-    return this.repository.findOneBy({
-      userUuid: 'userUuid'
+    return this.repository.findOne({
+      where: options
     });
-    // return this.repository.findOne({
-    //   where: options
-    // });
   }
 
 }

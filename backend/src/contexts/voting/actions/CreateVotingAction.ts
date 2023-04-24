@@ -44,13 +44,17 @@ export class CreateVotingAction {
 
     const currentCycle = GetCurrentCycleService.execute().cycle;
 
-    const hasVotedThisCycle = await this.votingRepository.findVoting({cycle: currentCycle});
+    const hasVotedThisCycle = await this.votingRepository.findVoting({
+      userUuid: userUuid,
+      cycle: currentCycle
+    });
     if (hasVotedThisCycle) throw new UserHasAlreadyVotedException();
 
     const [dataCollection, total] = await this.viewedLinkByUserDataRepository.getAllData({
       userUuid: userUuid,
       voted: false
     });
+
     await this.checkUserHasOpenedALink(total);
     await this.checkLinksHaveOpened(votes, dataCollection);
 
