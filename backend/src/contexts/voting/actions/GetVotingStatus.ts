@@ -14,16 +14,8 @@ export class GetVotingStatusAction {
 
   async execute(userUuid?:string): Promise<VotingStatusDto> {
     const currentDate = new Date();
-
-    console.log(currentDate);
-
     const currentCycle = GetCurrentCycleService.execute(currentDate);
-
-    console.log(currentCycle);
-
     const nextOpenVotingDate = new Date(currentCycle.openVotingDate);
-
-    console.log(await this.userHasVoted(userUuid, currentCycle));
 
     if (currentDate >= nextOpenVotingDate) {
       return {
@@ -51,12 +43,6 @@ export class GetVotingStatusAction {
   private async userHasVoted(userUuid: string | undefined, currentCycle: CycleDto) {
     let userHasVoted = false;
     if (userUuid) {
-
-      console.log(await this.votingRepository.findVoting({
-        userUuid: userUuid,
-        cycle: currentCycle.cycle
-      }));
-
       const hasVotedThisCycle = await this.votingRepository.findVoting({
         userUuid: userUuid,
         cycle: currentCycle.cycle

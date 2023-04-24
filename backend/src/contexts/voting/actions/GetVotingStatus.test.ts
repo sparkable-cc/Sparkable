@@ -57,7 +57,7 @@ describe('Get voting status', () => {
   });
 
   test('Get voting status in an open day from the second cycle', async () => {
-    jest.setSystemTime(new Date('Apr 22, 2023 00:00:00'));
+    jest.setSystemTime(new Date('Apr 21, 2023 00:00:00'));
     const votingStatus = await getVotingStatusAction.execute();
 
     expect(votingStatus.openVoting).toBeTruthy();
