@@ -22,6 +22,10 @@ describe('Create voting action', () => {
   let userRepository: UserRepositoryInMemory;
   let linkRepository: LinkRepositoryInMemory;
 
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
   afterAll(() => {
     jest.useRealTimers();
   });
@@ -71,6 +75,7 @@ describe('Create voting action', () => {
     viewedLinkByUserDataRepository.store(new ViewedLinkByUserData(userUuid, linkUuid, 1));
     const votes = [{linkUuid: linkUuid}, {linkUuid: 'linkUuid2'}];
 
+    jest.setSystemTime(new Date(2023, 3, 7));
     await expect(createVotingAction.execute(userUuid, votes)).rejects.toThrow(
       LinkNotOpenedByUserException
     );
@@ -97,7 +102,6 @@ describe('Create voting action', () => {
     viewedLinkByUserDataRepository.store(new ViewedLinkByUserData(userUuid, 'linkUuid', 1));
     const votes: LinkUuidDto[] = [];
 
-    jest.useFakeTimers();
     jest.setSystemTime(new Date(2023, 3, 7));
     await createVotingAction.execute(userUuid, votes);
 
