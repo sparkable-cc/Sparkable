@@ -8,13 +8,13 @@ export const Welcome = () => {
       <div className={styles.titleWrapper}>
         <h1 className={styles.title}>
           What on the internet <br />
-          really sparks new <br />
+          sparks new <br />
           understanding?
         </h1>
-        <p className={styles.subtitle}>
+        <h2 className={styles.subtitle}>
           Sparkable is a collection of links that have <br />
           brought lasting new insight to people.
-        </p>
+        </h2>
         <div className={styles.buttonsWrapper}>
           <Link
             scroll={false}

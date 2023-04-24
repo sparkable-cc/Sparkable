@@ -29,7 +29,7 @@ const CreateSubmissionStart = () => {
         </p>
       </div>
       <p className={styles.text}>
-        <a href="/">See Content Guidelines {">"}</a>
+        <a href="/legal/acceptable-use-policy">See Content Guidelines {">"}</a>
       </p>
       <p className={styles.text}>
         You can submit a link to any type of content: websites, podcasts,

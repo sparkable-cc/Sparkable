@@ -11,16 +11,16 @@ export const Footer = () => {
           src="/svg/sparkable-logo.svg"
           alt="sparkable-logo"
         />
-        <span className={styles.footerVersion}>v0.0.1</span>
+        <span className={styles.footerVersion}>v0.1 (beta)</span>
       </div>
       <div className={styles.footerColumnsWrapper}>
         <div className={styles.footerColumn}>
           <h3 className={styles.footerColumnTitle}>CONTACT</h3>
-          <a href="mailto:support@butterfy.me" className={styles.footerLink}>
-            support@butterfy.me
+          <a href="mailto:support@sparkable.cc" className={styles.footerLink}>
+            support@sparkable.cc
           </a>
           <br />
-          Butterfy (Association) <br />
+          Sparkable (Association) <br />
           CH-8000 Zurich, Switzerland
         </div>
         <div className={styles.footerColumn}>
@@ -89,6 +89,26 @@ export const Footer = () => {
           />
         </div>
         <div className={styles.footerBottomColumn}>
+          <div>
+            <br />
+            <br />
+            <p>
+              <a href="https://engagement.migros.ch/en/" target="_blank" rel="noopener noreferrer">
+                <img
+                  src="/svg/migros-2.png"
+                  alt="Migros Pioneer Fund"
+                  className={styles.footerMigros}
+                />
+              </a>
+            </p>
+            <p><b>About Migros Pioneer Fund</b></p>
+            <p>
+            The Migros Pioneer Fund looks for and supports ideas with social potential. It enables pioneering projects that break new ground and seek out forward-looking solutions. Its impact-oriented funding approach combines financial support with coaching services. The Migros Pioneer Fund is part of the Migros Group's social commitment and is enabled by the Migros Group with around CHF 15 million annually. For further information: <a href="https://www.migros-pionierfonds.ch/en" target="_blank" rel="noopener noreferrer">www.migros-pionierfonds.ch/en</a>
+            </p>
+          </div>
+          <br />
+          <br />
+          <br />
           <div>
             <img
               src="/svg/open-source.svg"

@@ -1,13 +1,13 @@
-import styles from "./index.module.scss";
-import { useState, useRef, useEffect } from "react";
 import classNames from "classnames";
-import { useRouter } from "next/router";
-import { useOutsideClick } from "../../utils/useOutsideClick";
-import { useLazyGetVotingStatusQuery } from "../../store/api/votingApi";
 import dayjs from "dayjs";
-import { setVotingBannerVisible } from "../../store/UIslice";
-import { useAppDispatch } from "../../store/hooks";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
+import { useLazyGetVotingStatusQuery } from "../../store/api/votingApi";
+import { useAppDispatch } from "../../store/hooks";
+import { setVotingBannerVisible } from "../../store/UIslice";
+import { useOutsideClick } from "../../utils/useOutsideClick";
+import styles from "./index.module.scss";
 
 interface Props {
   isShort?: boolean
@@ -63,9 +63,9 @@ export const VotingBanner = ({ isShort }: Props) => {
                 <>
                   <div className={styles.messageText}>
                     {
-                      data.daysUntilNextVoting <= 1 ?
+                      data.daysUntilNextVoting < 1 ?
                         <>
-                          <b>{timeArray?.[0]}</b> hours <b>{timeArray?.[1]}</b> minutes until next voting round
+                          Next voting round in <b>{timeArray?.[0]}</b> h <b>{timeArray?.[1]}</b> min
                         </> :
                         <>
                           <b>{data.daysUntilNextVoting}</b> days until next voting round
@@ -83,7 +83,7 @@ export const VotingBanner = ({ isShort }: Props) => {
             <div className={styles.detailsWrapper}>
               <img className={styles.detailsImage} src="/svg/voting-details.svg" alt="voting-details" />
               <div className={styles.detailsColumn}>
-                <b>How it works:</b> Every 2 weeks everyone selects the submissions that were most insightful to them.
+                <b>How it works:</b> In regular time frames, everyone selects the submissions that were most insightful to them.
               </div>
               <div className={styles.detailsColumn}>
                 If you vote you will be able to explore the submissions that made it to the next stage.

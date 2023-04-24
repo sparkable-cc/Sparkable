@@ -1,0 +1,16 @@
+@import "../../styles/variables";
+@import "../../styles/common";
+
+.submitLinkWrapper {
+  background: rgba(65, 85, 245, 0.1);
+  border-radius: 16px;
+  padding: $gapXs;
+  padding-right: 40px;
+  width: 100%;
+  margin-bottom: 16px;
+  font-size: $size13;
+}
+
+.submitLinkText {
+  margin-bottom: 8px;
+}

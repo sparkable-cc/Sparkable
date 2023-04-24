@@ -1,15 +1,15 @@
-import styles from "./index.module.scss";
-import { ArticleLink } from "../ArticleLink";
-import { ApiTypes } from "../../types";
-import { v4 as uuidv4 } from "uuid";
 import classNames from "classnames";
 import dayjs from "dayjs";
-import { Spiner } from "../Spiner";
+import { v4 as uuidv4 } from "uuid";
 import { useLazyPostViewedLinkByUserDataQuery } from "../../store/api/trackingApi";
+import { ApiTypes } from "../../types";
 import { storageKeys } from "../../utils/storageKeys";
+import { ArticleLink } from "../ArticleLink";
+import { Spiner } from "../Spiner";
+import styles from "./index.module.scss";
 
 interface Props extends ApiTypes.Res.Article {
-  isLoading: boolean
+  isLoading: boolean;
   onShareClick: () => void;
 }
 
@@ -20,11 +20,14 @@ export const ArticlePreview = ({
   image,
   date,
   description,
+  statement,
   categories,
+  username,
   isLoading,
-  onShareClick
+  onShareClick,
 }: Props) => {
-  const [triggerPostViewedLinkByUserData] = useLazyPostViewedLinkByUserDataQuery();
+  const [triggerPostViewedLinkByUserData] =
+    useLazyPostViewedLinkByUserDataQuery();
 
   const onLinkTrack = () => {
     const userUuid = sessionStorage.getItem(storageKeys.userId);
@@ -32,7 +35,8 @@ export const ArticlePreview = ({
 
     const data = {
       userUuid,
-      linkUuid: uuid
+      linkUuid: uuid,
+      linkDescription: description,
     };
 
     triggerPostViewedLinkByUserData(data);
@@ -43,19 +47,15 @@ export const ArticlePreview = ({
       <div
         className={styles.articleCover}
         style={{
-          backgroundImage: `url(${image})`
+          backgroundImage: `url(${image})`,
         }}
       />
       <div className={styles.contentWrapper}>
         <div>
           <ArticleLink link={url} uuid={uuid} />
         </div>
-        <h2 className={styles.articleTitle}>
-          {title}
-        </h2>
-        <p className={styles.articleDescription}>
-          {description}
-        </p>
+        <h2 className={styles.articleTitle}>{title}</h2>
+        <p className={styles.articleDescription}>{description}</p>
         <nav className={styles.buttonsWrapper}>
           <a
             href={url}
@@ -66,7 +66,9 @@ export const ArticlePreview = ({
           >
             Open
           </a>
-          <button className={classNames(styles.bookmarkButton, styles.disable)}>Bookmark</button>
+          <button className={classNames(styles.bookmarkButton, styles.disable)}>
+            Bookmark
+          </button>
           <button className={styles.shareButton} onClick={onShareClick} />
           <button className={classNames(styles.dotsButton, styles.disable)} />
         </nav>
@@ -76,17 +78,17 @@ export const ArticlePreview = ({
             <span className={styles.date}>
               Submitted on {dayjs(date).format("D MMM YYYY")}
             </span>
-            <span className={classNames(styles.showMore, styles.disable)}>Show more</span>
           </header>
+          <div>
+            <p className={styles.articleStatement}>@{username}: {statement}</p>
+          </div>
           <div className={styles.categories}>
-            {Boolean(categories?.length) && categories.map(item =>
-              <button
-                key={uuidv4()}
-                className={styles.categoryTag}
-              >
-                {item.name}
-              </button>
-            )}
+            {Boolean(categories?.length) &&
+              categories.map((item) => (
+                <button key={uuidv4()} className={styles.categoryTag}>
+                  {item.name}
+                </button>
+              ))}
           </div>
         </div>
       </div>

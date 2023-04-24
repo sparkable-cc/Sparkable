@@ -1,10 +1,9 @@
 import { MandatoryFieldEmptyException } from '../../users/domain/exceptions/MandatoryFieldEmptyException';
 import { UserNotFoundException } from '../../users/domain/exceptions/UserNotFoundException';
-import { User } from '../../users/domain/models/User';
 import { UserRepository } from '../../users/domain/repositories/UserRepository';
+import { GetCurrentCycleService } from '../../voting/domain/services/GetCurrentCycleService';
 import { DataDoesExistException } from '../domain/exceptions/DataDoesExistException';
 import { LinkNotFoundException } from '../domain/exceptions/LinkNotFoundException';
-import { Link } from '../domain/models/Link';
 import { ViewedLinkByUserData } from '../domain/models/ViewedLinkByUserData';
 import { LinkRepository } from '../domain/repositories/LinkRepository';
 import { ViewedLinkByUserDataRepository } from '../domain/repositories/ViewedLinkByUserDataRepository';
@@ -25,9 +24,20 @@ export class CreateViewedLinkByUserDataAction {
   }
 
   async execute(userUuid: string, linkUuid: string) {
-    const data = new ViewedLinkByUserData(userUuid, linkUuid, 1);
-    await this.checkUserDoesExist(userUuid);
-    await this.checkLinkDoesExist(linkUuid);
+    if (!userUuid || !linkUuid) {
+      throw new MandatoryFieldEmptyException();
+    }
+
+    const user = await this.checkUserDoesExist(userUuid);
+    const link = await this.checkLinkDoesExist(linkUuid);
+
+    const data = new ViewedLinkByUserData(
+      userUuid,
+      linkUuid,
+      GetCurrentCycleService.execute().cycle,
+      user.stage,
+      link.stage
+    );
     await this.checkDataIsNew(userUuid, linkUuid);
     this.viewedLinkByUserDataRepository.store(data);
   }

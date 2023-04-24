@@ -13,9 +13,9 @@ export class ViewedLinkByUserData {
     userUuid:string,
     linkUuid:string,
     cycle: number,
-    voted: boolean = false,
     userStage: number = 1,
     linkStage: number = 1,
+    voted: boolean = false,
   ) {
     if (!userUuid || !linkUuid || !cycle) {
       throw new MandatoryFieldEmptyException();
