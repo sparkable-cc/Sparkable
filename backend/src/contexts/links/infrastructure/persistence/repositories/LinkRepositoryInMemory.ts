@@ -21,8 +21,18 @@ export class LinkRepositoryInMemory implements LinkRepository {
     return new Promise((resolve) => resolve(this.links[0]));
   }
 
-  storeLink(link: Link): Promise<LinkDto> {
-    this.links.push(link.toDto());
+  async storeLink(link: Link): Promise<LinkDto> {
+    const linkDto = link.toDto();
+    if (await this.findLink('uuid', link.uuid)) {
+      this.links.forEach((link, index) => {
+        if(link.uuid === linkDto.uuid) {
+            this.links[index].stage = 2;
+        }
+      });
+    } else {
+      this.links.push(linkDto);
+    }
+
     return new Promise((resolve) => resolve(link.toDto()));
   }
 
