@@ -1,13 +1,13 @@
 import type { NextPage } from "next";
-import { useState, useEffect } from "react";
-import styles from "../../styles/Article.module.scss";
-import { ArticlesList } from "../../components/ArticlesList";
-import { ArticlePreview } from "../../components/ArticlePreview";
-import { BackButton } from "../../components/BackButton";
-import { useLazyGetArticleByIDQuery } from "../../store/api/articlesApi";
 import { useRouter } from "next/router";
-import { ApiTypes } from "../../types";
+import { useEffect, useState } from "react";
+import { ArticlePreview } from "../../components/ArticlePreview";
+import { ArticlesList } from "../../components/ArticlesList";
+import { BackButton } from "../../components/BackButton";
 import { ModalShare } from "../../components/ModalShare";
+import { useLazyGetArticleByIDQuery } from "../../store/api/articlesApi";
+import styles from "../../styles/Article.module.scss";
+import { ApiTypes } from "../../types";
 
 const Article: NextPage = () => {
   const [ isCopyModalVisible, setCopyModalVisible ] = useState(false);
@@ -38,7 +38,7 @@ const Article: NextPage = () => {
         data && <ModalShare
           isVisible={isCopyModalVisible}
           onCancel={() => setCopyModalVisible(false)}
-          textLink={data?.url}
+          textLink={data?.url.slice(0, 30) + "..."}
         />
       }
     </>
