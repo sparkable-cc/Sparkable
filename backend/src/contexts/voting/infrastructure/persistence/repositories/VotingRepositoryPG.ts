@@ -16,7 +16,9 @@ export class VotingRepositoryPG implements VotingRepository {
   }
 
   findVoting(options: Object): Promise<VotingDto | null> {
-    return this.repository.findOneBy(options);
+    return this.repository.findOne({
+      where: options
+    });
   }
 
 }

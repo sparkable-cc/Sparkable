@@ -380,10 +380,12 @@ app.post('/viewed-link-user', checkJwt, async (req: Request, res: Response) => {
 });
 
 app.post('/voting-status', async (req: Request, res: Response) => {
-  const getVotingStatusAction = new GetVotingStatusAction();
+  const getVotingStatusAction = new GetVotingStatusAction(
+    new VotingRepositoryPG(dataSource)
+  );
 
   getVotingStatusAction
-    .execute()
+    .execute(req.body.userUuid)
     .then((votingStatus) => {
       res.status(200);
       res.send(votingStatus);
@@ -448,7 +450,7 @@ app.post('/votes', checkJwt, async (req: Request, res: Response) => {
   createVoteAction
     .execute(
       req.body.userUuid,
-      req.body.votes
+      JSON.parse(req.body.votes)
     )
     .then(() => {
       res.status(200);

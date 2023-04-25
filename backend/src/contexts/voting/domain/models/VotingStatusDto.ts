@@ -4,4 +4,5 @@ export interface VotingStatusDto {
   nextOpenVotingDate:string;
   daysUntilNextVoting:number;
   timeUntilNextVoting:string;
+  userHasVoted:boolean;
 }
