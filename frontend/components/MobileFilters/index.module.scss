@@ -117,7 +117,8 @@
   }
 
   &.active {
-    background: rgba(0, 108, 123, 0.4);
+    background: rgba(65, 85, 245, 0.1);
+    color: #3748d0;
 
     &:after {
       content: url("../../public/svg/cros.svg");
