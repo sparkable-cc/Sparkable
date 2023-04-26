@@ -21,6 +21,18 @@ const Article: NextPage = () => {
     }
   }, [slug]);
 
+  const getTruncatedLink = (url?: string) => {
+    if (!url) return "";
+
+    const urlObj = new URL(url);
+    const subDomain = urlObj.hostname.split(".")[0];
+    const domain = urlObj.hostname.replace(`${subDomain}.`, "");
+    const tld = domain.split(".").slice(-1)[0];
+
+    return `${subDomain}.${domain.slice(0, 3)}...${tld}`;
+  };
+
+
   return (
     <>
       <div className={styles.backButtonWrapper}>
@@ -38,7 +50,7 @@ const Article: NextPage = () => {
         data && <ModalShare
           isVisible={isCopyModalVisible}
           onCancel={() => setCopyModalVisible(false)}
-          textLink={data?.url.slice(0, 30) + "..."}
+          textLink={getTruncatedLink(data?.url)}
         />
       }
     </>
