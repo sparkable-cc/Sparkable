@@ -25,9 +25,9 @@ interface Props {
 }
 
 export const ArticlesList = ({ isPreviewPage }: Props) => {
-  const [ currentPage, setCurrentPage ] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const dispatch = useAppDispatch();
-  const [ trigger, { isLoading }] = useLazyGetArticlesQuery();
+  const [trigger, { isLoading }] = useLazyGetArticlesQuery();
   const selectedFilters = useAppSelector(selectSelectedFilters);
   const sort = useAppSelector(selectSort);
   const total = useAppSelector(selectTotal);
@@ -44,11 +44,11 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
     };
 
     if (sorts) {
-      queryParams = { ...queryParams, ...{ sort: sorts }};
+      queryParams = { ...queryParams, ...{ sort: sorts } };
     }
 
     if (page) {
-      queryParams = { ...queryParams, ...{ page }};
+      queryParams = { ...queryParams, ...{ page } };
     }
 
     return queryParams;
@@ -70,7 +70,7 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
             dispatch(setArticles(res.data?.links));
           } else {
             dispatch(
-              setArticles(uniqBy([ ...articles, ...res.data?.links ], "id")),
+              setArticles(uniqBy([...articles, ...res.data?.links], "id")),
             );
           }
         } else {
@@ -100,17 +100,17 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
     if (previousSort && !isEqual(sort, previousSort)) {
       onGetData();
     }
-  }, [ selectedFilters, sort ]);
+  }, [selectedFilters, sort]);
 
   return (
     <>
-      <section
-        className={classNames(styles.articlesList, {
-          [styles.previewPage]: isPreviewPage,
-        })}
-      >
+      <section className={styles.articlesList}>
         {Boolean(articles?.length) &&
-          articles.map((item) => <ArticleItem {...item} key={uuidv4()} />)}
+          articles.map((item) => <ArticleItem
+            className={classNames({ [styles.articleItemPreview]: isPreviewPage })}
+            key={uuidv4()}
+            {...item}
+          />)}
       </section>
       {isLoading && <Spiner wrapperClassName={styles.spinnerWrapper} />}
       {Boolean(articles?.length) && (
