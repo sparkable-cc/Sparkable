@@ -21,17 +21,14 @@ const Article: NextPage = () => {
     }
   }, [slug]);
 
-  const getTruncatedLink = (url?: string) => {
-    if (!url) return "";
-
-    const urlObj = new URL(url);
-    const subDomain = urlObj.hostname.split(".")[0];
-    const domain = urlObj.hostname.replace(`${subDomain}.`, "");
-    const tld = domain.split(".").slice(-1)[0];
-
-    return `${subDomain}.${domain.slice(0, 3)}...${tld}`;
-  };
-
+  useEffect(() => {
+    if (data?.url) {
+      const url = new URL(data.url);
+      const domain = url.hostname.replace("www.", "");
+      const truncatedUrl = domain.replace(/^(https?)/, "");
+      document.title = `${data.title} | ${truncatedUrl}`;
+    }
+  }, [data]);
 
   return (
     <>
@@ -50,7 +47,7 @@ const Article: NextPage = () => {
         data && <ModalShare
           isVisible={isCopyModalVisible}
           onCancel={() => setCopyModalVisible(false)}
-          textLink={getTruncatedLink(data?.url)}
+          textLink={(data?.url)}
         />
       }
     </>
