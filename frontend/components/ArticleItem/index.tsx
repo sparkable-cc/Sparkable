@@ -2,7 +2,7 @@ import styles from "./index.module.scss";
 import { ApiTypes } from "../../types";
 import { ArticleLink } from "../ArticleLink";
 import { useRouter } from "next/router";
-import classNames from 'classnames';
+import classNames from "classnames";
 
 interface Props extends ApiTypes.Model.Link {
   className?: string
