@@ -1,4 +1,3 @@
-import { link } from "fs";
 import { Link } from "../../links/domain/models/Link";
 import { LinkRepository } from "../../links/domain/repositories/LinkRepository";
 import { VoteRepository } from "../../voting/domain/repositories/VoteRepository";
@@ -32,6 +31,7 @@ export class IncreaseStageOnLinksAction {
       this.linkRepository.storeLink(new Link(linkDto));
     });
 
+    return totalVotes;
   }
 
 }

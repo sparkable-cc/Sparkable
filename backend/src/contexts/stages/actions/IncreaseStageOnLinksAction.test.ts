@@ -1,6 +1,4 @@
 import { describe, expect, test } from '@jest/globals';
-import { link } from 'fs';
-import LinkFactory from '../../../factories/LinkFactory';
 import { Link } from '../../links/domain/models/Link';
 import { LinkRepository } from '../../links/domain/repositories/LinkRepository';
 import { LinkRepositoryInMemory } from '../../links/infrastructure/persistence/repositories/LinkRepositoryInMemory';
@@ -65,6 +63,47 @@ describe('Increase stage on links action', () => {
     expect(links?.[0].stage).toEqual(2);
   });
 
+  test('increase stage on multiple links', async () => {
+    const linkDto = {
+      title: 'title',
+      url: 'url',
+      categories: [{id:1, name:'name', slug:'name'}],
+      userUuid: 'userUuid'
+    };
+    const link = new Link(linkDto);
+    const link2 = new Link(linkDto);
+    const link3 = new Link(linkDto);
+    linkRepository.storeLink(link);
+    linkRepository.storeLink(link2);
+    linkRepository.storeLink(link3);
+
+    voteRepository.storeVote(new Vote({
+      userUuid: 'userUuid',
+      linkUuid: link.uuid,
+      cycle: 1,
+      userStage: 1,
+      linkStage: 1
+    }));
+    voteRepository.storeVote(new Vote({
+      userUuid: 'userUuid',
+      linkUuid: link3.uuid,
+      cycle: 1,
+      userStage: 1,
+      linkStage: 1
+    }));
+
+    jest.setSystemTime(new Date(2023, 3, 7));
+    await increaseStageOnLinksAction.execute();
+
+    const [links, total] = await linkRepository.getAllLinks();
+    expect(total).toEqual(3);
+    expect(links?.[0].uuid).toEqual(link.uuid);
+    expect(links?.[0].stage).toEqual(2);
+    expect(links?.[1].uuid).toEqual(link2.uuid);
+    expect(links?.[1].stage).toEqual(1);
+    expect(links?.[2].uuid).toEqual(link3.uuid);
+    expect(links?.[2].stage).toEqual(2);
+  });
 
   //E2E
   //test('cant increase stage on links when there are no votes in this cycle', async () => {

@@ -15,4 +15,5 @@ export class VoteRepositoryPG implements VoteRepository {
     return this.repository.save(vote.toDto());
   }
 
+  getAllVotes: (options?: Object | undefined) => Promise<[VoteDto[], number]>;
 }

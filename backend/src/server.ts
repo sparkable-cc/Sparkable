@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import app from './app';
 import dataSource from './data-source';
+import { scheduledActions } from './scheduledActions';
 
 dotenv.config();
 
@@ -14,6 +15,8 @@ dataSource
   .catch((err) => {
     console.error('Error during Data Source initialization:', err);
   });
+
+scheduledActions.start();
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
