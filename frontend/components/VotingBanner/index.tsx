@@ -15,15 +15,15 @@ interface Props {
 }
 
 export const VotingBanner = ({ isShort }: Props) => {
-  const [isOpen, setOpen] = useState(false);
-  const [timeArray, setTimeArray] = useState([]);
+  const [ isOpen, setOpen ] = useState(false);
+  const [ timeArray, setTimeArray ] = useState([]);
   const router = useRouter();
   const nodeRef = useRef(null);
-  const [triggerGetVotingStatus, { isLoading, data }] = useLazyGetVotingStatusQuery();
+  const [ triggerGetVotingStatus, { isLoading, data }] = useLazyGetVotingStatusQuery();
   const dispatch = useAppDispatch();
   let userId;
 
-  if (typeof window !== 'undefined'){
+  if (typeof window !== "undefined"){
     userId = sessionStorage.getItem(storageKeys.userId);
   }
 
@@ -43,7 +43,7 @@ export const VotingBanner = ({ isShort }: Props) => {
     const body = {
       date,
       userUuid: userId ? userId : ""
-    }
+    };
     triggerGetVotingStatus(body);
   }, [userId]);
 
@@ -64,11 +64,9 @@ export const VotingBanner = ({ isShort }: Props) => {
             {
               data?.openVoting ?
                 data?.userHasVoted ?
-                  <>
-                    <div className={styles.messageText}>
+                  <div className={styles.messageText}>
                       You are already voted
-                    </div>
-                  </> :
+                  </div> :
                   <>
                     <div className={styles.messageText}>
                       Voting is now open!
