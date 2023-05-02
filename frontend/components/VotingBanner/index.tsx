@@ -49,7 +49,7 @@ export const VotingBanner = ({ isShort }: Props) => {
   if (data?.daysUntilNextVoting !== undefined && data?.daysUntilNextVoting <= 10 && checkException()) {
     return (
       <div className={classNames(styles.bannerWrapper, { [styles.short]: isShort })} ref={nodeRef}>
-        <div className={styles.banner}>
+        <div className={styles.banner} onClick={() => setOpen(!isOpen)}>
           <div className={styles.messageWrapper}>
             {
               data?.openVoting ?
@@ -72,7 +72,7 @@ export const VotingBanner = ({ isShort }: Props) => {
                         </>
                     }
                   </div>
-                  <span className={styles.toggleButton} onClick={() => setOpen(!isOpen)}>
+                  <span className={styles.toggleButton} >
                     {isOpen ? "Hide" : "What is this?"}
                   </span>
                 </>
