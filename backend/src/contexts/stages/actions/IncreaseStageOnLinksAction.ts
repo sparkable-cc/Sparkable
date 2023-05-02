@@ -18,7 +18,7 @@ export class IncreaseStageOnLinksAction {
 
   async execute() {
     const [voteCollection, totalVotes] = await this.voteRepository.getAllVotes({
-      cycle: GetCurrentCycleService.execute()
+      cycle: GetCurrentCycleService.execute().cycle - 1
     });
 
     if (totalVotes === 0) {
@@ -27,8 +27,10 @@ export class IncreaseStageOnLinksAction {
 
     voteCollection.forEach(async vote => {
       let linkDto = await this.linkRepository.findLink('uuid', vote.linkUuid);
-      if (linkDto) linkDto.stage = 2;
-      this.linkRepository.storeLink(new Link(linkDto));
+      if (linkDto) {
+        linkDto.stage = 2;
+        this.linkRepository.storeLink(new Link(linkDto));
+      }
     });
 
     return totalVotes;

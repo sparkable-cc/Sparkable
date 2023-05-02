@@ -38,6 +38,7 @@ const scheduleAction = async () => {
   });
 };
 
-var scheduledActions = cron.schedule('* * * * *', scheduleAction, scheduleOptions);
+//At 04:00 on Monday
+var scheduledActions = cron.schedule('0 4 * * 1', scheduleAction, scheduleOptions);
 
 export { scheduledActions };

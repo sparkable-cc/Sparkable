@@ -110,7 +110,8 @@ describe('Create voting action', () => {
     expect(votings?.[0].cycle).toEqual(1);
     expect(votings?.[0].countVotes).toEqual(0);
 
-    const voteCollection = await voteRepository.getAllVotes();
+    const [voteCollection, total] = await voteRepository.getAllVotes();
+    expect(total).toEqual(0);
     expect(voteCollection).toEqual([]);
 
     const [ data ] = await viewedLinkByUserDataRepository.getAllData({});
