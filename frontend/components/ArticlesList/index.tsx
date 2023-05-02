@@ -104,13 +104,13 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
 
   return (
     <>
-      <section
-        className={classNames(styles.articlesList, {
-          [styles.previewPage]: isPreviewPage,
-        })}
-      >
+      <section className={styles.articlesList}>
         {Boolean(articles?.length) &&
-          articles.map((item) => <ArticleItem {...item} key={uuidv4()} />)}
+          articles.map((item) => <ArticleItem
+            className={classNames({ [styles.articleItemPreview]: isPreviewPage })}
+            key={uuidv4()}
+            {...item}
+          />)}
       </section>
       {isLoading && <Spiner wrapperClassName={styles.spinnerWrapper} />}
       {Boolean(articles?.length) && (

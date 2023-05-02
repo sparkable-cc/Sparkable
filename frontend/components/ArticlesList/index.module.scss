@@ -2,24 +2,15 @@
 @import "../../styles/common";
 
 .articlesList {
-  columns: 2;
-  column-gap: $gapS;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
 
-  @media only screen and (min-width: $desktop) {
-    columns: 3;
-    display: inline-flex;
-    flex-wrap: wrap;
-  }
-
-  @media only screen and (max-width: $mobile) {
-    columns: 1;
-  }
-
-  &.previewPage {
-    @media only screen and (max-width: $laptop) {
-      columns: 1;
-    }
-  }
+.articleItemPreview {
+  @media only screen and (max-width: $laptop){
+    width: 100%;
+  }  
 }
 
 .loadMoreWrapper {

@@ -15,7 +15,7 @@ const HomePage: NextPage = () => {
   return (
     <>
       <Head>
-        <link rel="shortcut icon" href="/public/favicon.ico" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         <title>Sparkable</title>
         <meta
           name="description"

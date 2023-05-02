@@ -7,6 +7,7 @@ import { useLazyGetVotingStatusQuery } from "../../store/api/votingApi";
 import { useAppDispatch } from "../../store/hooks";
 import { setVotingBannerVisible } from "../../store/UIslice";
 import { useOutsideClick } from "../../utils/useOutsideClick";
+import { storageKeys } from "../../utils/storageKeys";
 import styles from "./index.module.scss";
 
 interface Props {
@@ -20,6 +21,11 @@ export const VotingBanner = ({ isShort }: Props) => {
   const nodeRef = useRef(null);
   const [ triggerGetVotingStatus, { isLoading, data }] = useLazyGetVotingStatusQuery();
   const dispatch = useAppDispatch();
+  let userId;
+
+  if (typeof window !== "undefined"){
+    userId = sessionStorage.getItem(storageKeys.userId);
+  }
 
   const checkException = () => {
     if (/article|voting/.test(router.route)) {
@@ -34,8 +40,12 @@ export const VotingBanner = ({ isShort }: Props) => {
 
   useEffect(() => {
     const date = dayjs().format("YYYY-MM-DD hh:mm:s");
-    triggerGetVotingStatus({ date });
-  }, []);
+    const body = {
+      date,
+      userUuid: userId ? userId : ""
+    };
+    triggerGetVotingStatus(body);
+  }, [userId]);
 
   useEffect(() => {
     if (data?.timeUntilNextVoting) {
@@ -53,12 +63,16 @@ export const VotingBanner = ({ isShort }: Props) => {
           <div className={styles.messageWrapper}>
             {
               data?.openVoting ?
-                <>
+                data?.userHasVoted ?
                   <div className={styles.messageText}>
-                    Voting is now open!
-                  </div>
-                  <Link href="/voting/participate" className={styles.voiteButton}>Vote Now</Link>
-                </>
+                      You are already voted
+                  </div> :
+                  <>
+                    <div className={styles.messageText}>
+                      Voting is now open!
+                    </div>
+                    <Link href="/voting/participate" className={styles.voiteButton}>Vote Now</Link>
+                  </>
                 :
                 <>
                   <div className={styles.messageText}>
