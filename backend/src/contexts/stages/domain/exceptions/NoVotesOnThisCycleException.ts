@@ -1,0 +1,1 @@
+export class NoVotesOnThisCycleException extends Error {}

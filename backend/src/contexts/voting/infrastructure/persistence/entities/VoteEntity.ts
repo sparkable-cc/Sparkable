@@ -4,10 +4,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { VoteDto } from '../../../domain/models/VoteDto';
 
 @Entity('votes')
-export class VoteEntity {
-
+export class VoteEntity implements VoteDto {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -22,4 +22,10 @@ export class VoteEntity {
 
   @CreateDateColumn({ type: 'timestamptz' })
   date: Date;
+
+  @Column()
+  userStage: number;
+
+  @Column()
+  linkStage: number;
 }
