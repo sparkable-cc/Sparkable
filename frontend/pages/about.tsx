@@ -1,8 +1,8 @@
+import classNames from "classnames";
 import type { NextPage } from "next";
 import Head from "next/head";
-import styles from "../styles/About.module.scss";
-import classNames from "classnames";
 import Link from "next/link";
+import styles from "../styles/About.module.scss";
 
 const About: NextPage = () => {
   return (
@@ -193,7 +193,7 @@ const About: NextPage = () => {
         </section>
         {/* VALUES */}
         <section className={styles.valuesWrapper}>
-          <span className={styles.valuesTag}>OUR COMMUNITY</span>
+          <span className={styles.valuesTag}>OUR VALUES</span>
           <div className={styles.valuesContainer}>
             <div className={styles.valuesItem}>
               <h3 className={styles.valuesTitle}>Randomness & Diversity</h3>
