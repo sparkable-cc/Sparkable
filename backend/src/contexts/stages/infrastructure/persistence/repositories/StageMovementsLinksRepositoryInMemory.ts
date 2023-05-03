@@ -10,8 +10,11 @@ export class StageMovementsLinksRepositoryInMemory implements StageMovementsLink
     this.stageMovementsLinksCollection = [];
   }
 
-  storeStageMovementLink(stageMovementLink: StageMovementsLinks) {
+  storeStageMovementLink(stageMovementLink: StageMovementsLinks): Promise<StageMovementsLinksDto> {
+    const stageMovementsLinksDto = stageMovementLink.toDto();
     this.stageMovementsLinksCollection.push(stageMovementLink.toDto());
+
+    return new Promise((resolve, rejects) => resolve(stageMovementsLinksDto));
   }
 
   findStageMovementLink(options: Object): Promise<StageMovementsLinksDto | null> {

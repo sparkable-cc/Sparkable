@@ -32,6 +32,7 @@ export class IncreaseStageOnLinksAction {
       throw new NoVotesOnThisCycleException();
     }
 
+    let countLinksUpdated = 0;
     for (let index = 0; index < voteCollection.length; index++) {
       const vote = voteCollection[index];
       const stageMovementLink = await this.stageMovementsLinksRepository.findStageMovementLink(
@@ -43,10 +44,11 @@ export class IncreaseStageOnLinksAction {
 
       if (!stageMovementLink) {
         await this.changeStageOnLink(vote, lastCycle);
+        countLinksUpdated++;
       }
     };
 
-    return totalVotes;
+    return countLinksUpdated;
   }
 
   private async changeStageOnLink(vote: VoteDto, lastCycle: number) {
