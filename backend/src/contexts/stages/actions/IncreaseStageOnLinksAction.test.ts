@@ -6,12 +6,15 @@ import { Vote } from '../../voting/domain/models/Vote';
 import { VoteRepository } from '../../voting/domain/repositories/VoteRepository';
 import { VoteRepositoryInMemory } from '../../voting/infrastructure/persistence/repositories/VoteRepositoryInMemory';
 import { NoVotesOnThisCycleException } from '../domain/exceptions/NoVotesOnThisCycleException';
+import { StageMovementsLinksRepository } from '../domain/repositories/StageMovementsLinksRepository';
+import { StageMovementsLinksRepositoryInMemory } from '../infrastructure/persistence/repositories/StageMovementsLinksRepositoryInMemory';
 import { IncreaseStageOnLinksAction } from './IncreaseStageOnLinksAction';
 
 describe('Increase stage on links action', () => {
   let increaseStageOnLinksAction: IncreaseStageOnLinksAction;
   let voteRepository: VoteRepository;
   let linkRepository: LinkRepository;
+  let stageMovementsLinksRepository: StageMovementsLinksRepositoryInMemory;
 
   beforeAll(() => {
     jest.useFakeTimers();
@@ -24,9 +27,11 @@ describe('Increase stage on links action', () => {
   beforeEach(async () => {
     voteRepository = new VoteRepositoryInMemory();
     linkRepository = new LinkRepositoryInMemory();
+    stageMovementsLinksRepository = new StageMovementsLinksRepositoryInMemory();
     increaseStageOnLinksAction = new IncreaseStageOnLinksAction(
       voteRepository,
-      linkRepository
+      linkRepository,
+      stageMovementsLinksRepository
     );
   });
 
@@ -92,7 +97,7 @@ describe('Increase stage on links action', () => {
       linkStage: 1
     }));
 
-    jest.setSystemTime(new Date(2023, 3, 7));
+    jest.setSystemTime(new Date(2023, 3, 11));
     await increaseStageOnLinksAction.execute();
 
     const [links, total] = await linkRepository.getAllLinks();
@@ -103,9 +108,58 @@ describe('Increase stage on links action', () => {
     expect(links?.[1].stage).toEqual(1);
     expect(links?.[2].uuid).toEqual(link3.uuid);
     expect(links?.[2].stage).toEqual(2);
+
+    const stageMovementsLinksCollection = stageMovementsLinksRepository.all();
+    expect(stageMovementsLinksCollection.length).toEqual(2);
+    expect(stageMovementsLinksCollection[0].linkUuid).toEqual(link.uuid);
+    expect(stageMovementsLinksCollection[0].oldStage).toEqual(1);
+    expect(stageMovementsLinksCollection[0].newStage).toEqual(2);
+    expect(stageMovementsLinksCollection[0].cycle).toEqual(1);
+    expect(stageMovementsLinksCollection[1].linkUuid).toEqual(link3.uuid);
+    expect(stageMovementsLinksCollection[1].oldStage).toEqual(1);
+    expect(stageMovementsLinksCollection[1].newStage).toEqual(2);
+    expect(stageMovementsLinksCollection[1].cycle).toEqual(1);
   });
 
-  //E2E
-  //test('cant increase stage on links when there are no votes in this cycle', async () => {
+  test('save only one movement in one link with multiple votes', async () => {
+    const linkDto = {
+      title: 'title',
+      url: 'url',
+      categories: [{id:1, name:'name', slug:'name'}],
+      userUuid: 'userUuid'
+    };
+    const link = new Link(linkDto);
+    linkRepository.storeLink(link);
+
+    voteRepository.storeVote(new Vote({
+      userUuid: 'userUuid',
+      linkUuid: link.uuid,
+      cycle: 1,
+      userStage: 1,
+      linkStage: 1
+    }));
+    voteRepository.storeVote(new Vote({
+      userUuid: 'userUuid2',
+      linkUuid: link.uuid,
+      cycle: 1,
+      userStage: 1,
+      linkStage: 1
+    }));
+
+    jest.setSystemTime(new Date(2023, 3, 11));
+    await increaseStageOnLinksAction.execute();
+
+    const [links, total] = await linkRepository.getAllLinks();
+    expect(total).toEqual(1);
+    expect(links?.[0].uuid).toEqual(link.uuid);
+    expect(links?.[0].stage).toEqual(2);
+
+    const stageMovementsLinksCollection = stageMovementsLinksRepository.all();
+    expect(stageMovementsLinksCollection.length).toEqual(1);
+    expect(stageMovementsLinksCollection[0].linkUuid).toEqual(link.uuid);
+    expect(stageMovementsLinksCollection[0].oldStage).toEqual(1);
+    expect(stageMovementsLinksCollection[0].newStage).toEqual(2);
+    expect(stageMovementsLinksCollection[0].cycle).toEqual(1);
+  });
 
 });
