@@ -4,7 +4,10 @@
 .articlesList {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between; //creating a gap between the cards when it's less than 3
+
+  @media only screen and (max-width: $tablet) {
+    justify-content: space-between;
+  }
 }
 
 .articleItemPreview {
