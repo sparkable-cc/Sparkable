@@ -6,6 +6,7 @@ export interface LinkRepository {
     sort?: string,
     categories?: string,
     page?: number,
+    stage?: number
   ) => Promise<[LinkDto[], number]>;
   getLinkById: (id: number) => Promise<LinkDto | null>;
   storeLink: (link: Link) => void;

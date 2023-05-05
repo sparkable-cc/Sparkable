@@ -167,4 +167,39 @@ describe('GET /links', () => {
     expect(res.body.links[0].title).toEqual('title5');
     expect(res.body.links[1].title).toEqual('title4');
   });
+
+  it('returns 200 get all links filtering by stage', async () => {
+    const secondStage = 2;
+    await LinkFactory.createX(3);
+    await LinkFactory.createX(2, [], secondStage);
+
+    const res = await request(app).get('/links?stage=' + secondStage);
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.total).toEqual(2);
+    expect(res.body.links[0].stage).toEqual(secondStage);
+    expect(res.body.links[1].stage).toEqual(secondStage);
+  });
+
+  it('returns 200 get all links filtering by stage and categories', async () => {
+    const slug = 'business-and-economy';
+    const category1 = await CategoryFactory.create('Environment', 'env');
+    const category2 = await CategoryFactory.create('Business & Economy', slug);
+    const secondStage = 2;
+    await LinkFactory.createX(2, [category1], secondStage);
+    await LinkFactory.createX(2, [category2]);
+    await LinkFactory.createX(3, [category2], secondStage);
+
+    const res = await request(app).get('/links?stage=' + secondStage + '&categories=' + category2.slug);
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.total).toEqual(3);
+    expect(res.body.links[0].stage).toEqual(secondStage);
+    expect(res.body.links[0].categories[0].slug).toEqual(slug);
+    expect(res.body.links[1].stage).toEqual(secondStage);
+    expect(res.body.links[1].categories[0].slug).toEqual(slug);
+    expect(res.body.links[2].stage).toEqual(secondStage);
+    expect(res.body.links[2].categories[0].slug).toEqual(slug);
+  });
+
 });
