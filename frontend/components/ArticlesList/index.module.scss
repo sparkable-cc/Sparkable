@@ -4,13 +4,16 @@
 .articlesList {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+
+  @media only screen and (max-width: $tablet) {
+    justify-content: space-between;
+  }
 }
 
 .articleItemPreview {
   @media only screen and (max-width: $laptop){
     width: 100%;
-  }  
+  }
 }
 
 .loadMoreWrapper {
