@@ -102,6 +102,9 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
     }
   }, [ selectedFilters, sort ]);
 
+
+  console.log(articles);
+
   return (
     <>
       <section className={styles.articlesList}>
@@ -111,6 +114,7 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
             key={uuidv4()}
             {...item}
           />)}
+        {articles?.length % 3 == 2 && <div className={styles.dummyItem} />}
       </section>
       {isLoading && <Spiner wrapperClassName={styles.spinnerWrapper} />}
       {Boolean(articles?.length) && (
