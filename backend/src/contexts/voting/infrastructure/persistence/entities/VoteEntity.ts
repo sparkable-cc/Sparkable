@@ -23,9 +23,9 @@ export class VoteEntity implements VoteDto {
   @CreateDateColumn({ type: 'timestamptz' })
   date: Date;
 
-  @Column()
+  @Column({nullable: true})
   userStage: number;
 
-  @Column()
+  @Column({nullable: true})
   linkStage: number;
 }
