@@ -225,9 +225,11 @@ app.get('/links', async (req: Request, res: Response) => {
 
   let page: number = 0;
   if (req.query.page) page = +req.query.page;
+  let stage: number = 0;
+  if (req.query.stage) stage = +req.query.stage;
 
   getAllLinksAction
-    .execute(req.query.sort as string, req.query.categories as string, page)
+    .execute(req.query.sort as string, req.query.categories as string, page, stage)
     .then((result) => {
       res.status(200);
       res.send({ links: result[0], total: result[1] });

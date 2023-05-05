@@ -28,6 +28,7 @@ export default class LinkFactory {
       categories?: Array<CategoryEntity>;
       userUuid?: string;
       uuid?: string;
+      stage?: number
     }
   ): Promise<LinkDto> {
     const linkRepository = dataSource.getRepository(LinkEntity);
@@ -39,15 +40,21 @@ export default class LinkFactory {
     if (params?.categories) link.categories = params.categories;
     if (params?.userUuid) link.userUuid = params.userUuid;
     if (params?.uuid) link.uuid = params.uuid;
+    if (params?.stage) link.stage = params.stage;
 
     return await linkRepository.manager.save(link);
   }
 
-  public static async createX(x: number, categories?: Array<CategoryEntity>) {
+  public static async createX(
+    x: number,
+    categories?: Array<CategoryEntity>,
+    stage?: number
+  ) {
     for (let index = 0; index < x; index++) {
       await LinkFactory.create({
         categories,
-        title: this.linkDto.title + index
+        title: this.linkDto.title + index,
+        stage: stage || 1
       });
     }
   }

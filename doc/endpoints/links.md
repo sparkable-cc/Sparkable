@@ -17,6 +17,7 @@ By default return 20 links sorted randomly
 - 'sort=-date' (sorted newest first, 6 by 6)
 - 'categories=categories1,categories2,...' (filter by categories)
 - 'page=2' (pagination to sorted by date, 6 by 6)
+- 'stage=2' (number of the stage)
 
 ### Success Response
 
@@ -34,7 +35,8 @@ By default return 20 links sorted randomly
             "link": "https://www.butterfy.me/",
             "image": "https://uploads-ssl.webflow.com/5fe2721ea6fb441f47d88866/5fe2726881e6e52053a0217c_Butterfy_Logo-p-500.png",
             "date": "2022-12-15T11:33:55.110Z",
-            "username": "admin"
+            "username": "admin",
+            ...
         }
     ],
     "total": 10
