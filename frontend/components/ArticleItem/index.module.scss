@@ -6,8 +6,7 @@
   background: $colorWhite;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   border-radius: 16px;
-  width: calc(50% - 16px);
-  margin-right: 16px;
+  width: calc(50% - 8px);
   margin-bottom: $gapS;
   display: flex;
   flex-direction: column;
@@ -16,15 +15,6 @@
   break-inside: avoid;
   overflow: hidden;
 
-  &:nth-child(2n){
-    margin-right: 0;
-  }
-
-  @media only screen and (max-width: $tablet) {
-    margin-right: 0;
-    width: calc(50% - 8px);
-  }
-
   @media only screen and (max-width: $mobile) {
     height: 175px;
     flex-direction: row-reverse;
@@ -32,16 +22,7 @@
   }
   
   @media only screen and (min-width: $desktop) {
-    width: calc(33.33% - 16px);
-    margin-right: 16px;
-
-    &:nth-child(2n){
-      margin-right: 16px;
-    }
-    
-    &:nth-child(3n){
-      margin-right: 0;
-    }
+    width: calc(33.33% - 8px);
   }
 }
 

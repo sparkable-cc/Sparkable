@@ -4,10 +4,7 @@
 .articlesList {
   display: flex;
   flex-wrap: wrap;
-
-  @media only screen and (max-width: $tablet) {
-    justify-content: space-between;
-  }
+  justify-content: space-between;
 }
 
 .articleItemPreview {
@@ -46,4 +43,17 @@
 
 .spinnerWrapper {
   padding-top: $gapS;
+}
+
+.dummyItem {
+  display: none;
+
+  @media only screen and (min-width: $desktop) {
+    width: calc(33.33% - 8px);
+    display: flex;
+  }
+
+  @media only screen and (max-width: $mobile)  {
+    display: none;
+  }
 }
