@@ -12,7 +12,7 @@ export const Welcome = () => {
           understanding?
         </h1>
         <h2 className={styles.subtitle}>
-          Sparkable is a collection of links that have <br />
+          Sparkable is a collection of links that have
           brought lasting new insight to people.
         </h2>
         <div className={styles.buttonsWrapper}>

@@ -2,8 +2,11 @@ import styles from "./index.module.scss";
 import { ApiTypes } from "../../types";
 import { ArticleLink } from "../ArticleLink";
 import { useRouter } from "next/router";
+import classNames from "classnames";
 
-type Props = ApiTypes.Model.Link
+interface Props extends ApiTypes.Model.Link {
+  className?: string
+}
 
 export const ArticleItem = ({
   id,
@@ -13,7 +16,8 @@ export const ArticleItem = ({
   image,
   description,
   date,
-  username
+  username,
+  className,
 }: Props) => {
   const router = useRouter();
 
@@ -22,7 +26,7 @@ export const ArticleItem = ({
   };
 
   return (
-    <article className={styles.articleItem}>
+    <article className={classNames(styles.articleItem, className)}>
       {image && <div
         className={styles.articleCover}
         onClick={onItemClick}

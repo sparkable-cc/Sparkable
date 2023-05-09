@@ -110,7 +110,8 @@ describe('Create voting action', () => {
     expect(votings?.[0].cycle).toEqual(1);
     expect(votings?.[0].countVotes).toEqual(0);
 
-    const voteCollection = await voteRepository.getAllVotes();
+    const [voteCollection, total] = await voteRepository.getAllVotes();
+    expect(total).toEqual(0);
     expect(voteCollection).toEqual([]);
 
     const [ data ] = await viewedLinkByUserDataRepository.getAllData({});
@@ -135,7 +136,7 @@ describe('Create voting action', () => {
     expect(votings?.[0].cycle).toEqual(cycle);
     expect(votings?.[0].countVotes).toEqual(1);
 
-    const voteCollection = await voteRepository.getAllVotes();
+    const [voteCollection, total] = await voteRepository.getAllVotes();
     expect(voteCollection?.length).toEqual(1);
     expect(voteCollection?.[0].userUuid).toEqual(userUuid);
     expect(voteCollection?.[0].linkUuid).toEqual(linkUuid);
@@ -155,7 +156,7 @@ describe('Create voting action', () => {
     const votes = [{linkUuid: linkUuid}, {linkUuid: linkUuidSecond}];
     await createVotingAction.execute(userUuid, votes);
 
-    const votesInDatabase = await voteRepository.getAllVotes();
+    const [votesInDatabase, total] = await voteRepository.getAllVotes();
     expect(votesInDatabase?.length).toEqual(2);
     expect(votesInDatabase?.[0].linkUuid).toEqual(linkUuid);
     expect(votesInDatabase?.[1].linkUuid).toEqual(linkUuidSecond);
@@ -174,7 +175,7 @@ describe('Create voting action', () => {
     const votes = [{linkUuid: linkUuid}, {linkUuid: linkUuidSecond}];
     await createVotingAction.execute(userUuid, votes);
 
-    const votesInDatabase = await voteRepository.getAllVotes();
+    const [votesInDatabase, total] = await voteRepository.getAllVotes();
     expect(votesInDatabase?.length).toEqual(1);
     expect(votesInDatabase?.[0].linkUuid).toEqual(linkUuidSecond);
   });

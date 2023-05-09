@@ -102,15 +102,19 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
     }
   }, [ selectedFilters, sort ]);
 
+
+  console.log(articles);
+
   return (
     <>
-      <section
-        className={classNames(styles.articlesList, {
-          [styles.previewPage]: isPreviewPage,
-        })}
-      >
+      <section className={styles.articlesList}>
         {Boolean(articles?.length) &&
-          articles.map((item) => <ArticleItem {...item} key={uuidv4()} />)}
+          articles.map((item) => <ArticleItem
+            className={classNames({ [styles.articleItemPreview]: isPreviewPage })}
+            key={uuidv4()}
+            {...item}
+          />)}
+        {articles?.length % 3 == 2 && <div className={styles.dummyItem} />}
       </section>
       {isLoading && <Spiner wrapperClassName={styles.spinnerWrapper} />}
       {Boolean(articles?.length) && (

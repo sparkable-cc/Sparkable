@@ -6,9 +6,10 @@ export interface LinkRepository {
     sort?: string,
     categories?: string,
     page?: number,
+    stage?: number
   ) => Promise<[LinkDto[], number]>;
   getLinkById: (id: number) => Promise<LinkDto | null>;
-  storeLink: (link: Link) => Promise<LinkDto>;
+  storeLink: (link: Link) => void;
   findLink: (field: string, value: string) => Promise<LinkDto | null>;
   getLinkCollectionNotOwned: (
     uuidCollection: Array<string>,

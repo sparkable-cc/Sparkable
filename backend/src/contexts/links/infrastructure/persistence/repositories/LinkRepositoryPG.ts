@@ -1,8 +1,6 @@
-import { Any, DataSource, In } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { Link } from '../../../domain/models/Link';
 import { LinkDto } from '../../../domain/models/LinkDto';
-import { ViewedLinkByUserData } from '../../../domain/models/ViewedLinkByUserData';
-import { ViewedLinkByUserDataDto } from '../../../domain/models/ViewedLinkByUserDataDto';
 import { LinkRepository } from '../../../domain/repositories/LinkRepository';
 import { LinkEntity } from '../entities/LinkEntity';
 
@@ -20,11 +18,14 @@ export class LinkRepositoryPG implements LinkRepository {
     sort?: string,
     categories?: string,
     page?: number,
+    stage?: number
   ): Promise<[LinkDto[], number]> {
     let query: Record<string, any> = {};
 
     const categoriesToFilter = categories?.split(',');
+
     query = this.addQueryFilterByCategories(categoriesToFilter, query);
+    query = this.addQueryFilterByStage(stage, query);
 
     if (sort) {
       return await this.findSortingByDate(query, page);
@@ -37,10 +38,16 @@ export class LinkRepositoryPG implements LinkRepository {
     return this.repository.findOneBy({ id: id });
   }
 
-  async storeLink(link: Link): Promise<LinkDto> {
+  async storeLink(link: Link) {
     let linkDto = link.toDto();
-    const linkEntity = this.repository.create(linkDto);
-    return this.repository.save(linkEntity);
+    const params = { uuid: linkDto.uuid };
+
+    if (await this.repository.findOneBy(params)) {
+      await this.repository.update(params, {stage: linkDto.stage});
+    } else {
+      const linkEntity = this.repository.create(linkDto);
+      await this.repository.insert(linkEntity);
+    }
   }
 
   async findLink(field: string, value: string): Promise<LinkDto | null> {
@@ -72,6 +79,21 @@ export class LinkRepositoryPG implements LinkRepository {
 
       query.relations = { categories: true };
       query.where = categoriesFilter;
+    }
+
+    return query;
+  }
+
+  private addQueryFilterByStage(
+    stage: number | undefined,
+    query: Record<string, any>,
+  ) {
+    if (stage) {
+      if (query.where) {
+        query.where[0].stage = stage;
+      } else {
+        query.where = {stage: stage};
+      }
     }
 
     return query;

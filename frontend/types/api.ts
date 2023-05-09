@@ -77,6 +77,7 @@ export declare namespace ApiTypes.Req {
 
   interface VotingStatus {
     date: string
+    userUuid?: string
   }
 
   interface CreateVotes {
@@ -135,5 +136,6 @@ export declare namespace ApiTypes.Res {
     nextOpenVotingDate: string
     daysUntilNextVoting: number
     timeUntilNextVoting: string
+    userHasVoted: boolean
   }
 }
