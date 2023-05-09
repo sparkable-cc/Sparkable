@@ -84,7 +84,11 @@ export const SignInForm = () => {
       sessionStorage.setItem(storageKeys.userName, data.username);
       dispatch(setUserName(data.username));
       setTimeout(() => {
-        router.back();
+        if (router.query.next) {
+          router.push(router.query.next as string);
+        } else {
+          router.push("/");
+        }
       }, 100);
     }
   }, [data]);
