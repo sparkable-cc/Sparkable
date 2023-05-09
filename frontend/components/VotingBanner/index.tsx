@@ -28,6 +28,10 @@ export const VotingBanner = ({ isShort }: Props) => {
     return true;
   };
 
+  const handleChildElementClick = (e) => {
+    e.stopPropagation();
+  };
+
   useOutsideClick(nodeRef, () => {
     setOpen(false);
   });
@@ -57,22 +61,22 @@ export const VotingBanner = ({ isShort }: Props) => {
                   <div className={styles.messageText}>
                     Voting is now open!
                   </div>
-                  <Link href="/voting/participate" className={styles.voiteButton}>Vote Now</Link>
+                  <Link href="/voting/participate" onClick={handleChildElementClick} className={styles.voiteButton}>Vote Now</Link>
                 </>
                 :
                 <>
                   <div className={styles.messageText}>
                     {
-                      data.daysUntilNextVoting < 1 ?
+                      data?.daysUntilNextVoting < 1 ?
                         <>
                           Next voting round in <b>{timeArray?.[0]}</b> h <b>{timeArray?.[1]}</b> min
                         </> :
                         <>
-                          <b>{data.daysUntilNextVoting}</b> days until next voting round
+                          <b>{data?.daysUntilNextVoting}</b> days until next voting round
                         </>
                     }
                   </div>
-                  <span className={styles.toggleButton} >
+                  <span className={classNames(styles.toggleButton, { [styles.open]: isOpen })} >
                     {isOpen ? "Hide" : "What is this?"}
                   </span>
                 </>
