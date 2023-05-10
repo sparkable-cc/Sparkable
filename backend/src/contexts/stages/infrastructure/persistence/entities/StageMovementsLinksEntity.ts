@@ -4,10 +4,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { StageMovementsLinksDto } from '../../../domain/models/StageMovementsLinksDto';
+import { StageMovementDto } from '../../../domain/models/StageMovementDto';
 
 @Entity('stage_movements_links')
-export class StageMovementsLinksEntity implements StageMovementsLinksDto {
+export class StageMovementsLinksEntity implements StageMovementDto {
   @PrimaryGeneratedColumn()
   id: number;
 

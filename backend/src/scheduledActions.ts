@@ -1,6 +1,6 @@
 import cron, { ScheduleOptions } from 'node-cron';
 import { LinkRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/LinkRepositoryPG';
-import { IncreaseStageOnLinksAction } from './contexts/stages/actions/IncreaseStageOnLinksAction';
+import { IncreaseStageOnLinksAndUsersAction } from './contexts/stages/actions/IncreaseStageOnLinksAndUsersAction';
 import { NoVotesOnThisCycleException } from './contexts/stages/domain/exceptions/NoVotesOnThisCycleException';
 import { StageMovementsLinksRepositoryPG } from './contexts/stages/infrastructure/persistence/repositories/StageMovementsLinksRepositoryPG';
 import { DateOutsideCycleException } from './contexts/voting/domain/exceptions/DateOutsideCycleException';
@@ -12,7 +12,7 @@ const scheduleOptions: ScheduleOptions = {
 };
 
 const scheduleAction = async () => {
-  const increaseStageOnLinksAction = new IncreaseStageOnLinksAction(
+  const increaseStageOnLinksAction = new IncreaseStageOnLinksAndUsersAction(
     new VoteRepositoryPG(dataSource),
     new LinkRepositoryPG(dataSource),
     new StageMovementsLinksRepositoryPG(dataSource)

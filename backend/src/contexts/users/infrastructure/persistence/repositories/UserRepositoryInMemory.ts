@@ -4,7 +4,7 @@ import { UserRepository } from '../../../domain/repositories/UserRepository';
 
 export class UserRepositoryInMemory implements UserRepository {
 
-  users: UserDto[];
+  public users: UserDto[];
 
   constructor() {
     this.users = [];
@@ -13,11 +13,9 @@ export class UserRepositoryInMemory implements UserRepository {
   async storeUser(user:User) {
     const userExist = await this.findUser({uuid: user.getUuid});
 
-    if (userExist) {
-      this.users = [];
+    if (!userExist) {
+      this.users.push(user.toDto());
     }
-
-    this.users.push(user.toDto());
   }
 
   findUser(options:Object): Promise<UserDto | null> {
