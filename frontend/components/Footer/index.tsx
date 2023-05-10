@@ -50,7 +50,7 @@ export const Footer = () => {
           <h3 className={styles.footerColumnTitle}>KEEP IN TOUCH</h3>
           <div className={styles.footerSocialWrapper}>
             <a
-              href="https://join.slack.com/t/butterfy/shared_invite/zt-1fsubrlw2-4xzobfnGKxmiI~R~xXwYsw"
+              href="https://join.slack.com/t/sparkable-cc/shared_invite/zt-1uankp984-nPw9IJl956eeQ~9l689htg"
               className={classNames(styles.footerSocial, styles.slack)}
               target="_blank"
               rel="noopener noreferrer"

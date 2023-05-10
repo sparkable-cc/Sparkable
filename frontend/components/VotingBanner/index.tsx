@@ -75,7 +75,7 @@ export const VotingBanner = ({ isShort }: Props) => {
                     <div className={styles.messageText}>
                       Voting is now open!
                     </div>
-                    <Link href="/voting/participate" onClick={handleChildElementClick}  className={styles.voiteButton}>Vote Now</Link>
+                    <Link href="/voting/participate" onClick={handleChildElementClick} className={styles.voiteButton}>Vote Now</Link>
                   </>
                 :
                 <>

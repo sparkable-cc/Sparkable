@@ -162,7 +162,7 @@ const About: NextPage = () => {
             <span className={classNames(styles.titleTag, styles.social)}>KEEP IN TOUCH</span>
             <div className={styles.socialList}>
               <a
-                href="https://join.slack.com/t/butterfy/shared_invite/zt-1fsubrlw2-4xzobfnGKxmiI~R~xXwYsw"
+                href="https://join.slack.com/t/sparkable-cc/shared_invite/zt-1uankp984-nPw9IJl956eeQ~9l689htg"
                 className={classNames(styles.socialItem, styles.slack)}
                 target="_blank"
                 rel="noopener noreferrer"
