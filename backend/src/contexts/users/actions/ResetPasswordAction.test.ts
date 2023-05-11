@@ -128,7 +128,7 @@ describe('Reset password action', () => {
     const password = '12345678';
     await resetPasswordAction.execute(user.getUuid, token, password);
 
-    const userDto = await userRepository.findUser({ username: username });
+    const userDto = await userRepository.findUser({ uuid: user.getUuid });
     expect(await bcrypt.compare(password, userDto?.password as string)).toBe(true);
   });
 

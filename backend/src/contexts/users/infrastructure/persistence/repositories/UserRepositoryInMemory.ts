@@ -13,7 +13,12 @@ export class UserRepositoryInMemory implements UserRepository {
   async storeUser(user:User) {
     const userExist = await this.findUser({uuid: user.getUuid});
 
-    if (!userExist) {
+    if (userExist) {
+      if (this.users.length === 1) {
+        this.users = [];
+        this.users.push(user.toDto());
+      }
+    } else {
       this.users.push(user.toDto());
     }
   }
