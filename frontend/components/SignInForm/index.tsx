@@ -84,7 +84,7 @@ export const SignInForm = () => {
       sessionStorage.setItem(storageKeys.userName, data.username);
       dispatch(setUserName(data.username));
       setTimeout(() => {
-        router.back();
+        router.push("/");
       }, 100);
     }
   }, [data]);
