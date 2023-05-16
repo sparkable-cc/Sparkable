@@ -13,7 +13,7 @@ import { StageMovementRepositoryInMemory } from '../infrastructure/persistence/r
 import { IncreaseStageOnLinksAndUsersAction } from './IncreaseStageOnLinksAndUsersAction';
 
 describe('Increase stage on links and users action', () => {
-  let increaseStageOnLinksAction: IncreaseStageOnLinksAndUsersAction;
+  let increaseStageOnLinksAndUsersAction: IncreaseStageOnLinksAndUsersAction;
   let voteRepository: VoteRepository;
   let linkRepository: LinkRepository;
   let userRepository: UserRepository;
@@ -32,7 +32,7 @@ describe('Increase stage on links and users action', () => {
     linkRepository = new LinkRepositoryInMemory();
     userRepository = new UserRepositoryInMemory();
     stageMovementsLinksRepository = new StageMovementRepositoryInMemory();
-    increaseStageOnLinksAction = new IncreaseStageOnLinksAndUsersAction(
+    increaseStageOnLinksAndUsersAction = new IncreaseStageOnLinksAndUsersAction(
       voteRepository,
       linkRepository,
       userRepository,
@@ -42,7 +42,7 @@ describe('Increase stage on links and users action', () => {
 
   test('cant increase stage on links when there are no votes', async () => {
     jest.setSystemTime(new Date(2023, 3, 7));
-    await expect(increaseStageOnLinksAction.execute()).rejects.toThrow(
+    await expect(increaseStageOnLinksAndUsersAction.execute()).rejects.toThrow(
       NoVotesOnThisCycleException
     );
   });
@@ -79,7 +79,7 @@ describe('Increase stage on links and users action', () => {
     }));
 
     jest.setSystemTime(new Date(2023, 3, 7));
-    await increaseStageOnLinksAction.execute();
+    await increaseStageOnLinksAndUsersAction.execute();
 
     const [links, totalLinks] = await linkRepository.getAllLinks();
     expect(totalLinks).toEqual(1);
@@ -133,7 +133,7 @@ describe('Increase stage on links and users action', () => {
     }));
 
     jest.setSystemTime(new Date(2023, 3, 11));
-    await increaseStageOnLinksAction.execute();
+    await increaseStageOnLinksAndUsersAction.execute();
 
     const [links, total] = await linkRepository.getAllLinks();
     expect(total).toEqual(3);
@@ -218,7 +218,7 @@ describe('Increase stage on links and users action', () => {
     }));
 
     jest.setSystemTime(new Date(2023, 3, 11));
-    await increaseStageOnLinksAction.execute();
+    await increaseStageOnLinksAndUsersAction.execute();
 
     const [links, total] = await linkRepository.getAllLinks();
     expect(total).toEqual(1);
