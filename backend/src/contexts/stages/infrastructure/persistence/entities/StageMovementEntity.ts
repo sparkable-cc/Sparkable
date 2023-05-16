@@ -7,15 +7,18 @@ import {
 import { StageMovementDto } from '../../../domain/models/StageMovementDto';
 
 @Entity('stage_movements_links')
-export class StageMovementsLinksEntity implements StageMovementDto {
+export class StageMovementEntity implements StageMovementDto {
   @PrimaryGeneratedColumn()
   id: number;
 
   @CreateDateColumn({ type: 'timestamptz' })
   date: Date;
 
-  @Column()
+  @Column({nullable: true})
   linkUuid: string;
+
+  @Column({nullable: true})
+  userUuid: string;
 
   @Column()
   oldStage: number;

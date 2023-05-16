@@ -4,4 +4,5 @@ export interface VoteDto {
   cycle: number;
   userStage: number;
   linkStage: number;
+  date: Date;
 }

@@ -1,18 +1,18 @@
 import { DataSource } from 'typeorm';
-import { StageMovementsLinks } from '../../../domain/models/StageMovement';
+import { StageMovement } from '../../../domain/models/StageMovement';
 import { StageMovementDto } from '../../../domain/models/StageMovementDto';
 import { StageMovementRepository } from '../../../domain/repositories/StageMovementRepository';
-import { StageMovementsLinksEntity } from '../entities/StageMovementsLinksEntity';
+import { StageMovementEntity } from '../entities/StageMovementEntity';
 
-export class StageMovementsLinksRepositoryPG implements StageMovementRepository {
+export class StageMovementRepositoryPG implements StageMovementRepository {
   private repository;
 
   constructor(dataSource: DataSource) {
-    this.repository = dataSource.getRepository(StageMovementsLinksEntity);
+    this.repository = dataSource.getRepository(StageMovementEntity);
   }
 
-  storeStageMovementLink(stageMovementLink: StageMovementsLinks): Promise<StageMovementDto> {
-    return this.repository.save(stageMovementLink.toDto());
+  storeStageMovementLink(stageMovement: StageMovement): Promise<StageMovementDto> {
+    return this.repository.save(stageMovement.toDto());
   }
 
   findStageMovementLink(options: Object): Promise<StageMovementDto | null> {

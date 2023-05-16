@@ -27,8 +27,8 @@ export class IncreaseStageOnLinksAndUsersAction {
     this.stageMovementRepository = stageMovementRepository;
   }
 
-  async execute() {
-    const lastCycle = GetCurrentCycleService.execute().cycle - 1;
+  async execute(currentDate: Date = new Date()) {
+    const lastCycle = GetCurrentCycleService.execute(currentDate).cycle - 1;
     const [voteCollection, totalVotes] = await this.voteRepository.getAllVotes({
       cycle: lastCycle
     });

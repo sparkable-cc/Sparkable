@@ -27,7 +27,7 @@ describe('POST /votes', () => {
     const email = 'admin@butterfy.me';
     const password = 'password';
     const username = 'admin';
-    await UserFactory.create(request, app, email, password, username);
+    await UserFactory.create(email, password, username);
     auth = await UserFactory.signIn(request, app, email, password);
   });
 

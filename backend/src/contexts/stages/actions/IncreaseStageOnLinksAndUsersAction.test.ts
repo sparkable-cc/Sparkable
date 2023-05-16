@@ -74,7 +74,8 @@ describe('Increase stage on links and users action', () => {
       linkUuid: link.uuid,
       cycle: 1,
       userStage: stageInitial,
-      linkStage: stageInitial
+      linkStage: stageInitial,
+      date: new Date(2023, 3, 6)
     }));
 
     jest.setSystemTime(new Date(2023, 3, 7));
@@ -119,14 +120,16 @@ describe('Increase stage on links and users action', () => {
       linkUuid: link.uuid,
       cycle: 1,
       userStage: 1,
-      linkStage: 1
+      linkStage: 1,
+      date: new Date(2023, 3, 6)
     }));
     voteRepository.storeVote(new Vote({
       userUuid: userUuid,
       linkUuid: link3.uuid,
       cycle: 1,
       userStage: 1,
-      linkStage: 1
+      linkStage: 1,
+      date: new Date(2023, 3, 6)
     }));
 
     jest.setSystemTime(new Date(2023, 3, 11));
@@ -202,14 +205,16 @@ describe('Increase stage on links and users action', () => {
       linkUuid: link.uuid,
       cycle: 1,
       userStage: 1,
-      linkStage: 1
+      linkStage: 1,
+      date: new Date(2023, 3, 6)
     }));
     voteRepository.storeVote(new Vote({
       userUuid: userUuid2,
       linkUuid: link.uuid,
       cycle: 1,
       userStage: 1,
-      linkStage: 1
+      linkStage: 1,
+      date: new Date(2023, 3, 6)
     }));
 
     jest.setSystemTime(new Date(2023, 3, 11));

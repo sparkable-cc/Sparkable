@@ -112,6 +112,7 @@ export class CreateVotingAction {
             cycle: currentCycle,
             userStage: userDto?.stage || 0,
             linkStage: linkDto?.stage || 0,
+            date: new Date()
           })
         );
       }
