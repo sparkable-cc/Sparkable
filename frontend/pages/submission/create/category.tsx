@@ -1,20 +1,23 @@
-import { FormEvent, useMemo, useEffect } from "react";
-import { CreateSubmissionLayout } from "../../../layouts/CreateSubmissionLayout";
-import styles from "../../../styles/Submission.module.scss";
-import { useRouter } from "next/router";
-import { FormInput } from "../../../components/FormInput";
-import { useAppSelector, useAppDispatch } from "../../../store/hooks";
-import { getCategories, useLazyGetCategoriesQuery } from "../../../store/api/articlesApi";
 import classNames from "classnames";
+import { useRouter } from "next/router";
+import { FormEvent, useEffect, useMemo } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { FormInput } from "../../../components/FormInput";
 import { ModalNote } from "../../../components/ModalNote";
-import { storageKeys } from "../../../utils/storageKeys";
+import { CreateSubmissionLayout } from "../../../layouts/CreateSubmissionLayout";
 import {
-  setCategories,
+  getCategories,
+  useLazyGetCategoriesQuery,
+} from "../../../store/api/articlesApi";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import {
   selectCategories,
-  setSuggestedCategory,
   selectSuggestedCategory,
+  setCategories,
+  setSuggestedCategory,
 } from "../../../store/submissionSlice";
+import styles from "../../../styles/Submission.module.scss";
+import { storageKeys } from "../../../utils/storageKeys";
 
 const CreateSubmissionCategory = () => {
   const dispatch = useAppDispatch();
@@ -72,7 +75,7 @@ const CreateSubmissionCategory = () => {
       isCancelAvailable
     >
       <div className={styles.categoryDescription}>
-        Please pick at least one category. This helps others find your content.
+        Please pick <b>up to two</b> categories. This helps others find your content.
         None of the categories fit? Choose “Other” and suggest a new category.
       </div>
       <header className={styles.categoryHeader}>
