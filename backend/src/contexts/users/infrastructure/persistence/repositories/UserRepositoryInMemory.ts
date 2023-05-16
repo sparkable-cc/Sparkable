@@ -4,7 +4,7 @@ import { UserRepository } from '../../../domain/repositories/UserRepository';
 
 export class UserRepositoryInMemory implements UserRepository {
 
-  users: UserDto[];
+  public users: UserDto[];
 
   constructor() {
     this.users = [];
@@ -14,10 +14,13 @@ export class UserRepositoryInMemory implements UserRepository {
     const userExist = await this.findUser({uuid: user.getUuid});
 
     if (userExist) {
-      this.users = [];
+      if (this.users.length === 1) {
+        this.users = [];
+        this.users.push(user.toDto());
+      }
+    } else {
+      this.users.push(user.toDto());
     }
-
-    this.users.push(user.toDto());
   }
 
   findUser(options:Object): Promise<UserDto | null> {

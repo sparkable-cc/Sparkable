@@ -6,6 +6,7 @@ export class Vote {
   cycle: number;
   userStage: number;
   linkStage: number;
+  date: Date;
 
   constructor(voteDto: VoteDto) {
     this.userUuid = voteDto.userUuid;
@@ -13,6 +14,7 @@ export class Vote {
     this.cycle = voteDto.cycle;
     this.userStage = voteDto.userStage;
     this.linkStage = voteDto.linkStage;
+    this.date = voteDto.date;
   }
 
   public toDto(): VoteDto {
@@ -21,7 +23,8 @@ export class Vote {
       linkUuid: this.linkUuid,
       cycle: this.cycle,
       userStage: this.userStage,
-      linkStage: this.linkStage
+      linkStage: this.linkStage,
+      date: this.date
     };
   }
 }

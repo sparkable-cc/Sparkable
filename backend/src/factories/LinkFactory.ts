@@ -8,7 +8,7 @@ export default class LinkFactory {
   private static readonly linkDto:LinkDto = {
     id: 0,
     title: 'title',
-    uuid: 'uuid',
+    uuid: '',
     username: 'admin',
     url: 'https://www.butterfy.me/',
     image:

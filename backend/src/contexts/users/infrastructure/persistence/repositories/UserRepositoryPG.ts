@@ -15,7 +15,7 @@ export class UserRepositoryPG implements UserRepository {
     const userExist = await this.findUser({uuid: user.getUuid});
 
     if (userExist) {
-      await this.userRepository.update(userExist.id, user.toDto());
+      await this.userRepository.update({id: userExist.id}, {stage: user.getStage});
     } else  {
       await this.userRepository.save(user.toDto());
     }

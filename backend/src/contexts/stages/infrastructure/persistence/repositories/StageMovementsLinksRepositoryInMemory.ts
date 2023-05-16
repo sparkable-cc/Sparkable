@@ -1,23 +1,23 @@
-import { StageMovementsLinks } from "../../../domain/models/StageMovementsLinks";
-import { StageMovementsLinksDto } from "../../../domain/models/StageMovementsLinksDto";
-import { StageMovementsLinksRepository } from "../../../domain/repositories/StageMovementsLinksRepository";
+import { StageMovement } from "../../../domain/models/StageMovement";
+import { StageMovementDto } from "../../../domain/models/StageMovementDto";
+import { StageMovementRepository } from "../../../domain/repositories/StageMovementRepository";
 
-export class StageMovementsLinksRepositoryInMemory implements StageMovementsLinksRepository {
+export class StageMovementRepositoryInMemory implements StageMovementRepository {
 
-  stageMovementsLinksCollection: StageMovementsLinksDto[];
+  stageMovementsLinksCollection: StageMovementDto[];
 
   constructor() {
     this.stageMovementsLinksCollection = [];
   }
 
-  storeStageMovementLink(stageMovementLink: StageMovementsLinks): Promise<StageMovementsLinksDto> {
+  storeStageMovementLink(stageMovementLink: StageMovement): Promise<StageMovementDto> {
     const stageMovementsLinksDto = stageMovementLink.toDto();
     this.stageMovementsLinksCollection.push(stageMovementLink.toDto());
 
     return new Promise((resolve, rejects) => resolve(stageMovementsLinksDto));
   }
 
-  findStageMovementLink(options: Object): Promise<StageMovementsLinksDto | null> {
+  findStageMovementLink(options: Object): Promise<StageMovementDto | null> {
     const keys = Object.keys(options);
     type ObjectKey = keyof typeof options;
     const propertyOptions = keys[0] as ObjectKey;

@@ -1,21 +1,23 @@
 import cron, { ScheduleOptions } from 'node-cron';
 import { LinkRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/LinkRepositoryPG';
-import { IncreaseStageOnLinksAction } from './contexts/stages/actions/IncreaseStageOnLinksAction';
+import { IncreaseStageOnLinksAndUsersAction } from './contexts/stages/actions/IncreaseStageOnLinksAndUsersAction';
 import { NoVotesOnThisCycleException } from './contexts/stages/domain/exceptions/NoVotesOnThisCycleException';
-import { StageMovementsLinksRepositoryPG } from './contexts/stages/infrastructure/persistence/repositories/StageMovementsLinksRepositoryPG';
+import { StageMovementRepositoryPG } from './contexts/stages/infrastructure/persistence/repositories/StageMovementsLinksRepositoryPG';
 import { DateOutsideCycleException } from './contexts/voting/domain/exceptions/DateOutsideCycleException';
 import { VoteRepositoryPG } from './contexts/voting/infrastructure/persistence/repositories/VoteRepositoryPG';
 import dataSource from './data-source';
+import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
 
 const scheduleOptions: ScheduleOptions = {
   scheduled: false
 };
 
 const scheduleAction = async () => {
-  const increaseStageOnLinksAction = new IncreaseStageOnLinksAction(
+  const increaseStageOnLinksAction = new IncreaseStageOnLinksAndUsersAction(
     new VoteRepositoryPG(dataSource),
     new LinkRepositoryPG(dataSource),
-    new StageMovementsLinksRepositoryPG(dataSource)
+    new UserRepositoryPG(dataSource),
+    new StageMovementRepositoryPG(dataSource)
   );
 
   console.log(`Increase stage on links action job`);
