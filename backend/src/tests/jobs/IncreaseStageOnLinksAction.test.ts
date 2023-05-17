@@ -14,6 +14,8 @@ import { UserRepository } from '../../contexts/users/domain/repositories/UserRep
 import { UserRepositoryPG } from '../../contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
 import { StageMovementRepository } from '../../contexts/stages/domain/repositories/StageMovementRepository';
 import { StageMovementRepositoryPG } from '../../contexts/stages/infrastructure/persistence/repositories/StageMovementsLinksRepositoryPG';
+import { UserEntity } from '../../contexts/users/infrastructure/persistence/entities/UserEntity';
+import { StageMovementEntity } from '../../contexts/stages/infrastructure/persistence/entities/StageMovementEntity';
 
 describe('Increase stage on links and users in JOB', () => {
   let increaseStageOnLinksAndUsersAction: IncreaseStageOnLinksAndUsersAction;
@@ -24,6 +26,10 @@ describe('Increase stage on links and users in JOB', () => {
 
   beforeAll(async () => {
     await dataSource.initialize();
+  });
+
+  afterAll(async () => {
+    await dataSource.destroy();
   });
 
   beforeEach(async () => {
@@ -40,11 +46,17 @@ describe('Increase stage on links and users in JOB', () => {
   });
 
   afterEach(async () => {
-    const linkRepository = dataSource.getRepository(LinkEntity);
-    await linkRepository.delete({});
+    const stageMovementRepository = dataSource.getRepository(StageMovementEntity);
+    await stageMovementRepository.delete({});
 
     const voteRepository = dataSource.getRepository(VoteEntity);
     await voteRepository.delete({});
+
+    const userRepository = dataSource.getRepository(UserEntity);
+    await userRepository.delete({});
+
+    const linkRepository = dataSource.getRepository(LinkEntity);
+    await linkRepository.delete({});
   });
 
   test('increase stage on multiple links and users', async () => {
@@ -91,6 +103,29 @@ describe('Increase stage on links and users in JOB', () => {
     expect(userDto2?.stage).toEqual(2);
     const userDto3 = await userRepository.findUser({uuid: user3.uuid});
     expect(userDto3?.stage).toEqual(2);
+
+    const [stageMovementCollection, total] = await stageMovementRepository.getAllStageMovement();
+    expect(total).toEqual(4);
+    expect(stageMovementCollection?.[0].linkUuid).toEqual(linkDto.uuid);
+    expect(stageMovementCollection?.[0].userUuid).toEqual('');
+    expect(stageMovementCollection?.[0].oldStage).toEqual(1);
+    expect(stageMovementCollection?.[0].newStage).toEqual(2);
+    expect(stageMovementCollection?.[0].cycle).toEqual(1);
+    expect(stageMovementCollection?.[1].linkUuid).toEqual('');
+    expect(stageMovementCollection?.[1].userUuid).toEqual(user2.uuid);
+    expect(stageMovementCollection?.[1].oldStage).toEqual(1);
+    expect(stageMovementCollection?.[1].newStage).toEqual(2);
+    expect(stageMovementCollection?.[1].cycle).toEqual(1);
+    expect(stageMovementCollection?.[2].linkUuid).toEqual(linkDto3.uuid);
+    expect(stageMovementCollection?.[2].userUuid).toEqual('');
+    expect(stageMovementCollection?.[2].oldStage).toEqual(1);
+    expect(stageMovementCollection?.[2].newStage).toEqual(2);
+    expect(stageMovementCollection?.[2].cycle).toEqual(1);
+    expect(stageMovementCollection?.[3].linkUuid).toEqual('');
+    expect(stageMovementCollection?.[3].userUuid).toEqual(user3.uuid);
+    expect(stageMovementCollection?.[3].oldStage).toEqual(1);
+    expect(stageMovementCollection?.[3].newStage).toEqual(2);
+    expect(stageMovementCollection?.[3].cycle).toEqual(1);
   });
 
 });

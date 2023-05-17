@@ -21,4 +21,8 @@ export class StageMovementRepositoryPG implements StageMovementRepository {
     });
   }
 
+  getAllStageMovement(): Promise<[StageMovementDto[], number]> {
+    return this.repository.findAndCount();
+  }
+
 }

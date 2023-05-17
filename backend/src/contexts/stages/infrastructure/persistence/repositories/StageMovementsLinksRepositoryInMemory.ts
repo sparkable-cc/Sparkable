@@ -34,7 +34,15 @@ export class StageMovementRepositoryInMemory implements StageMovementRepository 
       return new Promise((resolve, rejects) => resolve(null));
   }
 
+  getAllStageMovement(): Promise<[StageMovementDto[], number]> {
+    return new Promise((resolve, rejects) => resolve([
+      this.stageMovementsLinksCollection,
+      this.stageMovementsLinksCollection.length
+    ]));
+  }
+
   all() {
     return this.stageMovementsLinksCollection;
   }
+
 }
