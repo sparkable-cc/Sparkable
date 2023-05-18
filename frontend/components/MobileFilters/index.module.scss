@@ -91,8 +91,15 @@
 }
 
 .filtersSubtitle {
-  margin-bottom: 8px;
+  // margin-bottom: 8px;
   width: 100%;
+}
+
+.filtersSubtitleWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
 }
 
 .filtersList {}
@@ -122,6 +129,57 @@
 
     &:after {
       content: url("../../public/svg/cros.svg");
+    }
+  }
+}
+
+.filterButtonWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filterButtonNote {
+  font-size: $size12;
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: $gapXxs;
+  padding-left: 4px;
+  max-width: 130px;
+}
+
+.filterStageItem {
+  padding: 0 $gapXs;
+  background: $colorWhite;
+  border: 1px solid $colorBlack;
+  font-family: $secondaryFont;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  border-radius: 16px;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  margin-right: 8px;
+  cursor: pointer;
+
+  &:before {
+    margin-right: 4px;
+    position: relative;
+    top: 2px;
+    content: url("../../public/svg/filterStageInactive.svg");
+  }
+
+  &.active {
+    background: rgba(65, 85, 245, 0.1);
+    color: #3748d0;
+
+    &:before {
+      content: url("../../public/svg/filterStageActive.svg");
+    }
+  }
+
+  &.disabled {
+    &:before {
+      content: url("../../public/svg/filterStageDisabled.svg");
     }
   }
 }

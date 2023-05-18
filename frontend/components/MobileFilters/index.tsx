@@ -8,6 +8,7 @@ import { CSSTransition } from "react-transition-group";
 import { SortsSelect } from "../SortsSelect";
 import { useOutsideClick } from "../../utils/useOutsideClick";
 import isEqual from "lodash.isequal";
+import { ModalNote } from "../ModalNote";
 import {
   setFilters,
   selectSelectedFilters,
@@ -25,8 +26,8 @@ export const MobileFilters = () => {
   const categories = useAppSelector(selectCategories);
   const total = useAppSelector(selectTotal);
 
-  const [ isModalOpen, setModalOpen ] = useState(false);
-  const [ currentFilters, setCurrentFilters ] = useState(selectedFilters);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [currentFilters, setCurrentFilters] = useState(selectedFilters);
 
   const categoriesData = categories?.data?.categories;
   const nodeRef = useRef(null);
@@ -38,7 +39,7 @@ export const MobileFilters = () => {
     if (currentFilters?.find(item => item === param)) {
       setCurrentFilters(currentFilters.filter(item => item !== param));
     } else {
-      setCurrentFilters([ ...currentFilters, ...[param] ]);
+      setCurrentFilters([...currentFilters, ...[param]]);
     }
   };
 
@@ -60,10 +61,10 @@ export const MobileFilters = () => {
     if (!categoriesData) {
       triggerGetCategories();
     }
-    if(isModalOpen){
+    if (isModalOpen) {
       setCurrentFilters(selectedFilters);
     }
-  }, [ isModalOpen, categoriesData ]);
+  }, [isModalOpen, categoriesData]);
 
   return (
     <>
@@ -106,7 +107,9 @@ export const MobileFilters = () => {
             <h3 className={styles.filtersTitle}>Filter</h3>
           </header>
           <section className={styles.filtersListWrapper}>
-            <h4 className={styles.filtersSubtitle}>Filter by category</h4>
+            <div className={styles.filtersSubtitleWrapper}>
+              <h4 className={styles.filtersSubtitle}>Filter by category</h4>
+            </div>
             <div className={styles.filtersList}>
               {
                 categoriesData?.length && categoriesData.map(item => (
@@ -124,16 +127,70 @@ export const MobileFilters = () => {
                 ))
               }
             </div>
+            {
+              !isEqual(currentFilters, selectedFilters) &&
+              <button
+                className={classNames(styles.applyButton, styles.sizeXl)}
+                onClick={onApply}
+              >
+                Apply
+              </button>
+            }
           </section>
-          {
-            !isEqual(currentFilters, selectedFilters) &&
-            <button
-              className={classNames(styles.applyButton, styles.sizeXl)}
-              onClick={onApply}
-            >
-              Apply
-            </button>
-          }
+          <section className={styles.filtersListWrapper}>
+            <div className={styles.filtersSubtitleWrapper}>
+              <h4 className={styles.filtersSubtitle}>Filter by stage</h4>
+              <ModalNote title="Filter by stage">
+                <div className={styles.modalText}>In stage 1, you can explore all the submissions.</div>
+                <div className={styles.modalText}>In stage 2, you can explore  submissions which received votes.</div>
+                <div className={styles.modalText}>To explore stage 2, participate in an upcoming voting round.</div>
+                <div className={styles.modalTextLink}>Learn more</div>
+                <div className={styles.modalImgWrapper}>
+                  <img src="svg/filter-tooltip.svg" alt="icon" />
+                </div>
+              </ModalNote>
+            </div>
+            <div className={styles.filtersList}>
+              <div className={styles.filterButtonWrapper}>
+                <button
+                  className={classNames(styles.filterStageItem, {
+                    [styles.active]: true
+                  })}
+                  // onClick={onSetCurrentFilter}
+                  // data-param={item.slug}
+                  // disabled={articles?.isLoading}
+                  key={uuidv4()}
+                >
+                  Stage 1
+                </button>
+                <span className={styles.filterButtonNote}>Explore all submissions</span>
+              </div>
+              <div className={styles.filterButtonWrapper}>
+                <button
+                  className={classNames(styles.filterStageItem, {
+                    [styles.disabled]: true
+                  })}
+                  // onClick={onSetCurrentFilter}
+                  // data-param={item.slug}
+                  // disabled={articles?.isLoading}
+                  key={uuidv4()}
+                >
+                  Stage 2
+                </button>
+                <span className={styles.filterButtonNote}>Explore submissions which received votes</span>
+              </div>
+            </div>
+            {/* {
+              !isEqual(currentFilters, selectedFilters) &&
+              <button
+                className={classNames(styles.applyButton, styles.sizeXl)}
+                onClick={onApply}
+              >
+                Apply
+              </button>
+            } */}
+          </section>
+
         </div>
       </CSSTransition>
     </>

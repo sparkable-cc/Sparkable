@@ -102,9 +102,6 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
     }
   }, [ selectedFilters, sort ]);
 
-
-  console.log(articles);
-
   return (
     <>
       <section className={styles.articlesList}>
