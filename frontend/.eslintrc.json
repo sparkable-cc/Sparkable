@@ -33,6 +33,7 @@
     "unused-imports/no-unused-imports": "warn",
     "react/no-adjacent-inline-elements": "off",
     "@next/next/no-html-link-for-pages": "off",
+    "react/iframe-missing-sandbox": "off",
     "quotes": [
       "warn",
       "double",
