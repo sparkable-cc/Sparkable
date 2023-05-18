@@ -12,7 +12,7 @@ const scheduleOptions: ScheduleOptions = {
   scheduled: false
 };
 
-const scheduleAction = async () => {
+const increaseStageOnLinksAction = async () => {
   const increaseStageOnLinksAction = new IncreaseStageOnLinksAndUsersAction(
     new VoteRepositoryPG(dataSource),
     new LinkRepositoryPG(dataSource),
@@ -42,7 +42,9 @@ const scheduleAction = async () => {
   });
 };
 
+
+
 //At 04:00 on Monday
-var scheduledActions = cron.schedule('0 4 * * 1', scheduleAction, scheduleOptions);
+var scheduledActions = cron.schedule('0 4 * * 1', increaseStageOnLinksAction, scheduleOptions);
 
 export { scheduledActions };

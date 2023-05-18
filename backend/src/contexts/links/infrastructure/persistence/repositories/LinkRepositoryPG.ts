@@ -43,10 +43,10 @@ export class LinkRepositoryPG implements LinkRepository {
     const params = { uuid: linkDto.uuid };
 
     if (await this.repository.findOneBy(params)) {
-      await this.repository.update(params, {stage: linkDto.stage});
+      return this.repository.update(params, {stage: linkDto.stage});
     } else {
       const linkEntity = this.repository.create(linkDto);
-      await this.repository.insert(linkEntity);
+      return this.repository.insert(linkEntity);
     }
   }
 

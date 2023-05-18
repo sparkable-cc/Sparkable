@@ -26,7 +26,7 @@ export class LinkRepositoryInMemory implements LinkRepository {
     if (await this.findLink('uuid', link.uuid)) {
       this.links.forEach((link, index) => {
         if(link.uuid === linkDto.uuid) {
-            this.links[index].stage = 2;
+            this.links[index].stage = linkDto.stage;
         }
       });
     } else {

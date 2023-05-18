@@ -31,4 +31,8 @@ export class UserRepositoryPG implements UserRepository {
     });
   }
 
+  getAllUsers(options: Object): Promise<[UserDto[], number]> {
+    return this.userRepository.findAndCount({ where:options });
+  }
+
 }
