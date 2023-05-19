@@ -83,9 +83,10 @@ export const Footer = () => {
         <div className={styles.footerBottomColumn}>
           <iframe
             className={styles.footerIframe}
-            sandbox="allow-scripts allow-popups allow-forms"
             src="https://f38488d3.sibforms.com/serve/MUIEAAjiBi-Ewn5NOU9Nsek6QtFBT2Rp4oMoMQS8OJk2C_PTeMSttEtrYQDxi8V3hqHbv4uFAzSk1YLzY0bMhh3d7SF1YpOtWj_Yaj5_Fc1gMP9B0KykzSIcHmk4a3KxpWGbxOPILYS41fSvnG23Zb9zbtnrEcEqTbNC0021yNkY48mvLXpzdTTsRQEAKwW4BzVU33_InBuJgWUK"
+            frameborder="0"
             scrolling="auto"
+            allowfullscreen
           />
         </div>
         <div className={styles.footerBottomColumn}>
