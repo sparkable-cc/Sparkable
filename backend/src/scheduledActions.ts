@@ -78,11 +78,9 @@ const decreaseStageOnLinksAction = async () => {
 
 const scheduledActions: Map<string, cron.ScheduledTask> = new Map();
 //At 01:00 on Monday
-//const increaseStageOnLinksJob = cron.schedule('0 1 * * 1', increaseStageOnLinksAction, scheduleOptions);
-const increaseStageOnLinksJob = cron.schedule('* * * * *', increaseStageOnLinksAction, scheduleOptions);
-//At 04:00 on Monday
-//const decreaseStageOnLinksJob = cron.schedule('0 4 * * 1', decreaseStageOnLinksAction, scheduleOptions);
-const decreaseStageOnLinksJob = cron.schedule('* * * * *', decreaseStageOnLinksAction, scheduleOptions);
+const increaseStageOnLinksJob = cron.schedule('0 1 * * 1', increaseStageOnLinksAction, scheduleOptions);
+//At 05:00 on Monday
+const decreaseStageOnLinksJob = cron.schedule('0 5 * * 1', decreaseStageOnLinksAction, scheduleOptions);
 
 scheduledActions.set('increaseStageOnLinksJob',increaseStageOnLinksJob);
 scheduledActions.set('decreaseStageOnLinksJob',decreaseStageOnLinksJob);
