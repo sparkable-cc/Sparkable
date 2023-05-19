@@ -26,12 +26,14 @@ export class DecreaseStageOnLinksAndUsersAction {
 
   async execute(currentDate: Date = new Date()) {
     const lastCycle = GetCurrentCycleService.execute(currentDate).cycle - 1;
-    await this.downgradeStageOnLinksWithoutVoted(lastCycle);
-    await this.downgradeStageOnUsersWithoutVotes(lastCycle);
+    const countLinksUpdated = await this.downgradeStageOnLinksWithoutVoted(lastCycle);
+    const countUsersUpdated = await this.downgradeStageOnUsersWithoutVotes(lastCycle);
+    return [countLinksUpdated, countUsersUpdated];
   }
 
   private async downgradeStageOnUsersWithoutVotes(lastCycle: number) {
     const [userCollectionOnStageTwo, totalUsers] = await this.userRepository.getAllUsers({ stage: 2 });
+    let countLinksUpdated = 0;
     for (let index = 0; index < totalUsers; index++) {
       const [voteCollectionOnThisCycle, totalVotes] = await this.voteRepository.getAllVotes({
         userUuid: userCollectionOnStageTwo[index].uuid,
@@ -44,12 +46,16 @@ export class DecreaseStageOnLinksAndUsersAction {
         userCollectionOnStageTwo[index].stage = 1;
         await this.userRepository.storeUser(User.factory(userCollectionOnStageTwo[index]));
         await this.storeStageMovementService.execute('', userCollectionOnStageTwo[index].uuid, oldStage, newStage, lastCycle);
+        countLinksUpdated++;
       }
     }
+
+    return countLinksUpdated;
   }
 
   private async downgradeStageOnLinksWithoutVoted(lastCycle:number) {
     const [linkCollectionOnStageTwo, totalLinks] = await this.linkRepository.getAllLinks('-desc', undefined, undefined, 2);
+    let countUsersUpdated = 0;
     for (let index = 0; index < totalLinks; index++) {
       const [voteCollectionOnThisCycle, totalVotes] = await this.voteRepository.getAllVotes({
         linkUuid: linkCollectionOnStageTwo[index].uuid,
@@ -62,8 +68,11 @@ export class DecreaseStageOnLinksAndUsersAction {
         linkCollectionOnStageTwo[index].stage = 1;
         await this.linkRepository.storeLink(new Link(linkCollectionOnStageTwo[index]));
         await this.storeStageMovementService.execute(linkCollectionOnStageTwo[index].uuid, '', oldStage, newStage, lastCycle);
+        countUsersUpdated++;
       }
     }
+
+    return countUsersUpdated;
   }
 
 }
