@@ -16,6 +16,7 @@ import { StageMovementRepository } from '../../contexts/stages/domain/repositori
 import { StageMovementRepositoryPG } from '../../contexts/stages/infrastructure/persistence/repositories/StageMovementsLinksRepositoryPG';
 import { UserEntity } from '../../contexts/users/infrastructure/persistence/entities/UserEntity';
 import { StageMovementEntity } from '../../contexts/stages/infrastructure/persistence/entities/StageMovementEntity';
+import { StoreStageMovementService } from '../../contexts/stages/domain/services/StoreStageMovementService';
 
 describe('Increase stage on links and users in JOB', () => {
   let increaseStageOnLinksAndUsersAction: IncreaseStageOnLinksAndUsersAction;
@@ -41,7 +42,8 @@ describe('Increase stage on links and users in JOB', () => {
       voteRepository,
       linkRepository,
       userRepository,
-      stageMovementRepository
+      stageMovementRepository,
+      new StoreStageMovementService(stageMovementRepository)
     );
   });
 

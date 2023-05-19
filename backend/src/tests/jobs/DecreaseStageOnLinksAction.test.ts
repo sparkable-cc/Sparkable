@@ -16,6 +16,7 @@ import { StageMovementRepository } from '../../contexts/stages/domain/repositori
 import { StageMovementRepositoryPG } from '../../contexts/stages/infrastructure/persistence/repositories/StageMovementsLinksRepositoryPG';
 import { UserEntity } from '../../contexts/users/infrastructure/persistence/entities/UserEntity';
 import { StageMovementEntity } from '../../contexts/stages/infrastructure/persistence/entities/StageMovementEntity';
+import { StoreStageMovementService } from '../../contexts/stages/domain/services/StoreStageMovementService';
 
 describe('Decrease stage on links and users in JOB', () => {
   let decreaseStageOnLinksAndUsersAction: DecreaseStageOnLinksAndUsersAction;
@@ -41,7 +42,7 @@ describe('Decrease stage on links and users in JOB', () => {
       voteRepository,
       linkRepository,
       userRepository,
-      stageMovementRepository
+      new StoreStageMovementService(stageMovementRepository)
     );
   });
 
@@ -150,7 +151,6 @@ describe('Decrease stage on links and users in JOB', () => {
 
     const [users, totalUsers] = await userRepository.getAllUsers({});
     expect(totalUsers).toEqual(3);
-
     expect(users?.[0].uuid).toEqual(user2.uuid);
     expect(users?.[0].stage).toEqual(2);
     expect(users?.[1].uuid).toEqual(user.uuid);
@@ -160,36 +160,26 @@ describe('Decrease stage on links and users in JOB', () => {
 
     const [stageMovementCollection, total] = await stageMovementRepository.getAllStageMovement();
     expect(total).toEqual(4);
-
-    console.log(stageMovementCollection);
-    console.log(linkDto);
-
-    expect(stageMovementCollection?.[0].linkUuid).toEqual(linkDto.uuid);
+    expect(stageMovementCollection?.[0].linkUuid).toEqual(linkDto3.uuid);
     expect(stageMovementCollection?.[0].userUuid).toEqual('');
     expect(stageMovementCollection?.[0].oldStage).toEqual(2);
     expect(stageMovementCollection?.[0].newStage).toEqual(1);
     expect(stageMovementCollection?.[0].cycle).toEqual(1);
-    expect(stageMovementCollection?.[1].linkUuid).toEqual(linkDto3.uuid);
+    expect(stageMovementCollection?.[1].linkUuid).toEqual(linkDto.uuid);
     expect(stageMovementCollection?.[1].userUuid).toEqual('');
     expect(stageMovementCollection?.[1].oldStage).toEqual(2);
     expect(stageMovementCollection?.[1].newStage).toEqual(1);
     expect(stageMovementCollection?.[1].cycle).toEqual(1);
-
-    // expect(stageMovementCollection?.[1].linkUuid).toEqual('');
-    // expect(stageMovementCollection?.[1].userUuid).toEqual(user.uuid);
-    // expect(stageMovementCollection?.[1].oldStage).toEqual(2);
-    // expect(stageMovementCollection?.[1].newStage).toEqual(1);
-    // expect(stageMovementCollection?.[1].cycle).toEqual(1);
-    // expect(stageMovementCollection?.[2].linkUuid).toEqual(linkDto3.uuid);
-    // expect(stageMovementCollection?.[2].userUuid).toEqual('');
-    // expect(stageMovementCollection?.[2].oldStage).toEqual(2);
-    // expect(stageMovementCollection?.[2].newStage).toEqual(1);
-    // expect(stageMovementCollection?.[2].cycle).toEqual(1);
-    // expect(stageMovementCollection?.[3].linkUuid).toEqual('');
-    // expect(stageMovementCollection?.[3].userUuid).toEqual(user3.uuid);
-    // expect(stageMovementCollection?.[3].oldStage).toEqual(2);
-    // expect(stageMovementCollection?.[3].newStage).toEqual(1);
-    // expect(stageMovementCollection?.[3].cycle).toEqual(1);
+    expect(stageMovementCollection?.[2].linkUuid).toEqual('');
+    expect(stageMovementCollection?.[2].userUuid).toEqual(user.uuid);
+    expect(stageMovementCollection?.[2].oldStage).toEqual(2);
+    expect(stageMovementCollection?.[2].newStage).toEqual(1);
+    expect(stageMovementCollection?.[2].cycle).toEqual(1);
+    expect(stageMovementCollection?.[3].linkUuid).toEqual('');
+    expect(stageMovementCollection?.[3].userUuid).toEqual(user3.uuid);
+    expect(stageMovementCollection?.[3].oldStage).toEqual(2);
+    expect(stageMovementCollection?.[3].newStage).toEqual(1);
+    expect(stageMovementCollection?.[3].cycle).toEqual(1);
   });
 
 });

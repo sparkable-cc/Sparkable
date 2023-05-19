@@ -38,6 +38,13 @@ export class UserRepositoryInMemory implements UserRepository {
     else return new Promise((resolve, rejects) => resolve(null));
   }
 
+  getAllUsers(options: Object): Promise<[UserDto[], number]> {
+    return new Promise((resolve, rejects) => resolve([
+      this.users,
+      this.users.length
+    ]));
+  }
+
   createWithOne(userUuid:string) {
     this.users = [{
       id:0,
