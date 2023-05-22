@@ -14,17 +14,21 @@ export default class UserFactory {
   };
 
   public static async create(
-    email?:string,
-    password?:string,
-    username?:string
+    params?:{
+      email?:string,
+      password?:string,
+      username?:string,
+      stage?:number
+    }
   ) {
     const userRepository = dataSource.getRepository(UserEntity);
     const user = userRepository.create({ ...this.userDto });
 
     user.uuid = uuidv4();
-    if (email) user.email = email;
-    if (password) user.password = password;
-    if (username) user.username = username;
+    if (params?.email) user.email = params?.email;
+    if (params?.password) user.password = params?.password;
+    if (params?.username) user.username = params?.username;
+    if (params?.stage) user.stage = params?.stage;
 
     return await userRepository.manager.save(user);
   }

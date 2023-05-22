@@ -6,25 +6,28 @@ import { VoteDto } from "../../voting/domain/models/VoteDto";
 import { VoteRepository } from "../../voting/domain/repositories/VoteRepository";
 import { GetCurrentCycleService } from "../../voting/domain/services/GetCurrentCycleService";
 import { NoVotesOnThisCycleException } from "../domain/exceptions/NoVotesOnThisCycleException";
-import { StageMovement } from "../domain/models/StageMovement";
 import { StageMovementRepository } from "../domain/repositories/StageMovementRepository";
+import { StoreStageMovementService } from "../domain/services/StoreStageMovementService";
 
 export class IncreaseStageOnLinksAndUsersAction {
   voteRepository: VoteRepository;
   linkRepository: LinkRepository;
   userRepository: UserRepository;
   stageMovementRepository: StageMovementRepository;
+  storeStageMovementService: StoreStageMovementService;
 
   constructor(
     voteRepository: VoteRepository,
     linkRepository: LinkRepository,
     userRepository: UserRepository,
-    stageMovementRepository: StageMovementRepository
+    stageMovementRepository: StageMovementRepository,
+    storeStageMovementService: StoreStageMovementService
   ) {
     this.voteRepository = voteRepository;
     this.linkRepository = linkRepository;
     this.userRepository = userRepository;
     this.stageMovementRepository = stageMovementRepository;
+    this.storeStageMovementService = storeStageMovementService;
   }
 
   async execute(currentDate: Date = new Date()) {
@@ -71,7 +74,7 @@ export class IncreaseStageOnLinksAndUsersAction {
       const newStage = 2;
       linkDto.stage = newStage;
       await this.linkRepository.storeLink(new Link(linkDto));
-      await this.saveStageMovement(linkDto.uuid, '', oldStage, newStage, lastCycle);
+      await this.storeStageMovementService.execute(linkDto.uuid, '', oldStage, newStage, lastCycle);
     }
   }
 
@@ -98,22 +101,8 @@ export class IncreaseStageOnLinksAndUsersAction {
       const newStage = 2;
       userDto.stage = newStage;
       await this.userRepository.storeUser(User.factory(userDto));
-      await this.saveStageMovement('', userDto.uuid, oldStage, newStage, lastCycle);
+      await this.storeStageMovementService.execute('', userDto.uuid, oldStage, newStage, lastCycle);
     }
-  }
-
-  private async saveStageMovement(linkUuid: string, userUuid: string, oldStage: number, newStage: number, lastCycle: number) {
-    await this.stageMovementRepository.storeStageMovementLink(
-      new StageMovement(
-        {
-          linkUuid: linkUuid,
-          userUuid: userUuid,
-          oldStage,
-          newStage,
-          cycle: lastCycle
-        }
-      )
-    );
   }
 
 }

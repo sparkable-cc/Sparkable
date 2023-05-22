@@ -7,23 +7,28 @@ import { DateOutsideCycleException } from './contexts/voting/domain/exceptions/D
 import { VoteRepositoryPG } from './contexts/voting/infrastructure/persistence/repositories/VoteRepositoryPG';
 import dataSource from './data-source';
 import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
+import { StoreStageMovementService } from './contexts/stages/domain/services/StoreStageMovementService';
+import { DecreaseStageOnLinksAndUsersAction } from './contexts/stages/actions/DecreaseStageOnLinksAndUsersAction';
 
 const scheduleOptions: ScheduleOptions = {
   scheduled: false
 };
 
-const scheduleAction = async () => {
+const increaseStageOnLinksAction = async () => {
+  const stageMovementRepository = new StageMovementRepositoryPG(dataSource);
   const increaseStageOnLinksAction = new IncreaseStageOnLinksAndUsersAction(
     new VoteRepositoryPG(dataSource),
     new LinkRepositoryPG(dataSource),
     new UserRepositoryPG(dataSource),
-    new StageMovementRepositoryPG(dataSource)
+    stageMovementRepository,
+    new StoreStageMovementService(stageMovementRepository)
   );
 
   console.log(`Increase stage on links action job`);
   await increaseStageOnLinksAction.execute()
-  .then((total) => {
-    console.log(`Total links updated: ${total}`);
+  .then(([totalLinks, totalUsers]) => {
+    console.log(`Total links increased: ${totalLinks}`);
+    console.log(`Total users increased: ${totalUsers}`);
   })
   .catch((error) => {
     switch (error.constructor) {
@@ -42,7 +47,42 @@ const scheduleAction = async () => {
   });
 };
 
-//At 04:00 on Monday
-var scheduledActions = cron.schedule('0 4 * * 1', scheduleAction, scheduleOptions);
+const decreaseStageOnLinksAction = async () => {
+  const stageMovementRepository = new StageMovementRepositoryPG(dataSource);
+  const decreaseStageOnLinksAction = new DecreaseStageOnLinksAndUsersAction(
+    new VoteRepositoryPG(dataSource),
+    new LinkRepositoryPG(dataSource),
+    new UserRepositoryPG(dataSource),
+    new StoreStageMovementService(stageMovementRepository)
+  );
+
+  console.log(`Decrease stage on links action job`);
+  await decreaseStageOnLinksAction.execute()
+  .then(([totalLinks, totalUsers]) => {
+    console.log(`Total links decreased: ${totalLinks}`);
+    console.log(`Total users decreased: ${totalUsers}`);
+  })
+  .catch((error) => {
+    switch (error.constructor) {
+      case DateOutsideCycleException:
+        console.log(`Date outside the cycle`);
+        break;
+      default:
+        console.log(
+          'Failed to do something async with an unspecified error: ',
+          error,
+        );
+    }
+  });
+};
+
+const scheduledActions: Map<string, cron.ScheduledTask> = new Map();
+//At 01:00 on Monday
+const increaseStageOnLinksJob = cron.schedule('0 1 * * 1', increaseStageOnLinksAction, scheduleOptions);
+//At 05:00 on Monday
+const decreaseStageOnLinksJob = cron.schedule('0 5 * * 1', decreaseStageOnLinksAction, scheduleOptions);
+
+scheduledActions.set('increaseStageOnLinksJob',increaseStageOnLinksJob);
+scheduledActions.set('decreaseStageOnLinksJob',decreaseStageOnLinksJob);
 
 export { scheduledActions };

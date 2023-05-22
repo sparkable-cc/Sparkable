@@ -16,7 +16,9 @@ dataSource
     console.error('Error during Data Source initialization:', err);
   });
 
-scheduledActions.start();
+scheduledActions.forEach((job) => {
+  job.start();
+});
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

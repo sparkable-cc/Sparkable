@@ -29,7 +29,7 @@ describe('POST /link-preview', () => {
   it('returns 400 when the body is empty', async () => {
     const email = 'admin@butterfy.me';
     const password = 'password';
-    await UserFactory.create(email, password);
+    await UserFactory.create({email, password})
     const auth = await UserFactory.signIn(request, app, email, password);
 
     const res = await request(app)
@@ -43,7 +43,7 @@ describe('POST /link-preview', () => {
   it('returns 200 when the url exists', async () => {
     const email = 'admin@butterfy.me';
     const password = 'password';
-    await UserFactory.create(email, password);
+    await UserFactory.create({email, password})
     const auth = await UserFactory.signIn(request, app, email, password);
     const url = 'https://ogp.me/';
 

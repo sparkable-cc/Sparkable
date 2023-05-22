@@ -11,6 +11,7 @@ import { VoteRepositoryInMemory } from '../../voting/infrastructure/persistence/
 import { NoVotesOnThisCycleException } from '../domain/exceptions/NoVotesOnThisCycleException';
 import { StageMovementRepositoryInMemory } from '../infrastructure/persistence/repositories/StageMovementsLinksRepositoryInMemory';
 import { IncreaseStageOnLinksAndUsersAction } from './IncreaseStageOnLinksAndUsersAction';
+import { StoreStageMovementService } from '../domain/services/StoreStageMovementService';
 
 describe('Increase stage on links and users action', () => {
   let increaseStageOnLinksAndUsersAction: IncreaseStageOnLinksAndUsersAction;
@@ -37,6 +38,7 @@ describe('Increase stage on links and users action', () => {
       linkRepository,
       userRepository,
       stageMovementsLinksRepository,
+      new StoreStageMovementService(stageMovementsLinksRepository)
     );
   });
 
