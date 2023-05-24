@@ -13,20 +13,21 @@ test('should click the "Start Exploring" button', async ({ page }) => {
   await expect(page).toHaveURL('/#explore');
 });
 
-test('should click the "Join Now" link', async ({ page }) => {
-  await page.goto('/');
-  await page.click('text=Join Now', { force: true });
-  await expect(page).toHaveURL('/auth/signup');
-});
-
 test('should click the "Sign In" link', async ({ page }) => {
   await page.goto('/');
   await page.locator('text=Sign In').last().click();
   await expect(page).toHaveURL('/auth/signin');
 });
 
-test('Explore should have 10 links', async ({ page }) => {
+
+test('should click the "Register" link', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('text=Register').last().click();
+  await expect(page).toHaveURL('/auth/signup');
+});
+
+test('Explore should have 20 links', async ({ page }) => {
   await page.goto('/');
   await page.click('text=Start Exploring');
-  expect(await page.locator('article').count()).toEqual(10);
+  expect(await page.locator('article').count()).toEqual(20);
 });
