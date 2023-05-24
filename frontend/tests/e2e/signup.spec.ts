@@ -28,5 +28,4 @@ test.describe('Sign Up', () => {
     await expect(page.locator('role=alert').locator('div').nth(-1)).toContainText('User exist!');
     await expect(page).toHaveURL('/auth/signup');
   });
-
 });
