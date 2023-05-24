@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test';
 import { compose } from 'redux';
 
 test.describe('Sign Up', () => {
@@ -10,7 +10,7 @@ test.describe('Sign Up', () => {
 
     await page.getByLabel('email').fill(randomUsername + '@admin.com');
     await page.getByLabel('username').fill(randomUsername);
-    await page.getByLabel('password').fill('12345678');
+    await page.getByLabel('password').fill('123Asdf#%@');
     await page.click('footer button');
 
     await expect(page.locator('role=alert').locator('div').nth(-1)).toContainText('User created!');
@@ -22,11 +22,10 @@ test.describe('Sign Up', () => {
 
     await page.getByLabel('email').fill(randomUsername + '@admin.com');
     await page.getByLabel('username').fill(randomUsername);
-    await page.getByLabel('password').fill('12345678');
+    await page.getByLabel('password').fill('123Asdf#%@');
     await page.click('footer button');
 
     await expect(page.locator('role=alert').locator('div').nth(-1)).toContainText('User exist!');
     await expect(page).toHaveURL('/auth/signup');
   });
-
 });
