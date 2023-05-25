@@ -1,7 +1,15 @@
 import styles from "./index.module.scss";
 import classNames from "classnames";
-import { useMemo, useState, useEffect, useRef } from "react";
-import { useLazyGetCategoriesQuery, getCategories } from "../../store/api/articlesApi";
+import {
+  useMemo,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
+import {
+  useLazyGetCategoriesQuery,
+  getCategories,
+} from "../../store/api/articlesApi";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { v4 as uuidv4 } from "uuid";
 import { CSSTransition } from "react-transition-group";
@@ -9,8 +17,11 @@ import { SortsSelect } from "../SortsSelect";
 import { useOutsideClick } from "../../utils/useOutsideClick";
 import isEqual from "lodash.isequal";
 import { ModalNote } from "../ModalNote";
+import { StageButton } from "../StageButton";
 import {
   setFilters,
+  setVotingStage,
+  selectSelectedVotingStage,
   selectSelectedFilters,
   selectTotal,
   selectArticles,
@@ -26,8 +37,11 @@ export const MobileFilters = () => {
   const categories = useAppSelector(selectCategories);
   const total = useAppSelector(selectTotal);
 
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [currentFilters, setCurrentFilters] = useState(selectedFilters);
+  const selectedVotingStage = useAppSelector(selectSelectedVotingStage);
+  const [ currentVotingStage, setCurrentVotingStage ] = useState<number | undefined>(selectedVotingStage);
+
+  const [ isModalOpen, setModalOpen ] = useState(false);
+  const [ currentFilters, setCurrentFilters ] = useState(selectedFilters);
 
   const categoriesData = categories?.data?.categories;
   const nodeRef = useRef(null);
@@ -39,7 +53,17 @@ export const MobileFilters = () => {
     if (currentFilters?.find(item => item === param)) {
       setCurrentFilters(currentFilters.filter(item => item !== param));
     } else {
-      setCurrentFilters([...currentFilters, ...[param]]);
+      setCurrentFilters([ ...currentFilters, ...[param] ]);
+    }
+  };
+
+  const onSetCurrentStage = (value: number) => {
+    if (!value) return;
+
+    if (currentVotingStage === value) {
+      setCurrentVotingStage(undefined);
+    } else {
+      setCurrentVotingStage(value);
     }
   };
 
@@ -50,7 +74,17 @@ export const MobileFilters = () => {
 
   const onApply = () => {
     dispatch(setFilters(currentFilters));
+    dispatch(setVotingStage(currentVotingStage));
     onCancel();
+  };
+
+  const checkApplyButton = () => {
+    if (!isEqual(currentFilters, selectedFilters)) {
+      return true;
+    }
+    if (!isEqual(currentVotingStage, selectedVotingStage)) {
+      return true;
+    }
   };
 
   useOutsideClick(nodeRef, () => {
@@ -64,7 +98,13 @@ export const MobileFilters = () => {
     if (isModalOpen) {
       setCurrentFilters(selectedFilters);
     }
-  }, [isModalOpen, categoriesData]);
+  }, [ isModalOpen, categoriesData ]);
+
+  const checkCounter = () => {
+    if(selectedFilters?.length) return true;
+    if(currentVotingStage) return true;
+    else return false;
+  };
 
   return (
     <>
@@ -77,9 +117,9 @@ export const MobileFilters = () => {
           >
             Filter
             {
-              Boolean(selectedFilters?.length) &&
+              checkCounter() &&
               <span className={styles.filterCounter}>
-                {selectedFilters?.length}
+                {(currentVotingStage ? 1 : 0) + selectedFilters?.length}
               </span>
             }
           </button>
@@ -127,15 +167,6 @@ export const MobileFilters = () => {
                 ))
               }
             </div>
-            {
-              !isEqual(currentFilters, selectedFilters) &&
-              <button
-                className={classNames(styles.applyButton, styles.sizeXl)}
-                onClick={onApply}
-              >
-                Apply
-              </button>
-            }
           </section>
           <section className={styles.filtersListWrapper}>
             <div className={styles.filtersSubtitleWrapper}>
@@ -152,45 +183,38 @@ export const MobileFilters = () => {
             </div>
             <div className={styles.filtersList}>
               <div className={styles.filterButtonWrapper}>
-                <button
-                  className={classNames(styles.filterStageItem, {
-                    [styles.active]: true
-                  })}
-                  // onClick={onSetCurrentFilter}
-                  // data-param={item.slug}
-                  // disabled={articles?.isLoading}
-                  key={uuidv4()}
+                <StageButton
+                  currentVotingStage={currentVotingStage}
+                  onButtonClick={onSetCurrentStage}
+                  value={1}
+                  isMobile
                 >
                   Stage 1
-                </button>
+                </StageButton>
                 <span className={styles.filterButtonNote}>Explore all submissions</span>
               </div>
               <div className={styles.filterButtonWrapper}>
-                <button
-                  className={classNames(styles.filterStageItem, {
-                    [styles.disabled]: true
-                  })}
-                  // onClick={onSetCurrentFilter}
-                  // data-param={item.slug}
-                  // disabled={articles?.isLoading}
-                  key={uuidv4()}
+                <StageButton
+                  currentVotingStage={currentVotingStage}
+                  onButtonClick={onSetCurrentStage}
+                  value={2}
+                  isMobile
                 >
                   Stage 2
-                </button>
+                </StageButton>
                 <span className={styles.filterButtonNote}>Explore submissions which received votes</span>
               </div>
             </div>
-            {/* {
-              !isEqual(currentFilters, selectedFilters) &&
-              <button
-                className={classNames(styles.applyButton, styles.sizeXl)}
-                onClick={onApply}
-              >
-                Apply
-              </button>
-            } */}
           </section>
-
+          {
+            checkApplyButton() &&
+            <button
+              className={classNames(styles.applyButton, styles.sizeXl)}
+              onClick={onApply}
+            >
+              Apply
+            </button>
+          }
         </div>
       </CSSTransition>
     </>

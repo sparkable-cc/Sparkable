@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
   selectArticles,
   selectSelectedFilters,
+  selectSelectedVotingStage,
   selectSort,
   selectTotal,
   setArticles,
@@ -29,15 +30,19 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
   const dispatch = useAppDispatch();
   const [ trigger, { isLoading }] = useLazyGetArticlesQuery();
   const selectedFilters = useAppSelector(selectSelectedFilters);
+  const selectedVotingStage = useAppSelector(selectSelectedVotingStage);
   const sort = useAppSelector(selectSort);
   const total = useAppSelector(selectTotal);
   const articles = useAppSelector(selectArticles);
+
   const previousSelectedFilters = usePrevious(selectedFilters);
+  const previousSelectedVotingStage = usePrevious(selectedVotingStage);
   const previousSort: UITypes.SortOption | undefined = usePrevious(sort);
 
   const setQueryParams = (page?: number) => {
     const filters = selectedFilters?.length ? selectedFilters : undefined;
     const sorts = sort.value === "newest-first" ? "-date" : "";
+    const stage = selectedVotingStage;
 
     let queryParams = {
       categories: filters,
@@ -49,6 +54,10 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
 
     if (page) {
       queryParams = { ...queryParams, ...{ page }};
+    }
+
+    if(stage) {
+      queryParams = { ...queryParams, ...{ stage }};
     }
 
     return queryParams;
@@ -100,7 +109,10 @@ export const ArticlesList = ({ isPreviewPage }: Props) => {
     if (previousSort && !isEqual(sort, previousSort)) {
       onGetData();
     }
-  }, [ selectedFilters, sort ]);
+    if (!isEqual(selectedVotingStage, previousSelectedVotingStage)) {
+      onGetData();
+    }
+  }, [ selectedFilters, sort, selectedVotingStage ]);
 
   return (
     <>

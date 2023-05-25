@@ -92,6 +92,10 @@
     &:before {
       content: url("../../public/svg/filterStageDisabled.svg");
     }
+
+    &:hover {
+      background: $colorWhite;
+    }
   }  
 }
 

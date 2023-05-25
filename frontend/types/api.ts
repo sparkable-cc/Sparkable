@@ -37,6 +37,7 @@ export declare namespace ApiTypes.Req {
     sort?: "-date",
     categories?: string[]
     page?: number
+    stage?: number
   }
 
   interface SignUp {
@@ -116,6 +117,7 @@ export declare namespace ApiTypes.Res {
     token_type: string
     uuid: string
     username: string
+    stage: number
   }
 
   interface SubmissionLinkPreview {

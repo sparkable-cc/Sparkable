@@ -1,28 +1,41 @@
+import { useMemo, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import { StageButton } from "../StageButton";
+import {
+  getArticles,
+  getCategories,
+  useLazyGetCategoriesQuery,
+} from "../../store/api/articlesApi";
+import {
+  setFilters,
+  setVotingStage,
+  selectSelectedFilters,
+  selectSelectedVotingStage,
+} from "../../store/UIslice";
+import isEqual from "lodash.isequal";
+import { ModalNote } from "../ModalNote";
 import styles from "./index.module.scss";
 import classNames from "classnames";
-import { useMemo, useEffect, useState } from "react";
-import { getArticles, getCategories, useLazyGetCategoriesQuery } from "../../store/api/articlesApi";
-import { setFilters, selectSelectedFilters } from "../../store/UIslice";
-import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { v4 as uuidv4 } from "uuid";
-import isEqual from "lodash.isequal";
-import { useRouter } from "next/router";
-import { ModalNote } from "../ModalNote";
 
 export const Filters = () => {
-  const selectedFilters = useAppSelector(selectSelectedFilters);
-  const [currentFilters, setCurrentFilters] = useState<string[]>(selectedFilters);
   const dispatch = useAppDispatch();
-  const [triggerGetCategories] = useLazyGetCategoriesQuery();
+  const router = useRouter();
+
+  const selectedFilters = useAppSelector(selectSelectedFilters);
+  const selectedVotingStage = useAppSelector(selectSelectedVotingStage);
   const params = selectedFilters?.length ? selectedFilters : undefined;
+  const selectCategories = useMemo(() => getCategories.select(), []);
   const selectArticles = useMemo(() => getArticles.select({ categories: params }), [
     selectedFilters,
   ]);
-  const selectCategories = useMemo(() => getCategories.select(), []);
   const articles = useAppSelector(selectArticles);
   const categories = useAppSelector(selectCategories);
   const categoriesData = categories?.data?.categories;
-  const router = useRouter();
+  const [ currentFilters, setCurrentFilters ] = useState<string[]>(selectedFilters);
+  const [ currentVotingStage, setCurrentVotingStage ] = useState<number | undefined>(selectedVotingStage);
+  const [triggerGetCategories] = useLazyGetCategoriesQuery();
 
   const onSetCurrentFilter = (event: any) => {
     const param = event?.target?.getAttribute("data-param");
@@ -31,12 +44,32 @@ export const Filters = () => {
     if (currentFilters?.find(item => item === param)) {
       setCurrentFilters(currentFilters.filter(item => item !== param));
     } else {
-      setCurrentFilters([...currentFilters, ...[param]]);
+      setCurrentFilters([ ...currentFilters, ...[param] ]);
+    }
+  };
+
+  const onSetCurrentStage = (value: number) => {
+    if (!value) return;
+
+    if (currentVotingStage === value) {
+      setCurrentVotingStage(undefined);
+    } else {
+      setCurrentVotingStage(value);
     }
   };
 
   const onApply = () => {
     dispatch(setFilters(currentFilters));
+    dispatch(setVotingStage(currentVotingStage));
+  };
+
+  const checkApplyButton = () => {
+    if (!isEqual(currentFilters, selectedFilters)) {
+      return true;
+    }
+    if (!isEqual(currentVotingStage, selectedVotingStage)) {
+      return true;
+    }
   };
 
   useEffect(() => {
@@ -64,15 +97,6 @@ export const Filters = () => {
             </button>
           ))
         }
-        {
-          !isEqual(currentFilters, selectedFilters) &&
-          <button
-            className={styles.applyButton}
-            onClick={onApply}
-          >
-            Apply
-          </button>
-        }
       </section>
       <section className={styles.filtersSection}>
         <div className={styles.filtersTitleWrapper}>
@@ -88,43 +112,35 @@ export const Filters = () => {
           </ModalNote>
         </div>
         <div className={styles.filterButtonWrapper}>
-          <button
-            className={classNames(styles.filterStageButton, {
-              [styles.active]: false
-            })}
-            // onClick={onSetCurrentFilter}
-            // data-param={item.slug}
-            disabled={articles?.isLoading}
-            key={uuidv4()}
+          <StageButton
+            currentVotingStage={currentVotingStage}
+            onButtonClick={onSetCurrentStage}
+            value={1}
           >
             Stage 1
-          </button>
+          </StageButton>
           <span className={styles.filterButtonNote}>Explore all submissions</span>
         </div>
         <div className={styles.filterButtonWrapper}>
-          <button
-            className={classNames(styles.filterStageButton, {
-              [styles.disabled]: true
-            })}
-            // onClick={onSetCurrentFilter}
-            // data-param={item.slug}
-            disabled={articles?.isLoading}
-            key={uuidv4()}
+          <StageButton
+            currentVotingStage={currentVotingStage}
+            onButtonClick={onSetCurrentStage}
+            value={2}
           >
             Stage 2
-          </button>
+          </StageButton>
           <span className={styles.filterButtonNote}>Explore submissions which received votes</span>
         </div>
-        {
-          // !isEqual(currentFilters, selectedFilters) &&
-          // <button
-          //   className={styles.applyButton}
-          //   onClick={onApply}
-          // >
-          //   Apply
-          // </button>
-        }
       </section>
+      {
+        checkApplyButton() &&
+        <button
+          className={styles.applyButton}
+          onClick={onApply}
+        >
+          Apply
+        </button>
+      }
       <div className={styles.textWrapper}>
         <p className={styles.text}>
           What is the most insightful piece of content you have encountered recently?
