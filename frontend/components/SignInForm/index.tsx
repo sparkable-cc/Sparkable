@@ -5,7 +5,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useLazySignInQuery } from "../../store/api/authApi";
 import { useAppDispatch } from "../../store/hooks";
-import { setUserName } from "../../store/UIslice";
+import { setUserName, setAvailableVotingStage } from "../../store/UIslice";
 import { storageKeys } from "../../utils/storageKeys";
 import { signInSchema, validationInitialState } from "../../utils/validations";
 import { FormInput } from "../FormInput";
@@ -78,11 +78,15 @@ export const SignInForm = () => {
     if (data) {
       setInputValues(inputValuesInitialState);
       toast.success("Authorized successfully!");
+
       sessionStorage.setItem(storageKeys.token, data.access_token);
       sessionStorage.setItem(storageKeys.tokenExpires, data.expires_in);
       sessionStorage.setItem(storageKeys.userId, data.uuid);
       sessionStorage.setItem(storageKeys.userName, data.username);
+      sessionStorage.setItem(storageKeys.availableVotingStage, String(data.stage));
+
       dispatch(setUserName(data.username));
+      dispatch(setAvailableVotingStage(data.stage));
       setTimeout(() => {
         router.push("/");
       }, 100);

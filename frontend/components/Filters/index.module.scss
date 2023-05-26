@@ -2,7 +2,7 @@
 @import "../../styles/common";
 
 .filtersSidebar {
-  padding: 40px 40px $gapXL 40px;
+  padding: 40px 20px $gapXL 30px;
   font-size: $size14;
   font-family: $secondaryFont;
   font-weight: 400;
@@ -27,16 +27,21 @@
   margin-bottom: $gapXxs;
 }
 
+.filtersTitleWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .filterButton {
   @extend .buttonWhite;
-
+ 
   padding: 0 $gapXs;
   margin-bottom: $gapXxs;
   white-space: nowrap;
 
   &:hover {
     background: rgba(0, 108, 123, 0.05);
-
   }
 
   &:after {
@@ -44,7 +49,6 @@
     position: relative;
     top: 2px;
     content: url("../../public/svg/plus-black.svg");
-
   }
 
   &.active {
@@ -55,6 +59,57 @@
       content: url("../../public/svg/cros.svg");
     }
   }
+}
+
+.filterStageButton {
+  @extend .buttonWhite;
+
+  padding: 0 $gapXs;
+  margin-bottom: $gapXxs;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba(0, 108, 123, 0.05);
+  }
+
+  &:before {
+    position: relative;
+    margin-right: 4px;
+    top: 2px;
+    content: url("../../public/svg/filterStageInactive.svg");
+  }
+
+  &.active {
+    background: rgba(65, 85, 245, 0.1);
+    color: #3748d0;
+
+    &:before {
+      content: url("../../public/svg/filterStageActive.svg");
+    }
+  }
+
+  &.disabled {
+    &:before {
+      content: url("../../public/svg/filterStageDisabled.svg");
+    }
+
+    &:hover {
+      background: $colorWhite;
+    }
+  }  
+}
+
+.filterButtonWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filterButtonNote {
+  font-size: $size12;
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: $gapXxs;
+  padding-left: 4px;
 }
 
 .textWrapper {

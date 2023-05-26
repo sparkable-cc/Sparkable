@@ -91,8 +91,15 @@
 }
 
 .filtersSubtitle {
-  margin-bottom: 8px;
+  // margin-bottom: 8px;
   width: 100%;
+}
+
+.filtersSubtitleWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
 }
 
 .filtersList {}
@@ -124,6 +131,20 @@
       content: url("../../public/svg/cros.svg");
     }
   }
+}
+
+.filterButtonWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filterButtonNote {
+  font-size: $size12;
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: $gapXxs;
+  padding-left: 4px;
+  max-width: 130px;
 }
 
 .applyButton {
