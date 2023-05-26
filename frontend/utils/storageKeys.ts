@@ -4,6 +4,7 @@ export const storageKeys = {
   tokenExpires: "butterfy-token-expires",
   userId: "butterfy-token-user-id",
   userName: "butterfy-token-user-name",
+  availableVotingStage: "butterfy-available-voting-stage",
   submissionLink: "butterfy-submission-link",
   submissionLinkData: "butterfy-submission-link-data",
   submissionCategories: "butterfy-submission-categories",

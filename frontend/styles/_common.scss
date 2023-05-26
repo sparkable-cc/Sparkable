@@ -160,3 +160,24 @@
   font-size: $size14;
   color: $colorRed;
 }
+
+// MODAL
+.modalText {
+  font-family: $secondaryFont;
+  font-weight: 400;
+  margin-bottom: $gapS;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.modalTextLink {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.modalImgWrapper {
+  display: flex;
+  justify-content: center;
+}
