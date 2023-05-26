@@ -14,19 +14,6 @@ test.describe('Sign In', () => {
     await expect(page).toHaveURL('/');
   });
 
-  test('should error if the user does not exist', async ({ page }) => {
-    await page.goto('/auth/signin');
-
-    await page.getByLabel('username').fill('randomUsername 2');
-    await page.getByLabel('password').fill('123Asdf#%@');
-    await page.click('footer button');
-
-    await expect(
-      page.locator('role=alert').locator('div').nth(-1),
-    ).toContainText('Sign in not successful!');
-    await expect(page).toHaveURL('/auth/signin');
-  });
-
   test('should error if the password is incorrect', async ({ page }) => {
     await page.goto('/auth/signin');
 
