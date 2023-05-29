@@ -8,11 +8,11 @@ describe('POST /voting-status', () => {
 
   beforeAll(async() => {
     await dataSource.initialize();
-    jest.useFakeTimers();
+    //jest.useFakeTimers();
   });
 
   afterAll(async() => {
-    jest.useRealTimers();
+    //jest.useRealTimers();
     await dataSource.destroy();
   });
 
@@ -22,9 +22,11 @@ describe('POST /voting-status', () => {
   });
 
   it('returns 200 when date is between one cycle in open voting', async () => {
-    jest.setSystemTime(new Date('2023-04-06 12:00:00'));
     const res = await request(app)
-      .post(endpoint);
+      .post(endpoint)
+      .send({
+        date: '2023-04-06 12:00:00'
+      });
 
     expect(res.statusCode).toEqual(200);
     expect(res.body.openVoting).toBeTruthy();
@@ -36,9 +38,11 @@ describe('POST /voting-status', () => {
   });
 
   it('returns 200 when date is between one cycle in close voting', async () => {
-    jest.setSystemTime(new Date('2023-03-27 00:00:00'));
     const res = await request(app)
-      .post(endpoint);
+      .post(endpoint)
+      .send({
+        date: '2023-03-27 00:00:00'
+      });
 
     expect(res.statusCode).toEqual(200);
     expect(res.body.openVoting).toBeFalsy();
@@ -50,9 +54,11 @@ describe('POST /voting-status', () => {
   });
 
   it('returns 400 when the date is outside cycles', async () => {
-    jest.setSystemTime(new Date('2023-03-23 12:02:34'));
     const res = await request(app)
-      .post(endpoint);
+      .post(endpoint)
+      .send({
+        date: '2023-03-23 12:02:34'
+      });
 
     expect(res.statusCode).toEqual(400);
     expect(res.body.message).toEqual('Date outside of voting cycles');
@@ -70,11 +76,11 @@ describe('POST /voting-status', () => {
     });
     await votingRepository.insert(votingEntity);
 
-    jest.setSystemTime(new Date('2023-04-06 12:00:00'));
     const res = await request(app)
       .post(endpoint)
       .send({
-        userUuid: userUuid
+        userUuid: userUuid,
+        date: '2023-04-06 12:00:00'
       });
 
     expect(res.body.userHasVoted).toBeTruthy();

@@ -15,11 +15,9 @@ describe('POST /votes', () => {
 
   beforeAll(async () => {
     await dataSource.initialize();
-    jest.useFakeTimers();
   });
 
   afterAll(async () => {
-    jest.useRealTimers();
     await dataSource.destroy();
   });
 
@@ -48,7 +46,7 @@ describe('POST /votes', () => {
     await userRepository.delete({});
   });
 
-  it('returns 401 when the user is not logged', async () => {
+  it('returns 401 when the user is not logged when user try to vote', async () => {
     const res = await request(app).post('/votes').send({});
 
     expect(res.statusCode).toEqual(401);
@@ -158,13 +156,13 @@ describe('POST /votes', () => {
       linkUuid: 'linkUuid'
     });
 
-    jest.setSystemTime(new Date('2023-04-07'));
     const res = await request(app)
       .post('/votes')
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         userUuid: auth.body.uuid,
-        votes: []
+        votes: [],
+        date: '2023-04-07'
       });
 
     expect(res.statusCode).toEqual(200);
@@ -175,24 +173,23 @@ describe('POST /votes', () => {
     expect(total).toEqual(1);
     expect(voting[0].userUuid).toEqual(auth.body.uuid);
     expect(voting[0].countVotes).toEqual(0);
-    expect(voting[0].cycle).toEqual(1);
+    expect(voting[0].cycle).toEqual(5);
   });
 
   it('returns 200 voting with multiple selection', async () => {
     const linkUuid = 'linkUuid';
     const linkUuidSecond = 'linkUuidSecond';
-    LinkFactory.create({ uuid:linkUuid });
-    LinkFactory.create({ uuid:linkUuidSecond });
-    ViewedLinkByUserDataFactory.store({
+    await LinkFactory.create({ uuid:linkUuid });
+    await LinkFactory.create({ uuid:linkUuidSecond });
+    await ViewedLinkByUserDataFactory.store({
       userUuid: auth.body.uuid,
       linkUuid: linkUuid
     });
-    ViewedLinkByUserDataFactory.store({
+    await ViewedLinkByUserDataFactory.store({
       userUuid: auth.body.uuid,
       linkUuid: linkUuidSecond
     });
 
-    jest.setSystemTime(new Date('2023-04-07'));
     const res = await request(app)
       .post('/votes')
       .auth(auth.body.access_token, { type: 'bearer' })
@@ -200,7 +197,8 @@ describe('POST /votes', () => {
         userUuid: auth.body.uuid,
         votes: [
           {linkUuid: linkUuid}, {linkUuid: linkUuidSecond}
-        ]
+        ],
+        date: '2023-04-07'
       });
 
     expect(res.statusCode).toEqual(200);
@@ -211,14 +209,14 @@ describe('POST /votes', () => {
     expect(total).toEqual(1);
     expect(voting[0].userUuid).toEqual(auth.body.uuid);
     expect(voting[0].countVotes).toEqual(2);
-    expect(voting[0].cycle).toEqual(1);
+    expect(voting[0].cycle).toEqual(5);
 
     const voteRepository = dataSource.getRepository(VoteEntity);
     const [votes, totalVotes] = await voteRepository.findAndCount();
     expect(totalVotes).toEqual(2);
     expect(votes[0].userUuid).toEqual(auth.body.uuid);
     expect(votes[0].linkUuid).toEqual(linkUuid);
-    expect(votes[0].cycle).toEqual(1);
+    expect(votes[0].cycle).toEqual(5);
     expect(votes[1].userUuid).toEqual(auth.body.uuid);
     expect(votes[1].linkUuid).toEqual(linkUuidSecond);
 
