@@ -38,11 +38,11 @@ export class CreateVotingAction {
     this.linkRepository = linkRepository;
   }
 
-  async execute(userUuid: string, votes: Array<LinkUuidDto>) {
+  async execute(userUuid: string, votes: Array<LinkUuidDto>, date?: Date) {
     this.userUuidIsNotEmpty(userUuid);
     this.checkNumberOfVotesMaximum(votes);
 
-    const currentCycle = GetCurrentCycleService.execute().cycle;
+    const currentCycle = GetCurrentCycleService.execute(date).cycle;
 
     const hasVotedThisCycle = await this.votingRepository.findVoting({
       userUuid: userUuid,
