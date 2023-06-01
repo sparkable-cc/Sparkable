@@ -51,6 +51,7 @@ jobs:
     - name: Check .env
       run: |
         docker-compose exec -T backend ls -la
+        docker-compose exec -T backend cp .env.txt .env
         docker-compose exec -T backend cat .env
 
     - name: Run backend unit tests
