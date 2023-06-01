@@ -47,6 +47,7 @@ jobs:
         # cp ../backend/.env.txt ../backend/.env
         docker-compose -f docker-compose-test.yml up --build --detach
         sleep 10  # wait for database to be ready
+        run: docker-compose exec -T backend ls -la
 
     - name: Run backend unit tests
       run: docker-compose exec -T backend npm run unit
