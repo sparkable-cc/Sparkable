@@ -61,8 +61,8 @@ jobs:
         docker-compose exec -T backend cat .env
 
     - name: Check Secret
+      run: echo $key1
       if: ${{env.key1}} == 'aaa'
-
 
     - name: Run backend unit tests
       run: docker-compose exec -T backend npm run unit
