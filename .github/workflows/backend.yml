@@ -17,6 +17,9 @@ jobs:
 
   build:
 
+    env:
+      key1: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
+
     runs-on: ubuntu-latest
 
     steps:
@@ -56,6 +59,10 @@ jobs:
         docker-compose exec -T backend echo "AUTH0_CLIENT_ID=${{ secrets.AUTH0_CLIENT_ID }}"
         docker-compose exec -T backend echo "AUTH0_CLIENT_SECRET=${{ secrets.AUTH0_CLIENT_SECRET }}"
         docker-compose exec -T backend cat .env
+
+    - name: Check Secret
+      if: ${{env.key1}} == 'aaa'
+
 
     - name: Run backend unit tests
       run: docker-compose exec -T backend npm run unit
