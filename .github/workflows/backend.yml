@@ -26,11 +26,11 @@ jobs:
     - name: Make envfile
       uses: SpicyPizza/create-envfile@v1.3
       with:
-        envkey_CLIENT: http://localhost:3000
-        envkey_AUTH0_AUDIENCE: http://localhost:5000
-        envkey_AUTH0_ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
-        envkey_AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
-        envkey_AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
+        INPUT_ENVKEY_CLIENT: http://localhost:3000
+        INPUT_ENVKEY_AUTH0_AUDIENCE: http://localhost:5000
+        INPUT_ENVKEY_AUTH0_ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
+        INPUT_ENVKEY_AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+        INPUT_ENVKEY_AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
 
     - name: Start docker containers
       # env:
