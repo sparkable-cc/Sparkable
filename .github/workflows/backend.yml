@@ -60,7 +60,7 @@ jobs:
     - name:  Check Secret
       env:
         AUTH0_ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
-      if: env.AUTH0_ISSUER_BASE_URL != null
+      if: env.AUTH0_ISSUER_BASE_URL != http://localhost:5000
       run: echo "env.AUTH0_ISSUER_BASE_URL != null"
 
     - name: Run backend unit tests
