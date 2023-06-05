@@ -115,12 +115,12 @@ describe('GET /viewed-links-in-current-cycle', () => {
     const linkDto = await LinkFactory.create({ userUuid: auth.body.uuid });
     const linkDto2 = await LinkFactory.create();
 
-    ViewedLinkByUserDataFactory.store({
+    await ViewedLinkByUserDataFactory.store({
       userUuid: auth.body.uuid,
       linkUuid: linkDto.uuid,
       cycle: 1
     });
-    ViewedLinkByUserDataFactory.store({
+    await ViewedLinkByUserDataFactory.store({
       userUuid: auth.body.uuid,
       linkUuid: linkDto2.uuid,
       cycle: 1
