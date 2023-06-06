@@ -27,7 +27,6 @@ jobs:
         echo "MAIL_HOST=${{ secrets.MAIL_HOST }}" >> .env
         echo "MAIL_USER=${{ secrets.MAIL_USER }}" >> .env
         echo "MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}" >> .env
-        cat ./.env
 
     - name: Start docker containers
       run: |
