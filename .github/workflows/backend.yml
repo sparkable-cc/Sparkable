@@ -26,7 +26,7 @@ jobs:
         echo "AUTH0_CLIENT_ID=${{ secrets.AUTH0_CLIENT_ID }}" >> .env
         echo "AUTH0_CLIENT_SECRET=${{ secrets.AUTH0_CLIENT_SECRET }}" >> .env
         echo TEST="https://xxx.execute-api.us-west-2.amazonaws.com" >> .env
-        cat .env
+        cat ./.env
 
     - name: Start docker containers
       run: |
