@@ -47,7 +47,9 @@ jobs:
         ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
         CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
         CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
-      run: docker-compose exec -T backend npm run e2e
+      run: |
+        docker-compose exec -T backend cat .env
+        docker-compose exec -T backend npm run e2e
 
     # - name: Run frontend E2E tests
     #   run: docker-compose exec -T frontend npm run e2e
