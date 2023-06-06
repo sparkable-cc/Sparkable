@@ -30,6 +30,7 @@ jobs:
         docker-compose exec -T backend echo "AUTH0_ISSUER_BASE_URL=${{ secrets.AUTH0_ISSUER_BASE_URL }}" >> ./.env
         docker-compose exec -T backend echo "AUTH0_CLIENT_ID=${{ secrets.AUTH0_CLIENT_ID }}" >> .env
         docker-compose exec -T backend echo "AUTH0_CLIENT_SECRET=${{ secrets.AUTH0_CLIENT_SECRET }}" >> .env
+        docker-compose exec -T backend echo TEST="https://xxx.execute-api.us-west-2.amazonaws.com" >> .env
         docker-compose exec -T backend cat .env
 
     - name: Run backend unit tests
