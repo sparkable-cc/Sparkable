@@ -21,7 +21,7 @@ jobs:
       run: |
         cd backend
         cp .env.txt .env
-        echo 'AUTH0_DOMAIN=${{ secrets.AUTH0_ISSUER_BASE_URL }}' >> ./.env
+        # echo 'AUTH0_DOMAIN=${{ secrets.AUTH0_ISSUER_BASE_URL }}' >> ./.env
         echo "AUTH0_ISSUER_BASE_URL=${{ secrets.AUTH0_ISSUER_BASE_URL }}" >> ./.env
         echo "AUTH0_CLIENT_ID=${{ secrets.AUTH0_CLIENT_ID }}" >> .env
         echo "AUTH0_CLIENT_SECRET=${{ secrets.AUTH0_CLIENT_SECRET }}" >> .env
