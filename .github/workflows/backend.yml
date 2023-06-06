@@ -19,6 +19,7 @@ jobs:
 
     - name: Check .env
       run: |
+        cd backend
         ls -la
         cp .env.txt .env
         echo 'AUTH0_DOMAIN=${{ secrets.AUTH0_ISSUER_BASE_URL }}' >> ./.env
