@@ -19,14 +19,14 @@ jobs:
 
     - name: Check .env
       run: |
-        docker-compose exec -T backend ls -la
-        docker-compose exec -T backend cp .env.txt .env
-        docker-compose exec -T backend echo 'AUTH0_DOMAIN=${{ secrets.AUTH0_ISSUER_BASE_URL }}' >> ./.env
-        docker-compose exec -T backend echo "AUTH0_ISSUER_BASE_URL=${{ secrets.AUTH0_ISSUER_BASE_URL }}" >> ./.env
-        docker-compose exec -T backend echo "AUTH0_CLIENT_ID=${{ secrets.AUTH0_CLIENT_ID }}" >> .env
-        docker-compose exec -T backend echo "AUTH0_CLIENT_SECRET=${{ secrets.AUTH0_CLIENT_SECRET }}" >> .env
-        docker-compose exec -T backend echo TEST="https://xxx.execute-api.us-west-2.amazonaws.com" >> .env
-        docker-compose exec -T backend cat .env
+        ls -la
+        cp .env.txt .env
+        echo 'AUTH0_DOMAIN=${{ secrets.AUTH0_ISSUER_BASE_URL }}' >> ./.env
+        echo "AUTH0_ISSUER_BASE_URL=${{ secrets.AUTH0_ISSUER_BASE_URL }}" >> ./.env
+        echo "AUTH0_CLIENT_ID=${{ secrets.AUTH0_CLIENT_ID }}" >> .env
+        echo "AUTH0_CLIENT_SECRET=${{ secrets.AUTH0_CLIENT_SECRET }}" >> .env
+        echo TEST="https://xxx.execute-api.us-west-2.amazonaws.com" >> .env
+        cat .env
 
     - name: Start docker containers
       run: |
