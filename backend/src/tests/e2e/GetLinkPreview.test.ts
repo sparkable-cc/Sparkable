@@ -6,6 +6,8 @@ import UserFactory from "../../factories/UserFactory"
 
 
 describe('POST /link-preview', () => {
+  let auth: { body: { access_token: string; uuid: string; } };
+  let username: string;
 
   beforeAll(async () => {
     await dataSource.initialize();
@@ -14,6 +16,15 @@ describe('POST /link-preview', () => {
   afterAll(async () => {
     await dataSource.destroy();
   });
+
+  beforeEach(async () => {
+    const email = 'admin@butterfy.me';
+    const password = 'password';
+    username = 'admin';
+    const user = await UserFactory.create({email, password, username});
+    auth = await UserFactory.signIn(user);
+  });
+
 
   afterEach(async () => {
     const repository = dataSource.getRepository(UserEntity);
@@ -27,11 +38,6 @@ describe('POST /link-preview', () => {
   });
 
   it('returns 400 when the body is empty', async () => {
-    const email = 'admin@butterfy.me';
-    const password = 'password';
-    await UserFactory.create({email, password})
-    const auth = await UserFactory.signIn(request, app, email, password);
-
     const res = await request(app)
     .post('/link-preview-data')
     .auth(auth.body.access_token, { type: 'bearer' })
@@ -41,10 +47,6 @@ describe('POST /link-preview', () => {
   });
 
   it('returns 200 when the url exists', async () => {
-    const email = 'admin@butterfy.me';
-    const password = 'password';
-    await UserFactory.create({email, password})
-    const auth = await UserFactory.signIn(request, app, email, password);
     const url = 'https://ogp.me/';
 
     const res = await request(app)

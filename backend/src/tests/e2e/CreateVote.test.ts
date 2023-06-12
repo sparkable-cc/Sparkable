@@ -9,6 +9,7 @@ import UserFactory from '../../factories/UserFactory';
 import LinkFactory from '../../factories/LinkFactory';
 import ViewedLinkByUserDataFactory from '../../factories/ViewedLinkByUserDataFactory';
 import { LinkEntity } from '../../contexts/links/infrastructure/persistence/entities/LinkEntity';
+import { GetCurrentCycleService } from '../../contexts/voting/domain/services/GetCurrentCycleService';
 
 describe('POST /votes', () => {
   let auth: { body: { access_token: string; uuid: string; } };
@@ -25,8 +26,8 @@ describe('POST /votes', () => {
     const email = 'admin@butterfy.me';
     const password = 'password';
     const username = 'admin';
-    await UserFactory.create({email, password, username});
-    auth = await UserFactory.signIn(request, app, email, password);
+    const user = await UserFactory.create({email, password, username});
+    auth = await UserFactory.signIn(user);
   });
 
   afterEach(async () => {
@@ -173,7 +174,8 @@ describe('POST /votes', () => {
     expect(total).toEqual(1);
     expect(voting[0].userUuid).toEqual(auth.body.uuid);
     expect(voting[0].countVotes).toEqual(0);
-    expect(voting[0].cycle).toEqual(5);
+    const currentCycle = GetCurrentCycleService.execute();
+    expect(voting[0].cycle).toEqual(currentCycle.cycle);
   });
 
   it('returns 200 voting with multiple selection', async () => {
@@ -209,14 +211,15 @@ describe('POST /votes', () => {
     expect(total).toEqual(1);
     expect(voting[0].userUuid).toEqual(auth.body.uuid);
     expect(voting[0].countVotes).toEqual(2);
-    expect(voting[0].cycle).toEqual(5);
+    const currentCycle = GetCurrentCycleService.execute();
+    expect(voting[0].cycle).toEqual(currentCycle.cycle);
 
     const voteRepository = dataSource.getRepository(VoteEntity);
     const [votes, totalVotes] = await voteRepository.findAndCount();
     expect(totalVotes).toEqual(2);
     expect(votes[0].userUuid).toEqual(auth.body.uuid);
     expect(votes[0].linkUuid).toEqual(linkUuid);
-    expect(votes[0].cycle).toEqual(5);
+    expect(votes[0].cycle).toEqual(currentCycle.cycle);
     expect(votes[1].userUuid).toEqual(auth.body.uuid);
     expect(votes[1].linkUuid).toEqual(linkUuidSecond);
 

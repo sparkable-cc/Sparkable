@@ -24,8 +24,8 @@ describe('POST /links', () => {
     const email = 'admin@butterfy.me';
     const password = 'password';
     username = 'admin';
-    await UserFactory.create({email, password, username});
-    auth = await UserFactory.signIn(request, app, email, password);
+    const user = await UserFactory.create({email, password, username});
+    auth = await UserFactory.signIn(user);
   });
 
   afterEach(async () => {

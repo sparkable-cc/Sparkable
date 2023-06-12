@@ -26,8 +26,8 @@ describe('GET /viewed-links-in-current-cycle', () => {
     const email = 'admin@butterfy.me';
     const password = 'password';
     username = 'admin';
-    await UserFactory.create({email, password, username});
-    auth = await UserFactory.signIn(request, app, email, password);
+    const user = await UserFactory.create({email, password, username});
+    auth = await UserFactory.signIn(user);
   });
 
   afterEach(async () => {
@@ -115,12 +115,12 @@ describe('GET /viewed-links-in-current-cycle', () => {
     const linkDto = await LinkFactory.create({ userUuid: auth.body.uuid });
     const linkDto2 = await LinkFactory.create();
 
-    ViewedLinkByUserDataFactory.store({
+    await ViewedLinkByUserDataFactory.store({
       userUuid: auth.body.uuid,
       linkUuid: linkDto.uuid,
       cycle: 1
     });
-    ViewedLinkByUserDataFactory.store({
+    await ViewedLinkByUserDataFactory.store({
       userUuid: auth.body.uuid,
       linkUuid: linkDto2.uuid,
       cycle: 1
