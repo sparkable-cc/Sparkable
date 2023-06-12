@@ -39,5 +39,13 @@ jobs:
     - name: Run backend Integration tests
       run: docker-compose exec -T backend npm run e2e
 
-    # - name: Run frontend E2E tests
-    #   run: docker-compose exec -T frontend npm run e2e
+    - name: Deploy on PREPRODUCTION
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.PRE_HOST }}
+        username: ${{ secrets.PRE_USERNAME }}
+        password: ${{ secrets.PRE_PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          whoami
+          ls -la
