@@ -46,6 +46,4 @@ jobs:
         username: ${{ secrets.PRE_USERNAME }}
         password: ${{ secrets.PRE_PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: |
-          whoami
-          ls -la
+        script: sh deploy-backend.sh
