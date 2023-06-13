@@ -1,8 +1,12 @@
 import { expect, test } from '@playwright/test';
+import { compose } from 'redux';
 
 test.describe('Submit', () => {
   test('should submit a link', async ({ page }) => {
-    // sign in
+    // Generate a random identifier
+    const randomId = Math.floor(Math.random() * 1000);
+    const randomUrl = `https://www.youtube.com/watch?v=8BFdFeOS3oM&t=${randomId}`;
+
     await page.goto('/auth/signin');
     await page.getByLabel('username').fill('randomUsername');
     await page.getByLabel('password').fill('123Asdf#%@');
@@ -11,28 +15,22 @@ test.describe('Submit', () => {
     await expect(page).toHaveURL('/');
 
     await page.goto('/submission/create');
-    await page.locator('text=start').click();
+    page.locator('button:has-text("start")').click();
     await expect(page).toHaveURL('/submission/create/link');
 
-    // paste url into input
-    await page.locator('input[name="link"]').fill('https://www.google.com');
-    await page.locator('text=continue').click();
+    await page.locator('input[name="link"]').fill(randomUrl);
+
+    page.locator('button:has-text("Continue")').click();
     await expect(page).toHaveURL('/submission/create/category');
 
-    // pick one category
-    // await page.locator('Society').click();
-    // await page.locator('text=continue').click();
-    // await expect(page).toHaveURL('/submission/create/statement');
+    page.locator('button:has-text("Society")').click();
+    page.locator('button:has-text("Continue")').click();
+    await expect(page).toHaveURL('/submission/create/statement');
 
-    // fill statement
-    // await page
-    //   .locator('textarea[name="statement"]')
-    //   .fill('This is a statement');
-    // await page.locator('text=Submit').click();
+    page.locator('button:has-text("Submit")').click();
 
-    // click on continue
-    // await expect(page).toHaveURL('/submission/create/success');
-    // await page.locator('text=Back to Explore').click();
-    // await expect(page).toHaveURL('/');
+    await expect(page).toHaveURL('/submission/create/success');
+    page.locator('button:has-text("Back to Explore")').click();
+    await expect(page).toHaveURL('/');
   });
 });
