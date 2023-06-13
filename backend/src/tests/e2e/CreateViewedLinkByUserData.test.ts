@@ -8,6 +8,7 @@ import { ViewedLinkByUserDataEntity } from '../../contexts/links/infrastructure/
 import { CategoryEntity } from '../../contexts/links/infrastructure/persistence/entities/CategoryEntity';
 import { UserEntity } from '../../contexts/users/infrastructure/persistence/entities/UserEntity';
 import { LinkEntity } from '../../contexts/links/infrastructure/persistence/entities/LinkEntity';
+import { GetCurrentCycleService } from '../../contexts/voting/domain/services/GetCurrentCycleService';
 
 describe('POST /viewed-link-user', () => {
   const endpoint = '/viewed-link-user';
@@ -92,8 +93,6 @@ describe('POST /viewed-link-user', () => {
   });
 
   it('returns 201 when data is created', async () => {
-    const cycle = 1;
-
     const res = await request(app)
       .post(endpoint)
       .auth(auth.body.access_token, { type: 'bearer' })
@@ -110,7 +109,8 @@ describe('POST /viewed-link-user', () => {
     expect(result[0][0].userUuid).toEqual(auth.body.uuid);
     expect(result[0][0].linkUuid).toEqual(link.uuid);
     expect(result[0][0].date).not.toEqual(null);
-    expect(result[0][0].cycle).toEqual(cycle);
+    const currentCycle = GetCurrentCycleService.execute();
+    expect(result[0][0].cycle).toEqual(currentCycle.cycle);
     expect(result[0][0].userStage).toEqual(1);
     expect(result[0][0].linkStage).toEqual(1);
   });

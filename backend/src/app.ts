@@ -44,6 +44,7 @@ import { DateNotValidException } from './contexts/voting/domain/exceptions/DateN
 import { DateOutsideCycleException } from './contexts/voting/domain/exceptions/DateOutsideCycleException';
 import dataSource from './data-source';
 import { UserHasAlreadyVotedException } from './contexts/voting/domain/exceptions/UserHasAlreadyVotedException';
+import { LinkUuidDto } from './contexts/links/domain/models/LinkUuidDto';
 
 const app: Express = express();
 
@@ -387,7 +388,7 @@ app.post('/voting-status', async (req: Request, res: Response) => {
   );
 
   getVotingStatusAction
-    .execute(req.body.userUuid)
+    .execute(req.body.userUuid, req.body.date)
     .then((votingStatus) => {
       res.status(200);
       res.send(votingStatus);
@@ -449,10 +450,18 @@ app.post('/votes', checkJwt, async (req: Request, res: Response) => {
     new LinkRepositoryPG(dataSource)
   );
 
+  let votes: Array<LinkUuidDto> = [];
+  if (typeof req.query.votes === 'string') votes = JSON.parse(req.body.votes);
+  else votes = req.body.votes;
+
+  let date: Date = new Date();
+  if (req.query.date) date = new Date(req.body.date);
+
   createVoteAction
     .execute(
       req.body.userUuid,
-      JSON.parse(req.body.votes)
+      votes,
+      date
     )
     .then(() => {
       res.status(200);
@@ -463,6 +472,10 @@ app.post('/votes', checkJwt, async (req: Request, res: Response) => {
         case MandatoryFieldEmptyException:
           res.status(400);
           res.send({ message: 'Bad request' });
+          break;
+        case DateOutsideCycleException:
+          res.status(400);
+          res.send({ message: 'Date outside of voting cycles' });
           break;
         case NumberOfVotesExceededException:
           res.status(400);
