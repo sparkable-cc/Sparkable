@@ -12,8 +12,10 @@ export class GetVotingStatusAction {
     this.votingRepository = votingRepository;
   }
 
-  async execute(userUuid?:string): Promise<VotingStatusDto> {
-    const currentDate = new Date();
+  async execute(userUuid?:string, date?:string): Promise<VotingStatusDto> {
+    let currentDate:Date = new Date();
+    if (date) currentDate = new Date(date);
+
     const currentCycle = GetCurrentCycleService.execute(currentDate);
     const nextOpenVotingDate = new Date(currentCycle.openVotingDate);
 

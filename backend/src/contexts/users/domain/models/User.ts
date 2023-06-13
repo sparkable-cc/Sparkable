@@ -46,6 +46,10 @@ export class User {
     return this.username;
   }
 
+  public get getPassword(): string {
+    return this.password;
+  }
+
   public get getUuid(): string {
     return this.uuid;
   }

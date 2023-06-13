@@ -2,11 +2,13 @@ import { UserDto } from "../contexts/users/domain/models/UserDto";
 import { UserEntity } from "../contexts/users/infrastructure/persistence/entities/UserEntity";
 import { v4 as uuidv4 } from 'uuid';
 import dataSource from "../data-source";
+import { User } from "../contexts/users/domain/models/User";
 
 export default class UserFactory {
 
   private static readonly userDto = {
-    uuid: '',
+    id: 0,
+    uuid:'uuid',
     email: 'email',
     username: 'username',
     password: 'password',
@@ -22,15 +24,18 @@ export default class UserFactory {
     }
   ) {
     const userRepository = dataSource.getRepository(UserEntity);
-    const user = userRepository.create({ ...this.userDto });
 
-    user.uuid = uuidv4();
-    if (params?.email) user.email = params?.email;
-    if (params?.password) user.password = params?.password;
-    if (params?.username) user.username = params?.username;
-    if (params?.stage) user.stage = params?.stage;
+    const userDto = { ...this.userDto };
+    userDto.uuid = uuidv4();
+    if (params?.email) userDto.email = params?.email;
+    if (params?.password) userDto.password = params?.password;
+    if (params?.username) userDto.username = params?.username;
+    if (params?.stage) userDto.stage = params?.stage;
 
-    return await userRepository.manager.save(user);
+    const user = User.factory(userDto);
+    const userEntity = userRepository.create(user.toDto());
+
+    return await userRepository.manager.save(userEntity);
   }
 
   public static async signIn(request:any, app:any, email:string, password:string) {

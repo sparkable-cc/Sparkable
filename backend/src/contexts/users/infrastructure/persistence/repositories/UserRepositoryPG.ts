@@ -12,10 +12,17 @@ export class UserRepositoryPG implements UserRepository {
   }
 
   async storeUser(user:User) {
-    const userExist = await this.findUser({uuid: user.getUuid});
+    const userExist = await this.findUser({ uuid: user.getUuid });
 
     if (userExist) {
-      await this.userRepository.update({id: userExist.id}, {stage: user.getStage});
+      await this.userRepository.update(
+        { uuid: user.getUuid },
+        {
+          password: user.getPassword,
+          stage: user.getStage,
+
+        }
+      );
     } else  {
       await this.userRepository.save(user.toDto());
     }
