@@ -3,7 +3,6 @@ import Link from "next/link";
 import { BackButton } from "../BackButton";
 
 export const NoAccess = () => {
-
   return (
     <section className={styles.noAccessWrapper}>
       <div className={styles.noAccessMessage}>Sorry, you don't have access.</div>
