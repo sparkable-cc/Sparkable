@@ -5,11 +5,15 @@ RUN mkdir -p /usr/app
 WORKDIR /usr/app
 COPY ./frontend/package.json ./frontend/tsconfig.json ./
 COPY ./frontend/.env.txt ./.env
-COPY ./frontend/components ./
+COPY ./frontend/components ./components
+COPY ./frontend/layouts ./layouts
 COPY ./frontend/pages ./pages
+COPY ./frontend/public ./public
+COPY ./frontend/store ./store
 COPY ./frontend/styles ./styles
 COPY ./frontend/tests ./tests
-COPY ./types /usr/types
+COPY ./frontend/types ./types
+COPY ./frontend/utils ./utils
 RUN ls -la
 RUN npm install
 RUN npm run build
