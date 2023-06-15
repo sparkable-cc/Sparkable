@@ -23,7 +23,7 @@ jobs:
         sleep 10  # wait for database to be ready
 
     - name: Run frontend E2E tests
-      run: docker-compose exec -T frontend npx playwright test
+      run: docker-compose exec -T frontend npm run e2e
 
     - name: Deploy on PREPRODUCTION
       uses: appleboy/ssh-action@v0.1.10
