@@ -17,6 +17,6 @@ COPY ./frontend/utils ./utils
 RUN ls -la
 RUN npm install
 RUN npm run build
-RUN npm run start
+# RUN npm run start
 
 CMD ["npm", "run", "dev"]
