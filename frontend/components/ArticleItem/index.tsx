@@ -27,7 +27,7 @@ export const ArticleItem = ({
 
   return (
     <article className={classNames(styles.articleItem, className)}>
-      {image && <div
+      {image.includes("http") && <div
         className={styles.articleCover}
         onClick={onItemClick}
         style={{
