@@ -20,7 +20,7 @@ export const signUpSchema = Joi.object({
 
   password: Joi.string()
     .min(8)
-    .pattern(new RegExp(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/))
+    // .pattern(new RegExp(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/))
     .required()
     .messages({
       'string.pattern.base':
