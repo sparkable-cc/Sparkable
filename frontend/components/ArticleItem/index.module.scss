@@ -42,7 +42,6 @@
   padding: $gapS;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: flex-start;
   height: auto;
   flex-grow: 1;
@@ -50,6 +49,7 @@
   @media only screen and (max-width: $mobile) {
     width: 50%;
     flex-grow: 0;
+    padding: 12px 8px;
   }
 }
 
@@ -65,4 +65,8 @@
   overflow: hidden;
   word-wrap: break-word;
   color: $colorBlack;
+
+  @media only screen and (max-width: $mobile) {
+    height: 114px;
+  }
 }
