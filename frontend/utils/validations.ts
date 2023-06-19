@@ -24,7 +24,7 @@ export const signUpSchema = Joi.object({
     .required()
     .messages({
       'string.pattern.base':
-        'Password must contain at least one number and one letter',
+        'Password must contain at least one letter, one number, and one special character',
       'string.empty': 'Password is required',
       'string.length':
         'This password is too short. Please use at least 8 characters and try again.',
