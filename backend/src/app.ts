@@ -1,7 +1,6 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Express, Request, Response } from 'express';
-import { auth } from 'express-oauth2-jwt-bearer';
 import ogs from 'ts-open-graph-scraper';
 import { CreateLinkAction } from './contexts/links/actions/CreateLinkAction';
 import { CreateViewedLinkByUserDataAction } from './contexts/links/actions/CreateViewedLinkByUserDataAction';
@@ -45,6 +44,7 @@ import { DateOutsideCycleException } from './contexts/voting/domain/exceptions/D
 import dataSource from './data-source';
 import { UserHasAlreadyVotedException } from './contexts/voting/domain/exceptions/UserHasAlreadyVotedException';
 import { LinkUuidDto } from './contexts/links/domain/models/LinkUuidDto';
+import checkJwt from './auth';
 
 const app: Express = express();
 
@@ -53,12 +53,6 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 
 dotenv.config();
 app.use(cors({ origin: process.env.CLIENT }));
-
-const checkJwt = auth({
-  audience: process.env.AUTH0_AUDIENCE,
-  issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
-  tokenSigningAlg: 'RS256',
-});
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Butterfy API');
