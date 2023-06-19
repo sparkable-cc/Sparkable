@@ -14,9 +14,11 @@ COPY ./frontend/styles ./styles
 COPY ./frontend/tests ./tests
 COPY ./frontend/types ./types
 COPY ./frontend/utils ./utils
-RUN ls -la
 RUN npm install
 RUN npm run build
+RUN npx playwright install chromium
+RUN mv /root/.cache/ms-playwright/chromium-1067 /root/.cache/ms-playwright/chromium-1040
+RUN ls -la /root/.cache/ms-playwright
 # RUN npm run start
 
 CMD ["npm", "run", "dev"]
