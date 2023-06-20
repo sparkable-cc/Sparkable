@@ -1,19 +1,24 @@
-import { auth } from 'express-oauth2-jwt-bearer';
+import jwt, { Secret, JwtPayload } from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express';
 
-const checkJwt = async(req:any, res:any, next:any) => {
-    if (process.env.NODE_ENV === 'test') {
-      if (!req.headers.authorization) {
-        return res.status(401).json({ error: 'No credentials sent!' });
-      }
-      next();
+export interface CustomRequest extends Request {
+ token: string | JwtPayload;
+}
+
+const checkJwt = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    if (!token) {
+      throw new Error();
     }
-    else
-      return auth({
-        audience: process.env.AUTH0_AUDIENCE,
-        issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
-        tokenSigningAlg: 'RS256',
-      })
-  };
 
+    const SECRET_KEY: Secret = process.env.SECRET_KEY || '';
+    const decoded = jwt.verify(token, SECRET_KEY);
+    (req as CustomRequest).token = decoded;
+    next();
+  } catch (err) {
+    res.status(401).send('Please authenticate');
+  }
+};
 
 export default checkJwt;

@@ -45,6 +45,7 @@ import dataSource from './data-source';
 import { UserHasAlreadyVotedException } from './contexts/voting/domain/exceptions/UserHasAlreadyVotedException';
 import { LinkUuidDto } from './contexts/links/domain/models/LinkUuidDto';
 import checkJwt from './auth';
+import { AuthServiceJWT } from './contexts/users/infrastructure/services/AuthServiceJWT';
 
 const app: Express = express();
 
@@ -96,7 +97,7 @@ app.post('/user', async (req: Request, res: Response) => {
 app.post('/signin', async (req: Request, res: Response) => {
   const signInAction = new SignInAction(
     new UserRepositoryPG(dataSource),
-    new AuthServiceAuth0(),
+    new AuthServiceJWT(),
   );
   signInAction
     .execute(req.body.password, req.body.username, req.body.email)

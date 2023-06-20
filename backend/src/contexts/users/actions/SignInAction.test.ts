@@ -5,18 +5,18 @@ import { User } from '../domain/models/User';
 import { UserRepositoryInMemory } from '../infrastructure/persistence/repositories/UserRepositoryInMemory';
 import { SignInAction } from './SignInAction';
 import { AuthService } from '../domain/services/AuthService';
-import { MockProxy, mock } from 'jest-mock-extended';
+import { AuthServiceJWT } from '../infrastructure/services/AuthServiceJWT';
 
 describe('signing in', () => {
-  let authServiceMock: MockProxy<AuthService>;
+  let authService: AuthService;
 
   beforeEach(() => {
-    authServiceMock = mock<AuthService>();
+    authService = new AuthServiceJWT();
   })
 
   test('cant sign in because the username does not exist', async () => {
     const userRepository = new UserRepositoryInMemory();
-    const signInAction = new SignInAction(userRepository, authServiceMock);
+    const signInAction = new SignInAction(userRepository, authService);
 
     await expect(signInAction.execute('password', 'username')).rejects.toThrow(
       UserNotFoundException,
@@ -25,7 +25,7 @@ describe('signing in', () => {
 
   test('cant sign in because the email does not exist', async () => {
     const userRepository = new UserRepositoryInMemory();
-    const signInAction = new SignInAction(userRepository, authServiceMock);
+    const signInAction = new SignInAction(userRepository, authService);
 
     await expect(signInAction.execute('password', 'email')).rejects.toThrow(
       UserNotFoundException,
@@ -38,7 +38,7 @@ describe('signing in', () => {
     const email = 'email';
     const password = 'password';
     await userRepository.storeUser(new User(email, username, password));
-    const signInAction = new SignInAction(userRepository, authServiceMock);
+    const signInAction = new SignInAction(userRepository, authService);
 
     await expect(
       signInAction.execute('wrong password', username, email),
@@ -51,25 +51,13 @@ describe('signing in', () => {
     const email = 'email';
     const password = 'password';
     await userRepository.storeUser(new User(email, username, password));
-
-    var date = new Date();
-    date.setDate(date.getDate() + 1);
-    const authResponse = {
-      access_token:"xxxx",
-      expires_in: date,
-      token_type:"Bearer"
-    }
-    authServiceMock.getToken.mockReturnValue(
-      new Promise((resolve) => resolve(authResponse))
-    );
-
-    const signInAction = new SignInAction(userRepository, authServiceMock);
+    const signInAction = new SignInAction(userRepository, authService);
 
     const res = await signInAction.execute(password, username);
 
-    expect(authServiceMock.getToken).toHaveBeenCalled();
     expect(res.token_type).toEqual('Bearer');
-    expect(res.access_token).toEqual('xxxx');
+    expect(res).toHaveProperty('expires_in');
+    expect(res).toHaveProperty('access_token');
   });
 
   test('can sign in with email', async () => {
@@ -77,28 +65,17 @@ describe('signing in', () => {
     const username = 'username';
     const email = 'email';
     const password = 'password';
-    await userRepository.storeUser(new User(email, username, password));
-
-    var date = new Date();
-    date.setDate(date.getDate() + 1);
-    const authResponse = {
-      access_token:"xxxx",
-      expires_in: date,
-      token_type:"Bearer"
-    }
-    authServiceMock.getToken.mockReturnValue(
-      new Promise((resolve) => resolve(authResponse))
-    );
-
-    const signInAction = new SignInAction(userRepository, authServiceMock);
+    const user = new User(email, username, password);
+    await userRepository.storeUser(user);
+    const signInAction = new SignInAction(userRepository, authService);
 
     const res = await signInAction.execute(password, '', email);
 
-    expect(authServiceMock.getToken).toHaveBeenCalled();
     expect(res.token_type).toEqual('Bearer');
-    expect(res.access_token).toEqual('xxxx');
+    expect(res).toHaveProperty('access_token');
+    expect(res.access_token).not.toBeNull();
     expect(res).toHaveProperty('uuid');
-    expect(res.uuid).not.toBeNull();
+    expect(res.uuid).toEqual(user.getUuid);
     expect(res.username).toEqual(username);
     expect(res.stage).toEqual(1);
   });
