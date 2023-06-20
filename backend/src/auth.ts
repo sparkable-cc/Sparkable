@@ -13,7 +13,7 @@ const checkJwt = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const SECRET_KEY: Secret = process.env.SECRET_KEY || '';
-    const decoded = jwt.verify(token, SECRET_KEY);
+    const decoded = await jwt.verify(token, SECRET_KEY);
     (req as CustomRequest).token = decoded;
     next();
   } catch (err) {
