@@ -15,18 +15,27 @@ test.describe('Voting', () => {
     await expect(page).toHaveURL('/#explore');
 
     //locate a link
+    await page
+      .locator('#explore section')
+      .getByRole('heading', {
+        name: 'In This Nigerian Market, Young Women Find a Place of Their Own',
+      })
+      .click();
 
     //open on a link
+    await expect(page).toHaveURL('/article/25');
+    await page.getByRole('link', { name: 'Open' }).click();
 
-    // await page.locator('text=Butterfy').click();
-    // await expect(page).toHaveURL('/article/21');
-
-    // await page.locator('text=Open').click();
+    // go back to home page
+    await page.goto('http://localhost:3000/');
+    await expect(page).toHaveURL('/');
 
     // click on voting banner
     await page.locator('text=Vote Now').click();
     await expect(page).toHaveURL('/voting/participate');
-    await page.locator('text=Start').click();
+    page.locator('button:has-text("Start")').click();
     await expect(page).toHaveURL('/voting/participate/list');
+
+    //click on a link to vote
   });
 });
