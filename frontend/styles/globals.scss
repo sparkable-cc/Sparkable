@@ -1,5 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;1,600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
 @import './reset.scss';
 @import './variables.scss';
 @import './common.scss';
@@ -7,7 +9,7 @@
 html,
 body {
   color: $colorBlack;
-  background: $colorBeige;
+  background: $colorWhite;
   font-family: $mainFont, sans-serif;
   font-size: 1em;
   font-weight: 400;

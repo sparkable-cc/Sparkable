@@ -1,5 +1,5 @@
-@import "../../styles/variables";
-@import "../../styles/common";
+@import '../../styles/variables';
+@import '../../styles/common';
 
 .filterStageButton {
   @extend .buttonWhite;
@@ -7,6 +7,7 @@
   padding: 0 $gapXs;
   margin-bottom: $gapXxs;
   white-space: nowrap;
+  box-shadow: 0px 2px 25px rgba(0, 48, 75, 0.2);
 
   &:hover {
     background: rgba(0, 108, 123, 0.05);
@@ -16,7 +17,7 @@
     position: relative;
     margin-right: 4px;
     top: 2px;
-    content: url("../../public/svg/filterStageInactive.svg");
+    content: url('../../public/svg/filterStageInactive.svg');
   }
 
   &.active {
@@ -24,19 +25,19 @@
     color: #3748d0;
 
     &:before {
-      content: url("../../public/svg/filterStageActive.svg");
+      content: url('../../public/svg/filterStageActive.svg');
     }
   }
 
   &.disabled {
     &:before {
-      content: url("../../public/svg/filterStageDisabled.svg");
+      content: url('../../public/svg/filterStageDisabled.svg');
     }
 
     &:hover {
       background: $colorWhite;
     }
-  }  
+  }
 }
 
 .filterStageButtonMobile {
@@ -51,13 +52,14 @@
   font-size: 1rem;
   margin-bottom: 8px;
   margin-right: 8px;
+  box-shadow: 0px 2px 25px rgba(0, 48, 75, 0.2);
   cursor: pointer;
 
   &:before {
     margin-right: 4px;
     position: relative;
     top: 2px;
-    content: url("../../public/svg/filterStageInactive.svg");
+    content: url('../../public/svg/filterStageInactive.svg');
   }
 
   &.active {
@@ -65,13 +67,13 @@
     color: #3748d0;
 
     &:before {
-      content: url("../../public/svg/filterStageActive.svg");
+      content: url('../../public/svg/filterStageActive.svg');
     }
   }
 
   &.disabled {
     &:before {
-      content: url("../../public/svg/filterStageDisabled.svg");
+      content: url('../../public/svg/filterStageDisabled.svg');
     }
   }
 }

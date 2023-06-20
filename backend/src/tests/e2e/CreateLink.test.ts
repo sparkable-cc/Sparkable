@@ -24,8 +24,8 @@ describe('POST /links', () => {
     const email = 'admin@butterfy.me';
     const password = 'password';
     username = 'admin';
-    await UserFactory.create({email, password, username});
-    auth = await UserFactory.signIn(request, app, email, password);
+    const user = await UserFactory.create({email, password, username});
+    auth = await UserFactory.fakeSignIn(user);
   });
 
   afterEach(async () => {
@@ -39,7 +39,7 @@ describe('POST /links', () => {
     await userRepository.delete({});
   });
 
-  it('returns 401 when the user is not logged', async () => {
+  it('returns 401 when the user is not logged to create link', async () => {
     const res = await request(app).post('/links').send({});
 
     expect(res.statusCode).toEqual(401);

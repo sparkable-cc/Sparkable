@@ -8,11 +8,9 @@ describe('POST /voting-status', () => {
 
   beforeAll(async() => {
     await dataSource.initialize();
-    //jest.useFakeTimers();
   });
 
   afterAll(async() => {
-    //jest.useRealTimers();
     await dataSource.destroy();
   });
 
