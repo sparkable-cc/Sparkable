@@ -45,13 +45,4 @@ export default class UserFactory {
     });
   }
 
-  public static async fakeSignIn(user:UserDto) {
-    return {
-      body : {
-        access_token: 'eyJhbGciOiJSUzI1NiI',
-        uuid: user.uuid
-      }
-    }
-  }
-
 }
