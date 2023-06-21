@@ -32,6 +32,8 @@ describe('POST /recovery-password', () => {
     expect(res.statusCode).toEqual(200);
   });
 
+  // UNCOMMENT when we mock the MailerService
+  //
   // it('returns 200 when the mail to reset password is sended', async () => {
   //   const email = 'test@butterfy.me';
   //   await request(app).post('/user').send({
