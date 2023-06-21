@@ -29,7 +29,7 @@ export class SignInAction {
     const match = await bcrypt.compare(password, user.password);
     if (!match) throw new WrongPasswordException();
 
-    const auth0 = await this.authService.getToken();
+    const auth = await this.authService.getToken(user);
 
     const userInfo = {
       uuid: user.uuid,
@@ -37,6 +37,6 @@ export class SignInAction {
       stage: user.stage
     };
 
-    return {...auth0, ...userInfo};
+    return {...auth, ...userInfo};
   }
 }

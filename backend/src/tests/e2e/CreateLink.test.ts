@@ -24,8 +24,8 @@ describe('POST /links', () => {
     const email = 'admin@butterfy.me';
     const password = 'password';
     username = 'admin';
-    const user = await UserFactory.create({email, password, username});
-    auth = await UserFactory.fakeSignIn(user);
+    await UserFactory.create({email, password, username});
+    auth = await UserFactory.signIn(request, app, email, password);
   });
 
   afterEach(async () => {
@@ -45,7 +45,7 @@ describe('POST /links', () => {
     expect(res.statusCode).toEqual(401);
   });
 
-  it('returns 400 when the mandatory field is empty', async () => {
+  it('returns 400 when the mandatory field is empty creating link', async () => {
     const res = await request(app)
       .post('/links')
       .auth(auth.body.access_token, { type: 'bearer' })
