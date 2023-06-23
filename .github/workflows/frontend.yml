@@ -1,0 +1,35 @@
+# name: Frontend CI & CD
+
+# on:
+#   push:
+#     branches: [ "develop" ]
+#   pull_request:
+#     branches: [ "develop" ]
+#   workflow_call:
+
+# jobs:
+
+#   build:
+
+#     runs-on: ubuntu-latest
+
+#     steps:
+
+#     - uses: actions/checkout@v3
+
+#     - name: Start docker containers
+#       run: |
+#         docker-compose -f docker-compose-test.yml up --build --detach
+#         sleep 10  # wait for database to be ready
+
+#     - name: Run frontend E2E tests
+#       run: docker-compose exec -T frontend npm run e2e
+
+#     - name: Deploy on PREPRODUCTION
+#       uses: appleboy/ssh-action@v0.1.10
+#       with:
+#         host: ${{ secrets.PRE_FRONTEND_HOST }}
+#         username: ${{ secrets.PRE_FRONTEND_USERNAME }}
+#         password: ${{ secrets.PRE_FRONTEND_PASSWORD }}
+#         port: ${{ secrets.PORT }}
+#         script: sh deploy-frontend.sh

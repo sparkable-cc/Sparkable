@@ -38,27 +38,27 @@ services:
       - db-data:/var/lib/postgresql/data
       - ./docker_postgres_init_testdb.sql:/docker-entrypoint-initdb.d/docker_postgres_init_testdb.sql
 
-  # frontend:
-  #   container_name: frontend
-  #   build:
-  #     context: .
-  #     dockerfile: ./frontend/Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - backend
-  #   environment:
-  #     NODE_ENV: development
-  #     PORT: 3000
-  #   volumes:
-  #     - ./frontend:/usr/app
-  #     - /usr/app/node_modules
-  #     - ./types:/usr/types
-  #   networks:
-  #     - server-side
+  frontend:
+    container_name: frontend
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+    volumes:
+      - ./frontend:/usr/app
+      - /usr/app/node_modules
+      - ./types:/usr/types
+    networks:
+      - client-side
 
 networks:
-  # client-side: {}
+  client-side: {}
   server-side: {}
 
 volumes:

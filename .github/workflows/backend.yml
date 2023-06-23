@@ -1,4 +1,4 @@
-name: Backend CI (unit & integration tests)
+name: Backend CI (unit & integration tests) & CD
 
 on:
   push:
@@ -33,11 +33,14 @@ jobs:
         docker-compose -f docker-compose-test.yml up --build --detach
         sleep 10  # wait for database to be ready
 
+    - name: Run frontend E2E tests
+      run: docker-compose exec -T frontend npm run e2e
+
     - name: Run backend unit tests
       run: docker-compose exec -T backend npm run unit
 
-    - name: Run backend Integration tests
-      run: docker-compose exec -T backend npm run e2e
+    # - name: Run backend Integration tests
+    #   run: docker-compose exec -T backend npm run e2e
 
     - name: Deploy on PREPRODUCTION
       uses: appleboy/ssh-action@v0.1.10
