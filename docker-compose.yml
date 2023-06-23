@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 services:
   backend:
     container_name: backend
@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: ./backend/Dockerfile
     ports:
-      - "5000:5000"
+      - '5000:5000'
     depends_on:
       - db
     environment:
@@ -33,7 +33,7 @@ services:
     networks:
       - server-side
     ports:
-      - "8080:80"
+      - '8080:80'
     depends_on:
       - db
     volumes:
@@ -55,24 +55,24 @@ services:
       - db-data:/var/lib/postgresql/data
       - ./docker_postgres_init_testdb.sql:/docker-entrypoint-initdb.d/docker_postgres_init_testdb.sql
 
-  frontend:
-    container_name: frontend
-    build:
-      context: .
-      dockerfile: ./frontend/Dockerfile
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
-    environment:
-      NODE_ENV: development
-      PORT: 3000
-    volumes:
-      - ./frontend:/usr/app
-      - /usr/app/node_modules
-      - ./types:/usr/types
-    networks:
-      - client-side
+  # frontend:
+  #   container_name: frontend
+  #   build:
+  #     context: .
+  #     dockerfile: ./frontend/Dockerfile
+  #   ports:
+  #     - '3000:3000'
+  #   depends_on:
+  #     - backend
+  #   environment:
+  #     NODE_ENV: development
+  #     PORT: 3000
+  #   volumes:
+  #     - ./frontend:/usr/app
+  #     - /usr/app/node_modules
+  #     - ./types:/usr/types
+  #   networks:
+  #     - client-side
 
 networks:
   client-side: {}
