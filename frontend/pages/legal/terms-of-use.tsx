@@ -28,7 +28,7 @@ const TermsOfUsePage: NextPage = () => {
         </p>
         <p>
           You can contact us by email at{" "}
-          <a href="mailto:support@butterfy.me">support@butterfy.me</a>, or by
+          <a href="mailto:support@sparkable.cc">support@sparkable.cc</a>, or by
           mail to Butterfy, Zurich 8000, Switzerland.
         </p>
         <p>
@@ -225,7 +225,7 @@ const TermsOfUsePage: NextPage = () => {
               If you wish to make any use of the Services, Content, or Marks
               other than as set out in this section or elsewhere in our Legal
               Terms, please address your request to:{" "}
-              <a href="mailto:support@butterfy.me">support@butterfy.me</a>. If
+              <a href="mailto:support@sparkable.cc">support@sparkable.cc</a>. If
               we ever grant you the permission to post, reproduce, or publicly
               display any part of our Services or Content, you must identify us
               as the owners or licensors of the Services, Content, or Marks and
@@ -1038,7 +1038,7 @@ const TermsOfUsePage: NextPage = () => {
               <strong>Switzerland</strong>
             </p>
             <p>
-              <a href="mailto:support@butterfy.me">support@butterfy.me</a>
+              <a href="mailto:support@sparkable.cc">support@sparkable.cc</a>
             </p>
           </section>
         </article>

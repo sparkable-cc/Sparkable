@@ -152,7 +152,7 @@ const AcceptableUsePage: NextPage = () => {
         this community is used to share experience rather than bully. Please
         help us to keep this community civil and a place you want to visit by
         reporting any unsocial behavior you observe by emailing us at{" "}
-        <a href="mailto:support@butterfy.me">support@butterfy.me </a>.
+        <a href="mailto:support@sparkable.cc">support@sparkable.cc </a>.
       </p>
       <h3>Content & Voting Guidelines</h3>
       <p>
@@ -386,7 +386,7 @@ const AcceptableUsePage: NextPage = () => {
         problematic Content or Contribution, you may contact us by:
       </p>
       <p>
-        E-mail: <a href="mailto:support@butterfy.me">support@butterfy.me</a>
+        E-mail: <a href="mailto:support@sparkable.cc">support@sparkable.cc</a>
       </p>
     </section>
   );

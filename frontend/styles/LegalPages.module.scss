@@ -1,4 +1,4 @@
-@import "./common.scss";
+@import './common.scss';
 
 .legalContainer {
   max-width: 632px;
@@ -11,7 +11,6 @@
   h1 {
     font-size: 3rem;
     font-weight: 600;
-    font-style: italic;
     margin-bottom: $gapS;
     margin-top: 30px;
   }
@@ -20,7 +19,6 @@
     font-size: $size32;
     font-weight: 600;
     margin-bottom: $gapS;
-    font-style: italic;
   }
 
   p {
