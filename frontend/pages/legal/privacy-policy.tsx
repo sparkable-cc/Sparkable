@@ -5,19 +5,19 @@ import styles from "../../styles/LegalPages.module.scss";
 const PrivacyPolicyPage: NextPage = () => {
   return (
     <section className={styles.legalContainer}>
-      <h1>Butterfy Data Privacy Policy</h1>
+      <h1>Sparkable Data Privacy Policy</h1>
       <p>
-        Butterfy is a not-for-profit organization building a self-sustaining
+        Sparkable is a not-for-profit organization building a self-sustaining
         business model which does not rely on advertisement or any third-party
-        investors or clients. Butterfy's only obligation is to its users.
+        investors or clients. Sparkable's only obligation is to its users.
       </p>
       <p>
-        This gives Butterfy the freedom of not having to collect unnecessary
+        This gives Sparkable the freedom of not having to collect unnecessary
         data. Your data privacy and security are a top concern for us. We treat
         your data with the utmost care and in accordance with the applicable
-        laws and this privacy policy. Butterfy does not collect any data that is
-        not absolutely needed and necessary for the respective purpose. We use
-        servers in the European Union (Germany).
+        laws and this privacy policy. Sparkable does not collect any data that
+        is not absolutely needed and necessary for the respective purpose. We
+        use servers in the European Union (Germany).
       </p>
       <p>
         However, some third-party services we are using (like Twitter, LinkedIn,
@@ -42,12 +42,12 @@ const PrivacyPolicyPage: NextPage = () => {
       </p>
       <h3>Create an account</h3>
       <p>
-        New Butterfy accounts are created with an email, username and a
-        password. When using Butterfy with a user account, your activity (such
+        New Sparkable accounts are created with an email, username and a
+        password. When using Sparkable with a user account, your activity (such
         as your submitted content links) is recorded in an anonymized way to
         ensure the integrity of the platform (e.g. preventing bad actors from
         flooding the platform with spam or harmful content). The data collected
-        during the sign-up process is stored on our servers. Butterfy is using{" "}
+        during the sign-up process is stored on our servers. Sparkable is using{" "}
         <a
           target="_blank"
           rel="noopener noreferrer"
@@ -75,11 +75,11 @@ const PrivacyPolicyPage: NextPage = () => {
       </p>
       <h3>Usage data</h3>
       <p>
-        When you visit Butterfy, we will store: the parts of our site you visit,
-        the date and duration of your visit, information from the device (device
-        type, operating system, screen resolution, language, country you are
-        located in, and web browser type) you used during your visit, and more.
-        We process this usage data in{" "}
+        When you visit Sparkable, we will store: the parts of our site you
+        visit, the date and duration of your visit, information from the device
+        (device type, operating system, screen resolution, language, country you
+        are located in, and web browser type) you used during your visit, and
+        more. We process this usage data in{" "}
         <a target="_blank" rel="noopener noreferrer" href="https://matomo.org/">
           Matomo
         </a>{" "}
@@ -97,14 +97,14 @@ const PrivacyPolicyPage: NextPage = () => {
       </p>
       <h3>Session Storage</h3>
       <p>
-        Butterfy uses session storage for record-keeping purposes and to enhance
-        functionality on our site. You may deactivate or restrict the
+        Sparkable uses session storage for record-keeping purposes and to
+        enhance functionality on our site. You may deactivate or restrict the
         transmission by changing the settings of your web browser.
       </p>
       <h3>Subscribe to our newsletter</h3>
       <p>
         To keep you updated, we send newsletters at regular intervals. For this,
-        Butterfy uses the tool{" "}
+        Sparkable uses the tool{" "}
         <a
           target="_blank"
           rel="noopener noreferrer"
@@ -113,7 +113,7 @@ const PrivacyPolicyPage: NextPage = () => {
           Sendinblue
         </a>
         . This tool works in compliance with GDPR and uses servers in Germany.
-        Upon registration, Butterfy collects your e-mail address. This
+        Upon registration, Sparkable collects your e-mail address. This
         information is exclusively for the purpose of sending the newsletter.
         The Newsletter is only sent to those who have signed up for it
         (double-op-in). You can unsubscribe at any time. For details, see{" "}

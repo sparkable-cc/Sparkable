@@ -1,18 +1,37 @@
 @import './common.scss';
 
-.legalContainer {
-  max-width: 632px;
+.careerContainer {
+  max-width: 664px;
   width: 100%;
   margin: 0 auto;
   padding: 90px $gapS 0;
   font-size: $size18;
   line-height: 1.15;
 
+  @media (max-width: 767px) {
+    padding: 60px $gapS 0;
+  }
+
+  .jobCard {
+    background: $colorWhite;
+    box-shadow: 0px 2px 25px rgba(0, 48, 75, 0.2);
+    border-radius: 16px;
+    padding: $gapS;
+    width: 100%;
+
+    &:hover {
+      box-shadow: 0px 2px 25px rgba(0, 48, 75, 0.4);
+      cursor: pointer;
+      transition: box-shadow 0.3s ease-in-out;
+    }
+  }
+
   h1 {
     font-size: 3rem;
     font-weight: 600;
     margin-bottom: $gapS;
     margin-top: 30px;
+    text-align: center;
   }
 
   h2 {
@@ -25,14 +44,11 @@
     margin-bottom: $gapS;
   }
 
-  a {
-    text-decoration: underline;
-  }
-
   ul {
     padding-left: $gapS;
     list-style-type: disc;
     margin-bottom: $gapS;
+    list-style-type: none;
   }
 
   li {
@@ -40,10 +56,6 @@
   }
 
   ol {
-    margin-bottom: $gapS;
-  }
-
-  blockquote {
     margin-bottom: $gapS;
   }
 }

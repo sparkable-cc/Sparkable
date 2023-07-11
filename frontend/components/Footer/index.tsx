@@ -28,6 +28,10 @@ export const Footer = () => {
           <Link href="/about" className={styles.footerLink}>
             About Sparkable
           </Link>
+          <br />
+          <Link href="/career" className={styles.footerLink}>
+            Join our team
+          </Link>
         </div>
         <div className={styles.footerColumn}>
           <h3 className={styles.footerColumnTitle}>LEGAL</h3>
@@ -94,7 +98,11 @@ export const Footer = () => {
             <br />
             <br />
             <p>
-              <a href="https://engagement.migros.ch/en/" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://engagement.migros.ch/en/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img
                   src="/svg/migros-2.png"
                   alt="Migros Pioneer Fund"
@@ -102,9 +110,24 @@ export const Footer = () => {
                 />
               </a>
             </p>
-            <p><b>About Migros Pioneer Fund</b></p>
             <p>
-            The Migros Pioneer Fund looks for and supports ideas with social potential. It enables pioneering projects that break new ground and seek out forward-looking solutions. Its impact-oriented funding approach combines financial support with coaching services. The Migros Pioneer Fund is part of the Migros Group's social commitment and is enabled by the Migros Group with around CHF 15 million annually. For further information: <a href="https://www.migros-pionierfonds.ch/en" target="_blank" rel="noopener noreferrer">www.migros-pionierfonds.ch/en</a>
+              <b>About Migros Pioneer Fund</b>
+            </p>
+            <p>
+              The Migros Pioneer Fund looks for and supports ideas with social
+              potential. It enables pioneering projects that break new ground
+              and seek out forward-looking solutions. Its impact-oriented
+              funding approach combines financial support with coaching
+              services. The Migros Pioneer Fund is part of the Migros Group's
+              social commitment and is enabled by the Migros Group with around
+              CHF 15 million annually. For further information:{" "}
+              <a
+                href="https://www.migros-pionierfonds.ch/en"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                www.migros-pionierfonds.ch/en
+              </a>
             </p>
           </div>
           <br />
