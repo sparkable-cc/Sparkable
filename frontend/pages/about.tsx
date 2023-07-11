@@ -25,211 +25,147 @@ const About: NextPage = () => {
         <meta name="twitter:description" content="Discover links that spark new understanding." />
         <meta name="twitter:image" content="https://www.sparkable.cc/og-image.png" />
       </Head>
-      <div className={styles.about}>
+      <div className={styles.aboutWrapper}>
 
-        {/* FIRST SCREEN */}
-        <section className={styles.aboutWrapper}>
-          <div className={styles.titleTag}>ABOUT</div>
-          <h1 className={styles.mainTitle}>There is a lot of noise on the internet.</h1>
-          <img
-            className={styles.squaresGradient}
-            src="/squares-gradient.png"
-            alt="square gradient"
-          />
-          <div className={styles.description}>
-            <div className={styles.descriptionText}>
-              <p>Finding what really matters on the internet is difficult.</p>
-              <p>We set out on a mission to find the most insightful content on the internet: the signals in the noise.</p>
-            </div>
-            <img
-              src="/square.png"
-              alt="square"
-            />
-          </div>
-          <div className={classNames(styles.description, styles.reverse)}>
-            <div className={styles.descriptionText}>
-              To find this content, Sparkable employs a circular system where everyone can contribute links, and select what is most insightful.
-            </div>
-            <img
-              src="/tini-squares.png"
-              alt="tini squares"
-            />
-          </div>
-          <div className={styles.description}>
-            <div className={styles.descriptionText}>
-              With this, we are creating a fully crowdsourced and democratic information environment, aimed to bring out the most insightful content of the internet.
-            </div>
-            <img
-              src="/triangle.png"
-              alt="triangle"
-            />
+        <section className={styles.situationWrapper}>
+          <div className={styles.aboutContainer}>
+            <div className={styles.titleTag}>SITUATION</div>
+            <h2 className={styles.aboutTitle}>The internet has become toxic.</h2>
+            <p className={classNames(styles.aboutText, styles.center)}>Our life online is dominated by the advertisement business model which optimizes for clicks, likes, and follows. This has led to filter bubbles, polarization, hate, and other dangerous trends. </p>
           </div>
         </section>
-        {/* HOW IT WORKS */}
-        <section className={styles.howItWorksWrapper}>
-          <div className={styles.howItWorksContainer}>
-            <header className={styles.howItWorksHeader}>
-              <h2 className={styles.howItWorksTitle}>HOW IT WORKS</h2>
-              <img className={styles.howItWorksStars} src="svg/how-it-works-stars.svg" alt="how it works" />
-            </header>
-            <div className={styles.howItWorksContent}>
-              <div className={styles.howItWorksItem}>
-                <span className={styles.howItWorksCounter}>1</span>
-                <p className={styles.howItWorksDescription}>
-                  <strong>Discover and share</strong> links that were insightful
-                </p>
-              </div>
-              <div className={styles.howItWorksItem}>
-                <span className={styles.howItWorksCounter}>2</span>
-                <p className={styles.howItWorksDescription}>
-                  <strong>Vote</strong> to select the most insightful and constructive links shared by the community
-                </p>
-              </div>
-              <div className={styles.howItWorksItem}>
-                <span className={styles.howItWorksCounter}>3</span>
-                <p className={styles.howItWorksDescription}>
-                  <strong>Get access to the top links</strong> by contributing your perspective
-                </p>
-              </div>
-              <div className={classNames(styles.howItWorksItem, styles.notAvailable)}>
-                <span className={styles.howItWorksCounter}>COMING SOON</span>
-                <p className={styles.howItWorksDescription}>
-                  <strong>Support everyone involved</strong> with a small contribution and access only the most constructive content instantly
-                </p>
-              </div>
+        <section className={styles.visionWrapper}>
+          <div className={styles.aboutContainer}>
+            <div className={styles.titleTag}>VISION</div>
+            <h2 className={styles.aboutTitle}>What if we optimized for understanding?</h2>
+            <p className={classNames(styles.aboutText, styles.center)}>We are working on a fundamentally new business model for the internet. It rewards the creation of new  understanding instead of clickbait.</p>
+            <p className={classNames(styles.aboutText, styles.center)}>For people, not for profit.</p>
+            <div className={styles.visionButtonWrapper}>
+              <Link scroll={false} href="about#howItWorks" className={classNames(styles.whiteButton, styles.learnMore)}>Learn more</Link>
             </div>
           </div>
         </section>
-        {/* TEAM */}
+        <section className={styles.howItWorksWrapper} id="howItWorks">
+          <div className={styles.aboutContainer}>
+            <div className={styles.videoFrame}>
+              <iframe src="https://player.vimeo.com/video/766153844?h=44f44d933a&color=ffffff&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" />
+            </div>
+            <h3 className={classNames(styles.aboutTitle, styles.smaller)}>How it works</h3>
+            <ol>
+              <li className={styles.aboutListItem}>See link submissions that have given others new insight and understanding.</li>
+              <li className={styles.aboutListItem}>Submit your own links and get points.</li>
+              <li className={styles.aboutListItem}>Participate in the weekly voting to select the most insightful link submissions and get points.</li>
+              <li className={styles.aboutListItem}>Spend your points to see only the best content.</li>
+              <li className={styles.aboutListItem}>The spent points are then redistributed to the submitter, the selectors, and the platform.</li>
+            </ol>
+            <div className={styles.howItWorksButtonsWrapper}>
+              <span className={classNames(styles.blueButton, styles.whitepaper)}>Whitepaper and FAQ</span>
+              <Link target="_blank" href="/" className={classNames(styles.whiteButton, styles.explore)}>Explore the platform</Link>
+            </div>
+          </div>
+        </section>
+        <section className={styles.communityWrapper}>
+          <div className={styles.aboutContainer}>
+            <div className={styles.titleTag}>COMMUNITY</div>
+            <h2 className={styles.aboutTitle}>Calling changemakers like you.</h2>
+            <p className={classNames(styles.aboutText, styles.center)}>Join the Sparkable community to co-create a better internet that leads to more understanding instead of more polarization. </p>
+            <div className={styles.communityButtons}>
+              <a
+                className={classNames(styles.blueButton, styles.joinSlack)}
+                target="_blank"
+                href="https://join.slack.com/t/sparkable-cc/shared_invite/zt-1uankp984-nPw9IJl956eeQ~9l689htg" rel="noreferrer"
+              >
+                Join our Slack
+              </a>
+            </div>
+            <div className={styles.slackMembersWrapper}>
+              <img src="slack-member-1.png" alt="member" className={styles.slackMember} />
+              <img src="slack-member-2.png" alt="member" className={styles.slackMember} />
+              <img src="slack-member-3.png" alt="member" className={styles.slackMember} />
+              <span className={styles.slackMemberCounter}>+60</span>
+            </div>
+            <div className={styles.communityButtons}>
+              <Link scroll={false} href="about#newsletter" className={classNames(styles.whiteButton, styles.joinMailing)}>Join mailing list</Link>
+            </div>
+          </div>
+        </section>
         <section className={styles.teamWrapper}>
-          <span className={styles.titleTag}>OUR TEAM</span>
-          <h2 className={classNames(styles.mainTitle, styles.teamTitle)}>A collective of curious minds.</h2>
-          <div className={styles.teamSubtitle}>Sparkable brings together a diverse range of people from different backgrounds and walks of life. All united by the goal of creating a better information environment.</div>
-          <div className={styles.teamMembersWrapper}>
-            <div className={styles.teamMemberItem}>
-              <img className={styles.teamMemberPhoto} src="team-felix.jpg" alt="Felix Gugler" />
-              <div className={styles.teamMemberNameWrapper}>
-                <h3 className={styles.teamMemberName}>Felix Gugler</h3>
-                <div className={styles.teamMemberRole}>Business Design</div>
+          <div className={styles.aboutContainer}>
+            <div className={styles.titleTag}>TEAM</div>
+            <h2 className={styles.aboutTitle}>A collective of curious minds.</h2>
+            <p className={classNames(styles.aboutText, styles.center)}>People from different walks of life. United by the vision of a better information environment.</p>
+            <div className={styles.teamMembersWrapper}>
+              <div className={styles.teamMember}>
+                <img src="Felix.png" alt="Felix" className={styles.teamMemberPhoto} />
+                <div className={styles.teamMemberInfo}>
+                  <div className={styles.teamMemberName}>Felix Gugler </div>
+                  <div className={styles.teamMemberPosition}>Business Design</div>
+                </div>
+              </div>
+              <div className={styles.teamMember}>
+                <img src="Tony.png" alt="Tony" className={styles.teamMemberPhoto} />
+                <div className={styles.teamMemberInfo}>
+                  <div className={styles.teamMemberName}>Tony Morellá Llácer</div>
+                  <div className={styles.teamMemberPosition}>Technology</div>
+                </div>
+              </div>
+              <div className={styles.teamMember}>
+                <img src="Oma.png" alt="Oma" className={styles.teamMemberPhoto} />
+                <div className={styles.teamMemberInfo}>
+                  <div className={styles.teamMemberName}>Oma Ikwueme</div>
+                  <div className={styles.teamMemberPosition}>Technology</div>
+                </div>
+              </div>
+              <div className={styles.teamMember}>
+                <img src="Vardon.png" alt="Vardon" className={styles.teamMemberPhoto} />
+                <div className={styles.teamMemberInfo}>
+                  <div className={styles.teamMemberName}>Vardon Hamdiu</div>
+                  <div className={styles.teamMemberPosition}>Project Lead</div>
+                </div>
               </div>
             </div>
-            <div className={styles.teamMemberItem}>
-              <img className={styles.teamMemberPhoto} src="team-ninja.jpg" alt="Felix Gugler" />
-              <div className={styles.teamMemberNameWrapper}>
-                <h3 className={styles.teamMemberName}>Ninja Hoffmann</h3>
-                <div className={styles.teamMemberRole}>Co-Lead</div>
+            <div className={styles.teamVacanciesWrapper}>
+              <img src="svg/vacancies.svg" alt="img" />
+              <div className={styles.teamVacanciesListWrapper}>
+                <h3 className={styles.teamVacanciesTitle}>You?</h3>
+                <ul className={styles.teamVacanciesList}>
+                  <li className={styles.teamVacanciesListItem}>Product Lead</li>
+                  <li className={styles.teamVacanciesListItem}>Product Designer</li>
+                  <li className={styles.teamVacanciesListItem}>Frontend Developer</li>
+                </ul>
               </div>
             </div>
-            <div className={styles.teamMemberItem}>
-              <img className={styles.teamMemberPhoto} src="team-oma.jpg" alt="Felix Gugler" />
-              <div className={styles.teamMemberNameWrapper}>
-                <h3 className={styles.teamMemberName}>Oma Ikwueme</h3>
-                <div className={styles.teamMemberRole}>Technology</div>
-              </div>
+            <div className={styles.teamButtonWrapper}>
+              <a href="mailto:support@sparkable.cc" className={classNames(styles.whiteButton, styles.joinMailing)}>Drop us a line</a>
             </div>
-            <div className={styles.teamMemberItem}>
-              <img className={styles.teamMemberPhoto} src="team-paula.jpg" alt="Felix Gugler" />
-              <div className={styles.teamMemberNameWrapper}>
-                <h3 className={styles.teamMemberName}>Paula Härtel </h3>
-                <div className={styles.teamMemberRole}>Design</div>
-              </div>
-            </div>
-            <div className={styles.teamMemberItem}>
-              <img className={styles.teamMemberPhoto} src="team-tony.jpg" alt="Felix Gugler" />
-              <div className={styles.teamMemberNameWrapper}>
-                <h3 className={styles.teamMemberName}>Tony Morellá Llácer</h3>
-                <div className={styles.teamMemberRole}>Technology</div>
-              </div>
-            </div>
-            <div className={styles.teamMemberItem}>
-              <img className={styles.teamMemberPhoto} src="team-vardon.jpg" alt="Felix Gugler" />
-              <div className={styles.teamMemberNameWrapper}>
-                <h3 className={styles.teamMemberName}>Vardon Hamdiu</h3>
-                <div className={styles.teamMemberRole}>Co-Lead</div>
-              </div>
+            <div className={styles.teamButtonWrapper}>
+              <span className={classNames(styles.blueButton, styles.submit)}>See open job positions</span>
             </div>
           </div>
         </section>
-        {/* CTA COMMUNITY */}
-        <section className={styles.ctaCommunity}>
-          <span className={styles.titleTag}>OUR COMMUNITY</span>
-          <h2 className={styles.ctaCommunityTitle}>Help shape this project</h2>
-          <div className={styles.ctaDescription}>Only together, we can truly co-create an information environment that fosters mutual understanding. </div>
-          <div className={styles.buttonWrapper}>
-            <a href="https://sparkable-cc.slack.com/signup#/domain-signup" target="_blank" rel="noopener noreferrer" className={classNames(styles.ctaButton, styles.slack)}>Join our Slack</a>
+        <section className={styles.newsletterWrapper} id="newsletter">
+          <div className={styles.aboutContainer}>
+            <div className={styles.titleTag}>NEWSLETTER</div>
+            <h2 className={styles.aboutTitle}>Keep in touch.</h2>
+            <form action="" className={styles.newsletterForm}>
+              <input type="text" className={styles.newsletterInput} placeholder="Email" />
+              <div className={styles.newsletterNote}>Once a month, no noise. You can unsubscribe at any time.</div>
+              <label htmlFor="privacyAgree" className={styles.inputLabel}>
+                <input type="radio" className={styles.inputRadio} id="privacyAgree" />
+                By submitting your email you agree to our <Link href="legal/privacy-policy" className={styles.link}>privacy policy</Link>
+              </label>
+            </form>
           </div>
-          <div className={styles.socialWrapper}>
-            <span className={classNames(styles.titleTag, styles.social)}>KEEP IN TOUCH</span>
-            <div className={styles.socialList}>
-              <a
-                href="https://join.slack.com/t/sparkable-cc/shared_invite/zt-1uankp984-nPw9IJl956eeQ~9l689htg"
-                className={classNames(styles.socialItem, styles.slack)}
-                target="_blank"
-                rel="noopener noreferrer"
-              />
-              <br />
-              <a
-                href="https://www.linkedin.com/company/sparkable-cc/"
-                className={classNames(styles.socialItem, styles.linkedin)}
-                target="_blank"
-                rel="noopener noreferrer"
-              />
-              <br />
-              <a
-                href="https://github.com/butterfyme"
-                className={classNames(styles.socialItem, styles.github)}
-                target="_blank"
-                rel="noopener noreferrer"
-              />
-              <br />
-              <a
-                href="https://twitter.com/sparkable_cc"
-                className={classNames(styles.socialItem, styles.twitter)}
-                target="_blank"
-                rel="noopener noreferrer"
-              />
+        </section>
+        <section className={styles.participateWrapper}>
+          <div className={styles.aboutContainer}>
+            <div className={styles.titleTag}>PARTICIPATE</div>
+            <h2 className={styles.aboutTitle}>Spark new insight and mutual understanding.</h2>
+            <div className={styles.participateButtonWrapper}>
+              <Link className={classNames(styles.blueButton, styles.submit)} href="submission/create">Submit a link</Link>
             </div>
           </div>
         </section>
-        {/* VALUES */}
-        <section className={styles.valuesWrapper}>
-          <span className={styles.valuesTag}>OUR VALUES</span>
-          <div className={styles.valuesContainer}>
-            <div className={styles.valuesItem}>
-              <h3 className={styles.valuesTitle}>Randomness & Diversity</h3>
-              <div className={styles.valuesDescription}>
-                Sparkable selectively induces randomness in order to reinforce diversity and to create a constructive environment.
-              </div>
-            </div>
-            <div className={styles.valuesItem}>
-              <h3 className={styles.valuesTitle}>Participation</h3>
-              <div className={styles.valuesDescription}>
-                When you share insightful content or participate, you will get heard and your actions will make a difference. No matter who or where you are.
-              </div>
-            </div>
-            <div className={styles.valuesItem}>
-              <h3 className={styles.valuesTitle}>Decentralization</h3>
-              <div className={styles.valuesDescription}>
-                Sparkable’s participation system transparently decentralizes the power of information curation and thereby hands back autonomy.
-              </div>
-            </div>
-            <div className={styles.valuesItem}>
-              <h3 className={styles.valuesTitle}>Free & Open Source </h3>
-              <div className={styles.valuesDescription}>
-                Sparkable’s redistributive system ensures independence from ads, paywalls and third party interests. It allows the project to be free for everyone to use, modify, and improve.
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* CTA MISSION */}
-        <section className={styles.ctaMission}>
-          <span className={styles.titleTag}>OUR MISSION</span>
-          <h2 className={styles.ctaMissionTitle}>Sparkable aims to create an environment that sparks lasting new insight and understanding.</h2>
-          <div className={styles.buttonWrapper}>
-            <Link href="/submission/create" className={styles.ctaButton}>Submit a link</Link>
-          </div>
-        </section>
-
       </div>
     </>
   );
