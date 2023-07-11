@@ -7,19 +7,19 @@ const Career: NextPage = () => {
       id: 1,
       title: "Product Lead",
       location: "Remote",
-      link: "https://www.sparkable.cc/",
+      link: "mailto:support@sparkable.cc",
     },
     {
       id: 2,
-      title: "Product designer",
+      title: "Product Designer",
       location: "Remote",
-      link: "https://www.sparkable.cc/",
+      link: "mailto:support@sparkable.cc",
     },
     {
       id: 3,
       title: "Frontend Developer",
       location: "Remote",
-      link: "https://www.sparkable.cc/",
+      link: "mailto:support@sparkable.cc",
     },
   ];
 
