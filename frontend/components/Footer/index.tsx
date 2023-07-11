@@ -11,7 +11,11 @@ export const Footer = () => {
           src="/svg/sparkable-logo.svg"
           alt="sparkable-logo"
         />
-        <span className={styles.footerVersion}>v0.1.1 (beta)</span>
+        <span className={styles.footerVersion}>
+          <Link href="https://github.com/butterfyme/sparkable/releases">
+            v0.1.1 (beta)
+          </Link>
+        </span>
       </div>
       <div className={styles.footerColumnsWrapper}>
         <div className={styles.footerColumn}>
