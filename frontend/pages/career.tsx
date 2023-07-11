@@ -5,7 +5,7 @@ const Career: NextPage = () => {
   const jobOpenings = [
     {
       id: 1,
-      title: "Product Manager",
+      title: "Product Lead",
       location: "Remote",
       link: "https://www.sparkable.cc/",
     },
