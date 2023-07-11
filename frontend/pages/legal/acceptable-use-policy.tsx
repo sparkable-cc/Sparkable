@@ -181,7 +181,7 @@ const AcceptableUsePage: NextPage = () => {
           provide in any manner on or through to the Services; or
         </li>
         <li>
-          any other content, materials, or data you provide to Butterfy
+          any other content, materials, or data you provide to sparkable
           (Association) or use with the Services.
         </li>
       </ul>
@@ -314,13 +314,13 @@ const AcceptableUsePage: NextPage = () => {
       <p>If you consider that any Content or Contribution:</p>
       <ul>
         <li>
-          breach this Policy, please email us at report@butterfy.me, or refer to
-          the contact details at the bottom of this document to let us know
+          breach this Policy, please email us at report@sparkable.cc, or refer
+          to the contact details at the bottom of this document to let us know
           which Content or Contribution is in breach of this Policy and why; or
         </li>
         <li>
           infringe any third-party intellectual property rights, please email us
-          at <a href="mailto:report@butterfy.me">report@butterfy.me</a>.
+          at <a href="mailto:report@sparkable.cc">report@sparkable.cc</a>.
         </li>
       </ul>
       <p>
@@ -365,19 +365,19 @@ const AcceptableUsePage: NextPage = () => {
       </p>
       <h2>DISCLAIMER</h2>
       <p>
-        Butterfy (Association) is under no obligation to monitor users
+        Sparkable (Association) is under no obligation to monitor users
         activities, and we disclaim any responsibility for any user s misuse of
-        the Services. Butterfy (Association) has no responsibility for any user
+        the Services. Sparkable (Association) has no responsibility for any user
         or other Content or Contribution created, maintained, stored,
         transmitted, or accessible on or through the Services, and is not
         obligated to monitor or exercise any editorial control over such
-        material. If Butterfy (Association) becomes aware that any such Content
-        or Contribution violates this Policy, Butterfy (Association) may, in
+        material. If Sparkable (Association) becomes aware that any such Content
+        or Contribution violates this Policy, Sparkable (Association) may, in
         addition to removing such Content or Contribution and blocking your
         account, report such breach to the police or appropriate regulatory
-        authority. Unless otherwise stated in this Policy, Butterfy
+        authority. Unless otherwise stated in this Policy, Sparkable
         (Association) disclaims any obligation to any person who has not entered
-        into an agreement with Butterfy (Association) for the use of the
+        into an agreement with Sparkable (Association) for the use of the
         Services.
       </p>
       <h2>How Can You Contact Us About This Policy?</h2>

@@ -9,8 +9,8 @@ const TermsOfUsePage: NextPage = () => {
         <h1>Agreement to our Legal Terms</h1>
         <p>Last updated February 19, 2023</p>
         <p>
-          We are Butterfy (Association) ("Company," "we," "us," "our"), a
-          company registered in Switzerland at Butterfy, Zurich 8000. Our VAT
+          We are Sparkable (Association) ("Company," "we," "us," "our"), a
+          company registered in Switzerland at Sparkable, Zurich 8000. Our VAT
           number is CHE-180.177.924.
         </p>
         <p>
@@ -29,12 +29,12 @@ const TermsOfUsePage: NextPage = () => {
         <p>
           You can contact us by email at{" "}
           <a href="mailto:support@sparkable.cc">support@sparkable.cc</a>, or by
-          mail to Butterfy, Zurich 8000, Switzerland.
+          mail to Sparkable, Zurich 8000, Switzerland.
         </p>
         <p>
           These Legal Terms constitute a legally binding agreement made between
           you, whether personally or on behalf of an entity ("you"), and
-          Butterfy (Association), concerning your access to and use of the
+          Sparkable (Association), concerning your access to and use of the
           Services. You agree that by accessing the Services, you have read,
           understood, and agreed to be bound by all of these Legal Terms. IF YOU
           DO NOT AGREE WITH ALL OF THESE LEGAL TERMS, THEN YOU ARE EXPRESSLY
@@ -801,7 +801,7 @@ const TermsOfUsePage: NextPage = () => {
               excluded. If your habitual residence is in the EU, and you are a
               consumer, you additionally possess the protection provided to you
               by obligatory provisions of the law in your country to residence.
-              Butterfy (Association) and yourself both agree to submit to the
+              Sparkable (Association) and yourself both agree to submit to the
               non-exclusive jurisdiction of the courts of Zurich, which means
               that you may make a claim to defend your consumer protection
               rights in regards to these Legal Terms in Switzerland, or in the
@@ -1026,10 +1026,10 @@ const TermsOfUsePage: NextPage = () => {
               contact us at:
             </p>
             <p>
-              <strong>Butterfy (Association)</strong>
+              <strong>Sparkable (Association)</strong>
             </p>
             <p>
-              <strong>Butterfy </strong>
+              <strong>Sparkable </strong>
             </p>
             <p>
               <strong>8000 Zurich </strong>
