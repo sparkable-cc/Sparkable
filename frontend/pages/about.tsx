@@ -139,7 +139,7 @@ const About: NextPage = () => {
               <a href="mailto:support@sparkable.cc" className={classNames(styles.whiteButton, styles.joinMailing)}>Drop us a line</a>
             </div>
             <div className={styles.teamButtonWrapper}>
-              <span className={classNames(styles.blueButton, styles.submit)}>See open job positions</span>
+              <Link className={classNames(styles.blueButton, styles.submit)} href="/career">See open job positions</Link>
             </div>
           </div>
         </section>
