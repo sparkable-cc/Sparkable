@@ -12,7 +12,11 @@ export const Footer = () => {
           alt="sparkable-logo"
         />
         <span className={styles.footerVersion}>
-          <Link href="https://github.com/butterfyme/sparkable/releases">
+          <Link
+            href="https://github.com/butterfyme/sparkable/releases"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             v0.1.1 (beta)
           </Link>
         </span>
@@ -72,14 +76,14 @@ export const Footer = () => {
             />
             <br />
             <a
-              href="https://github.com/butterfyme"
+              href="https://github.com/butterfyme/Sparkable"
               className={classNames(styles.footerSocial, styles.github)}
               target="_blank"
               rel="noopener noreferrer"
             />
             <br />
             <a
-              href="https://twitter.com/ButterfyMe"
+              href="https://www.twitter.com/sparkable_cc"
               className={classNames(styles.footerSocial, styles.twitter)}
               target="_blank"
               rel="noopener noreferrer"
