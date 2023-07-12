@@ -8,7 +8,7 @@ export const Footer = () => {
       <div className={styles.footerTopPart}>
         <img
           className={styles.footerLogo}
-          src="/svg/sparkable-logo.svg"
+          src="/svg/logo.svg"
           alt="sparkable-logo"
         />
         <span className={styles.footerVersion}>
@@ -65,7 +65,7 @@ export const Footer = () => {
             />
             <br />
             <a
-              href="https://www.linkedin.com/company/butterfy/"
+              href="https://www.linkedin.com/company/sparkable-cc"
               className={classNames(styles.footerSocial, styles.linkedin)}
               target="_blank"
               rel="noopener noreferrer"

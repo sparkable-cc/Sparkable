@@ -1,13 +1,14 @@
-@import "../../styles/variables";
-@import "../../styles/common";
+@import '../../styles/variables';
+@import '../../styles/common';
 
 .footerWrapper {
   margin-top: 50px;
   width: 100%;
   padding: 56px 40px 50px;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), #F9F7F3;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)),
+    #f9f7f3;
 
-  @media only screen and (max-width: $laptop){
+  @media only screen and (max-width: $laptop) {
     padding: 40px $gapS;
   }
 }
@@ -19,7 +20,8 @@
 }
 
 .footerLogo {
-  @media only screen and (max-width: $mobile){
+  margin-left: -18px;
+  @media only screen and (max-width: $mobile) {
     max-width: 165px;
   }
 }
@@ -27,7 +29,7 @@
 .footerVersion {
   font-size: $size18;
 
-  @media only screen and (max-width: $mobile){
+  @media only screen and (max-width: $mobile) {
     font-size: 1rem;
   }
 }
@@ -42,12 +44,12 @@
   width: 25%;
   line-height: 1.7;
 
-  @media only screen and (max-width: $laptop){
+  @media only screen and (max-width: $laptop) {
     width: 50%;
     margin-bottom: 20px;
   }
 
-  @media only screen and (max-width: $mobile){
+  @media only screen and (max-width: $mobile) {
     width: 100%;
     margin-bottom: 40px;
 
@@ -77,23 +79,21 @@
 }
 
 .footerSocial {
-
   &.slack {
-    content: url("../../public/svg/social-slack.svg")
+    content: url('../../public/svg/social-slack.svg');
   }
 
   &.linkedin {
-    content: url("../../public/svg/social-linkedin.svg")
+    content: url('../../public/svg/social-linkedin.svg');
   }
 
   &.github {
-    content: url("../../public/svg/social-github.svg")
+    content: url('../../public/svg/social-github.svg');
   }
 
   &.twitter {
-    content: url("../../public/svg/social-twitter.svg")
+    content: url('../../public/svg/social-twitter.svg');
   }
-
 }
 
 .footerBottomPart {
@@ -106,7 +106,7 @@
 .footerBottomColumn {
   width: 50%;
 
-  @media only screen and (max-width: $laptop){
+  @media only screen and (max-width: $laptop) {
     margin-bottom: 30px;
 
     &:last-child {
@@ -130,7 +130,7 @@
   // margin-left: -20px;
   margin-bottom: -60px;
 
-  @media only screen and (max-width: $tablet){
+  @media only screen and (max-width: $tablet) {
     width: 100%;
     height: 450px;
     margin-left: 0;
