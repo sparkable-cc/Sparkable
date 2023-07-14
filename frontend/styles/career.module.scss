@@ -21,8 +21,8 @@
 
     &:hover {
       box-shadow: 0px 2px 25px rgba(0, 48, 75, 0.4);
-      cursor: pointer;
       transition: box-shadow 0.3s ease-in-out;
+      cursor: pointer;
     }
   }
 
@@ -38,6 +38,13 @@
     font-size: $size32;
     font-weight: 600;
     margin-bottom: $gapS;
+  }
+
+  h3 {
+    font-size: $size18;
+    font-weight: 300;
+    margin-bottom: $gapS;
+    text-decoration: underline;
   }
 
   p {

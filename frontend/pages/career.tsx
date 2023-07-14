@@ -7,19 +7,22 @@ const Career: NextPage = () => {
       id: 1,
       title: "Product Lead",
       location: "Remote",
-      link: "mailto:support@sparkable.cc",
+      link: "https://tally.so/r/nPDoox",
+      jobAd: "Open job ad",
     },
     {
       id: 2,
       title: "Product Designer",
       location: "Remote",
-      link: "mailto:support@sparkable.cc",
+      link: "https://tally.so/r/m6eoZB",
+      jobAd: "Open job ad",
     },
     {
       id: 3,
       title: "Frontend Developer",
       location: "Remote",
-      link: "mailto:support@sparkable.cc",
+      link: "https://tally.so/r/mJd7zd",
+      jobAd: "Open job ad",
     },
   ];
 
@@ -34,13 +37,10 @@ const Career: NextPage = () => {
         {jobOpenings.length > 0 ? (
           <ul>
             {jobOpenings.map((job) => (
-              <li
-                key={job.id}
-                className={styles.jobCard}
-                onClick={() => handleClick(job.link)}
-              >
+              <li key={job.id} className={styles.jobCard}>
                 <h2>{job.title}</h2>
                 <p>{job.location}</p>
+                <h3 onClick={() => handleClick(job.link)}>{job.jobAd}</h3>
               </li>
             ))}
           </ul>
