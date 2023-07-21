@@ -12,6 +12,10 @@
   @media only screen and (max-width: $tablet) {
     padding: 0 $gapS;
   }
+
+  :focus {
+    outline: 2px solid $colorBlue;
+  }
 }
 
 // BUTTONS
@@ -180,4 +184,25 @@
 .modalImgWrapper {
   display: flex;
   justify-content: center;
+}
+
+// Define the focus styles for buttons
+.buttonPrimary:focus,
+.buttonSecondary:focus,
+.buttonTransparent:focus,
+.buttonWhite:focus,
+.buttonOutlined:focus,
+.authForm:focus,
+.authButtonLink:focus,
+.submitButton:focus,
+.authLink:focus,
+.modalTextLink:focus,
+.menuWrapper:focus,
+.menuItem:focus,
+.articleItem:focus,
+.articleItemTitle:focus,
+.authFooter:focus,
+.menuFooterLink:focus,
+.menuLogo:focus {
+  outline: 2px solid $colorBlue;
 }
