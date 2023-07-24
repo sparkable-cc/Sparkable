@@ -5,6 +5,10 @@ import Link from "next/link";
 import styles from "../styles/About.module.scss";
 
 const About: NextPage = () => {
+  const openPDF = () => {
+    window.open("/pdf/whitepaper-and-faq.pdf", "_blank");
+  };
+
   return (
     <>
       <Head>
@@ -113,18 +117,20 @@ const About: NextPage = () => {
               </li>
             </ol>
             <div className={styles.howItWorksButtonsWrapper}>
-              <span
+              <a
                 className={classNames(styles.blueButton, styles.whitepaper)}
+                href="/pdf/whitepaper-and-faq.pdf"
+                download
               >
                 Whitepaper and FAQ
-              </span>
-              <Link
-                target="_blank"
-                href="/"
+              </a>
+              {/* "FAQ" button to open the PDF */}
+              <button
                 className={classNames(styles.whiteButton, styles.explore)}
+                onClick={openPDF}
               >
-                Explore the platform
-              </Link>
+                FAQ
+              </button>
             </div>
           </div>
         </section>
