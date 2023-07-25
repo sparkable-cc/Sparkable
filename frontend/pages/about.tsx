@@ -2,11 +2,20 @@ import classNames from "classnames";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import { useState } from "react";
 import styles from "../styles/About.module.scss";
 
 const About: NextPage = () => {
   const openPDF = () => {
     window.open("/pdf/whitepaper-and-faq.pdf", "_blank");
+  };
+
+  const [ email, setEmail ] = useState("");
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Submitted email:", email);
+
+    setEmail("");
   };
 
   return (
@@ -280,6 +289,8 @@ const About: NextPage = () => {
                 type="text"
                 className={styles.newsletterInput}
                 placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <div className={styles.newsletterNote}>
                 Once a month, no noise. You can unsubscribe at any time.
@@ -295,6 +306,12 @@ const About: NextPage = () => {
                   privacy policy
                 </Link>
               </label>
+              <button
+                className={classNames(styles.blueButton, styles.subscribe)}
+                onClick={handleSubmit}
+              >
+                Subscribe
+              </button>
             </form>
           </div>
         </section>
