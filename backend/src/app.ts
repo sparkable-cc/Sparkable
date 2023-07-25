@@ -72,12 +72,10 @@ app.post('/user', async (req: Request, res: Response) => {
     .catch((error) => {
       switch (error.constructor) {
         case MandatoryFieldEmptyException:
-          res.status(400);
-          res.send({ message: 'Bad request' });
+          fourHundrerErrorBadRequest(res);
           break;
         case ShortPasswordException:
-          res.status(400);
-          res.send({ message: 'Password is too short!' });
+          fourHundrerErrorPasswordShort(res);
           break;
         case UsernameExistsException:
         case EmailExistsException:
@@ -168,12 +166,10 @@ app.post('/reset-password', async (req: Request, res: Response) => {
     .catch((error) => {
       switch (error.constructor) {
         case MandatoryFieldEmptyException:
-          res.status(400);
-          res.send({ message: 'Bad request' });
+          fourHundrerErrorBadRequest(res);
           break;
         case ShortPasswordException:
-          res.status(400);
-          res.send({ message: 'Password is too short!' });
+          fourHundrerErrorPasswordShort(res);
           break;
         case UserNotFoundException:
         case TokenNotFoundException:
@@ -206,11 +202,7 @@ app.get('/categories', async (req: Request, res: Response) => {
       res.send({ categories: result[0], total: result[1] });
     })
     .catch((error) => {
-      console.log(
-        'Failed to do something async with an unspecified error: ',
-        error,
-      );
-      return res.send(500);
+      return fiveHundredError(error, res);
     });
 });
 
@@ -498,5 +490,23 @@ app.post('/votes', checkJwt, async (req: Request, res: Response) => {
     });
 
 });
+
+function fourHundrerErrorBadRequest(res: express.Response<any, Record<string, any>>) {
+  res.status(400);
+  res.send({ message: 'Bad request' });
+}
+
+function fourHundrerErrorPasswordShort(res: express.Response<any, Record<string, any>>) {
+  res.status(400);
+  res.send({ message: 'Password is too short!' });
+}
+
+function fiveHundredError(error: any, res: express.Response<any, Record<string, any>>) {
+  console.log(
+    'Failed to do something async with an unspecified error: ',
+    error
+  );
+  return res.send(500);
+}
 
 export default app;

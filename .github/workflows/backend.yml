@@ -33,6 +33,9 @@ jobs:
         docker-compose -f docker-compose-test.yml up --build --detach
         sleep 10  # wait for database to be ready
 
+    - name: Run copy paste detector
+      run: docker-compose exec -T backend npm run cpd
+
     - name: Run backend unit tests
       run: docker-compose exec -T backend npm run unit
 
