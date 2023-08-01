@@ -260,6 +260,7 @@ app.post('/links', checkJwt, async (req: Request, res: Response) => {
     new LinkRepositoryPG(dataSource),
     new CategoryRepositoryPG(dataSource),
     new UserRepositoryPG(dataSource),
+    new MailerServiceGD()
   );
 
   createLinkAction

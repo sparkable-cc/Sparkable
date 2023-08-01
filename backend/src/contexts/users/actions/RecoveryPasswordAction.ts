@@ -47,7 +47,7 @@ export class RecoveryPasswordAction {
     const link = `${process.env.CLIENT}/auth/password-reset?token=${resetToken}&userUuid=${user.uuid}`;
 
     const mailOptions = {
-      from: 'test@butterfy.me',
+      from: 'support@sparkable.cc',
       to: user.email,
       subject: 'Password Reset Request',
       html: `

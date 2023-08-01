@@ -78,6 +78,10 @@ export class Link {
     };
   }
 
+  public setId(id:number) {
+    this.id = id;
+  }
+
   private isACategoryDto(object: any): object is CategoryDto {
     return Object.prototype.hasOwnProperty.call(object, 'id')
     && Object.prototype.hasOwnProperty.call(object, 'name')
