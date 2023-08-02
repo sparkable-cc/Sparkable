@@ -14,6 +14,7 @@ import { LinkRepositoryInMemory } from '../infrastructure/persistence/repositori
 import { CreateLinkAction } from './CreateLinkAction';
 import { MockProxy, mock } from 'jest-mock-extended';
 import { MailerService } from '../../users/domain/services/MailerService';
+import { CheckUserExistsService } from '../../_shared/domain/services/CheckUserExistsService';
 
 describe('Create link action', () => {
   let createLinkAction: CreateLinkAction;
@@ -30,7 +31,7 @@ describe('Create link action', () => {
     createLinkAction = new CreateLinkAction(
       linkRepository,
       categoryRepository,
-      userRepository,
+      new CheckUserExistsService(userRepository),
       mailServiceMock
     );
   });
@@ -119,7 +120,7 @@ describe('Create link action', () => {
     createLinkAction = new CreateLinkAction(
       linkRepository,
       categoryRepository,
-      userRepository,
+      new CheckUserExistsService(userRepository),
       mailServiceMock
     );
 
@@ -151,7 +152,7 @@ describe('Create link action', () => {
     createLinkAction = new CreateLinkAction(
       linkRepository,
       categoryRepository,
-      userRepository,
+      new CheckUserExistsService(userRepository),
       mailServiceMock
     );
 
@@ -195,7 +196,7 @@ describe('Create link action', () => {
     createLinkAction = new CreateLinkAction(
       linkRepository,
       categoryRepository,
-      userRepository,
+      new CheckUserExistsService(userRepository),
       mailServiceMock
     );
 
@@ -259,7 +260,7 @@ describe('Create link action', () => {
     createLinkAction = new CreateLinkAction(
       linkRepository,
       categoryRepository,
-      userRepository,
+      new CheckUserExistsService(userRepository),
       mailServiceMock
     );
 

@@ -1,35 +1,33 @@
-import { UserNotFoundException } from '../../_shared/domain/exceptions/UserNotFoundException';
-import { UserRepository } from '../../users/domain/repositories/UserRepository';
+import { CheckUserExistsService } from '../../_shared/domain/services/CheckUserExistsService';
 import { MailerService } from '../../users/domain/services/MailerService';
 import { CategoryNotFoundException } from '../domain/exceptions/CategoryNotFoundException';
 import { LinkExistsException } from '../domain/exceptions/LinkExistsException';
 import { Link } from '../domain/models/Link';
-import { LinkDto } from '../domain/models/LinkDto';
 import { CategoryRepository } from '../domain/repositories/CategoryRepository';
 import { LinkRepository } from '../domain/repositories/LinkRepository';
 
 export class CreateLinkAction {
   private linkRepository: LinkRepository;
   private categoryRepository: CategoryRepository;
-  private userRepository: UserRepository;
+  private checkUserExistsService: CheckUserExistsService;
   private mailerService: MailerService;
 
   constructor(
     linkRepository: LinkRepository,
     categoryRepository: CategoryRepository,
-    userRepository: UserRepository,
+    checkUserExistsService: CheckUserExistsService,
     mailerService: MailerService
   ) {
     this.linkRepository = linkRepository;
     this.categoryRepository = categoryRepository;
-    this.userRepository = userRepository;
+    this.checkUserExistsService = checkUserExistsService;
     this.mailerService = mailerService;
   }
 
   async execute(linkData: any) {
     const link = new Link(linkData);
     await this.checkExistsCategories(link);
-    const user = await this.checkUserExists(link);
+    const user = await this.checkUserExistsService.execute(link.userUuid);
     await this.checkUrlIsNew(link);
     link.username = user.username;
     const linkId = await this.linkRepository.storeLink(link);
@@ -41,14 +39,6 @@ export class CreateLinkAction {
     const linkExists = await this.linkRepository.findLink('url', linkData.url);
     if (linkExists)
       throw new LinkExistsException();
-  }
-
-  private async checkUserExists(link: Link) {
-    const user = await this.userRepository.findUser({ uuid: link.userUuid });
-    if (!user)
-      throw new UserNotFoundException();
-
-    return user;
   }
 
   private async checkExistsCategories(link: Link) {

@@ -49,6 +49,8 @@ import { AuthServiceJWT } from './contexts/users/infrastructure/services/AuthSer
 import { CreateBookmarkAction } from './contexts/bookmarks/actions/CreateBookmarkAction';
 import { BookmarkRepositoryPG } from './contexts/bookmarks/infrastructure/persistence/repositories/BookmarkRepositoryPG';
 import { BookmarkReallyDoesExistException } from './contexts/bookmarks/domain/exceptions/BookmarkReallyDoesExistException';
+import { CheckUserExistsService } from './contexts/_shared/domain/services/CheckUserExistsService';
+import { CheckLinkExistsService } from './contexts/_shared/domain/services/CheckLinkExistsService';
 
 const app: Express = express();
 
@@ -262,7 +264,7 @@ app.post('/links', checkJwt, async (req: Request, res: Response) => {
   const createLinkAction = new CreateLinkAction(
     new LinkRepositoryPG(dataSource),
     new CategoryRepositoryPG(dataSource),
-    new UserRepositoryPG(dataSource),
+    new CheckUserExistsService(new UserRepositoryPG(dataSource)),
     new MailerServiceGD()
   );
 
@@ -497,8 +499,8 @@ app.post('/votes', checkJwt, async (req: Request, res: Response) => {
 app.post('/bookmarks', checkJwt, async (req: Request, res: Response) => {
   const createBookmarkAction = new CreateBookmarkAction(
     new BookmarkRepositoryPG(dataSource),
-    new UserRepositoryPG(dataSource),
-    new LinkRepositoryPG(dataSource)
+    new CheckUserExistsService(new UserRepositoryPG(dataSource)),
+    new CheckLinkExistsService(new LinkRepositoryPG(dataSource))
   );
 
   createBookmarkAction
@@ -513,12 +515,10 @@ app.post('/bookmarks', checkJwt, async (req: Request, res: Response) => {
     .catch((error) => {
       switch (error.constructor) {
         case MandatoryFieldEmptyException:
-          res.status(400);
-          res.send({ message: 'Bad request' });
+          fourHundrerErrorBadRequest(res);
           break;
         case UserNotFoundException:
-          res.status(400);
-          res.send({ message: 'User not found!' });
+          fourHundrerErrorUserNotFound(res);
           break;
         case LinkNotFoundException:
           res.status(400);
@@ -542,6 +542,11 @@ function fourHundrerErrorBadRequest(res: express.Response<any, Record<string, an
 function fourHundrerErrorPasswordShort(res: express.Response<any, Record<string, any>>) {
   res.status(400);
   res.send({ message: 'Password is too short!' });
+}
+
+function fourHundrerErrorUserNotFound(res: express.Response<any, Record<string, any>>) {
+  res.status(400);
+  res.send({ message: 'User not found!' });
 }
 
 function fiveHundredError(error: any, res: express.Response<any, Record<string, any>>) {
