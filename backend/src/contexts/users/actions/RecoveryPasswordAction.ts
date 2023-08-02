@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import dotenv from 'dotenv';
-import { MandatoryFieldEmptyException } from '../domain/exceptions/MandatoryFieldEmptyException';
-import { UserNotFoundException } from '../domain/exceptions/UserNotFoundException';
+import { MandatoryFieldEmptyException } from '../../_shared/domain/exceptions/MandatoryFieldEmptyException';
+import { UserNotFoundException } from '../../_shared/domain/exceptions/UserNotFoundException';
 import { ResetToken } from '../domain/models/ResetToken';
 import { UserDto } from '../domain/models/UserDto';
 import { ResetTokenRepository } from '../domain/repositories/ResetTokenRepository';

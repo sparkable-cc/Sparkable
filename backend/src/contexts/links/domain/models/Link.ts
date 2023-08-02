@@ -1,4 +1,4 @@
-import { MandatoryFieldEmptyException } from '../../../users/domain/exceptions/MandatoryFieldEmptyException';
+import { MandatoryFieldEmptyException } from '../../../_shared/domain/exceptions/MandatoryFieldEmptyException';
 import { CategoryRestrictionException } from '../exceptions/CategoryRestrictionException';
 import { CategoryDto } from './CategoryDto';
 import { LinkDto } from './LinkDto';

@@ -1,4 +1,4 @@
-import { UserNotFoundException } from '../../users/domain/exceptions/UserNotFoundException';
+import { UserNotFoundException } from '../../_shared/domain/exceptions/UserNotFoundException';
 import { UserRepository } from '../../users/domain/repositories/UserRepository';
 import { MailerService } from '../../users/domain/services/MailerService';
 import { CategoryNotFoundException } from '../domain/exceptions/CategoryNotFoundException';

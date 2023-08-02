@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
-import { MandatoryFieldEmptyException } from '../../users/domain/exceptions/MandatoryFieldEmptyException';
-import { UserNotFoundException } from '../../users/domain/exceptions/UserNotFoundException';
+import { MandatoryFieldEmptyException } from '../../_shared/domain/exceptions/MandatoryFieldEmptyException';
+import { UserNotFoundException } from '../../_shared/domain/exceptions/UserNotFoundException';
 import { User } from '../../users/domain/models/User';
 import { UserRepository } from '../../users/domain/repositories/UserRepository';
 import { UserRepositoryInMemory } from '../../users/infrastructure/persistence/repositories/UserRepositoryInMemory';
