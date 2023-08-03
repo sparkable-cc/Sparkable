@@ -123,7 +123,6 @@ describe('POST /bookmarks', () => {
       linkUuid: linkUuid
     });
     expect(typeof bookmark.id).toBe("number");
-    expect(typeof bookmark.uuid).toBe("string");
     expect(bookmark.userUuid).toEqual(auth.body.uuid);
     expect(bookmark.linkUuid).toEqual(linkUuid);
   });

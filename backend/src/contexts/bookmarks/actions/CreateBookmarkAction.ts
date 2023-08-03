@@ -21,7 +21,6 @@ export class CreateBookmarkAction {
 
   async execute(userUuid: string, linkUuid: string) {
     const bookmark = new Bookmark(userUuid, linkUuid);
-    // DATABASE RESPONSABILITY?
     await this.checkUserExistsService.execute(userUuid);
     await this.checkLinkExistsService.execute(linkUuid);
     await this.checkBookmarkExists(userUuid, linkUuid);
