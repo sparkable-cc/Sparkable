@@ -12,7 +12,7 @@ import { CategoryNotFoundException } from './contexts/links/domain/exceptions/Ca
 import { CategoryRestrictionException } from './contexts/links/domain/exceptions/CategoryRestrictionException';
 import { DataDoesExistException } from './contexts/links/domain/exceptions/DataDoesExistException';
 import { LinkExistsException } from './contexts/links/domain/exceptions/LinkExistsException';
-import { LinkNotFoundException } from './contexts/links/domain/exceptions/LinkNotFoundException';
+import { LinkNotFoundException } from './contexts/_shared/domain/exceptions/LinkNotFoundException';
 import { CategoryRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/CategoryRepositoryPG';
 import { LinkRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/LinkRepositoryPG';
 import { ViewedLinkByUserDataRepositoryPG } from './contexts/links/infrastructure/persistence/repositories/ViewedLinkByUserDataRepositoryPG';
@@ -21,12 +21,12 @@ import { RecoveryPasswordAction } from './contexts/users/actions/RecoveryPasswor
 import { ResetPasswordAction } from './contexts/users/actions/ResetPasswordAction';
 import { SignInAction } from './contexts/users/actions/SignInAction';
 import { EmailExistsException } from './contexts/users/domain/exceptions/EmailExistsException';
-import { MandatoryFieldEmptyException } from './contexts/users/domain/exceptions/MandatoryFieldEmptyException';
+import { MandatoryFieldEmptyException } from './contexts/_shared/domain/exceptions/MandatoryFieldEmptyException';
 import { ShortPasswordException } from './contexts/users/domain/exceptions/ShortPasswordException';
 import { TokenIsExpiredException } from './contexts/users/domain/exceptions/TokenIsExpiredException';
 import { TokenNotFoundException } from './contexts/users/domain/exceptions/TokenNotFoundException';
 import { UsernameExistsException } from './contexts/users/domain/exceptions/UsernameExistsException';
-import { UserNotFoundException } from './contexts/users/domain/exceptions/UserNotFoundException';
+import { UserNotFoundException } from './contexts/_shared/domain/exceptions/UserNotFoundException';
 import { WrongPasswordException } from './contexts/users/domain/exceptions/WrongPasswordException';
 import { ResetTokenRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/ResetTokenRepositoryPG';
 import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
@@ -46,6 +46,11 @@ import { UserHasAlreadyVotedException } from './contexts/voting/domain/exception
 import { LinkUuidDto } from './contexts/links/domain/models/LinkUuidDto';
 import checkJwt from './auth';
 import { AuthServiceJWT } from './contexts/users/infrastructure/services/AuthServiceJWT';
+import { CreateBookmarkAction } from './contexts/bookmarks/actions/CreateBookmarkAction';
+import { BookmarkRepositoryPG } from './contexts/bookmarks/infrastructure/persistence/repositories/BookmarkRepositoryPG';
+import { BookmarkReallyDoesExistException } from './contexts/bookmarks/domain/exceptions/BookmarkReallyDoesExistException';
+import { CheckUserExistsService } from './contexts/_shared/domain/services/CheckUserExistsService';
+import { CheckLinkExistsService } from './contexts/_shared/domain/services/CheckLinkExistsService';
 
 const app: Express = express();
 
@@ -259,7 +264,7 @@ app.post('/links', checkJwt, async (req: Request, res: Response) => {
   const createLinkAction = new CreateLinkAction(
     new LinkRepositoryPG(dataSource),
     new CategoryRepositoryPG(dataSource),
-    new UserRepositoryPG(dataSource),
+    new CheckUserExistsService(new UserRepositoryPG(dataSource)),
     new MailerServiceGD()
   );
 
@@ -489,7 +494,44 @@ app.post('/votes', checkJwt, async (req: Request, res: Response) => {
           return res.send(500);
       }
     });
+});
 
+app.post('/bookmarks', checkJwt, async (req: Request, res: Response) => {
+  const createBookmarkAction = new CreateBookmarkAction(
+    new BookmarkRepositoryPG(dataSource),
+    new CheckUserExistsService(new UserRepositoryPG(dataSource)),
+    new CheckLinkExistsService(new LinkRepositoryPG(dataSource))
+  );
+
+  createBookmarkAction
+    .execute(
+      req.body.userUuid,
+      req.body.linkUuid
+    )
+    .then(() => {
+      res.status(201);
+      res.send({ message: 'Bookmark created!' });
+    })
+    .catch((error) => {
+      switch (error.constructor) {
+        case MandatoryFieldEmptyException:
+          fourHundrerErrorBadRequest(res);
+          break;
+        case UserNotFoundException:
+          fourHundrerErrorUserNotFound(res);
+          break;
+        case LinkNotFoundException:
+          res.status(400);
+          res.send({ message: 'Link not found!' });
+          break;
+        case BookmarkReallyDoesExistException:
+          res.status(201);
+          res.send({ message: 'Bookmark created!' });
+          break;
+        default:
+          return fiveHundredError(error, res);
+      }
+    });
 });
 
 function fourHundrerErrorBadRequest(res: express.Response<any, Record<string, any>>) {
@@ -500,6 +542,11 @@ function fourHundrerErrorBadRequest(res: express.Response<any, Record<string, an
 function fourHundrerErrorPasswordShort(res: express.Response<any, Record<string, any>>) {
   res.status(400);
   res.send({ message: 'Password is too short!' });
+}
+
+function fourHundrerErrorUserNotFound(res: express.Response<any, Record<string, any>>) {
+  res.status(400);
+  res.send({ message: 'User not found!' });
 }
 
 function fiveHundredError(error: any, res: express.Response<any, Record<string, any>>) {
