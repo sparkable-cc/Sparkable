@@ -6,9 +6,6 @@ export class BookmarkEntity implements BookmarkDto {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column() //UNIQUE
-  uuid:string;
-
   @Column()
   userUuid: string;
 

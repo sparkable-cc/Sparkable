@@ -51,6 +51,8 @@ import { BookmarkRepositoryPG } from './contexts/bookmarks/infrastructure/persis
 import { BookmarkReallyDoesExistException } from './contexts/bookmarks/domain/exceptions/BookmarkReallyDoesExistException';
 import { CheckUserExistsService } from './contexts/_shared/domain/services/CheckUserExistsService';
 import { CheckLinkExistsService } from './contexts/_shared/domain/services/CheckLinkExistsService';
+import { RemoveBookmarkAction } from './contexts/bookmarks/actions/RemoveBookmarkAction';
+import { NotFoundException } from './contexts/_shared/domain/exceptions/NotFoundException';
 
 const app: Express = express();
 
@@ -527,6 +529,35 @@ app.post('/bookmarks', checkJwt, async (req: Request, res: Response) => {
         case BookmarkReallyDoesExistException:
           res.status(201);
           res.send({ message: 'Bookmark created!' });
+          break;
+        default:
+          return fiveHundredError(error, res);
+      }
+    });
+});
+
+app.delete('/bookmarks', checkJwt, async (req: Request, res: Response) => {
+  const removeBookmarkAction = new RemoveBookmarkAction(
+    new BookmarkRepositoryPG(dataSource)
+  );
+
+  removeBookmarkAction
+    .execute(
+      req.body.userUuid,
+      req.body.linkUuid
+    )
+    .then(() => {
+      res.status(204);
+      res.send({});
+    })
+    .catch((error) => {
+      switch (error.constructor) {
+        case MandatoryFieldEmptyException:
+          fourHundrerErrorBadRequest(res);
+          break;
+        case NotFoundException:
+          res.status(404);
+          res.send({ message: 'Not Found' });
           break;
         default:
           return fiveHundredError(error, res);

@@ -1,11 +1,11 @@
 import request from 'supertest';
-import app from '../../app';
-import dataSource from '../../data-source';
-import UserFactory from '../../factories/UserFactory';
-import { UserEntity } from '../../contexts/users/infrastructure/persistence/entities/UserEntity';
-import { LinkEntity } from '../../contexts/links/infrastructure/persistence/entities/LinkEntity';
-import { BookmarkEntity } from '../../contexts/bookmarks/infrastructure/persistence/entities/BookmarkEntity';
-import LinkFactory from '../../factories/LinkFactory';
+import app from '../../../app';
+import dataSource from '../../../data-source';
+import UserFactory from '../../../factories/UserFactory';
+import { UserEntity } from '../../../contexts/users/infrastructure/persistence/entities/UserEntity';
+import { LinkEntity } from '../../../contexts/links/infrastructure/persistence/entities/LinkEntity';
+import { BookmarkEntity } from '../../../contexts/bookmarks/infrastructure/persistence/entities/BookmarkEntity';
+import LinkFactory from '../../../factories/LinkFactory';
 
 describe('POST /bookmarks', () => {
   let auth: { body: { access_token: string; uuid: string; } };
@@ -37,7 +37,7 @@ describe('POST /bookmarks', () => {
     await userRepository.delete({});
   });
 
-  it('returns 401 when the user is not logged to create link', async () => {
+  it('returns 401 when the user is not logged to create bookmark', async () => {
     const res = await request(app).post('/bookmarks').send({});
 
     expect(res.statusCode).toEqual(401);
