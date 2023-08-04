@@ -19,7 +19,6 @@ describe('Create Bookmark', () => {
     const bookmark = new Bookmark(userUuid, linkUuid);
 
     const bookmarkDto = bookmark.toDto();
-    expect(bookmarkDto.uuid).not.toBeUndefined;
     expect(bookmarkDto.userUuid).toEqual(userUuid);
     expect(bookmarkDto.linkUuid).toEqual(linkUuid);
   });

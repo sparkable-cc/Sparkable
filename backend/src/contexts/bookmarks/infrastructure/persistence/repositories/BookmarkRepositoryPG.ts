@@ -3,6 +3,8 @@ import { BookmarkRepository } from '../../../domain/repositories/BookmarkReposit
 import { BookmarkDto } from '../../../domain/models/BookmarkDto';
 import { BookmarkEntity } from '../entities/BookmarkEntity';
 import { Bookmark } from '../../../domain/models/Bookmark';
+import { resourceLimits } from 'worker_threads';
+import { NotFoundException } from '../../../../_shared/domain/exceptions/NotFoundException';
 
 export class BookmarkRepositoryPG implements BookmarkRepository {
   private repository;
@@ -20,4 +22,11 @@ export class BookmarkRepositoryPG implements BookmarkRepository {
     return result.raw[0].id;
   }
 
+  async removeBookmark(bookmark: Bookmark): Promise<any> {
+    const result = await this.repository.delete(bookmark.toDto());
+
+    if (result.affected === 0) {
+      throw new NotFoundException();
+    }
+  }
 }
