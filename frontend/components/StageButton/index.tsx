@@ -34,7 +34,7 @@ export const StageButton = ({
         [styles.active]: currentVotingStage == value,
         [styles.disabled]: availableStage != value,
       })}
-      onClick={() => onButtonClick(1)}
+      onClick={() => onButtonClick(value)}
       disabled={availableStage != value}
     >
       {children}
