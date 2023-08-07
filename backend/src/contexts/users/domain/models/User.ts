@@ -70,7 +70,6 @@ export class User {
 
   public toDto(): UserDto {
     return {
-      id: 0,
       uuid: this.uuid,
       email: this.email,
       username: this.username,

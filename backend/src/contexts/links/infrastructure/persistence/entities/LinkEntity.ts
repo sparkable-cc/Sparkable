@@ -2,19 +2,23 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Generated,
   JoinTable,
   ManyToMany,
-  PrimaryGeneratedColumn,
+  OneToMany,
+  PrimaryColumn
 } from 'typeorm';
 import { LinkDto } from '../../../domain/models/LinkDto';
 import { CategoryEntity } from './CategoryEntity';
+import { BookmarkEntity } from '../../../../bookmarks/infrastructure/persistence/entities/BookmarkEntity';
 
 @Entity('links')
 export class LinkEntity implements LinkDto {
-  @PrimaryGeneratedColumn()
+  @Column()
+  @Generated('increment')
   id: number;
 
-  @Column({nullable: true})
+  @PrimaryColumn()
   uuid: string;
 
   @Column()
@@ -53,4 +57,7 @@ export class LinkEntity implements LinkDto {
 
   @Column({nullable: true, default: 1})
   stage: number;
+
+  @OneToMany(() => BookmarkEntity, bookmark => bookmark.user)
+  public bookmark: BookmarkEntity[];
 }

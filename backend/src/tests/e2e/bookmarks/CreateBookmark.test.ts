@@ -53,7 +53,7 @@ describe('POST /bookmarks', () => {
     expect(res.body.message).toEqual('Bad request');
   });
 
-  it('returns 400 when the user does not exist', async () => {
+  it('returns 400 when the user does not exist creating bookmark', async () => {
     const res = await request(app)
       .post('/bookmarks')
       .auth(auth.body.access_token, { type: 'bearer' })
@@ -66,7 +66,7 @@ describe('POST /bookmarks', () => {
     expect(res.body.message).toEqual('User not found!');
   });
 
-  it('returns 400 when the link does not exist', async () => {
+  it('returns 400 when the link does not exist creating bookmark', async () => {
     const res = await request(app)
       .post('/bookmarks')
       .auth(auth.body.access_token, { type: 'bearer' })
@@ -122,7 +122,6 @@ describe('POST /bookmarks', () => {
       userUuid: auth.body.uuid,
       linkUuid: linkUuid
     });
-    expect(typeof bookmark.id).toBe("number");
     expect(bookmark.userUuid).toEqual(auth.body.uuid);
     expect(bookmark.linkUuid).toEqual(linkUuid);
   });

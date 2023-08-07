@@ -3,8 +3,10 @@ import { BookmarkRepository } from '../../../domain/repositories/BookmarkReposit
 import { BookmarkDto } from '../../../domain/models/BookmarkDto';
 import { BookmarkEntity } from '../entities/BookmarkEntity';
 import { Bookmark } from '../../../domain/models/Bookmark';
-import { resourceLimits } from 'worker_threads';
 import { NotFoundException } from '../../../../_shared/domain/exceptions/NotFoundException';
+import { UserNotFoundException } from '../../../../_shared/domain/exceptions/UserNotFoundException';
+import { LinkNotFoundException } from '../../../../_shared/domain/exceptions/LinkNotFoundException';
+import { BookmarkReallyDoesExistException } from '../../../domain/exceptions/BookmarkReallyDoesExistException';
 
 export class BookmarkRepositoryPG implements BookmarkRepository {
   private repository;
@@ -18,8 +20,27 @@ export class BookmarkRepositoryPG implements BookmarkRepository {
   }
 
   async storeBookmark(bookmark: Bookmark): Promise<number> {
-    const result = await this.repository.insert(bookmark.toDto());
-    return result.raw[0].id;
+    let result:any;
+
+    await this.repository.insert(bookmark.toDto())
+    .then((insertInfo) => {
+      result = insertInfo;
+    })
+    .catch((error) => {
+      if (error.detail.includes('is not present in table "users"')) {
+        throw new UserNotFoundException();
+      }
+
+      if (error.detail.includes('is not present in table "links"')) {
+        throw new LinkNotFoundException();
+      }
+
+      if (error.detail.includes('already exists')) {
+        throw new BookmarkReallyDoesExistException();
+      }
+    });
+
+    return new Promise((resolve) => resolve(result.raw[0].id));
   }
 
   async removeBookmark(bookmark: Bookmark): Promise<any> {

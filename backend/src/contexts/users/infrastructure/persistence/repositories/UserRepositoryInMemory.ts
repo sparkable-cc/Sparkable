@@ -47,7 +47,6 @@ export class UserRepositoryInMemory implements UserRepository {
 
   createWithOne(userUuid:string) {
     this.users = [{
-      id:0,
       uuid: userUuid,
       email: 'email',
       username: 'username',

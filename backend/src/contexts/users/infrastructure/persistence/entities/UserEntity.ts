@@ -1,11 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, PrimaryColumn } from "typeorm"
 import { UserDto } from "../../../domain/models/UserDto";
+import { BookmarkEntity } from "../../../../bookmarks/infrastructure/persistence/entities/BookmarkEntity";
 
 @Entity('users')
 export class UserEntity implements UserDto {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Column()
   email: string;
 
@@ -15,7 +13,7 @@ export class UserEntity implements UserDto {
   @Column()
   password: string;
 
-  @Column({nullable: true})
+  @PrimaryColumn()
   uuid: string;
 
   @CreateDateColumn({ type: 'timestamptz', nullable: true })
@@ -23,4 +21,7 @@ export class UserEntity implements UserDto {
 
   @Column({ nullable: true })
   stage: number;
+
+  @OneToMany(() => BookmarkEntity, bookmark => bookmark.user)
+  public bookmark: BookmarkEntity[];
 }
