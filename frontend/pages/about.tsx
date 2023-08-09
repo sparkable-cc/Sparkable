@@ -282,9 +282,18 @@ const About: NextPage = () => {
         </section>
         <section className={styles.newsletterWrapper} id="newsletter">
           <div className={styles.aboutContainer}>
-            <div className={styles.titleTag}>NEWSLETTER</div>
+            {/* <div className={styles.titleTag}>NEWSLETTER</div> */}
+            <div className={styles.iframeContainer}>
+              <iframe
+                className={styles.aboutIframe}
+                src="https://f38488d3.sibforms.com/serve/MUIEAAjiBi-Ewn5NOU9Nsek6QtFBT2Rp4oMoMQS8OJk2C_PTeMSttEtrYQDxi8V3hqHbv4uFAzSk1YLzY0bMhh3d7SF1YpOtWj_Yaj5_Fc1gMP9B0KykzSIcHmk4a3KxpWGbxOPILYS41fSvnG23Zb9zbtnrEcEqTbNC0021yNkY48mvLXpzdTTsRQEAKwW4BzVU33_InBuJgWUK"
+                frameBorder="0"
+                scrolling="auto"
+                allowFullScreen
+              />
+            </div>
             <h2 className={styles.aboutTitle}>Keep in touch.</h2>
-            <form action="" className={styles.newsletterForm}>
+            {/* <form action="" className={styles.newsletterForm}>
               <input
                 type="text"
                 className={styles.newsletterInput}
@@ -301,7 +310,7 @@ const About: NextPage = () => {
                   className={styles.inputRadio}
                   id="privacyAgree"
                 />
-                By submitting your email you agree to our{" "}
+                By submitting your email you agree to our{' '}
                 <Link href="legal/privacy-policy" className={styles.link}>
                   privacy policy
                 </Link>
@@ -312,7 +321,7 @@ const About: NextPage = () => {
               >
                 Subscribe
               </button>
-            </form>
+            </form> */}
           </div>
         </section>
         <section className={styles.participateWrapper}>
