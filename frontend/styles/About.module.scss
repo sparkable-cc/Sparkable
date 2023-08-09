@@ -357,18 +357,20 @@
 }
 
 .iframeContainer {
-  position: relative;
-  overflow: hidden;
-  padding-top: 56.25%;
-  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  width: 100%;
+}
 
-  iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
+.aboutIframe {
+  height: 400px;
+  width: 100%;
+  margin-left: 180px;
+
+  @media only screen and (max-width: $tablet) {
+    margin-left: 0;
   }
 }
 
