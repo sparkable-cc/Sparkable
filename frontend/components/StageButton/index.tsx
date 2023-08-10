@@ -21,6 +21,7 @@ export const StageButton = ({
 }: Props) => {
   const [ availableStage, setAvailableStage ] = useState<number | undefined>(undefined);
   const availableVotingStage = useAppSelector(selectAvailableVotingStage);
+  const isDisabled = !availableStage || availableStage < value;
 
   useEffect(() => {
     setAvailableStage(availableVotingStage);
@@ -32,10 +33,10 @@ export const StageButton = ({
         [styles.filterStageButton]: !isMobile,
         [styles.filterStageButtonMobile]: isMobile,
         [styles.active]: currentVotingStage == value,
-        [styles.disabled]: availableStage != value,
+        [styles.disabled]: isDisabled,
       })}
       onClick={() => onButtonClick(value)}
-      disabled={availableStage != value}
+      disabled={isDisabled}
     >
       {children}
     </button>
