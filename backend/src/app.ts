@@ -501,7 +501,6 @@ app.post('/votes', checkJwt, async (req: Request, res: Response) => {
 app.post('/bookmarks', checkJwt, async (req: Request, res: Response) => {
   const createBookmarkAction = new CreateBookmarkAction(
     new BookmarkRepositoryPG(dataSource),
-    new CheckUserExistsService(new UserRepositoryPG(dataSource)),
     new CheckLinkExistsService(new LinkRepositoryPG(dataSource))
   );
 
