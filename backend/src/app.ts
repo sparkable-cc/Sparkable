@@ -53,6 +53,8 @@ import { CheckUserExistsService } from './contexts/_shared/domain/services/Check
 import { CheckLinkExistsService } from './contexts/_shared/domain/services/CheckLinkExistsService';
 import { RemoveBookmarkAction } from './contexts/bookmarks/actions/RemoveBookmarkAction';
 import { NotFoundException } from './contexts/_shared/domain/exceptions/NotFoundException';
+import { UpdateLinkAction } from './contexts/links/actions/UpdateLinkAction';
+import { UserCanNotEditException } from './contexts/links/domain/exceptions/UserCanNotEditException';
 
 const app: Express = express();
 
@@ -63,7 +65,7 @@ dotenv.config();
 app.use(cors({ origin: process.env.CLIENT }));
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Butterfy API');
+  res.send('Sparkable API');
 });
 
 app.post('/user', async (req: Request, res: Response) => {
@@ -297,6 +299,43 @@ app.post('/links', checkJwt, async (req: Request, res: Response) => {
         case LinkExistsException:
           res.status(403);
           res.send({ message: 'Link already exists!' });
+          break;
+        default:
+          console.log(
+            'Failed to do something async with an unspecified error: ',
+            error,
+          );
+          return res.send(500);
+      }
+    });
+});
+
+app.put('/links', checkJwt, async (req: Request, res: Response) => {
+  const updateLinkAction = new UpdateLinkAction(
+    new LinkRepositoryPG(dataSource)
+  );
+
+  //Extract to Service
+  let userUuid = '';
+  if ('userUuid' in req) {
+    userUuid = String(req.userUuid);
+  }
+
+  updateLinkAction
+    .execute(userUuid, req.body)
+    .then(() => {
+      res.status(200);
+      res.send({ message: 'Link updated!' });
+    })
+    .catch((error) => {
+      switch (error.constructor) {
+        case MandatoryFieldEmptyException:
+          res.status(400);
+          res.send({ message: 'Bad request' });
+          break;
+        case UserCanNotEditException:
+          res.status(403);
+          res.send({ message: 'Forbidden' });
           break;
         default:
           console.log(

@@ -1,14 +1,14 @@
 import request from 'supertest';
-import app from '../../app';
-import dataSource from '../../data-source';
-import UserFactory from '../../factories/UserFactory';
-import LinkFactory from '../../factories/LinkFactory';
-import { LinkDto } from '../../contexts/links/domain/models/LinkDto';
-import { ViewedLinkByUserDataEntity } from '../../contexts/links/infrastructure/persistence/entities/ViewedLinkByUserDataEntity';
-import { CategoryEntity } from '../../contexts/links/infrastructure/persistence/entities/CategoryEntity';
-import { UserEntity } from '../../contexts/users/infrastructure/persistence/entities/UserEntity';
-import { LinkEntity } from '../../contexts/links/infrastructure/persistence/entities/LinkEntity';
-import { GetCurrentCycleService } from '../../contexts/voting/domain/services/GetCurrentCycleService';
+import app from '../../../app';
+import dataSource from '../../../data-source';
+import UserFactory from '../../../factories/UserFactory';
+import LinkFactory from '../../../factories/LinkFactory';
+import { LinkDto } from '../../../contexts/links/domain/models/LinkDto';
+import { ViewedLinkByUserDataEntity } from '../../../contexts/links/infrastructure/persistence/entities/ViewedLinkByUserDataEntity';
+import { CategoryEntity } from '../../../contexts/links/infrastructure/persistence/entities/CategoryEntity';
+import { UserEntity } from '../../../contexts/users/infrastructure/persistence/entities/UserEntity';
+import { LinkEntity } from '../../../contexts/links/infrastructure/persistence/entities/LinkEntity';
+import { GetCurrentCycleService } from '../../../contexts/voting/domain/services/GetCurrentCycleService';
 
 describe('POST /viewed-link-user', () => {
   const endpoint = '/viewed-link-user';

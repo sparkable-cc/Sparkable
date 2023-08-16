@@ -18,6 +18,7 @@ export class Link {
   statement: string;
   suggestionCategory: string;
   stage: number;
+  updateDate: Date;
 
   constructor(link: any) {
     if (Object.keys(link).length === 0) {
@@ -54,6 +55,7 @@ export class Link {
     this.statement = link.statement;
     this.suggestionCategory = link.suggestionCategory;
     this.stage = link.stage || 1;
+    this.updateDate = new Date();
   }
 
   public static factory(linkDto: LinkDto): Link {
@@ -74,7 +76,8 @@ export class Link {
       username: this.username,
       statement: this.statement,
       suggestionCategory: this.suggestionCategory,
-      stage: this.stage
+      stage: this.stage,
+      updateDate: this.updateDate
     };
   }
 

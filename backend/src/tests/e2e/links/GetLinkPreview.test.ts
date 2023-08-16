@@ -1,8 +1,8 @@
 import request from 'supertest';
-import app from '../../app';
-import { UserEntity } from '../../contexts/users/infrastructure/persistence/entities/UserEntity';
-import dataSource from '../../data-source';
-import UserFactory from "../../factories/UserFactory"
+import app from '../../../app';
+import { UserEntity } from '../../../contexts/users/infrastructure/persistence/entities/UserEntity';
+import dataSource from '../../../data-source';
+import UserFactory from "../../../factories/UserFactory"
 
 
 describe('POST /link-preview', () => {

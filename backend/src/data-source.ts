@@ -42,7 +42,8 @@ switch (process.env.NODE_ENV) {
             synchronize: true,
             logging: false,
             entities: [__dirname + '/contexts/**/infrastructure/persistence/entities/*.{ts,js}'],
-            subscribers: []
+            subscribers: [],
+            dropSchema: true
         });
         break;
 

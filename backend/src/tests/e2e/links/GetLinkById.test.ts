@@ -1,10 +1,10 @@
 import request from 'supertest';
-import app from '../../app';
-import { CategoryEntity } from '../../contexts/links/infrastructure/persistence/entities/CategoryEntity';
-import { LinkEntity } from '../../contexts/links/infrastructure/persistence/entities/LinkEntity';
-import dataSource from '../../data-source';
-import CategoryFactory from '../../factories/CategoryFactory';
-import LinkFactory from '../../factories/LinkFactory';
+import app from '../../../app';
+import { CategoryEntity } from '../../../contexts/links/infrastructure/persistence/entities/CategoryEntity';
+import { LinkEntity } from '../../../contexts/links/infrastructure/persistence/entities/LinkEntity';
+import dataSource from '../../../data-source';
+import CategoryFactory from '../../../factories/CategoryFactory';
+import LinkFactory from '../../../factories/LinkFactory';
 
 describe('GET /links/:id', () => {
   beforeAll(async () => {
