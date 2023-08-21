@@ -15,6 +15,7 @@ import { CreateLinkAction } from './CreateLinkAction';
 import { MockProxy, mock } from 'jest-mock-extended';
 import { MailerService } from '../../users/domain/services/MailerService';
 import { CheckUserExistsService } from '../../_shared/domain/services/CheckUserExistsService';
+import { UrlWithoutHttpsRestrictionException } from '../domain/exceptions/UrlWithoutHttpsRestrictionException';
 
 describe('Create link action', () => {
   let createLinkAction: CreateLinkAction;
@@ -99,11 +100,40 @@ describe('Create link action', () => {
     ).rejects.toThrow(CategoryRestrictionException);
   });
 
-  test('cant create link when the category does not exist', async () => {
+  test('cant create link with url without https', async () => {
     await expect(
       createLinkAction.execute({
         title: 'title',
         url: 'http://example',
+        userUuid: 'xxxxxx',
+        categories: [
+          {id:1, name:'name', slug:'name'},
+          {id:2, name:'name2', slug:'name2'}
+        ],
+      }),
+    ).rejects.toThrow(UrlWithoutHttpsRestrictionException);
+  });
+
+  test('cant create link with image without https', async () => {
+    await expect(
+      createLinkAction.execute({
+        title: 'title',
+        url: 'https://url',
+        image: 'http://image',
+        userUuid: 'xxxxxx',
+        categories: [
+          {id:1, name:'name', slug:'name'},
+          {id:2, name:'name2', slug:'name2'}
+        ],
+      }),
+    ).rejects.toThrow(UrlWithoutHttpsRestrictionException);
+  });
+
+  test('cant create link when the category does not exist', async () => {
+    await expect(
+      createLinkAction.execute({
+        title: 'title',
+        url: 'https://example',
         userUuid: 'xxxxxx',
         categories: [
           {id:1, name:'name', slug:'name'},
@@ -127,7 +157,7 @@ describe('Create link action', () => {
     await expect(
       createLinkAction.execute({
         title: 'title 2',
-        url: 'http://example',
+        url: 'https://example',
         userUuid: 'xxxxxx',
         categories: [categoryDto],
       }),
@@ -156,7 +186,7 @@ describe('Create link action', () => {
       mailServiceMock
     );
 
-    const url = 'http://example';
+    const url = 'https://example';
 
     await createLinkAction.execute({
       title: 'title',
@@ -177,7 +207,7 @@ describe('Create link action', () => {
 
   test('create link with mandatory field', async () => {
     const title = 'title';
-    const url = 'http://example';
+    const url = 'https://example';
 
     const categoryDto = {id:1, name:'name', slug:'name'};
     const categoryRepository = new CategoryRepositoryInMemory(
@@ -237,8 +267,8 @@ describe('Create link action', () => {
 
   test('create link with optional field', async () => {
     const title = 'title';
-    const url = 'http://example';
-    const image = 'http://image';
+    const url = 'https://example';
+    const image = 'https://image';
     const description = '123';
     const statement =  'Lorem ipsum';
     const suggestion = 'Sports';

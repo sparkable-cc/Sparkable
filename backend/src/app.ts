@@ -53,6 +53,7 @@ import { CheckUserExistsService } from './contexts/_shared/domain/services/Check
 import { CheckLinkExistsService } from './contexts/_shared/domain/services/CheckLinkExistsService';
 import { RemoveBookmarkAction } from './contexts/bookmarks/actions/RemoveBookmarkAction';
 import { NotFoundException } from './contexts/_shared/domain/exceptions/NotFoundException';
+import { UrlWithoutHttpsRestrictionException } from './contexts/links/domain/exceptions/UrlWithoutHttpsRestrictionException';
 
 const app: Express = express();
 
@@ -285,6 +286,10 @@ app.post('/links', checkJwt, async (req: Request, res: Response) => {
         case CategoryRestrictionException:
           res.status(400);
           res.send({ message: 'Category limit restriction!' });
+          break;
+        case UrlWithoutHttpsRestrictionException:
+          res.status(400);
+          res.send({ message: 'Url without https is forbidden' });
           break;
         case CategoryNotFoundException:
           res.status(400);
