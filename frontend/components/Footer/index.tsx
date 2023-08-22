@@ -21,7 +21,7 @@ export const Footer = () => {
           </Link>
         </span>
       </div>
-      <div className={styles.footerColumnsWrapper}> run
+      <div className={styles.footerColumnsWrapper}>
         <div className={styles.footerColumn}>
           <h3 className={styles.footerColumnTitle}>CONTACT</h3>
           <a href="mailto:support@sparkable.cc" className={styles.footerLink}>
