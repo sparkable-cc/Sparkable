@@ -15,16 +15,15 @@ let linkDto = {
 };
 
 describe('Get viewed links action', () => {
-
   test('cant get viewed links without user', async () => {
     const getViewedLinkByUserDataAction = new GetViewedLinksAction(
       new ViewedLinkByUserDataRepositoryInMemory(),
       new LinkRepositoryInMemory(),
     );
 
-    await expect(
-      getViewedLinkByUserDataAction.execute('')
-    ).rejects.toThrow(MandatoryFieldEmptyException);
+    await expect(getViewedLinkByUserDataAction.execute('')).rejects.toThrow(
+      MandatoryFieldEmptyException,
+    );
   });
 
   test('returns empty links if there are no links', async () => {
@@ -33,9 +32,9 @@ describe('Get viewed links action', () => {
       new LinkRepositoryInMemory(),
     );
 
-    await expect(
-      getAllMyViewedLinkAction.execute('userUuid'),
-    ).resolves.toEqual([]);
+    await expect(getAllMyViewedLinkAction.execute('userUuid')).resolves.toEqual(
+      [],
+    );
   });
 
   test('returns one link', async () => {
@@ -48,10 +47,11 @@ describe('Get viewed links action', () => {
     const link = new Link(linkDto);
     linkRepoInMemory.storeLink(link);
 
-    const viewedLinkByUserDataRepositoryInMemory = new ViewedLinkByUserDataRepositoryInMemory();
+    const viewedLinkByUserDataRepositoryInMemory =
+      new ViewedLinkByUserDataRepositoryInMemory();
 
     viewedLinkByUserDataRepositoryInMemory.store(
-      new ViewedLinkByUserData(user.getUuid, link.uuid, 1)
+      new ViewedLinkByUserData(user.getUuid, link.uuid, 1),
     );
 
     const getAllMyViewedLinkAction = new GetViewedLinksAction(
@@ -77,13 +77,14 @@ describe('Get viewed links action', () => {
     const link2 = new Link(linkDto);
     linkRepoInMemory.storeLink(link2);
 
-    const viewedLinkByUserDataRepositoryInMemory = new ViewedLinkByUserDataRepositoryInMemory();
+    const viewedLinkByUserDataRepositoryInMemory =
+      new ViewedLinkByUserDataRepositoryInMemory();
 
     viewedLinkByUserDataRepositoryInMemory.store(
-      new ViewedLinkByUserData(user.getUuid, link.uuid, 1)
+      new ViewedLinkByUserData(user.getUuid, link.uuid, 1),
     );
     viewedLinkByUserDataRepositoryInMemory.store(
-      new ViewedLinkByUserData(user.getUuid, link2.uuid, 1)
+      new ViewedLinkByUserData(user.getUuid, link2.uuid, 1),
     );
 
     const getAllMyViewedLinkAction = new GetViewedLinksAction(
@@ -97,5 +98,4 @@ describe('Get viewed links action', () => {
     expect(links[0].userUuid).toEqual(user.getUuid);
     expect(links[1].userUuid).toEqual(user.getUuid);
   });
-
 });
