@@ -17,11 +17,11 @@ export const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            v0.1.3 (beta)
+            v0.1.4 (beta)
           </Link>
         </span>
       </div>
-      <div className={styles.footerColumnsWrapper}>
+      <div className={styles.footerColumnsWrapper}> run
         <div className={styles.footerColumn}>
           <h3 className={styles.footerColumnTitle}>CONTACT</h3>
           <a href="mailto:support@sparkable.cc" className={styles.footerLink}>
