@@ -49,6 +49,11 @@ const About: NextPage = () => {
           name="twitter:image"
           content="https://www.sparkable.cc/og-image.png"
         />
+        <script
+          defer
+          data-domain="sparkable.cc"
+          src="https://plausible.io/js/script.js"
+        />
       </Head>
       <div className={styles.aboutWrapper}>
         <section className={styles.situationWrapper}>
