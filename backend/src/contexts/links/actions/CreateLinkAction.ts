@@ -24,7 +24,8 @@ export class CreateLinkAction {
     this.mailerService = mailerService;
   }
 
-  async execute(linkData: any) {
+  async execute(userUuid: string, linkData: any) {
+    linkData.userUuid = userUuid;
     const link = new Link(linkData);
     await this.checkExistsCategories(link);
     const user = await this.checkUserExistsService.execute(link.userUuid);

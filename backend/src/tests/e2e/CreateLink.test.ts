@@ -8,6 +8,7 @@ import dataSource from '../../data-source';
 import CategoryFactory from '../../factories/CategoryFactory';
 import UserFactory from '../../factories/UserFactory';
 
+
 describe('POST /links', () => {
   let auth: { body: { access_token: string; uuid: string; } };
   let username: string;
@@ -55,14 +56,13 @@ describe('POST /links', () => {
     expect(res.body.message).toEqual('Bad request');
   });
 
-  it('returns 400 when the category limit is reached', async () => {
+  it('returns 400 when the category limit is reached creating link', async () => {
     const res = await request(app)
       .post('/links')
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         title: 'title',
         url: 'http://example',
-        userUuid: 'xxxxxx',
         categories: [
           {id:1, name:'name', slug:'name'},
           {id:2, name:'name2', slug:'name2'},
@@ -81,7 +81,6 @@ describe('POST /links', () => {
       .send({
         title: 'title',
         url: 'http://example',
-        userUuid: 'xxxxxx',
         categories: [
           {id:1, name:'name', slug:'name'}
         ],
@@ -89,23 +88,6 @@ describe('POST /links', () => {
 
     expect(res.statusCode).toEqual(400);
     expect(res.body.message).toEqual('Category not found!');
-  });
-
-  it('returns 400 when the user does not exist', async () => {
-    const category = await CategoryFactory.create('Environment', 'environment');
-
-    const res = await request(app)
-      .post('/links')
-      .auth(auth.body.access_token, { type: 'bearer' })
-      .send({
-        title: 'title',
-        url: 'http://example',
-        categories: [category],
-        userUuid: 'xxxxxx'
-      });
-
-    expect(res.statusCode).toEqual(400);
-    expect(res.body.message).toEqual('User not found!');
   });
 
   it('returns 403 when link exist', async () => {
@@ -117,8 +99,7 @@ describe('POST /links', () => {
       .send({
         title: 'title',
         url: 'http://example',
-        categories: [category],
-        userUuid: auth.body.uuid
+        categories: [category]
       });
 
     const res = await request(app)
@@ -127,8 +108,7 @@ describe('POST /links', () => {
       .send({
         title: 'title2',
         url: 'http://example',
-        categories: [category],
-        userUuid: auth.body.uuid
+        categories: [category]
       });
 
     expect(res.statusCode).toEqual(403);
@@ -145,8 +125,7 @@ describe('POST /links', () => {
       .send({
         title: title,
         url: url,
-        categories: [category],
-        userUuid: auth.body.uuid
+        categories: [category]
       });
 
     expect(res.statusCode).toEqual(201);
@@ -176,7 +155,6 @@ describe('POST /links', () => {
       .send({
         title: title,
         url: url,
-        userUuid: auth.body.uuid,
         categories: [category],
         image: image,
         description: description,
@@ -192,6 +170,7 @@ describe('POST /links', () => {
     expect(links[0].description).toEqual(description);
     expect(links[0].statement).toEqual(statement);
     expect(links[0].suggestionCategory).toEqual(suggestionCategory);
+    expect(links[0].userUuid).toEqual(auth.body.uuid);
   });
 
 });

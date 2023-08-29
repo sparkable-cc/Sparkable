@@ -30,7 +30,6 @@ import { UserNotFoundException } from './contexts/_shared/domain/exceptions/User
 import { WrongPasswordException } from './contexts/users/domain/exceptions/WrongPasswordException';
 import { ResetTokenRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/ResetTokenRepositoryPG';
 import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
-import { AuthServiceAuth0 } from './contexts/users/infrastructure/services/AuthServiceAuth0';
 import { MailerServiceGD } from './contexts/users/infrastructure/services/MailerServiceGD';
 import { GetVotingStatusAction } from './contexts/voting/actions/GetVotingStatus';
 import { CreateVotingAction } from './contexts/voting/actions/CreateVotingAction';
@@ -53,6 +52,8 @@ import { CheckUserExistsService } from './contexts/_shared/domain/services/Check
 import { CheckLinkExistsService } from './contexts/_shared/domain/services/CheckLinkExistsService';
 import { RemoveBookmarkAction } from './contexts/bookmarks/actions/RemoveBookmarkAction';
 import { NotFoundException } from './contexts/_shared/domain/exceptions/NotFoundException';
+import { MailerServiceFake } from './contexts/users/infrastructure/services/MailerServiceFake';
+import { MailerService } from './contexts/users/domain/services/MailerService';
 
 const app: Express = express();
 
@@ -61,6 +62,13 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 
 dotenv.config();
 app.use(cors({ origin: process.env.CLIENT }));
+
+let mailerService: MailerService;
+if (process.env.NODE_ENV === 'test') {
+  mailerService = new MailerServiceFake();
+} else {
+  mailerService = new MailerServiceGD();
+}
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Butterfy API');
@@ -131,7 +139,7 @@ app.post('/recovery-password', async (req: Request, res: Response) => {
   const recoveryPasswordAction = new RecoveryPasswordAction(
     new UserRepositoryPG(dataSource),
     new ResetTokenRepositoryPG(dataSource),
-    new MailerServiceGD(),
+    mailerService,
   );
   recoveryPasswordAction
     .execute(req.body.email)
@@ -267,11 +275,16 @@ app.post('/links', checkJwt, async (req: Request, res: Response) => {
     new LinkRepositoryPG(dataSource),
     new CategoryRepositoryPG(dataSource),
     new CheckUserExistsService(new UserRepositoryPG(dataSource)),
-    new MailerServiceGD()
+    mailerService
   );
 
+  let userUuid = '';
+  if ('userUuid' in req) {
+    userUuid = String(req.userUuid);
+  }
+
   createLinkAction
-    .execute(req.body)
+    .execute(userUuid, req.body)
     .then(() => {
       res.status(201);
       res.send({ message: 'Link created!' });
