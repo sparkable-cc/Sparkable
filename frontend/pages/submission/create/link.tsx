@@ -105,9 +105,9 @@ const CreateSubmissionLink = () => {
             <div>
               <header className={styles.linkPreviewHeader}>
                 <span>Link preview</span>
-                <span>INFORM IT's MANDATORY HTTPS</span>
                 <ModalNote title="Link preview">
                   <div className={styles.modalText}>We generate the link preview based on each link’s public metadata.</div>
+                  <div className={styles.modalText}>Only works with secure links (https).</div>
                   <div className={styles.modalText}>Something is wrong or not working as expected?</div>
                   <div className={styles.modalText}>
                     <Link href="/" className={styles.modalLink}>Contact us</Link>
