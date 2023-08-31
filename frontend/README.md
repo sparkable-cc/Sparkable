@@ -2,7 +2,13 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+First, you need to make a `.env` file with the contents of the `.env.txt` file.
+
+```bash
+cp .env.txt .env
+```
+
+Now, you can run the development server:
 
 ```bash
 npm run dev
