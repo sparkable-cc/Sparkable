@@ -1,5 +1,6 @@
 import { User } from '../../../domain/models/User';
 import { UserDto } from '../../../domain/models/UserDto';
+import { UserRole } from '../../../domain/models/UserRole';
 import { UserRepository } from '../../../domain/repositories/UserRepository';
 
 export class UserRepositoryInMemory implements UserRepository {
@@ -52,7 +53,8 @@ export class UserRepositoryInMemory implements UserRepository {
       email: 'email',
       username: 'username',
       password: 'password',
-      stage: 1
+      stage: 1,
+      role: UserRole.USER
     }];
   }
 }

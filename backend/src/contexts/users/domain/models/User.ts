@@ -4,6 +4,7 @@ import { UserDto } from './UserDto';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
+import { UserRole } from './UserRole';
 
 export class User {
   private email: string;
@@ -11,6 +12,7 @@ export class User {
   private password: string;
   private uuid: string;
   private stage: number;
+  private role: UserRole;
 
   constructor(
     email: string,
@@ -28,6 +30,7 @@ export class User {
     this.username = username;
     this.uuid = uuid;
     this.stage = stage;
+    this.role = UserRole.USER;
   }
 
   public setPassword(password:string) {
@@ -75,7 +78,8 @@ export class User {
       email: this.email,
       username: this.username,
       password: this.password,
-      stage: this.stage
+      stage: this.stage,
+      role: this.role
     };
   }
 }
