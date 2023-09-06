@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
-import { MandatoryFieldEmptyException } from '../../_shared/domain/exceptions/MandatoryFieldEmptyException';
-import { LinkPreview } from '../domain/models/LinkPreview';
-import { UrlWithoutHttpsRestrictionException } from '../domain/exceptions/UrlWithoutHttpsRestrictionException';
+import { MandatoryFieldEmptyException } from '../../../_shared/domain/exceptions/MandatoryFieldEmptyException';
+import { LinkPreview } from '../models/LinkPreview';
+import { UrlWithoutHttpsRestrictionException } from '../exceptions/UrlWithoutHttpsRestrictionException';
 
 describe('Create Link Preview', () => {
 

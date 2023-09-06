@@ -2,6 +2,7 @@ import { describe, expect, test } from '@jest/globals';
 import { Link } from '../models/Link';
 import { MandatoryFieldEmptyException } from '../../../_shared/domain/exceptions/MandatoryFieldEmptyException';
 import { CategoryRestrictionException } from '../exceptions/CategoryRestrictionException';
+import { UrlWithoutHttpsRestrictionException } from '../exceptions/UrlWithoutHttpsRestrictionException';
 
 describe('Create Link', () => {
 
@@ -66,6 +67,35 @@ describe('Create Link', () => {
     );
   });
 
+  test('cant create link with url without https', async () => {
+    expect(() => new Link({
+      title: 'title',
+      url: 'http://example',
+      userUuid: 'xxxxxx',
+      categories: [
+        {id:1, name:'name', slug:'name'},
+        {id:2, name:'name2', slug:'name2'}
+      ]
+    })).toThrow(
+      UrlWithoutHttpsRestrictionException
+    );
+  });
+
+  test('cant create link with image without https', async () => {
+    expect(() => new Link({
+      title: 'title',
+      url: 'https://url',
+      image: 'http://image',
+      userUuid: 'xxxxxx',
+      categories: [
+        {id:1, name:'name', slug:'name'},
+        {id:2, name:'name2', slug:'name2'}
+      ]
+    })).toThrow(
+      UrlWithoutHttpsRestrictionException
+    );
+  });
+
   test('create Link with mandatory fields', async () => {
     const title = 'title';
     const url = 'https://url';
@@ -94,7 +124,7 @@ describe('Create Link', () => {
     const userUuid = 'userUuid';
 
     const uuid = 'uuid';
-    const image = 'http://image';
+    const image = 'https://image';
     const description = '123';
     const statement =  'Lorem ipsum';
     const suggestion = 'Sports';
