@@ -110,13 +110,14 @@ describe('POST /links', () => {
 
   it('returns 403 when link exist', async () => {
     const category = await CategoryFactory.create('Environment', 'environment');
+    const link = 'https://example';
 
     await request(app)
       .post('/links')
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         title: 'title',
-        url: 'http://example',
+        url: link,
         categories: [category]
       });
 
@@ -125,7 +126,7 @@ describe('POST /links', () => {
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         title: 'title2',
-        url: 'http://example',
+        url: link,
         categories: [category]
       });
 
