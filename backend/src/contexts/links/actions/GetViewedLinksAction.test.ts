@@ -8,7 +8,7 @@ import { GetViewedLinksAction } from './GetViewedLinksAction';
 
 let linkDto = {
   title: 'title',
-  url: 'url',
+  url: 'https://url',
   userUuid: 'userUuid',
   categories: [{ id: 1, name: 'name', slug: 'name' }],
   stage: 1,

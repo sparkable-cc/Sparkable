@@ -74,13 +74,31 @@ describe('POST /links', () => {
     expect(res.body.message).toEqual('Category limit restriction!');
   });
 
-  it('returns 400 when the category does not exist', async () => {
+  it('returns 400 when the url has not https', async () => {
     const res = await request(app)
       .post('/links')
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         title: 'title',
         url: 'http://example',
+        categories: [
+          {id:1, name:'name', slug:'name'},
+          {id:2, name:'name2', slug:'name2'}
+        ],
+      });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toEqual('Url without https is forbidden');
+  });
+
+  it('returns 400 when the category does not exist', async () => {
+    const res = await request(app)
+      .post('/links')
+      .auth(auth.body.access_token, { type: 'bearer' })
+      .send({
+        title: 'title',
+        url: 'https://example',
+        userUuid: 'xxxxxx',
         categories: [
           {id:1, name:'name', slug:'name'}
         ],
@@ -92,13 +110,14 @@ describe('POST /links', () => {
 
   it('returns 403 when link exist', async () => {
     const category = await CategoryFactory.create('Environment', 'environment');
+    const link = 'https://example';
 
     await request(app)
       .post('/links')
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         title: 'title',
-        url: 'http://example',
+        url: link,
         categories: [category]
       });
 
@@ -107,7 +126,7 @@ describe('POST /links', () => {
       .auth(auth.body.access_token, { type: 'bearer' })
       .send({
         title: 'title2',
-        url: 'http://example',
+        url: link,
         categories: [category]
       });
 
@@ -116,7 +135,7 @@ describe('POST /links', () => {
 
   it('returns 201 when the link is created with the mandatory fields', async () => {
     const title = 'title';
-    const url = 'http://example2';
+    const url = 'https://example2';
     const category = await CategoryFactory.create('name', 'slug');
 
     const res = await request(app)
@@ -142,8 +161,8 @@ describe('POST /links', () => {
 
   it('returns 201 when the link is created with all the fields', async () => {
     const title = 'title';
-    const url = 'http://example';
-    const image = 'http://image';
+    const url = 'https://example';
+    const image = 'https://image';
     const description = 'description';
     const category = await CategoryFactory.create('name', 'slug');
     const statement = 'Lorem ipsum...';

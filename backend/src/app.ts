@@ -1,7 +1,6 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Express, Request, Response } from 'express';
-import ogs from 'ts-open-graph-scraper';
 import { CreateLinkAction } from './contexts/links/actions/CreateLinkAction';
 import { CreateViewedLinkByUserDataAction } from './contexts/links/actions/CreateViewedLinkByUserDataAction';
 import { GetAllCategoriesAction } from './contexts/links/actions/GetAllCategoriesAction';
@@ -52,6 +51,9 @@ import { CheckUserExistsService } from './contexts/_shared/domain/services/Check
 import { CheckLinkExistsService } from './contexts/_shared/domain/services/CheckLinkExistsService';
 import { RemoveBookmarkAction } from './contexts/bookmarks/actions/RemoveBookmarkAction';
 import { NotFoundException } from './contexts/_shared/domain/exceptions/NotFoundException';
+import { UrlWithoutHttpsRestrictionException } from './contexts/links/domain/exceptions/UrlWithoutHttpsRestrictionException';
+import { GetLinkPreviewAction } from './contexts/links/actions/GetLinkPreviewAction';
+import { ScraperServiceOgs } from './contexts/links/infrastructure/services/ScraperServiceOgs';
 import { MailerServiceFake } from './contexts/users/infrastructure/services/MailerServiceFake';
 import { MailerService } from './contexts/users/domain/services/MailerService';
 
@@ -299,6 +301,10 @@ app.post('/links', checkJwt, async (req: Request, res: Response) => {
           res.status(400);
           res.send({ message: 'Category limit restriction!' });
           break;
+        case UrlWithoutHttpsRestrictionException:
+          res.status(400);
+          res.send({ message: 'Url without https is forbidden' });
+          break;
         case CategoryNotFoundException:
           res.status(400);
           res.send({ message: 'Category not found!' });
@@ -321,33 +327,33 @@ app.post('/links', checkJwt, async (req: Request, res: Response) => {
     });
 });
 
-app.post(
-  '/link-preview-data',
-  checkJwt,
-  async (req: Request, res: Response) => {
-    const url = req.body.url;
-
-    if (!url) {
-      res.status(400);
-      res.send({ message: 'Bad request' });
-      return;
-    }
-
-    ogs(url)
-      .then((data: any) => {
-        const { response, ...result } = data;
-        res.status(200);
-        res.send(result);
-      })
-      .catch((error: any) => {
+app.post('/link-preview-data', checkJwt, async (req: Request, res: Response) => {
+  const getLinkPreviewAction = new GetLinkPreviewAction(new ScraperServiceOgs());
+  getLinkPreviewAction
+  .execute(req.body.url || '')
+  .then((result:any) => {
+    res.status(200);
+    res.send(result);
+  })
+  .catch((error:any) => {
+    switch (error.constructor) {
+      case MandatoryFieldEmptyException:
+        res.status(400);
+        res.send({ message: 'Bad request' });
+        break;
+      case UrlWithoutHttpsRestrictionException:
+        res.status(400);
+        res.send({ message: 'Url without https is forbidden' });
+        break;
+      default:
         console.log(
           'Failed to do something async with an unspecified error: ',
           error,
         );
-        return res.status(500);
-      });
-  },
-);
+        return res.send(500);
+    }
+  });
+});
 
 app.post('/viewed-link-user', checkJwt, async (req: Request, res: Response) => {
   const createViewedLinkByUserDataAction = new CreateViewedLinkByUserDataAction(
