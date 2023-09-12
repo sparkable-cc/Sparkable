@@ -252,7 +252,7 @@ const About: NextPage = () => {
                 </div>
               </div>
             </div>
-            <div className={styles.teamVacanciesWrapper}>
+            {/* <div className={styles.teamVacanciesWrapper}>
               <img src="svg/vacancies.svg" alt="img" />
               <div className={styles.teamVacanciesListWrapper}>
                 <h3 className={styles.teamVacanciesTitle}>You?</h3>
@@ -266,7 +266,7 @@ const About: NextPage = () => {
                   </li>
                 </ul>
               </div>
-            </div>
+            </div> */}
             <div className={styles.teamButtonWrapper}>
               <a
                 href="mailto:support@sparkable.cc"
@@ -275,14 +275,14 @@ const About: NextPage = () => {
                 Drop us a line
               </a>
             </div>
-            <div className={styles.teamButtonWrapper}>
+            {/* <div className={styles.teamButtonWrapper}>
               <Link
                 className={classNames(styles.blueButton, styles.submit)}
                 href="/career"
               >
                 See open job positions
               </Link>
-            </div>
+            </div> */}
           </div>
         </section>
         <section className={styles.newsletterWrapper} id="newsletter">
