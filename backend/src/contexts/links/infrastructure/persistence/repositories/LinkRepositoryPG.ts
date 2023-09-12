@@ -46,7 +46,12 @@ export class LinkRepositoryPG implements LinkRepository {
     const linkPersisted = await this.repository.findOneBy(params)
 
     if (linkPersisted) {
-      await this.repository.update(params, {stage: linkDto.stage});
+      const updatedFields = {
+        stage: linkDto.stage,
+        statement: linkDto.statement,
+        //updateDate: linkDto.updateDate
+      };
+      await this.repository.update(params, updatedFields);
       return linkPersisted.id;
     } else {
       const linkEntity = this.repository.create(linkDto);

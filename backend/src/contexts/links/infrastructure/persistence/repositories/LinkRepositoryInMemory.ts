@@ -62,7 +62,8 @@ export class LinkRepositoryInMemory implements LinkRepository {
       username: 'username',
       statement: 'statement',
       suggestionCategory: 'Other',
-      stage: 1
+      stage: 1,
+      updateDate: new Date()
     });
   }
 

@@ -1,12 +1,12 @@
 import request from 'supertest';
-import app from '../../app';
-import { CategoryEntity } from '../../contexts/links/infrastructure/persistence/entities/CategoryEntity';
-import { LinkEntity } from '../../contexts/links/infrastructure/persistence/entities/LinkEntity';
-import { LinkRepositoryPG } from '../../contexts/links/infrastructure/persistence/repositories/LinkRepositoryPG';
-import { UserEntity } from '../../contexts/users/infrastructure/persistence/entities/UserEntity';
-import dataSource from '../../data-source';
-import CategoryFactory from '../../factories/CategoryFactory';
-import UserFactory from '../../factories/UserFactory';
+import app from '../../../app';
+import { CategoryEntity } from '../../../contexts/links/infrastructure/persistence/entities/CategoryEntity';
+import { LinkEntity } from '../../../contexts/links/infrastructure/persistence/entities/LinkEntity';
+import { LinkRepositoryPG } from '../../../contexts/links/infrastructure/persistence/repositories/LinkRepositoryPG';
+import { UserEntity } from '../../../contexts/users/infrastructure/persistence/entities/UserEntity';
+import dataSource from '../../../data-source';
+import CategoryFactory from '../../../factories/CategoryFactory';
+import UserFactory from '../../../factories/UserFactory';
 
 
 describe('POST /links', () => {

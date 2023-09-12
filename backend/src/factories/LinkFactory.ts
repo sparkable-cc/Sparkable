@@ -19,7 +19,8 @@ export default class LinkFactory {
     date: new Date(),
     statement: 'Statement ...',
     suggestionCategory: 'Sports',
-    stage: 1
+    stage: 1,
+    updateDate: new Date(0),
   };
 
   public static async create(
