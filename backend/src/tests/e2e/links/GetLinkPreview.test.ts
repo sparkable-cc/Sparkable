@@ -31,22 +31,35 @@ describe('POST /link-preview', () => {
     await repository.clear();
   });
 
-  it('returns 401 when the user is not logged', async () => {
+  it('returns 401 when the user is not logged getting link preview', async () => {
     const res = await request(app).post('/link-preview-data').send({});
 
     expect(res.statusCode).toEqual(401);
   });
 
-  it('returns 400 when the body is empty', async () => {
+  it('returns 400 when the body is empty getting link preview', async () => {
     const res = await request(app)
     .post('/link-preview-data')
     .auth(auth.body.access_token, { type: 'bearer' })
     .send({});
 
     expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toEqual('Bad request');
   });
 
-  it('returns 200 when the url exists', async () => {
+  it('returns 400 when the url is without https', async () => {
+    const res = await request(app)
+    .post('/link-preview-data')
+    .auth(auth.body.access_token, { type: 'bearer' })
+    .send({
+      url: 'http://sparkable/'
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toEqual('Url without https is forbidden');
+  });
+
+  it('returns 200 getting link preview', async () => {
     const url = 'https://ogp.me/';
 
     const res = await request(app)

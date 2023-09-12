@@ -33,4 +33,10 @@ describe('Create User', () => {
     expect(await bcrypt.compare(password, user.getPassword)).toBe(true);
   });
 
+  test('user is created by default with the role user', async () => {
+    const user = new User('email', 'username', 'password');
+
+    expect(user.toDto().role).toEqual('user');
+  });
+
 });

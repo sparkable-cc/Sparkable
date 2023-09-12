@@ -54,7 +54,7 @@ describe('Increase stage on links and users action', () => {
     const userUuid = 'userUuid';
     const linkDto = {
       title: 'title',
-      url: 'url',
+      url: 'https://url',
       categories: [{id:1, name:'name', slug:'name'}],
       userUuid: userUuid,
       stage: stageInitial
@@ -96,7 +96,7 @@ describe('Increase stage on links and users action', () => {
     const userUuid = 'userUuid';
     const linkDto = {
       title: 'title',
-      url: 'url',
+      url: 'https://url',
       categories: [{id:1, name:'name', slug:'name'}],
       userUuid: userUuid,
       stage: stageInitial
@@ -177,7 +177,7 @@ describe('Increase stage on links and users action', () => {
 
     const linkDto = {
       title: 'title',
-      url: 'url',
+      url: 'https://url',
       categories: [{id:1, name:'name', slug:'name'}],
       userUuid: userUuid,
       stage: 1

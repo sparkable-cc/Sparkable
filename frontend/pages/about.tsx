@@ -2,11 +2,20 @@ import classNames from "classnames";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import { useState } from "react";
 import styles from "../styles/About.module.scss";
 
 const About: NextPage = () => {
   const openPDF = () => {
     window.open("/pdf/whitepaper-and-faq.pdf", "_blank");
+  };
+
+  const [ email, setEmail ] = useState("");
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Submitted email:", email);
+
+    setEmail("");
   };
 
   return (
@@ -243,7 +252,7 @@ const About: NextPage = () => {
                 </div>
               </div>
             </div>
-            <div className={styles.teamVacanciesWrapper}>
+            {/* <div className={styles.teamVacanciesWrapper}>
               <img src="svg/vacancies.svg" alt="img" />
               <div className={styles.teamVacanciesListWrapper}>
                 <h3 className={styles.teamVacanciesTitle}>You?</h3>
@@ -257,7 +266,7 @@ const About: NextPage = () => {
                   </li>
                 </ul>
               </div>
-            </div>
+            </div> */}
             <div className={styles.teamButtonWrapper}>
               <a
                 href="mailto:support@sparkable.cc"
@@ -266,25 +275,36 @@ const About: NextPage = () => {
                 Drop us a line
               </a>
             </div>
-            <div className={styles.teamButtonWrapper}>
+            {/* <div className={styles.teamButtonWrapper}>
               <Link
                 className={classNames(styles.blueButton, styles.submit)}
                 href="/career"
               >
                 See open job positions
               </Link>
-            </div>
+            </div> */}
           </div>
         </section>
         <section className={styles.newsletterWrapper} id="newsletter">
           <div className={styles.aboutContainer}>
-            <div className={styles.titleTag}>NEWSLETTER</div>
+            {/* <div className={styles.titleTag}>NEWSLETTER</div> */}
+            <div className={styles.iframeContainer}>
+              <iframe
+                className={styles.aboutIframe}
+                src="https://f38488d3.sibforms.com/serve/MUIEAAjiBi-Ewn5NOU9Nsek6QtFBT2Rp4oMoMQS8OJk2C_PTeMSttEtrYQDxi8V3hqHbv4uFAzSk1YLzY0bMhh3d7SF1YpOtWj_Yaj5_Fc1gMP9B0KykzSIcHmk4a3KxpWGbxOPILYS41fSvnG23Zb9zbtnrEcEqTbNC0021yNkY48mvLXpzdTTsRQEAKwW4BzVU33_InBuJgWUK"
+                frameBorder="0"
+                scrolling="auto"
+                allowFullScreen
+              />
+            </div>
             <h2 className={styles.aboutTitle}>Keep in touch.</h2>
-            <form action="" className={styles.newsletterForm}>
+            {/* <form action="" className={styles.newsletterForm}>
               <input
                 type="text"
                 className={styles.newsletterInput}
                 placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <div className={styles.newsletterNote}>
                 Once a month, no noise. You can unsubscribe at any time.
@@ -295,12 +315,18 @@ const About: NextPage = () => {
                   className={styles.inputRadio}
                   id="privacyAgree"
                 />
-                By submitting your email you agree to our{" "}
+                By submitting your email you agree to our{' '}
                 <Link href="legal/privacy-policy" className={styles.link}>
                   privacy policy
                 </Link>
               </label>
-            </form>
+              <button
+                className={classNames(styles.blueButton, styles.subscribe)}
+                onClick={handleSubmit}
+              >
+                Subscribe
+              </button>
+            </form> */}
           </div>
         </section>
         <section className={styles.participateWrapper}>

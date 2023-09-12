@@ -53,6 +53,7 @@ describe('POST /user', () => {
     expect(total).toEqual(1);
     expect(users[0].registrationDate).toBeInstanceOf(Date);
     expect(users[0].stage).toEqual(1);
+    expect(users[0].role).toEqual('user');
   });
 
   it('returns 403 when email exists', async () => {

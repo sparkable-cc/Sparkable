@@ -17,7 +17,7 @@ export const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            v0.1.3 (beta)
+            v0.1.4 (beta)
           </Link>
         </span>
       </div>

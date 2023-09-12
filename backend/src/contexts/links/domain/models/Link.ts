@@ -1,5 +1,6 @@
 import { MandatoryFieldEmptyException } from '../../../_shared/domain/exceptions/MandatoryFieldEmptyException';
 import { CategoryRestrictionException } from '../exceptions/CategoryRestrictionException';
+import { UrlWithoutHttpsRestrictionException } from '../exceptions/UrlWithoutHttpsRestrictionException';
 import { CategoryDto } from './CategoryDto';
 import { LinkDto } from './LinkDto';
 import { v4 as uuidv4 } from 'uuid';
@@ -41,6 +42,14 @@ export class Link {
 
     if (link.categories.length > 2) {
       throw new CategoryRestrictionException();
+    }
+
+    if (!link.url.startsWith('https://')) {
+      throw new UrlWithoutHttpsRestrictionException();
+    }
+
+    if (link.image && !link.image.startsWith('https://')) {
+      throw new UrlWithoutHttpsRestrictionException();
     }
 
     this.title = link.title;
