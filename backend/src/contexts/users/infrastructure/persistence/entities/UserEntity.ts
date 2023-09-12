@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm"
 import { UserDto } from "../../../domain/models/UserDto";
+import { UserRole } from "../../../domain/models/UserRole";
 
 @Entity('users')
 export class UserEntity implements UserDto {
@@ -23,4 +24,11 @@ export class UserEntity implements UserDto {
 
   @Column({ nullable: true })
   stage: number;
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.USER,
+  })
+  role: UserRole
 }

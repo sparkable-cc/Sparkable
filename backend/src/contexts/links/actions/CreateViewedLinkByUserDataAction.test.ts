@@ -73,7 +73,7 @@ describe('Create viewed link by user data action', () => {
 
     const linkDto = {
       title: 'title',
-      url: 'url',
+      url: 'https://url',
       categories: [{id:1, name:'name', slug:'name'}],
       userUuid: userUuid
     };
@@ -100,7 +100,7 @@ describe('Create viewed link by user data action', () => {
     const linkStage = 1;
     const linkDto = {
       title: 'title',
-      url: 'url',
+      url: 'https://url',
       categories: [{id:1, name:'name', slug:'name'}],
       userUuid: userUuid,
       stage: linkStage
@@ -128,7 +128,7 @@ describe('Create viewed link by user data action', () => {
 
     const linkDto = {
       title: 'title',
-      url: 'url',
+      url: 'https://url',
       categories: [{id:1, name:'name', slug:'name'}],
       userUuid: userUuid
     };
@@ -153,7 +153,7 @@ describe('Create viewed link by user data action', () => {
     const linkStage = 2;
     const linkDto = {
       title: 'title',
-      url: 'url',
+      url: 'https://url',
       categories: [{id:1, name:'name', slug:'name'}],
       userUuid: userUuid,
       stage: linkStage
