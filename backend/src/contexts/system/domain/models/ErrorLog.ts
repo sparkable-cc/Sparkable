@@ -7,7 +7,7 @@ export class ErrorLog {
   private userUuid: string;
 
   constructor(error: any) {
-    if (!error.message && !error.url) {
+    if (!error.message || !error.url) {
       throw new MandatoryFieldEmptyException();
     }
 

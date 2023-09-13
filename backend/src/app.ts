@@ -58,6 +58,8 @@ import { GetLinkPreviewAction } from './contexts/links/actions/GetLinkPreviewAct
 import { ScraperServiceOgs } from './contexts/links/infrastructure/services/ScraperServiceOgs';
 import { MailerServiceFake } from './contexts/users/infrastructure/services/MailerServiceFake';
 import { MailerService } from './contexts/users/domain/services/MailerService';
+import { CreateErrorLogAction } from './contexts/system/actions/CreateErrorLogAction';
+import { ErrorLogRepositoryPG } from './contexts/system/infrastructure/persistence/repositories/ErrorLogRepositoryPG';
 
 const app: Express = express();
 
@@ -621,6 +623,29 @@ app.delete('/bookmarks', checkJwt, async (req: Request, res: Response) => {
           return fiveHundredError(error, res);
       }
     });
+});
+
+app.post('/error-log', async (req: Request, res: Response) => {
+  const createErrorLogAction = new CreateErrorLogAction(
+    new ErrorLogRepositoryPG(dataSource)
+  );
+
+  createErrorLogAction
+    .execute(req.body)
+    .then(() => {
+      res.status(201);
+      res.send({ message: 'Error created!' });
+    })
+    .catch((error) => {
+      switch (error.constructor) {
+        case MandatoryFieldEmptyException:
+          fourHundrerErrorBadRequest(res);
+          break;
+        default:
+          return fiveHundredError(error, res);
+      }
+    });
+
 });
 
 function fourHundrerErrorBadRequest(res: express.Response<any, Record<string, any>>) {
