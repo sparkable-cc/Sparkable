@@ -58,6 +58,8 @@ import { GetLinkPreviewAction } from './contexts/links/actions/GetLinkPreviewAct
 import { ScraperServiceOgs } from './contexts/links/infrastructure/services/ScraperServiceOgs';
 import { MailerServiceFake } from './contexts/users/infrastructure/services/MailerServiceFake';
 import { MailerService } from './contexts/users/domain/services/MailerService';
+import { CreateErrorLogAction } from './contexts/system/actions/CreateErrorLogAction';
+import { ErrorLogRepositoryPG } from './contexts/system/infrastructure/persistence/repositories/ErrorLogRepositoryPG';
 
 const app: Express = express();
 
@@ -91,10 +93,10 @@ app.post('/user', async (req: Request, res: Response) => {
     .catch((error) => {
       switch (error.constructor) {
         case MandatoryFieldEmptyException:
-          fourHundrerErrorBadRequest(res);
+          fourHundredErrorBadRequest(res);
           break;
         case ShortPasswordException:
-          fourHundrerErrorPasswordShort(res);
+          fourHundredErrorPasswordShort(res);
           break;
         case UsernameExistsException:
         case EmailExistsException:
@@ -185,10 +187,10 @@ app.post('/reset-password', async (req: Request, res: Response) => {
     .catch((error) => {
       switch (error.constructor) {
         case MandatoryFieldEmptyException:
-          fourHundrerErrorBadRequest(res);
+          fourHundredErrorBadRequest(res);
           break;
         case ShortPasswordException:
-          fourHundrerErrorPasswordShort(res);
+          fourHundredErrorPasswordShort(res);
           break;
         case UserNotFoundException:
         case TokenNotFoundException:
@@ -575,10 +577,10 @@ app.post('/bookmarks', checkJwt, async (req: Request, res: Response) => {
     .catch((error) => {
       switch (error.constructor) {
         case MandatoryFieldEmptyException:
-          fourHundrerErrorBadRequest(res);
+          fourHundredErrorBadRequest(res);
           break;
         case UserNotFoundException:
-          fourHundrerErrorUserNotFound(res);
+          fourHundredErrorUserNotFound(res);
           break;
         case LinkNotFoundException:
           res.status(400);
@@ -611,7 +613,7 @@ app.delete('/bookmarks', checkJwt, async (req: Request, res: Response) => {
     .catch((error) => {
       switch (error.constructor) {
         case MandatoryFieldEmptyException:
-          fourHundrerErrorBadRequest(res);
+          fourHundredErrorBadRequest(res);
           break;
         case NotFoundException:
           res.status(404);
@@ -623,17 +625,40 @@ app.delete('/bookmarks', checkJwt, async (req: Request, res: Response) => {
     });
 });
 
-function fourHundrerErrorBadRequest(res: express.Response<any, Record<string, any>>) {
+app.post('/error-log', async (req: Request, res: Response) => {
+  const createErrorLogAction = new CreateErrorLogAction(
+    new ErrorLogRepositoryPG(dataSource)
+  );
+
+  createErrorLogAction
+    .execute(req.body)
+    .then(() => {
+      res.status(201);
+      res.send({ message: 'Error created!' });
+    })
+    .catch((error) => {
+      switch (error.constructor) {
+        case MandatoryFieldEmptyException:
+          fourHundredErrorBadRequest(res);
+          break;
+        default:
+          return fiveHundredError(error, res);
+      }
+    });
+
+});
+
+function fourHundredErrorBadRequest(res: express.Response<any, Record<string, any>>) {
   res.status(400);
   res.send({ message: 'Bad request' });
 }
 
-function fourHundrerErrorPasswordShort(res: express.Response<any, Record<string, any>>) {
+function fourHundredErrorPasswordShort(res: express.Response<any, Record<string, any>>) {
   res.status(400);
   res.send({ message: 'Password is too short!' });
 }
 
-function fourHundrerErrorUserNotFound(res: express.Response<any, Record<string, any>>) {
+function fourHundredErrorUserNotFound(res: express.Response<any, Record<string, any>>) {
   res.status(400);
   res.send({ message: 'User not found!' });
 }
