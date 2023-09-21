@@ -60,13 +60,29 @@ import { MailerServiceFake } from './contexts/users/infrastructure/services/Mail
 import { MailerService } from './contexts/users/domain/services/MailerService';
 import { CreateErrorLogAction } from './contexts/system/actions/CreateErrorLogAction';
 import { ErrorLogRepositoryPG } from './contexts/system/infrastructure/persistence/repositories/ErrorLogRepositoryPG';
+import * as Sentry from "@sentry/node";
+import { ProfilingIntegration } from "@sentry/profiling-node";
 
 const app: Express = express();
+
+dotenv.config();
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  integrations: [
+    new Sentry.Integrations.Http({ tracing: true }),
+    new Sentry.Integrations.Express({ app }),
+    new ProfilingIntegration(),
+  ],
+  tracesSampleRate: 1.0,
+  profilesSampleRate: 1.0,
+});
+app.use(Sentry.Handlers.requestHandler());
+app.use(Sentry.Handlers.tracingHandler());
 
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-dotenv.config();
 app.use(cors({ origin: process.env.CLIENT }));
 
 let mailerService: MailerService;
@@ -670,5 +686,11 @@ function fiveHundredError(error: any, res: express.Response<any, Record<string, 
   );
   return res.send(500);
 }
+
+app.use(Sentry.Handlers.errorHandler());
+app.use(function onError(err:any, req:any, res:any, next:any) {
+  res.statusCode = 500;
+  res.end(res.sentry + "\n");
+});
 
 export default app;
