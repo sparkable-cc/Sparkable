@@ -1,8 +1,8 @@
-import { UserDto } from "../contexts/users/domain/models/UserDto";
 import { UserEntity } from "../contexts/users/infrastructure/persistence/entities/UserEntity";
 import { v4 as uuidv4 } from 'uuid';
 import dataSource from "../data-source";
 import { User } from "../contexts/users/domain/models/User";
+import { UserRole } from "../contexts/users/domain/models/UserRole";
 
 export default class UserFactory {
 
@@ -12,7 +12,8 @@ export default class UserFactory {
     email: 'email',
     username: 'username',
     password: 'password',
-    stage: 1
+    stage: 1,
+    role: UserRole.USER
   };
 
   public static async create(

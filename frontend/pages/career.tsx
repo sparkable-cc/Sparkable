@@ -3,27 +3,13 @@ import styles from "../styles/career.module.scss";
 
 const Career: NextPage = () => {
   const jobOpenings = [
-    {
-      id: 1,
-      title: "Product Lead",
-      location: "Remote",
-      link: "https://tally.so/r/nPDoox",
-      jobAd: "Open job ad",
-    },
-    {
-      id: 2,
-      title: "Product Designer",
-      location: "Remote",
-      link: "https://tally.so/r/m6eoZB",
-      jobAd: "Open job ad",
-    },
-    {
-      id: 3,
-      title: "Frontend Developer",
-      location: "Remote",
-      link: "https://tally.so/r/mJd7zd",
-      jobAd: "Open job ad",
-    },
+    // {
+    //   id: 0,
+    //   title: '',
+    //   location: '',
+    //   link: '',
+    //   jobAd: '',
+    // },
   ];
 
   const handleClick = (link: string) => {

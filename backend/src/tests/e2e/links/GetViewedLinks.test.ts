@@ -1,12 +1,12 @@
 import request from 'supertest';
-import app from '../../app';
-import dataSource from '../../data-source';
-import { UserEntity } from '../../contexts/users/infrastructure/persistence/entities/UserEntity';
-import LinkFactory from '../../factories/LinkFactory';
-import UserFactory from '../../factories/UserFactory';
-import ViewedLinkByUserDataFactory from '../../factories/ViewedLinkByUserDataFactory';
-import { ViewedLinkByUserDataEntity } from '../../contexts/links/infrastructure/persistence/entities/ViewedLinkByUserDataEntity';
-import { LinkEntity } from '../../contexts/links/infrastructure/persistence/entities/LinkEntity';
+import app from '../../../app';
+import dataSource from '../../../data-source';
+import { UserEntity } from '../../../contexts/users/infrastructure/persistence/entities/UserEntity';
+import LinkFactory from '../../../factories/LinkFactory';
+import UserFactory from '../../../factories/UserFactory';
+import ViewedLinkByUserDataFactory from '../../../factories/ViewedLinkByUserDataFactory';
+import { ViewedLinkByUserDataEntity } from '../../../contexts/links/infrastructure/persistence/entities/ViewedLinkByUserDataEntity';
+import { LinkEntity } from '../../../contexts/links/infrastructure/persistence/entities/LinkEntity';
 
 describe('GET /viewed-links-in-current-cycle', () => {
   const endpoint = '/viewed-links-in-current-cycle';

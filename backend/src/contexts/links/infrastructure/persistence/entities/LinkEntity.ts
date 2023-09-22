@@ -5,6 +5,7 @@ import {
   JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { LinkDto } from '../../../domain/models/LinkDto';
 import { CategoryEntity } from './CategoryEntity';
@@ -53,4 +54,7 @@ export class LinkEntity implements LinkDto {
 
   @Column({nullable: true, default: 1})
   stage: number;
+
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updateDate: Date;
 }

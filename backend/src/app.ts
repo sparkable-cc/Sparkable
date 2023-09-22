@@ -1,7 +1,6 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Express, Request, Response } from 'express';
-import ogs from 'ts-open-graph-scraper';
 import { CreateLinkAction } from './contexts/links/actions/CreateLinkAction';
 import { CreateViewedLinkByUserDataAction } from './contexts/links/actions/CreateViewedLinkByUserDataAction';
 import { GetAllCategoriesAction } from './contexts/links/actions/GetAllCategoriesAction';
@@ -30,7 +29,6 @@ import { UserNotFoundException } from './contexts/_shared/domain/exceptions/User
 import { WrongPasswordException } from './contexts/users/domain/exceptions/WrongPasswordException';
 import { ResetTokenRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/ResetTokenRepositoryPG';
 import { UserRepositoryPG } from './contexts/users/infrastructure/persistence/repositories/UserRepositoryPG';
-import { AuthServiceAuth0 } from './contexts/users/infrastructure/services/AuthServiceAuth0';
 import { MailerServiceGD } from './contexts/users/infrastructure/services/MailerServiceGD';
 import { GetVotingStatusAction } from './contexts/voting/actions/GetVotingStatus';
 import { CreateVotingAction } from './contexts/voting/actions/CreateVotingAction';
@@ -53,20 +51,49 @@ import { CheckUserExistsService } from './contexts/_shared/domain/services/Check
 import { CheckLinkExistsService } from './contexts/_shared/domain/services/CheckLinkExistsService';
 import { RemoveBookmarkAction } from './contexts/bookmarks/actions/RemoveBookmarkAction';
 import { NotFoundException } from './contexts/_shared/domain/exceptions/NotFoundException';
+import { UpdateLinkAction } from './contexts/links/actions/UpdateLinkAction';
+import { UserCanNotEditException } from './contexts/links/domain/exceptions/UserCanNotEditException';
 import { UrlWithoutHttpsRestrictionException } from './contexts/links/domain/exceptions/UrlWithoutHttpsRestrictionException';
 import { GetLinkPreviewAction } from './contexts/links/actions/GetLinkPreviewAction';
 import { ScraperServiceOgs } from './contexts/links/infrastructure/services/ScraperServiceOgs';
+import { MailerServiceFake } from './contexts/users/infrastructure/services/MailerServiceFake';
+import { MailerService } from './contexts/users/domain/services/MailerService';
+import { CreateErrorLogAction } from './contexts/system/actions/CreateErrorLogAction';
+import { ErrorLogRepositoryPG } from './contexts/system/infrastructure/persistence/repositories/ErrorLogRepositoryPG';
+import * as Sentry from "@sentry/node";
+import { ProfilingIntegration } from "@sentry/profiling-node";
 
 const app: Express = express();
+
+dotenv.config();
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  integrations: [
+    new Sentry.Integrations.Http({ tracing: true }),
+    new Sentry.Integrations.Express({ app }),
+    new ProfilingIntegration(),
+  ],
+  tracesSampleRate: 1.0,
+  profilesSampleRate: 1.0,
+});
+app.use(Sentry.Handlers.requestHandler());
+app.use(Sentry.Handlers.tracingHandler());
 
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-dotenv.config();
 app.use(cors({ origin: process.env.CLIENT }));
 
+let mailerService: MailerService;
+if (process.env.NODE_ENV === 'test') {
+  mailerService = new MailerServiceFake();
+} else {
+  mailerService = new MailerServiceGD();
+}
+
 app.get('/', (req: Request, res: Response) => {
-  res.send('Butterfy API');
+  res.send('Sparkable API');
 });
 
 app.post('/user', async (req: Request, res: Response) => {
@@ -82,10 +109,10 @@ app.post('/user', async (req: Request, res: Response) => {
     .catch((error) => {
       switch (error.constructor) {
         case MandatoryFieldEmptyException:
-          fourHundrerErrorBadRequest(res);
+          fourHundredErrorBadRequest(res);
           break;
         case ShortPasswordException:
-          fourHundrerErrorPasswordShort(res);
+          fourHundredErrorPasswordShort(res);
           break;
         case UsernameExistsException:
         case EmailExistsException:
@@ -134,7 +161,7 @@ app.post('/recovery-password', async (req: Request, res: Response) => {
   const recoveryPasswordAction = new RecoveryPasswordAction(
     new UserRepositoryPG(dataSource),
     new ResetTokenRepositoryPG(dataSource),
-    new MailerServiceGD(),
+    mailerService,
   );
   recoveryPasswordAction
     .execute(req.body.email)
@@ -176,10 +203,10 @@ app.post('/reset-password', async (req: Request, res: Response) => {
     .catch((error) => {
       switch (error.constructor) {
         case MandatoryFieldEmptyException:
-          fourHundrerErrorBadRequest(res);
+          fourHundredErrorBadRequest(res);
           break;
         case ShortPasswordException:
-          fourHundrerErrorPasswordShort(res);
+          fourHundredErrorPasswordShort(res);
           break;
         case UserNotFoundException:
         case TokenNotFoundException:
@@ -270,11 +297,16 @@ app.post('/links', checkJwt, async (req: Request, res: Response) => {
     new LinkRepositoryPG(dataSource),
     new CategoryRepositoryPG(dataSource),
     new CheckUserExistsService(new UserRepositoryPG(dataSource)),
-    new MailerServiceGD()
+    mailerService
   );
 
+  let userUuid = '';
+  if ('userUuid' in req) {
+    userUuid = String(req.userUuid);
+  }
+
   createLinkAction
-    .execute(req.body)
+    .execute(userUuid, req.body)
     .then(() => {
       res.status(201);
       res.send({ message: 'Link created!' });
@@ -304,6 +336,43 @@ app.post('/links', checkJwt, async (req: Request, res: Response) => {
         case LinkExistsException:
           res.status(403);
           res.send({ message: 'Link already exists!' });
+          break;
+        default:
+          console.log(
+            'Failed to do something async with an unspecified error: ',
+            error,
+          );
+          return res.send(500);
+      }
+    });
+});
+
+app.put('/links', checkJwt, async (req: Request, res: Response) => {
+  const updateLinkAction = new UpdateLinkAction(
+    new LinkRepositoryPG(dataSource)
+  );
+
+  //Extract to Service
+  let userUuid = '';
+  if ('userUuid' in req) {
+    userUuid = String(req.userUuid);
+  }
+
+  updateLinkAction
+    .execute(userUuid, req.body)
+    .then(() => {
+      res.status(200);
+      res.send({ message: 'Link updated!' });
+    })
+    .catch((error) => {
+      switch (error.constructor) {
+        case MandatoryFieldEmptyException:
+          res.status(400);
+          res.send({ message: 'Bad request' });
+          break;
+        case UserCanNotEditException:
+          res.status(403);
+          res.send({ message: 'Forbidden' });
           break;
         default:
           console.log(
@@ -524,10 +593,10 @@ app.post('/bookmarks', checkJwt, async (req: Request, res: Response) => {
     .catch((error) => {
       switch (error.constructor) {
         case MandatoryFieldEmptyException:
-          fourHundrerErrorBadRequest(res);
+          fourHundredErrorBadRequest(res);
           break;
         case UserNotFoundException:
-          fourHundrerErrorUserNotFound(res);
+          fourHundredErrorUserNotFound(res);
           break;
         case LinkNotFoundException:
           res.status(400);
@@ -560,7 +629,7 @@ app.delete('/bookmarks', checkJwt, async (req: Request, res: Response) => {
     .catch((error) => {
       switch (error.constructor) {
         case MandatoryFieldEmptyException:
-          fourHundrerErrorBadRequest(res);
+          fourHundredErrorBadRequest(res);
           break;
         case NotFoundException:
           res.status(404);
@@ -572,17 +641,40 @@ app.delete('/bookmarks', checkJwt, async (req: Request, res: Response) => {
     });
 });
 
-function fourHundrerErrorBadRequest(res: express.Response<any, Record<string, any>>) {
+app.post('/error-log', async (req: Request, res: Response) => {
+  const createErrorLogAction = new CreateErrorLogAction(
+    new ErrorLogRepositoryPG(dataSource)
+  );
+
+  createErrorLogAction
+    .execute(req.body)
+    .then(() => {
+      res.status(201);
+      res.send({ message: 'Error created!' });
+    })
+    .catch((error) => {
+      switch (error.constructor) {
+        case MandatoryFieldEmptyException:
+          fourHundredErrorBadRequest(res);
+          break;
+        default:
+          return fiveHundredError(error, res);
+      }
+    });
+
+});
+
+function fourHundredErrorBadRequest(res: express.Response<any, Record<string, any>>) {
   res.status(400);
   res.send({ message: 'Bad request' });
 }
 
-function fourHundrerErrorPasswordShort(res: express.Response<any, Record<string, any>>) {
+function fourHundredErrorPasswordShort(res: express.Response<any, Record<string, any>>) {
   res.status(400);
   res.send({ message: 'Password is too short!' });
 }
 
-function fourHundrerErrorUserNotFound(res: express.Response<any, Record<string, any>>) {
+function fourHundredErrorUserNotFound(res: express.Response<any, Record<string, any>>) {
   res.status(400);
   res.send({ message: 'User not found!' });
 }
@@ -594,5 +686,11 @@ function fiveHundredError(error: any, res: express.Response<any, Record<string, 
   );
   return res.send(500);
 }
+
+app.use(Sentry.Handlers.errorHandler());
+app.use(function onError(err:any, req:any, res:any, next:any) {
+  res.statusCode = 500;
+  res.end(res.sentry + "\n");
+});
 
 export default app;
