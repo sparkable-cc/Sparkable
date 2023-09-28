@@ -1,16 +1,16 @@
 import { NextPage } from "next";
 import styles from "../styles/career.module.scss";
 
+type Job = {
+  id: number,
+  title: string,
+  location: string,
+  link: string,
+  jobAd: string
+};
+
 const Career: NextPage = () => {
-  const jobOpenings = [
-    // {
-    //   id: 0,
-    //   title: '',
-    //   location: '',
-    //   link: '',
-    //   jobAd: '',
-    // },
-  ];
+  const jobOpenings:Array<Job> = [];
 
   const handleClick = (link: string) => {
     window.open(link, "_blank");
