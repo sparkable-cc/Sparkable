@@ -2,6 +2,7 @@ import {Image as RNImage, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {ArrowOutward_Stroke2_Corner0_Rounded as ArrowOutwardIcon} from '#/components/icons/ArrowOutward'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
@@ -43,9 +44,11 @@ export function LoggedOutBanner() {
   const t = useTheme()
   const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
+  const headerOffset = useHeaderOffset()
 
   return (
-    <Layout.Center style={[a.px_md, {paddingTop: 8, paddingBottom: 4}]}>
+    <Layout.Center
+      style={[a.px_md, {paddingTop: headerOffset + 8, paddingBottom: 4}]}>
       <View
         style={[
           a.w_full,
