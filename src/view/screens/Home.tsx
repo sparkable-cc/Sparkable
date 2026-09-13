@@ -88,7 +88,6 @@ export function HomeScreen(props: Props) {
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
       <Layout.Screen testID="HomeScreen" noInsetTop={IS_LIQUID_GLASS}>
-        {!currentAccount && <LoggedOutBannerSlot />}
         <HomeHeaderModeProvider>
           <HomeScreenReady
             {...props}
@@ -101,7 +100,6 @@ export function HomeScreen(props: Props) {
   } else {
     return (
       <Layout.Screen>
-        {!currentAccount && <LoggedOutBannerSlot />}
         <Layout.Center style={styles.loading}>
           <ActivityIndicator size="large" />
         </Layout.Center>
@@ -219,29 +217,31 @@ function HomeScreenReady({
 
   const renderTabBar = useCallback(
     (props: RenderTabBarFnProps) => {
-      if (demoMode) {
-        return (
-          <HomeHeader
-            key="FEEDS_TAB_BAR"
-            {...props}
-            testID="homeScreenFeedTabs"
-            onPressSelected={onPressSelected}
-            // @ts-ignore
-            feeds={[{displayName: 'Following'}, {displayName: 'Discover'}]}
-          />
-        )
-      }
       return (
-        <HomeHeader
-          key="FEEDS_TAB_BAR"
-          {...props}
-          testID="homeScreenFeedTabs"
-          onPressSelected={onPressSelected}
-          feeds={pinnedFeedInfos}
-        />
+        <>
+          {demoMode ? (
+            <HomeHeader
+              key="FEEDS_TAB_BAR"
+              {...props}
+              testID="homeScreenFeedTabs"
+              onPressSelected={onPressSelected}
+              // @ts-ignore
+              feeds={[{displayName: 'Following'}, {displayName: 'Discover'}]}
+            />
+          ) : (
+            <HomeHeader
+              key="FEEDS_TAB_BAR"
+              {...props}
+              testID="homeScreenFeedTabs"
+              onPressSelected={onPressSelected}
+              feeds={pinnedFeedInfos}
+            />
+          )}
+          {!hasSession && <LoggedOutBannerSlot />}
+        </>
       )
     },
-    [onPressSelected, pinnedFeedInfos, demoMode],
+    [hasSession, onPressSelected, pinnedFeedInfos, demoMode],
   )
 
   const renderFollowingEmptyState = useCallback(() => {
