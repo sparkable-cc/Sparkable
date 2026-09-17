@@ -16,8 +16,8 @@ import {
   BLUESKY_PROXY_HEADER,
   BSKY_SERVICE,
   DISCOVER_SAVED_FEED,
-  GREENEARTH_SAVED_FEED,
   IS_PROD_SERVICE,
+  MYSKY_SAVED_FEED,
   PUBLIC_BSKY_SERVICE,
   TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
@@ -220,7 +220,7 @@ export async function createAgentAndCreateAccount(
       networkRetry(1, () => {
         return agent.overwriteSavedFeeds([
           {
-            ...GREENEARTH_SAVED_FEED,
+            ...MYSKY_SAVED_FEED,
             id: TID.nextStr(),
           },
           {

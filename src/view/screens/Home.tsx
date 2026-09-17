@@ -128,7 +128,8 @@ function HomeScreenReady({
   const maybeSelectedFeed: FeedDescriptor | undefined = allFeeds[selectedIndex]
   const requestNotificationsPermission = useRequestNotificationsPermission()
 
-  useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
+  const {hasSession} = useSession()
+  useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName, !hasSession)
   useOTAUpdates()
 
   useEffect(() => {
@@ -147,7 +148,6 @@ function HomeScreenReady({
     }
   }, [selectedIndex])
 
-  const {hasSession} = useSession()
   const headerMode = useHomeHeaderMode()
   const showHeader = useCallback(() => {
     'worklet'
