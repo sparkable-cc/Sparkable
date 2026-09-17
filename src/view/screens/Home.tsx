@@ -219,6 +219,7 @@ function HomeScreenReady({
     (props: RenderTabBarFnProps) => {
       return (
         <>
+          {!hasSession && <LoggedOutBannerSlot />}
           {demoMode ? (
             <HomeHeader
               key="FEEDS_TAB_BAR"
@@ -237,7 +238,6 @@ function HomeScreenReady({
               feeds={pinnedFeedInfos}
             />
           )}
-          {!hasSession && <LoggedOutBannerSlot />}
         </>
       )
     },
