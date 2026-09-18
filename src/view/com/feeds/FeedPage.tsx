@@ -37,7 +37,7 @@ import {useTheme} from '#/alf'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {useAnalytics} from '#/analytics'
-import {IS_NATIVE} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 const POLL_FREQ = 60e3 // 60sec
 
@@ -69,7 +69,8 @@ export function FeedPage({
   const queryClient = useQueryClient()
   const {openComposer} = useOpenComposer()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
-  const headerOffset = useHeaderOffset()
+  const defaultHeaderOffset = useHeaderOffset()
+  const headerOffset = IS_WEB && !hasSession ? 0 : defaultHeaderOffset
   const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useRef<ListMethods>(null)
   const [hasNew, setHasNew] = useState(false)
