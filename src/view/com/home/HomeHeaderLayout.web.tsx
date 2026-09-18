@@ -22,7 +22,7 @@ export function HomeHeaderLayout(props: {
 }) {
   const {gtMobile} = useBreakpoints()
   if (!gtMobile) {
-    return <HomeHeaderLayoutMobile {...props} />
+    return <HomeHeaderLayoutMobile {...props} loggedOutTabsInFlow />
   } else {
     return <HomeHeaderLayoutDesktopAndTablet {...props} />
   }
