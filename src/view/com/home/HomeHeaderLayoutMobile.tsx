@@ -25,9 +25,11 @@ import {IS_DEV, IS_LIQUID_GLASS} from '#/env'
 
 export function HomeHeaderLayoutMobile({
   children,
+  loggedOutTabsInFlow = false,
 }: {
   children: React.ReactNode
   tabBarAnchor: React.ReactElement | null | undefined
+  loggedOutTabsInFlow?: boolean
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -40,68 +42,77 @@ export function HomeHeaderLayoutMobile({
   const {navigate} = useNavigation<NavigationProp>()
   const logoVariant = useLogoVariant()
 
-  return (
-    <Animated.View
-      style={[
-        a.fixed,
-        a.z_10,
-        t.atoms.bg,
-        {
-          top: 0,
-          left: 0,
-          right: 0,
-        },
-        IS_LIQUID_GLASS && {paddingTop: insets.top},
-        headerMinimalShellTransform,
-      ]}
-      onLayout={e => {
-        headerHeight.set(e.nativeEvent.layout.height)
-      }}>
-      <Layout.Header.Outer noBottomBorder>
-        <Layout.Header.Slot>
-          <Layout.Header.MenuButton />
-        </Layout.Header.Slot>
+  const appHeader = (
+    <Layout.Header.Outer noBottomBorder>
+      <Layout.Header.Slot>
+        <Layout.Header.MenuButton />
+      </Layout.Header.Slot>
 
-        <View style={[a.flex_1, a.align_center]}>
-          <PressableScale
-            targetScale={0.9}
+      <View style={[a.flex_1, a.align_center]}>
+        <PressableScale
+          targetScale={0.9}
+          onPress={() => {
+            if (IS_DEV) {
+              navigate('Debug')
+            } else {
+              playHaptic('Light')
+              emitSoftReset()
+            }
+          }}>
+          <Logo width={logoVariant === 'japan' ? 34 : 30} />
+        </PressableScale>
+      </View>
+
+      <Layout.Header.Slot>
+        {hasSession && (
+          <Link
+            testID="viewHeaderHomeFeedPrefsBtn"
+            to={{screen: 'Feeds'}}
+            hitSlop={HITSLOP_10}
+            label={_(msg`View your feeds and explore more`)}
+            size="small"
+            variant="ghost"
+            color="secondary"
+            shape="square"
             onPress={() => {
-              if (IS_DEV) {
-                navigate('Debug')
-              } else {
-                playHaptic('Light')
-                emitSoftReset()
-              }
-            }}>
-            <Logo width={logoVariant === 'japan' ? 34 : 30} />
-          </PressableScale>
-        </View>
+              ax.metric('nav:click', {item: 'feeds', surface: 'topBar'})
+            }}
+            style={[
+              a.justify_center,
+              {marginRight: -Layout.BUTTON_VISUAL_ALIGNMENT_OFFSET},
+              a.bg_transparent,
+            ]}>
+            <ButtonIcon icon={FeedsIcon} size="lg" />
+          </Link>
+        )}
+      </Layout.Header.Slot>
+    </Layout.Header.Outer>
+  )
 
-        <Layout.Header.Slot>
-          {hasSession && (
-            <Link
-              testID="viewHeaderHomeFeedPrefsBtn"
-              to={{screen: 'Feeds'}}
-              hitSlop={HITSLOP_10}
-              label={_(msg`View your feeds and explore more`)}
-              size="small"
-              variant="ghost"
-              color="secondary"
-              shape="square"
-              onPress={() => {
-                ax.metric('nav:click', {item: 'feeds', surface: 'topBar'})
-              }}
-              style={[
-                a.justify_center,
-                {marginRight: -Layout.BUTTON_VISUAL_ALIGNMENT_OFFSET},
-                a.bg_transparent,
-              ]}>
-              <ButtonIcon icon={FeedsIcon} size="lg" />
-            </Link>
-          )}
-        </Layout.Header.Slot>
-      </Layout.Header.Outer>
-      {children}
-    </Animated.View>
+  return (
+    <>
+      <Animated.View
+        style={[
+          a.fixed,
+          a.z_10,
+          t.atoms.bg,
+          {
+            top: 0,
+            left: 0,
+            right: 0,
+          },
+          IS_LIQUID_GLASS && {paddingTop: insets.top},
+          headerMinimalShellTransform,
+        ]}
+        onLayout={e => {
+          headerHeight.set(e.nativeEvent.layout.height)
+        }}>
+        {appHeader}
+        {(hasSession || !loggedOutTabsInFlow) && children}
+      </Animated.View>
+      {!hasSession && loggedOutTabsInFlow && (
+        <Layout.Center style={[t.atoms.bg]}>{children}</Layout.Center>
+      )}
+    </>
   )
 }

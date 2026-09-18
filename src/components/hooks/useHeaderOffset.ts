@@ -4,7 +4,9 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useBreakpoints} from '#/alf'
 import {IS_LIQUID_GLASS} from '#/env'
 
-export function useHeaderOffset() {
+export function useHeaderOffset({
+  loggedOutTabsInFlow = false,
+}: {loggedOutTabsInFlow?: boolean} = {}) {
   const {gtMobile} = useBreakpoints()
   const {fontScale} = useWindowDimensions()
   const insets = useSafeAreaInsets()
@@ -12,6 +14,9 @@ export function useHeaderOffset() {
     return 0
   }
   const navBarHeight = 52 + (IS_LIQUID_GLASS ? insets.top : 0)
+  if (loggedOutTabsInFlow) {
+    return navBarHeight
+  }
   const tabBarPad = 10 + 10 + 3 // padding + border
   const normalLineHeight = 20 // matches tab bar
   const tabBarText = normalLineHeight * fontScale

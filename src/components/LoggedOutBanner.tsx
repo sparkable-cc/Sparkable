@@ -44,7 +44,7 @@ export function LoggedOutBanner() {
   const t = useTheme()
   const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
-  const headerOffset = useHeaderOffset()
+  const headerOffset = useHeaderOffset({loggedOutTabsInFlow: true})
 
   return (
     <Layout.Center
