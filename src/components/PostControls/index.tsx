@@ -38,6 +38,11 @@ import {
 import {PostMenuButton} from './PostMenu'
 import {RepostButton} from './RepostButton'
 import {ShareMenuButton} from './ShareMenu'
+import {
+  type SparkReaction,
+  SparkReactionIcon,
+  SparkReactionPicker,
+} from './SparkReactionPicker'
 
 let PostControls = ({
   big,
@@ -102,6 +107,7 @@ let PostControls = ({
   const formatPostStatCount = useFormatPostStatCount()
 
   const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] = useState(false)
+  const [sparkReaction, setSparkReaction] = useState<SparkReaction>()
 
   const onPressToggleLike = async () => {
     if (isBlocked) {
@@ -114,6 +120,7 @@ let PostControls = ({
     try {
       setHasLikeIconBeenToggled(true)
       if (!post.viewer?.like) {
+        setSparkReaction(undefined)
         sendInteraction({
           item: post.uri,
           event: 'app.bsky.feed.defs#interactionLike',
@@ -123,6 +130,7 @@ let PostControls = ({
         captureAction(ProgressGuideAction.Like)
         await queueLike()
       } else {
+        setSparkReaction(undefined)
         await queueUnlike()
       }
     } catch (err) {
@@ -130,6 +138,14 @@ let PostControls = ({
       if (e?.name !== 'AbortError') {
         throw e
       }
+    }
+  }
+
+  const onSelectSparkReaction = async (reaction: SparkReaction) => {
+    setSparkReaction(reaction)
+    if (!post.viewer?.like) {
+      await onPressToggleLike()
+      setSparkReaction(reaction)
     }
   }
 
@@ -215,47 +231,56 @@ let PostControls = ({
       ]}>
       <View style={[a.flex_row, a.flex_1, {maxWidth: 320}]}>
         <View style={[a.flex_1, a.align_start, {marginLeft: big ? -2 : -6}]}>
-          <PostControlButton
-            testID="likeBtn"
-            big={big}
-            active={Boolean(post.viewer?.like)}
-            activeColor={t.palette.pink}
-            onPress={() => requireAuth(() => onPressToggleLike())}
-            label={
-              post.viewer?.like
-                ? l({
-                    message: `Unspark (${plural(post.likeCount || 0, {
-                      one: '# spark',
-                      other: '# sparks',
-                    })})`,
-                    comment:
-                      'Accessibility label for the spark button when the post has been sparked, verb followed by number of sparks and noun',
-                  })
-                : l({
-                    message: `Spark (${plural(post.likeCount || 0, {
-                      one: '# spark',
-                      other: '# sparks',
-                    })})`,
-                    comment:
-                      'Accessibility label for the spark button when the post has not been sparked, verb form followed by number of sparks and noun form',
-                  })
+          <SparkReactionPicker
+            onSelect={reaction =>
+              requireAuth(() => onSelectSparkReaction(reaction))
             }>
-            <AnimatedLikeIcon
-              isLiked={Boolean(post.viewer?.like)}
+            <PostControlButton
+              testID="likeBtn"
               big={big}
-              hasBeenToggled={hasLikeIconBeenToggled}
-            />
-            <CountWheel
-              count={post.likeCount ?? 0}
-              isToggled={Boolean(post.viewer?.like)}
-              hasBeenToggled={hasLikeIconBeenToggled}
-              renderCount={({count}) => (
-                <PostControlButtonText testID="likeCount">
-                  {formatPostStatCount(count)}
-                </PostControlButtonText>
+              active={Boolean(post.viewer?.like)}
+              activeColor={t.palette.pink}
+              onPress={() => requireAuth(() => onPressToggleLike())}
+              label={
+                post.viewer?.like
+                  ? l({
+                      message: `Unspark (${plural(post.likeCount || 0, {
+                        one: '# spark',
+                        other: '# sparks',
+                      })})`,
+                      comment:
+                        'Accessibility label for the spark button when the post has been sparked, verb followed by number of sparks and noun',
+                    })
+                  : l({
+                      message: `Spark (${plural(post.likeCount || 0, {
+                        one: '# spark',
+                        other: '# sparks',
+                      })})`,
+                      comment:
+                        'Accessibility label for the spark button when the post has not been sparked, verb form followed by number of sparks and noun form',
+                    })
+              }>
+              {sparkReaction && post.viewer?.like ? (
+                <SparkReactionIcon reaction={sparkReaction} />
+              ) : (
+                <AnimatedLikeIcon
+                  isLiked={Boolean(post.viewer?.like)}
+                  big={big}
+                  hasBeenToggled={hasLikeIconBeenToggled}
+                />
               )}
-            />
-          </PostControlButton>
+              <CountWheel
+                count={post.likeCount ?? 0}
+                isToggled={Boolean(post.viewer?.like)}
+                hasBeenToggled={hasLikeIconBeenToggled}
+                renderCount={({count}) => (
+                  <PostControlButtonText testID="likeCount">
+                    {formatPostStatCount(count)}
+                  </PostControlButtonText>
+                )}
+              />
+            </PostControlButton>
+          </SparkReactionPicker>
         </View>
         <View
           style={[
