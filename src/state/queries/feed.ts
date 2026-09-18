@@ -19,7 +19,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {GREENEARTH_FEED_URI, GREENEARTH_SAVED_FEED} from '#/lib/constants'
+import {MYSKY_FEED_URI, MYSKY_SAVED_FEED} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {GCTIME, STALE} from '#/state/queries'
@@ -122,9 +122,12 @@ export function hydrateFeedGenerator(
       params: route[1],
     },
     avatar: view.avatar,
-    displayName: view.displayName
-      ? sanitizeDisplayName(view.displayName)
-      : t`Feed by ${sanitizeHandle(view.creator.handle, '@')}`,
+    displayName:
+      view.uri === MYSKY_FEED_URI
+        ? 'MySky'
+        : view.displayName
+          ? sanitizeDisplayName(view.displayName)
+          : t`Feed by ${sanitizeHandle(view.creator.handle, '@')}`,
     description,
     creatorDid: view.creator.did,
     creatorHandle: view.creator.handle,
@@ -402,9 +405,9 @@ export type SavedFeedSourceInfo = FeedSourceInfo & {
 
 const PWI_DEFAULT_FEED_STUB: SavedFeedSourceInfo = {
   type: 'feed',
-  displayName: 'GreenEarth',
-  uri: GREENEARTH_FEED_URI,
-  feedDescriptor: `feedgen|${GREENEARTH_FEED_URI}`,
+  displayName: 'MySky',
+  uri: MYSKY_FEED_URI,
+  feedDescriptor: `feedgen|${MYSKY_FEED_URI}`,
   route: {
     href: '/',
     name: 'Home',
@@ -420,7 +423,7 @@ const PWI_DEFAULT_FEED_STUB: SavedFeedSourceInfo = {
   // ---
   savedFeed: {
     id: 'pwi-default',
-    ...GREENEARTH_SAVED_FEED,
+    ...MYSKY_SAVED_FEED,
   },
   contentMode: undefined,
 }
@@ -446,7 +449,20 @@ export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
   const agent = useAgent()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
-  const pinnedItems = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
+  const savedPinnedItems =
+    preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
+  const savedMySkyFeed = savedPinnedItems.find(
+    feed => feed.value === MYSKY_FEED_URI,
+  )
+  const pinnedItems = hasSession
+    ? [
+        savedMySkyFeed ?? {
+          id: 'mysky-default',
+          ...MYSKY_SAVED_FEED,
+        },
+        ...savedPinnedItems.filter(feed => feed.value !== MYSKY_FEED_URI),
+      ]
+    : savedPinnedItems
 
   return useQuery({
     queryKey: createPinnedFeedInfosQueryKey(

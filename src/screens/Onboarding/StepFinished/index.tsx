@@ -17,7 +17,7 @@ import {uploadBlob} from '#/lib/api'
 import {
   DEFAULT_FOLLOW_DIDS,
   DISCOVER_SAVED_FEED,
-  GREENEARTH_SAVED_FEED,
+  MYSKY_SAVED_FEED,
   TIMELINE_SAVED_FEED,
   VIDEO_SAVED_FEED,
 } from '#/lib/constants'
@@ -115,7 +115,7 @@ export function StepFinished() {
           // Default feeds that every user should have pinned when landing in the app
           const feedsToSave: AppBskyActorDefs.SavedFeed[] = [
             {
-              ...GREENEARTH_SAVED_FEED,
+              ...MYSKY_SAVED_FEED,
               id: TID.nextStr(),
             },
             {
