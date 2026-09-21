@@ -353,6 +353,57 @@ export type Events = {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
     feedDescriptor?: string
   }
+  'spark:picker:opened': {
+    surface: 'feed' | 'thread' | 'profile' | 'video-feed'
+  }
+  'spark:reaction:selected': {
+    reaction:
+      | 'insight'
+      | 'compassion'
+      | 'joy'
+      | 'inspiration'
+      | 'hope'
+      | 'respect'
+    surface: 'feed' | 'thread' | 'profile' | 'video-feed'
+  }
+  'spark:reaction:changed': {
+    reaction:
+      | 'insight'
+      | 'compassion'
+      | 'joy'
+      | 'inspiration'
+      | 'hope'
+      | 'respect'
+    previousReaction:
+      | 'insight'
+      | 'compassion'
+      | 'joy'
+      | 'inspiration'
+      | 'hope'
+      | 'respect'
+    surface: 'feed' | 'thread' | 'profile' | 'video-feed'
+  }
+  'spark:reaction:removed': {
+    reaction:
+      | 'insight'
+      | 'compassion'
+      | 'joy'
+      | 'inspiration'
+      | 'hope'
+      | 'respect'
+    surface: 'feed' | 'thread' | 'profile' | 'video-feed'
+  }
+  'spark:reaction:failed': {
+    reaction:
+      | 'insight'
+      | 'compassion'
+      | 'joy'
+      | 'inspiration'
+      | 'hope'
+      | 'respect'
+    action: 'select' | 'change' | 'remove'
+    surface: 'feed' | 'thread' | 'profile' | 'video-feed'
+  }
   'post:repost': {
     uri: string
     authorDid: string

@@ -39,9 +39,11 @@ const REACTIONS: {
 
 export function SparkReactionPicker({
   children,
+  onOpen,
   onSelect,
 }: {
   children: React.ReactNode
+  onOpen?: () => void
   onSelect: (reaction: SparkReaction) => void
 }) {
   const t = useTheme()
@@ -51,7 +53,10 @@ export function SparkReactionPicker({
     <View
       style={{position: 'relative'}}
       // @ts-ignore web-only hover interaction
-      onMouseEnter={() => setVisible(true)}
+      onMouseEnter={() => {
+        if (!visible) onOpen?.()
+        setVisible(true)
+      }}
       // @ts-ignore web-only hover interaction
       onMouseLeave={() => setVisible(false)}>
       {visible && (
@@ -89,6 +94,7 @@ export function SparkReactionPicker({
                 key={reaction.id}
                 accessibilityRole="button"
                 accessibilityLabel={`React with ${reaction.label}`}
+                accessibilityHint="Selects this reaction for the post"
                 onPress={evt => {
                   evt.stopPropagation()
                   onSelect(reaction.id)
