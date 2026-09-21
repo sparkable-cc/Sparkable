@@ -108,6 +108,14 @@ let PostControls = ({
 
   const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] = useState(false)
   const [sparkReaction, setSparkReaction] = useState<SparkReaction>()
+  const sparkSurface =
+    logContext === 'FeedItem'
+      ? 'feed'
+      : logContext === 'PostThreadItem'
+        ? 'thread'
+        : logContext === 'ImmersiveVideo'
+          ? 'video-feed'
+          : 'profile'
 
   const onPressToggleLike = async () => {
     if (isBlocked) {
@@ -130,11 +138,25 @@ let PostControls = ({
         captureAction(ProgressGuideAction.Like)
         await queueLike()
       } else {
+        const removedReaction = sparkReaction
         setSparkReaction(undefined)
         await queueUnlike()
+        if (removedReaction) {
+          ax.metric('spark:reaction:removed', {
+            reaction: removedReaction,
+            surface: sparkSurface,
+          })
+        }
       }
     } catch (err) {
       const e = err as Error
+      if (sparkReaction && post.viewer?.like) {
+        ax.metric('spark:reaction:failed', {
+          reaction: sparkReaction,
+          action: 'remove',
+          surface: sparkSurface,
+        })
+      }
       if (e?.name !== 'AbortError') {
         throw e
       }
@@ -142,10 +164,32 @@ let PostControls = ({
   }
 
   const onSelectSparkReaction = async (reaction: SparkReaction) => {
+    const previousReaction = sparkReaction
     setSparkReaction(reaction)
-    if (!post.viewer?.like) {
-      await onPressToggleLike()
-      setSparkReaction(reaction)
+    try {
+      if (!post.viewer?.like) {
+        await onPressToggleLike()
+        setSparkReaction(reaction)
+      }
+      if (previousReaction && previousReaction !== reaction) {
+        ax.metric('spark:reaction:changed', {
+          reaction,
+          previousReaction,
+          surface: sparkSurface,
+        })
+      } else {
+        ax.metric('spark:reaction:selected', {
+          reaction,
+          surface: sparkSurface,
+        })
+      }
+    } catch (err) {
+      ax.metric('spark:reaction:failed', {
+        reaction,
+        action: previousReaction ? 'change' : 'select',
+        surface: sparkSurface,
+      })
+      throw err
     }
   }
 
@@ -232,6 +276,9 @@ let PostControls = ({
       <View style={[a.flex_row, a.flex_1, {maxWidth: 320}]}>
         <View style={[a.flex_1, a.align_start, {marginLeft: big ? -2 : -6}]}>
           <SparkReactionPicker
+            onOpen={() =>
+              ax.metric('spark:picker:opened', {surface: sparkSurface})
+            }
             onSelect={reaction =>
               requireAuth(() => onSelectSparkReaction(reaction))
             }>

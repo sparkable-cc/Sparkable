@@ -1,6 +1,7 @@
 import {onAppStateChange} from '#/lib/appState'
 import {isNetworkError} from '#/lib/strings/errors'
 import {Logger} from '#/logger'
+import {trackUmamiEvent} from '#/analytics/metrics/umami'
 import * as env from '#/env'
 
 type Event<M extends Record<string, any>> = {
@@ -52,6 +53,8 @@ export class MetricsClient<M extends Record<string, any>> {
       metadata,
     }
     this.queue.push(e)
+
+    trackUmamiEvent(event as string, payload)
 
     logger.debug(`event: ${e.event as string}`, e)
 
