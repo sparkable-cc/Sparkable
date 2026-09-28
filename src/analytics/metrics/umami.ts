@@ -97,6 +97,7 @@ const EVENTS_WITHOUT_PROPERTIES = [
 const SAFE_PROPERTIES: Record<string, readonly string[]> = {
   'account:loggedIn': ['logContext', 'withPassword'],
   'account:loggedOut': ['logContext', 'scope'],
+  'account:joinedSparkable': ['source'],
   'signin:hostingProviderPressed': ['hostingProviderDidChange'],
   'signin:success': [
     'failedAttemptsCount',
@@ -187,5 +188,27 @@ export function trackUmamiEvent(event: string, payload: unknown) {
     tracker.track(event, Object.keys(data).length ? data : undefined)
   } catch {
     // Product analytics must never interrupt a user action.
+  }
+}
+
+export async function registerSparkableAccount(
+  did: string,
+  source: 'create' | 'login' | 'oauth' | 'resume',
+) {
+  if (!env.IS_WEB) return
+
+  try {
+    const response = await fetch(`${env.SPARKABLE_ANALYTICS_HOST}/join`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({did}),
+    })
+    if (!response.ok) return
+    const result = (await response.json()) as {isNew?: unknown}
+    if (result.isNew === true) {
+      trackUmamiEvent('account:joinedSparkable', {source})
+    }
+  } catch {
+    // Account registration analytics must never interrupt authentication.
   }
 }

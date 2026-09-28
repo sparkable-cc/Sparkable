@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Image, Pressable, View} from 'react-native'
 
 import {atoms as a, useTheme, web} from '#/alf'
@@ -39,19 +39,31 @@ const REACTIONS: {
 
 export function SparkReactionPicker({
   children,
+  dismissKey,
   onOpen,
   onSelect,
+  onVisibilityChange,
 }: {
   children: React.ReactNode
+  dismissKey?: number
   onOpen?: () => void
   onSelect: (reaction: SparkReaction) => void
+  onVisibilityChange?: (visible: boolean) => void
 }) {
   const t = useTheme()
   const [visible, setVisible] = useState(false)
 
+  useEffect(() => {
+    setVisible(false)
+  }, [dismissKey])
+
+  useEffect(() => {
+    onVisibilityChange?.(visible)
+  }, [onVisibilityChange, visible])
+
   return (
     <View
-      style={{position: 'relative'}}
+      style={{position: 'relative', zIndex: visible ? 1001 : 0}}
       // @ts-ignore web-only hover interaction
       onMouseEnter={() => {
         if (!visible) onOpen?.()
@@ -68,7 +80,8 @@ export function SparkReactionPicker({
               position: 'absolute',
               bottom: '100%',
               left: -12,
-              zIndex: 100,
+              zIndex: 1002,
+              elevation: 16,
               paddingBottom: 8,
             },
           ]}>
