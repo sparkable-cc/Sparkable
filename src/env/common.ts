@@ -91,6 +91,13 @@ export const METRICS_API_HOST: string =
   process.env.EXPO_PUBLIC_METRICS_API_HOST || 'https://events.bsky.app'
 
 /**
+ * Sparkable-owned service used for privacy-preserving account registration.
+ */
+export const SPARKABLE_ANALYTICS_HOST: string =
+  process.env.EXPO_PUBLIC_SPARKABLE_ANALYTICS_HOST ||
+  'https://analytics-api-production-8506.up.railway.app'
+
+/**
  * Growthbook API host
  */
 export const GROWTHBOOK_API_HOST: string =

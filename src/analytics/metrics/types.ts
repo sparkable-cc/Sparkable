@@ -51,6 +51,9 @@ export type Events = {
       | 'AgeAssuranceNoAccessScreen'
     scope: 'current' | 'every'
   }
+  'account:joinedSparkable': {
+    source: 'create' | 'login' | 'oauth' | 'resume'
+  }
   'notifications:openApp': {
     reason: NotificationReason
     causedBoot: boolean

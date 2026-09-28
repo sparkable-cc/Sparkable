@@ -14,6 +14,7 @@ import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {AnalyticsContext, useAnalyticsBase, utils} from '#/analytics'
+import {registerSparkableAccount} from '#/analytics/metrics/umami'
 import {IS_WEB} from '#/env'
 import {emitSessionDropped} from '../events'
 import {
@@ -150,6 +151,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       ax.metric('account:create:success', metrics, {
         session: utils.accountToSessionMetadata(account),
       })
+      void registerSparkableAccount(account.did, 'create')
       addSessionDebugLog({type: 'method:end', method: 'createAccount', account})
     },
     [ax, store, onAgentSessionChange, cancelPendingTask],
@@ -177,6 +179,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         {logContext, withPassword: true},
         {session: utils.accountToSessionMetadata(account)},
       )
+      void registerSparkableAccount(account.did, 'login')
       addSessionDebugLog({type: 'method:end', method: 'login', account})
     },
     [ax, store, onAgentSessionChange, cancelPendingTask],
@@ -201,6 +204,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         {logContext, withPassword: false},
         {session: utils.accountToSessionMetadata(account)},
       )
+      void registerSparkableAccount(account.did, 'oauth')
       addSessionDebugLog({
         type: 'method:end',
         method: 'loginWithOAuth',
@@ -297,6 +301,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         newAgent: agent,
         newAccount: account,
       })
+      void registerSparkableAccount(account.did, 'resume')
       addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
       if (isSwitchingAccounts) {
         // reset onboarding flow on switch account

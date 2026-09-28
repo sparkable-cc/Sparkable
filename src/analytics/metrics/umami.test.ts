@@ -1,12 +1,18 @@
-import {trackUmamiEvent} from './umami'
+import {registerSparkableAccount, trackUmamiEvent} from './umami'
 
-jest.mock('#/env', () => ({IS_WEB: true}))
+jest.mock('#/env', () => ({
+  IS_WEB: true,
+  SPARKABLE_ANALYTICS_HOST: 'https://analytics.sparkable.test',
+}))
 
 describe('Umami metrics bridge', () => {
   const track = jest.fn()
+  const fetchMock = jest.fn()
 
   beforeEach(() => {
     track.mockReset()
+    fetchMock.mockReset()
+    global.fetch = fetchMock
     ;(globalThis as typeof globalThis & {umami?: {track: jest.Mock}}).umami = {
       track,
     }
@@ -48,5 +54,36 @@ describe('Umami metrics bridge', () => {
     })
 
     expect(() => trackUmamiEvent('post:like', {})).not.toThrow()
+  })
+
+  it('tracks a join only when the service confirms the account is new', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({isNew: true}),
+    })
+
+    await registerSparkableAccount('did:plc:test-account', 'oauth')
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://analytics.sparkable.test/join',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({did: 'did:plc:test-account'}),
+      }),
+    )
+    expect(track).toHaveBeenCalledWith('account:joinedSparkable', {
+      source: 'oauth',
+    })
+  })
+
+  it('does not track returning accounts as new joins', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({isNew: false}),
+    })
+
+    await registerSparkableAccount('did:plc:returning-account', 'resume')
+
+    expect(track).not.toHaveBeenCalled()
   })
 })

@@ -24,7 +24,7 @@ import {unstableCacheProfileView} from '#/state/queries/profile'
 import {Link} from '#/view/com/util/Link'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, select, useTheme} from '#/alf'
+import {atoms as a, select, useTheme, web} from '#/alf'
 import {
   GalleryBleed,
   maybeApplyGalleryOffsetStyles,
@@ -310,5 +310,6 @@ const styles = StyleSheet.create({
   },
   contentHiderChild: {
     marginTop: 6,
+    ...web({minHeight: 86}),
   },
 })

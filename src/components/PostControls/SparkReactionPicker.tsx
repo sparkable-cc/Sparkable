@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Image, Pressable, View} from 'react-native'
 
 import {atoms as a, useTheme, web} from '#/alf'
@@ -39,15 +39,21 @@ const REACTIONS: {
 
 export function SparkReactionPicker({
   children,
+  dismissKey,
   onOpen,
   onSelect,
 }: {
   children: React.ReactNode
+  dismissKey?: number
   onOpen?: () => void
   onSelect: (reaction: SparkReaction) => void
 }) {
   const t = useTheme()
   const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    setVisible(false)
+  }, [dismissKey])
 
   return (
     <View
