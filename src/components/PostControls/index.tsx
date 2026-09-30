@@ -109,7 +109,6 @@ let PostControls = ({
   const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] = useState(false)
   const [sparkReaction, setSparkReaction] = useState<SparkReaction>()
   const [sparkPickerDismissKey, setSparkPickerDismissKey] = useState(0)
-  const [isSparkPickerVisible, setIsSparkPickerVisible] = useState(false)
   const sparkSurface =
     logContext === 'FeedItem'
       ? 'feed'
@@ -274,7 +273,6 @@ let PostControls = ({
         a.align_center,
         !big && a.pt_2xs,
         a.gap_md,
-        isSparkPickerVisible && {zIndex: 1000},
         style,
       ]}>
       <View style={[a.flex_row, a.flex_1, {maxWidth: 320}]}>
@@ -286,8 +284,7 @@ let PostControls = ({
             }
             onSelect={reaction =>
               requireAuth(() => onSelectSparkReaction(reaction))
-            }
-            onVisibilityChange={setIsSparkPickerVisible}>
+            }>
             <PostControlButton
               testID="likeBtn"
               big={big}

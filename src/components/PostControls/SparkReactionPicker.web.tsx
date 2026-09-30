@@ -1,0 +1,242 @@
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {Image, Pressable, useWindowDimensions, View} from 'react-native'
+import {
+  autoUpdate,
+  flip,
+  offset,
+  shift,
+  useFloating,
+} from '@floating-ui/react-dom'
+
+import {atoms as a, useTheme, web} from '#/alf'
+import {Portal} from '#/components/Portal'
+import {Text} from '#/components/Typography'
+// @ts-ignore bundled image asset
+import compassionIcon from '../../../assets/images/reactions/compassion.png'
+// @ts-ignore bundled image asset
+import hopeIcon from '../../../assets/images/reactions/hope.png'
+// @ts-ignore bundled image asset
+import insightIcon from '../../../assets/images/reactions/insight.png'
+// @ts-ignore bundled image asset
+import inspirationIcon from '../../../assets/images/reactions/inspiration.png'
+// @ts-ignore bundled image asset
+import joyIcon from '../../../assets/images/reactions/joy.png'
+// @ts-ignore bundled image asset
+import respectIcon from '../../../assets/images/reactions/respect.png'
+
+export type SparkReaction =
+  | 'insight'
+  | 'compassion'
+  | 'joy'
+  | 'inspiration'
+  | 'hope'
+  | 'respect'
+
+const REACTIONS: {
+  id: SparkReaction
+  label: string
+  icon: number
+}[] = [
+  {id: 'insight', label: 'Insight', icon: insightIcon},
+  {id: 'compassion', label: 'Compassion', icon: compassionIcon},
+  {id: 'joy', label: 'Joy', icon: joyIcon},
+  {id: 'inspiration', label: 'Inspiration', icon: inspirationIcon},
+  {id: 'hope', label: 'Hope', icon: hopeIcon},
+  {id: 'respect', label: 'Respect', icon: respectIcon},
+]
+
+const VIEWPORT_GUTTER = 8
+const DESKTOP_MENU_WIDTH = 408
+
+export function SparkReactionPicker({
+  children,
+  dismissKey,
+  onOpen,
+  onSelect,
+}: {
+  children: React.ReactNode
+  dismissKey?: number
+  onOpen?: () => void
+  onSelect: (reaction: SparkReaction) => void
+}) {
+  const t = useTheme()
+  const {width: viewportWidth} = useWindowDimensions()
+  const [visible, setVisible] = useState(false)
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const {refs, floatingStyles, update} = useFloating({
+    placement: 'top-start',
+    strategy: 'fixed',
+    middleware: [
+      offset(8),
+      flip({padding: VIEWPORT_GUTTER}),
+      shift({padding: VIEWPORT_GUTTER}),
+    ],
+    whileElementsMounted: autoUpdate,
+  })
+
+  const menuWidth = Math.min(
+    DESKTOP_MENU_WIDTH,
+    Math.max(0, viewportWidth - VIEWPORT_GUTTER * 2),
+  )
+  const compact = menuWidth < DESKTOP_MENU_WIDTH
+  const horizontalChrome = compact ? 8 : 36
+  const itemWidth = Math.max(
+    32,
+    (menuWidth - horizontalChrome) / REACTIONS.length,
+  )
+  const iconSize = compact ? Math.min(30, itemWidth - 16) : 34
+  const labelSize = compact
+    ? Math.max(8, Math.min(11, itemWidth / 6))
+    : undefined
+
+  const cancelClose = useCallback(() => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current)
+      closeTimer.current = null
+    }
+  }, [])
+
+  const show = useCallback(() => {
+    cancelClose()
+    setVisible(current => {
+      if (!current) onOpen?.()
+      return true
+    })
+  }, [cancelClose, onOpen])
+
+  const scheduleClose = useCallback(() => {
+    cancelClose()
+    closeTimer.current = setTimeout(() => setVisible(false), 100)
+  }, [cancelClose])
+
+  useEffect(() => {
+    setVisible(false)
+  }, [dismissKey])
+
+  useEffect(() => {
+    if (visible) void update()
+  }, [menuWidth, update, visible])
+
+  useEffect(() => cancelClose, [cancelClose])
+
+  const menu = useMemo(
+    () => (
+      <div
+        ref={refs.setFloating}
+        style={{
+          ...floatingStyles,
+          width: menuWidth,
+          maxWidth: `calc(100vw - ${VIEWPORT_GUTTER * 2}px)`,
+          zIndex: 10000,
+        }}
+        onPointerEnter={show}
+        onPointerLeave={scheduleClose}>
+        <View
+          style={[
+            a.flex_row,
+            a.align_center,
+            {
+              width: '100%',
+              gap: compact ? 0 : 4,
+              paddingHorizontal: compact ? 4 : 8,
+              paddingVertical: compact ? 6 : 8,
+              borderRadius: 18,
+              borderWidth: 1,
+              borderColor: t.palette.contrast_100,
+              backgroundColor: t.palette.white,
+            },
+            web({boxShadow: '0 5px 20px rgba(0, 0, 0, 0.18)'}),
+          ]}>
+          {REACTIONS.map(reaction => (
+            <Pressable
+              key={reaction.id}
+              accessibilityRole="button"
+              accessibilityLabel={`React with ${reaction.label}`}
+              accessibilityHint="Selects this reaction for the post"
+              onPress={evt => {
+                evt.stopPropagation()
+                onSelect(reaction.id)
+                setVisible(false)
+              }}
+              style={({hovered}) => [
+                a.align_center,
+                a.justify_center,
+                {
+                  width: itemWidth,
+                  minWidth: 0,
+                  minHeight: compact ? 54 : 62,
+                  borderRadius: 12,
+                  backgroundColor: hovered
+                    ? t.palette.contrast_25
+                    : 'transparent',
+                },
+              ]}>
+              <Image
+                source={reaction.icon}
+                accessibilityIgnoresInvertColors
+                style={{
+                  width: iconSize,
+                  height: iconSize,
+                  resizeMode: 'contain',
+                }}
+              />
+              <Text
+                numberOfLines={1}
+                style={[
+                  a.text_xs,
+                  a.pt_2xs,
+                  {
+                    color: t.palette.contrast_700,
+                    fontSize: labelSize,
+                    maxWidth: itemWidth,
+                  },
+                ]}>
+                {reaction.label}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+      </div>
+    ),
+    [
+      compact,
+      floatingStyles,
+      iconSize,
+      itemWidth,
+      labelSize,
+      menuWidth,
+      onSelect,
+      refs.setFloating,
+      scheduleClose,
+      show,
+      t,
+    ],
+  )
+
+  return (
+    <View
+      // @ts-ignore react-native-web provides the underlying HTMLElement
+      ref={refs.setReference}
+      style={{position: 'relative'}}
+      // @ts-ignore web-only pointer interaction
+      onPointerEnter={show}
+      // @ts-ignore web-only pointer interaction
+      onPointerLeave={scheduleClose}>
+      {children}
+      {visible && <Portal>{menu}</Portal>}
+    </View>
+  )
+}
+
+export function SparkReactionIcon({reaction}: {reaction: SparkReaction}) {
+  const source = REACTIONS.find(item => item.id === reaction)?.icon
+  if (!source) return null
+
+  return (
+    <Image
+      source={source}
+      accessibilityIgnoresInvertColors
+      style={{width: 20, height: 20, resizeMode: 'contain'}}
+    />
+  )
+}
