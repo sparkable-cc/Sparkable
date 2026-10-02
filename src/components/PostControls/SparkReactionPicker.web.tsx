@@ -48,6 +48,14 @@ const REACTIONS: {
 const VIEWPORT_GUTTER = 8
 const DESKTOP_MENU_WIDTH = 408
 
+function getPointerType(event: unknown) {
+  const pointerEvent = event as {
+    pointerType?: string
+    nativeEvent?: {pointerType?: string}
+  }
+  return pointerEvent.pointerType ?? pointerEvent.nativeEvent?.pointerType
+}
+
 export function SparkReactionPicker({
   children,
   dismissKey,
@@ -117,6 +125,29 @@ export function SparkReactionPicker({
     if (visible) void update()
   }, [menuWidth, update, visible])
 
+  useEffect(() => {
+    if (!visible) return
+
+    const closeOnOutsidePress = (event: PointerEvent) => {
+      const target = event.target
+      const reference = refs.reference.current
+      const floating = refs.floating.current
+
+      if (
+        target instanceof Node &&
+        ((reference instanceof Element && reference.contains(target)) ||
+          (floating instanceof Element && floating.contains(target)))
+      ) {
+        return
+      }
+      setVisible(false)
+    }
+
+    document.addEventListener('pointerdown', closeOnOutsidePress)
+    return () =>
+      document.removeEventListener('pointerdown', closeOnOutsidePress)
+  }, [refs.floating, refs.reference, visible])
+
   useEffect(() => cancelClose, [cancelClose])
 
   const menu = useMemo(
@@ -129,8 +160,12 @@ export function SparkReactionPicker({
           maxWidth: `calc(100vw - ${VIEWPORT_GUTTER * 2}px)`,
           zIndex: 10000,
         }}
-        onPointerEnter={show}
-        onPointerLeave={scheduleClose}>
+        onPointerEnter={event => {
+          if (getPointerType(event) === 'mouse') show()
+        }}
+        onPointerLeave={event => {
+          if (getPointerType(event) === 'mouse') scheduleClose()
+        }}>
         <View
           style={[
             a.flex_row,
@@ -219,9 +254,20 @@ export function SparkReactionPicker({
       ref={refs.setReference}
       style={{position: 'relative'}}
       // @ts-ignore web-only pointer interaction
-      onPointerEnter={show}
+      onPointerEnter={event => {
+        if (getPointerType(event) === 'mouse') show()
+      }}
       // @ts-ignore web-only pointer interaction
-      onPointerLeave={scheduleClose}>
+      onPointerLeave={event => {
+        if (getPointerType(event) === 'mouse') scheduleClose()
+      }}
+      // Touchscreens cannot hover. Keep the picker open after the Spark tap;
+      // pointer-leave is ignored for touch so the portalled menu does not
+      // disappear as soon as it moves away from the tapped button.
+      // @ts-ignore web-only pointer interaction
+      onPointerDown={event => {
+        if (getPointerType(event) !== 'mouse') show()
+      }}>
       {children}
       {visible && <Portal>{menu}</Portal>}
     </View>
