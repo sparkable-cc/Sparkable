@@ -109,6 +109,7 @@ let PostControls = ({
   const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] = useState(false)
   const [sparkReaction, setSparkReaction] = useState<SparkReaction>()
   const [sparkPickerDismissKey, setSparkPickerDismissKey] = useState(0)
+  const [sparkPickerOpenKey, setSparkPickerOpenKey] = useState(0)
   const sparkSurface =
     logContext === 'FeedItem'
       ? 'feed'
@@ -137,7 +138,9 @@ let PostControls = ({
           reqId,
         })
         captureAction(ProgressGuideAction.Like)
-        await queueLike()
+        const likePromise = queueLike()
+        setSparkPickerOpenKey(key => key + 1)
+        await likePromise
       } else {
         const removedReaction = sparkReaction
         setSparkPickerDismissKey(key => key + 1)
@@ -279,6 +282,7 @@ let PostControls = ({
         <View style={[a.flex_1, a.align_start, {marginLeft: big ? -2 : -6}]}>
           <SparkReactionPicker
             dismissKey={sparkPickerDismissKey}
+            openKey={sparkPickerOpenKey}
             openOnTouch={!post.viewer?.like}
             onOpen={() =>
               ax.metric('spark:picker:opened', {surface: sparkSurface})

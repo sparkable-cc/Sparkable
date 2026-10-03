@@ -59,12 +59,14 @@ function getPointerType(event: unknown) {
 export function SparkReactionPicker({
   children,
   dismissKey,
+  openKey,
   openOnTouch,
   onOpen,
   onSelect,
 }: {
   children: React.ReactNode
   dismissKey?: number
+  openKey?: number
   openOnTouch?: boolean
   onOpen?: () => void
   onSelect: (reaction: SparkReaction) => void
@@ -74,6 +76,7 @@ export function SparkReactionPicker({
   const [visible, setVisible] = useState(false)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pressedPointerType = useRef<string | undefined>(undefined)
+  const previousOpenKey = useRef(openKey)
   const {refs, floatingStyles, update} = useFloating({
     placement: 'top-start',
     strategy: 'fixed',
@@ -114,6 +117,13 @@ export function SparkReactionPicker({
       return true
     })
   }, [cancelClose, onOpen])
+
+  useEffect(() => {
+    if (openKey !== previousOpenKey.current) {
+      previousOpenKey.current = openKey
+      show()
+    }
+  }, [openKey, show])
 
   const scheduleClose = useCallback(() => {
     cancelClose()

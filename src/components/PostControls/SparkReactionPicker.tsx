@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {Image, Pressable, View} from 'react-native'
 
 import {atoms as a, useTheme, web} from '#/alf'
@@ -40,6 +40,7 @@ const REACTIONS: {
 export function SparkReactionPicker({
   children,
   dismissKey,
+  openKey,
   openOnTouch: _openOnTouch,
   onOpen,
   onSelect,
@@ -47,6 +48,7 @@ export function SparkReactionPicker({
 }: {
   children: React.ReactNode
   dismissKey?: number
+  openKey?: number
   openOnTouch?: boolean
   onOpen?: () => void
   onSelect: (reaction: SparkReaction) => void
@@ -54,6 +56,15 @@ export function SparkReactionPicker({
 }) {
   const t = useTheme()
   const [visible, setVisible] = useState(false)
+  const previousOpenKey = useRef(openKey)
+
+  useEffect(() => {
+    if (openKey !== previousOpenKey.current) {
+      previousOpenKey.current = openKey
+      if (!visible) onOpen?.()
+      setVisible(true)
+    }
+  }, [onOpen, openKey, visible])
 
   useEffect(() => {
     setVisible(false)
