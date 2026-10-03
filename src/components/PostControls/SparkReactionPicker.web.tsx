@@ -7,9 +7,9 @@ import {
   shift,
   useFloating,
 } from '@floating-ui/react-dom'
+import {createPortal} from 'react-dom'
 
 import {atoms as a, useTheme, web} from '#/alf'
-import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 // @ts-ignore bundled image asset
 import compassionIcon from '../../../assets/images/reactions/compassion.png'
@@ -63,6 +63,7 @@ export function SparkReactionPicker({
   openOnTouch,
   onOpen,
   onSelect,
+  selectedReaction,
 }: {
   children: React.ReactNode
   dismissKey?: number
@@ -70,6 +71,7 @@ export function SparkReactionPicker({
   openOnTouch?: boolean
   onOpen?: () => void
   onSelect: (reaction: SparkReaction) => void
+  selectedReaction?: SparkReaction
 }) {
   const t = useTheme()
   const {width: viewportWidth} = useWindowDimensions()
@@ -100,8 +102,8 @@ export function SparkReactionPicker({
   )
   const iconSize = compact ? Math.min(30, itemWidth - 16) : 34
   const labelSize = compact
-    ? Math.max(8, Math.min(11, itemWidth / 6))
-    : undefined
+    ? Math.max(7.5, Math.min(11, (itemWidth - 4) / 6.05))
+    : 11
 
   const cancelClose = useCallback(() => {
     if (closeTimer.current) {
@@ -195,54 +197,74 @@ export function SparkReactionPicker({
             },
             web({boxShadow: '0 5px 20px rgba(0, 0, 0, 0.18)'}),
           ]}>
-          {REACTIONS.map(reaction => (
-            <Pressable
-              key={reaction.id}
-              accessibilityRole="button"
-              accessibilityLabel={`React with ${reaction.label}`}
-              accessibilityHint="Selects this reaction for the post"
-              onPress={evt => {
-                evt.stopPropagation()
-                onSelect(reaction.id)
-                setVisible(false)
-              }}
-              style={({hovered}) => [
-                a.align_center,
-                a.justify_center,
-                {
-                  width: itemWidth,
-                  minWidth: 0,
-                  minHeight: compact ? 54 : 62,
-                  borderRadius: 12,
-                  backgroundColor: hovered
-                    ? t.palette.contrast_25
-                    : 'transparent',
-                },
-              ]}>
-              <Image
-                source={reaction.icon}
-                accessibilityIgnoresInvertColors
-                style={{
-                  width: iconSize,
-                  height: iconSize,
-                  resizeMode: 'contain',
+          {REACTIONS.map(reaction => {
+            const selected = selectedReaction === reaction.id
+            return (
+              <Pressable
+                key={reaction.id}
+                accessibilityRole="button"
+                accessibilityLabel={
+                  selected
+                    ? `Remove ${reaction.label} reaction`
+                    : `React with ${reaction.label}`
+                }
+                accessibilityHint={
+                  selected
+                    ? 'Removes this reaction from the post'
+                    : 'Selects this reaction for the post'
+                }
+                accessibilityState={{selected}}
+                onPress={evt => {
+                  evt.stopPropagation()
+                  onSelect(reaction.id)
+                  setVisible(false)
                 }}
-              />
-              <Text
-                numberOfLines={1}
-                style={[
-                  a.text_xs,
-                  a.pt_2xs,
+                style={({hovered}) => [
+                  a.align_center,
+                  a.justify_center,
                   {
-                    color: t.palette.contrast_700,
-                    fontSize: labelSize,
-                    maxWidth: itemWidth,
+                    width: itemWidth,
+                    minWidth: 0,
+                    minHeight: compact ? 54 : 62,
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    borderColor: selected
+                      ? t.palette.primary_500
+                      : 'transparent',
+                    backgroundColor: selected
+                      ? t.palette.primary_50
+                      : hovered
+                        ? t.palette.contrast_25
+                        : 'transparent',
                   },
                 ]}>
-                {reaction.label}
-              </Text>
-            </Pressable>
-          ))}
+                <Image
+                  source={reaction.icon}
+                  accessibilityIgnoresInvertColors
+                  style={{
+                    width: iconSize,
+                    height: iconSize,
+                    resizeMode: 'contain',
+                  }}
+                />
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    a.text_xs,
+                    a.pt_2xs,
+                    {
+                      color: selected
+                        ? t.palette.primary_700
+                        : t.palette.contrast_700,
+                      fontSize: labelSize,
+                      maxWidth: itemWidth - 2,
+                    },
+                  ]}>
+                  {reaction.label}
+                </Text>
+              </Pressable>
+            )
+          })}
         </View>
       </div>
     ),
@@ -254,6 +276,7 @@ export function SparkReactionPicker({
       labelSize,
       menuWidth,
       onSelect,
+      selectedReaction,
       refs.setFloating,
       scheduleClose,
       show,
@@ -290,7 +313,7 @@ export function SparkReactionPicker({
         }
       }}>
       {children}
-      {visible && <Portal>{menu}</Portal>}
+      {visible && createPortal(menu, document.body)}
     </View>
   )
 }

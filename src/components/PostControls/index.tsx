@@ -127,6 +127,11 @@ let PostControls = ({
       return
     }
 
+    if (post.viewer?.like && sparkReaction) {
+      setSparkPickerOpenKey(key => key + 1)
+      return
+    }
+
     try {
       setHasLikeIconBeenToggled(true)
       if (!post.viewer?.like) {
@@ -170,6 +175,16 @@ let PostControls = ({
 
   const onSelectSparkReaction = async (reaction: SparkReaction) => {
     const previousReaction = sparkReaction
+
+    if (previousReaction === reaction) {
+      setSparkReaction(undefined)
+      ax.metric('spark:reaction:removed', {
+        reaction,
+        surface: sparkSurface,
+      })
+      return
+    }
+
     setSparkReaction(reaction)
     try {
       if (!post.viewer?.like) {
@@ -289,7 +304,8 @@ let PostControls = ({
             }
             onSelect={reaction =>
               requireAuth(() => onSelectSparkReaction(reaction))
-            }>
+            }
+            selectedReaction={sparkReaction}>
             <PostControlButton
               testID="likeBtn"
               big={big}
