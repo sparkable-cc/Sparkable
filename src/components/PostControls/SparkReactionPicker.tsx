@@ -40,12 +40,14 @@ const REACTIONS: {
 export function SparkReactionPicker({
   children,
   dismissKey,
+  openOnTouch: _openOnTouch,
   onOpen,
   onSelect,
   onVisibilityChange,
 }: {
   children: React.ReactNode
   dismissKey?: number
+  openOnTouch?: boolean
   onOpen?: () => void
   onSelect: (reaction: SparkReaction) => void
   onVisibilityChange?: (visible: boolean) => void

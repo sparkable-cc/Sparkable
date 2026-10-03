@@ -279,6 +279,7 @@ let PostControls = ({
         <View style={[a.flex_1, a.align_start, {marginLeft: big ? -2 : -6}]}>
           <SparkReactionPicker
             dismissKey={sparkPickerDismissKey}
+            openOnTouch={!post.viewer?.like}
             onOpen={() =>
               ax.metric('spark:picker:opened', {surface: sparkSurface})
             }

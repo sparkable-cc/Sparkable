@@ -59,11 +59,13 @@ function getPointerType(event: unknown) {
 export function SparkReactionPicker({
   children,
   dismissKey,
+  openOnTouch,
   onOpen,
   onSelect,
 }: {
   children: React.ReactNode
   dismissKey?: number
+  openOnTouch?: boolean
   onOpen?: () => void
   onSelect: (reaction: SparkReaction) => void
 }) {
@@ -71,6 +73,7 @@ export function SparkReactionPicker({
   const {width: viewportWidth} = useWindowDimensions()
   const [visible, setVisible] = useState(false)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const pressedPointerType = useRef<string | undefined>(undefined)
   const {refs, floatingStyles, update} = useFloating({
     placement: 'top-start',
     strategy: 'fixed',
@@ -261,12 +264,20 @@ export function SparkReactionPicker({
       onPointerLeave={event => {
         if (getPointerType(event) === 'mouse') scheduleClose()
       }}
-      // Touchscreens cannot hover. Keep the picker open after the Spark tap;
-      // pointer-leave is ignored for touch so the portalled menu does not
-      // disappear as soon as it moves away from the tapped button.
       // @ts-ignore web-only pointer interaction
       onPointerDown={event => {
-        if (getPointerType(event) !== 'mouse') show()
+        pressedPointerType.current = getPointerType(event)
+      }}
+      // Let the nested Spark button finish its click before mounting the
+      // portalled menu. Mounting it on pointer-down interrupts the first tap
+      // in some mobile browsers, forcing users to tap twice to Spark.
+      // @ts-ignore web-only click interaction
+      onClick={() => {
+        const pointerType = pressedPointerType.current
+        pressedPointerType.current = undefined
+        if (openOnTouch && (pointerType === 'touch' || pointerType === 'pen')) {
+          show()
+        }
       }}>
       {children}
       {visible && <Portal>{menu}</Portal>}
