@@ -43,6 +43,10 @@ export class MetricsClient<M extends Record<string, any>> {
     payload: M[E],
     metadata: Record<string, any> = {},
   ) {
+    trackUmamiEvent(event as string, payload)
+
+    if (!env.METRICS_ENABLED) return
+
     this.start()
 
     const e: Event<M> = {
@@ -53,8 +57,6 @@ export class MetricsClient<M extends Record<string, any>> {
       metadata,
     }
     this.queue.push(e)
-
-    trackUmamiEvent(event as string, payload)
 
     logger.debug(`event: ${e.event as string}`, e)
 
