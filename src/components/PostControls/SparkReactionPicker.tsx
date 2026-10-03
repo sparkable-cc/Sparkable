@@ -75,8 +75,8 @@ export function SparkReactionPicker({
   )
   const iconSize = compact ? Math.min(30, itemWidth - 14) : 34
   const labelSize = compact
-    ? Math.max(7.5, Math.min(11, (itemWidth - 4) / 6.05))
-    : 11
+    ? Math.max(7, Math.min(10, (itemWidth - 6) / 6.1))
+    : 10
 
   useEffect(() => {
     if (openKey !== previousOpenKey.current) {

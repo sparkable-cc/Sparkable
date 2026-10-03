@@ -178,10 +178,22 @@ let PostControls = ({
 
     if (previousReaction === reaction) {
       setSparkReaction(undefined)
-      ax.metric('spark:reaction:removed', {
-        reaction,
-        surface: sparkSurface,
-      })
+      setHasLikeIconBeenToggled(true)
+      try {
+        await queueUnlike()
+        ax.metric('spark:reaction:removed', {
+          reaction,
+          surface: sparkSurface,
+        })
+      } catch (err) {
+        setSparkReaction(previousReaction)
+        ax.metric('spark:reaction:failed', {
+          reaction,
+          action: 'remove',
+          surface: sparkSurface,
+        })
+        throw err
+      }
       return
     }
 
