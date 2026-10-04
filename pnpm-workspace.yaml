@@ -53,3 +53,4 @@ minimumReleaseAgeExclude:
   - '@oxlint-tsgolint/win32-arm64@7.0.2001'
   - '@oxlint-tsgolint/win32-x64@7.0.2001'
   - oxlint-tsgolint@7.0.2001
+  - '@sparkable/prosocial-contract@0.1.0'

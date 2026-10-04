@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from 'react'
 import {Image, Pressable, useWindowDimensions, View} from 'react-native'
+import {type ReactionType} from '@sparkable/prosocial-contract'
 
 import {atoms as a, useTheme, web} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -16,13 +17,7 @@ import joyIcon from '../../../assets/images/reactions/joy.png'
 // @ts-ignore bundled image asset
 import respectIcon from '../../../assets/images/reactions/respect.png'
 
-export type SparkReaction =
-  | 'insight'
-  | 'compassion'
-  | 'joy'
-  | 'inspiration'
-  | 'hope'
-  | 'respect'
+export type SparkReaction = ReactionType
 
 const REACTIONS: {
   id: SparkReaction

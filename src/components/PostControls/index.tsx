@@ -8,17 +8,24 @@ import {
 } from '@atproto/api'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {
+  createReactionWithSpark,
+  deleteReactionWithSpark,
+  putReaction,
+} from '#/lib/prosocial-reactions'
+import {updatePostShadow} from '#/state/cache/post-shadow'
 import {type Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
   usePostLikeMutationQueue,
   usePostRepostMutationQueue,
 } from '#/state/queries/post'
-import {useRequireAuth} from '#/state/session'
+import {useAgent, useRequireAuth} from '#/state/session'
 import {
   ProgressGuideAction,
   useProgressGuideControls,
@@ -78,6 +85,8 @@ let PostControls = ({
   forceGoogleTranslate?: boolean
 }): React.ReactNode => {
   const ax = useAnalytics()
+  const agent = useAgent()
+  const queryClient = useQueryClient()
   const t = useTheme()
   const {t: l} = useLingui()
   const {openComposer} = useOpenComposer()
@@ -138,13 +147,20 @@ let PostControls = ({
       setSparkPickerDismissKey(key => key + 1)
       setSparkReaction(undefined)
       setHasLikeIconBeenToggled(true)
+      const likeUri = post.viewer.like
+      updatePostShadow(queryClient, post.uri, {likeUri: undefined})
       try {
-        await queueUnlike()
+        await deleteReactionWithSpark({
+          agent,
+          subjectUri: post.uri,
+          likeUri,
+        })
         ax.metric('spark:reaction:removed', {
           reaction: removedReaction,
           surface: sparkSurface,
         })
       } catch (err) {
+        updatePostShadow(queryClient, post.uri, {likeUri})
         setSparkReaction(removedReaction)
         ax.metric('spark:reaction:failed', {
           reaction: removedReaction,
@@ -201,15 +217,23 @@ let PostControls = ({
     const previousReaction = sparkReaction
 
     if (previousReaction === reaction) {
+      const likeUri = post.viewer?.like
+      if (!likeUri) return
       setSparkReaction(undefined)
       setHasLikeIconBeenToggled(true)
+      updatePostShadow(queryClient, post.uri, {likeUri: undefined})
       try {
-        await queueUnlike()
+        await deleteReactionWithSpark({
+          agent,
+          subjectUri: post.uri,
+          likeUri,
+        })
         ax.metric('spark:reaction:removed', {
           reaction,
           surface: sparkSurface,
         })
       } catch (err) {
+        updatePostShadow(queryClient, post.uri, {likeUri})
         setSparkReaction(previousReaction)
         ax.metric('spark:reaction:failed', {
           reaction,
@@ -224,8 +248,28 @@ let PostControls = ({
     setSparkReaction(reaction)
     try {
       if (!post.viewer?.like) {
-        await onPressToggleLike()
-        setSparkReaction(reaction)
+        setHasLikeIconBeenToggled(true)
+        updatePostShadow(queryClient, post.uri, {likeUri: 'pending'})
+        sendInteraction({
+          item: post.uri,
+          event: 'app.bsky.feed.defs#interactionLike',
+          feedContext,
+          reqId,
+        })
+        captureAction(ProgressGuideAction.Like)
+        const {likeUri} = await createReactionWithSpark({
+          agent,
+          subject: {uri: post.uri, cid: post.cid},
+          reactionType: reaction,
+          via: viaRepost,
+        })
+        updatePostShadow(queryClient, post.uri, {likeUri})
+      } else {
+        await putReaction({
+          agent,
+          subject: {uri: post.uri, cid: post.cid},
+          reactionType: reaction,
+        })
       }
       if (previousReaction && previousReaction !== reaction) {
         ax.metric('spark:reaction:changed', {
@@ -240,6 +284,10 @@ let PostControls = ({
         })
       }
     } catch (err) {
+      setSparkReaction(previousReaction)
+      if (!post.viewer?.like) {
+        updatePostShadow(queryClient, post.uri, {likeUri: undefined})
+      }
       ax.metric('spark:reaction:failed', {
         reaction,
         action: previousReaction ? 'change' : 'select',
