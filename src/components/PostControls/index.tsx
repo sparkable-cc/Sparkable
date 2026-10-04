@@ -1,4 +1,4 @@
-import {memo, useMemo, useState} from 'react'
+import {memo, useEffect, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -25,6 +25,10 @@ import {
   usePostLikeMutationQueue,
   usePostRepostMutationQueue,
 } from '#/state/queries/post'
+import {
+  prosocialMetadataQueryKey,
+  useProsocialPostMetadata,
+} from '#/state/queries/prosocial-metadata'
 import {useAgent, useRequireAuth} from '#/state/session'
 import {
   ProgressGuideAction,
@@ -114,6 +118,7 @@ let PostControls = ({
   const replyDisabled = post.viewer?.replyDisabled
   const {gtPhone} = useBreakpoints()
   const formatPostStatCount = useFormatPostStatCount()
+  const {data: prosocialMetadata} = useProsocialPostMetadata(post.uri)
 
   const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] = useState(false)
   const [sparkReaction, setSparkReaction] = useState<SparkReaction>()
@@ -128,6 +133,20 @@ let PostControls = ({
         : logContext === 'ImmersiveVideo'
           ? 'video-feed'
           : 'profile'
+
+  useEffect(() => {
+    if (prosocialMetadata?.viewerReaction) {
+      setSparkReaction(prosocialMetadata.viewerReaction)
+    }
+  }, [prosocialMetadata?.viewerReaction])
+
+  const refreshProsocialMetadata = () => {
+    setTimeout(() => {
+      void queryClient.invalidateQueries({
+        queryKey: prosocialMetadataQueryKey(post.uri),
+      })
+    }, 1500)
+  }
 
   const onPressToggleLike = async () => {
     if (isBlocked) {
@@ -155,6 +174,7 @@ let PostControls = ({
           subjectUri: post.uri,
           likeUri,
         })
+        refreshProsocialMetadata()
         ax.metric('spark:reaction:removed', {
           reaction: removedReaction,
           surface: sparkSurface,
@@ -228,6 +248,7 @@ let PostControls = ({
           subjectUri: post.uri,
           likeUri,
         })
+        refreshProsocialMetadata()
         ax.metric('spark:reaction:removed', {
           reaction,
           surface: sparkSurface,
@@ -264,12 +285,14 @@ let PostControls = ({
           via: viaRepost,
         })
         updatePostShadow(queryClient, post.uri, {likeUri})
+        refreshProsocialMetadata()
       } else {
         await putReaction({
           agent,
           subject: {uri: post.uri, cid: post.cid},
           reactionType: reaction,
         })
+        refreshProsocialMetadata()
       }
       if (previousReaction && previousReaction !== reaction) {
         ax.metric('spark:reaction:changed', {
@@ -390,6 +413,7 @@ let PostControls = ({
               requireAuth(() => onSelectSparkReaction(reaction))
             }
             onVisibilityChange={setSparkPickerVisible}
+            reactionCounts={prosocialMetadata?.reactionCounts}
             selectedReaction={sparkReaction}>
             <PostControlButton
               testID="likeBtn"

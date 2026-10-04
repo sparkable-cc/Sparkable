@@ -106,6 +106,13 @@ export const SPARKABLE_ANALYTICS_HOST: string =
   'https://analytics-api-production-8506.up.railway.app'
 
 /**
+ * Sparkable-owned service for indexed prosocial reaction metadata.
+ */
+export const PROSOCIAL_METADATA_API_HOST: string =
+  process.env.EXPO_PUBLIC_PROSOCIAL_METADATA_API_HOST ||
+  'https://prosocial-metadata-production.up.railway.app'
+
+/**
  * Growthbook API host
  */
 export const GROWTHBOOK_API_HOST: string =

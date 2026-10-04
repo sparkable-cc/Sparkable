@@ -1,6 +1,9 @@
 import {useEffect, useRef, useState} from 'react'
 import {Image, Pressable, useWindowDimensions, View} from 'react-native'
-import {type ReactionType} from '@sparkable/prosocial-contract'
+import {
+  type ReactionCounts,
+  type ReactionType,
+} from '@sparkable/prosocial-contract'
 
 import {atoms as a, useTheme, web} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -42,6 +45,7 @@ export function SparkReactionPicker({
   openOnTouch: _openOnTouch,
   onOpen,
   onSelect,
+  reactionCounts,
   selectedReaction,
   onVisibilityChange,
 }: {
@@ -51,6 +55,7 @@ export function SparkReactionPicker({
   openOnTouch?: boolean
   onOpen?: () => void
   onSelect: (reaction: SparkReaction) => void
+  reactionCounts?: ReactionCounts
   selectedReaction?: SparkReaction
   onVisibilityChange?: (visible: boolean) => void
 }) {
@@ -133,6 +138,7 @@ export function SparkReactionPicker({
             ]}>
             {REACTIONS.map(reaction => {
               const selected = selectedReaction === reaction.id
+              const count = reactionCounts?.[reaction.id] ?? 0
               return (
                 <Pressable
                   key={reaction.id}
@@ -181,6 +187,25 @@ export function SparkReactionPicker({
                       resizeMode: 'contain',
                     }}
                   />
+                  {count > 0 && (
+                    <View
+                      style={{
+                        position: 'absolute',
+                        top: compact ? 1 : 3,
+                        right: compact ? 1 : 3,
+                        minWidth: 16,
+                        height: 16,
+                        paddingHorizontal: 3,
+                        borderRadius: 8,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: t.palette.primary_500,
+                      }}>
+                      <Text style={{fontSize: 9, color: t.palette.white}}>
+                        {count > 99 ? '99+' : count}
+                      </Text>
+                    </View>
+                  )}
                   <Text
                     numberOfLines={1}
                     adjustsFontSizeToFit
