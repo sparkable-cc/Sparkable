@@ -110,6 +110,7 @@ let PostControls = ({
   const [sparkReaction, setSparkReaction] = useState<SparkReaction>()
   const [sparkPickerDismissKey, setSparkPickerDismissKey] = useState(0)
   const [sparkPickerOpenKey, setSparkPickerOpenKey] = useState(0)
+  const [sparkPickerVisible, setSparkPickerVisible] = useState(false)
   const sparkSurface =
     logContext === 'FeedItem'
       ? 'feed'
@@ -128,7 +129,30 @@ let PostControls = ({
     }
 
     if (post.viewer?.like && sparkReaction) {
-      setSparkPickerOpenKey(key => key + 1)
+      if (!sparkPickerVisible) {
+        setSparkPickerOpenKey(key => key + 1)
+        return
+      }
+
+      const removedReaction = sparkReaction
+      setSparkPickerDismissKey(key => key + 1)
+      setSparkReaction(undefined)
+      setHasLikeIconBeenToggled(true)
+      try {
+        await queueUnlike()
+        ax.metric('spark:reaction:removed', {
+          reaction: removedReaction,
+          surface: sparkSurface,
+        })
+      } catch (err) {
+        setSparkReaction(removedReaction)
+        ax.metric('spark:reaction:failed', {
+          reaction: removedReaction,
+          action: 'remove',
+          surface: sparkSurface,
+        })
+        throw err
+      }
       return
     }
 
@@ -317,6 +341,7 @@ let PostControls = ({
             onSelect={reaction =>
               requireAuth(() => onSelectSparkReaction(reaction))
             }
+            onVisibilityChange={setSparkPickerVisible}
             selectedReaction={sparkReaction}>
             <PostControlButton
               testID="likeBtn"

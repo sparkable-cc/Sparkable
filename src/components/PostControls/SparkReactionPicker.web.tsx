@@ -64,6 +64,7 @@ export function SparkReactionPicker({
   onOpen,
   onSelect,
   selectedReaction,
+  onVisibilityChange,
 }: {
   children: React.ReactNode
   dismissKey?: number
@@ -72,6 +73,7 @@ export function SparkReactionPicker({
   onOpen?: () => void
   onSelect: (reaction: SparkReaction) => void
   selectedReaction?: SparkReaction
+  onVisibilityChange?: (visible: boolean) => void
 }) {
   const t = useTheme()
   const {width: viewportWidth} = useWindowDimensions()
@@ -135,6 +137,10 @@ export function SparkReactionPicker({
   useEffect(() => {
     setVisible(false)
   }, [dismissKey])
+
+  useEffect(() => {
+    onVisibilityChange?.(visible)
+  }, [onVisibilityChange, visible])
 
   useEffect(() => {
     if (visible) void update()
