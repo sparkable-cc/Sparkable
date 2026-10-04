@@ -109,7 +109,8 @@ let PostControls = ({
   const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] = useState(false)
   const [sparkReaction, setSparkReaction] = useState<SparkReaction>()
   const [sparkPickerDismissKey, setSparkPickerDismissKey] = useState(0)
-  const [isSparkPickerVisible, setIsSparkPickerVisible] = useState(false)
+  const [sparkPickerOpenKey, setSparkPickerOpenKey] = useState(0)
+  const [sparkPickerVisible, setSparkPickerVisible] = useState(false)
   const sparkSurface =
     logContext === 'FeedItem'
       ? 'feed'
@@ -127,6 +128,34 @@ let PostControls = ({
       return
     }
 
+    if (post.viewer?.like && sparkReaction) {
+      if (!sparkPickerVisible) {
+        setSparkPickerOpenKey(key => key + 1)
+        return
+      }
+
+      const removedReaction = sparkReaction
+      setSparkPickerDismissKey(key => key + 1)
+      setSparkReaction(undefined)
+      setHasLikeIconBeenToggled(true)
+      try {
+        await queueUnlike()
+        ax.metric('spark:reaction:removed', {
+          reaction: removedReaction,
+          surface: sparkSurface,
+        })
+      } catch (err) {
+        setSparkReaction(removedReaction)
+        ax.metric('spark:reaction:failed', {
+          reaction: removedReaction,
+          action: 'remove',
+          surface: sparkSurface,
+        })
+        throw err
+      }
+      return
+    }
+
     try {
       setHasLikeIconBeenToggled(true)
       if (!post.viewer?.like) {
@@ -138,7 +167,9 @@ let PostControls = ({
           reqId,
         })
         captureAction(ProgressGuideAction.Like)
-        await queueLike()
+        const likePromise = queueLike()
+        setSparkPickerOpenKey(key => key + 1)
+        await likePromise
       } else {
         const removedReaction = sparkReaction
         setSparkPickerDismissKey(key => key + 1)
@@ -168,6 +199,28 @@ let PostControls = ({
 
   const onSelectSparkReaction = async (reaction: SparkReaction) => {
     const previousReaction = sparkReaction
+
+    if (previousReaction === reaction) {
+      setSparkReaction(undefined)
+      setHasLikeIconBeenToggled(true)
+      try {
+        await queueUnlike()
+        ax.metric('spark:reaction:removed', {
+          reaction,
+          surface: sparkSurface,
+        })
+      } catch (err) {
+        setSparkReaction(previousReaction)
+        ax.metric('spark:reaction:failed', {
+          reaction,
+          action: 'remove',
+          surface: sparkSurface,
+        })
+        throw err
+      }
+      return
+    }
+
     setSparkReaction(reaction)
     try {
       if (!post.viewer?.like) {
@@ -274,20 +327,22 @@ let PostControls = ({
         a.align_center,
         !big && a.pt_2xs,
         a.gap_md,
-        isSparkPickerVisible && {zIndex: 1000},
         style,
       ]}>
       <View style={[a.flex_row, a.flex_1, {maxWidth: 320}]}>
         <View style={[a.flex_1, a.align_start, {marginLeft: big ? -2 : -6}]}>
           <SparkReactionPicker
             dismissKey={sparkPickerDismissKey}
+            openKey={sparkPickerOpenKey}
+            openOnTouch={!post.viewer?.like}
             onOpen={() =>
               ax.metric('spark:picker:opened', {surface: sparkSurface})
             }
             onSelect={reaction =>
               requireAuth(() => onSelectSparkReaction(reaction))
             }
-            onVisibilityChange={setIsSparkPickerVisible}>
+            onVisibilityChange={setSparkPickerVisible}
+            selectedReaction={sparkReaction}>
             <PostControlButton
               testID="likeBtn"
               big={big}

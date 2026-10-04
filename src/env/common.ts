@@ -91,6 +91,14 @@ export const METRICS_API_HOST: string =
   process.env.EXPO_PUBLIC_METRICS_API_HOST || 'https://events.bsky.app'
 
 /**
+ * Whether app events are sent to `METRICS_API_HOST`. Off unless
+ * `EXPO_PUBLIC_METRICS_API_HOST` is set, so Sparkable never falls back to
+ * sending events to Bluesky's metrics service. Umami tracking is separate.
+ */
+export const METRICS_ENABLED: boolean =
+  !!process.env.EXPO_PUBLIC_METRICS_API_HOST
+
+/**
  * Sparkable-owned service used for privacy-preserving account registration.
  */
 export const SPARKABLE_ANALYTICS_HOST: string =
