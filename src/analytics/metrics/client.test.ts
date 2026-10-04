@@ -20,8 +20,14 @@ jest.mock('#/logger', () => ({
   },
 }))
 
+let mockMetricsEnabled = true
+
 jest.mock('#/env', () => ({
   METRICS_API_HOST: 'https://test.metrics.api',
+  // getter so tests can toggle it after the module is loaded
+  get METRICS_ENABLED() {
+    return mockMetricsEnabled
+  },
   IS_WEB: false,
 }))
 
@@ -48,6 +54,19 @@ describe('MetricsClient', () => {
   afterEach(() => {
     jest.useRealTimers()
     jest.clearAllMocks()
+    mockMetricsEnabled = true
+  })
+
+  it('sends nothing when metrics are disabled', async () => {
+    mockMetricsEnabled = false
+    const client = new MetricsClient<TestEvents>()
+    client.track('click', {button: 'submit'})
+
+    await jest.advanceTimersByTimeAsync(10_000)
+    client.flush()
+    await jest.advanceTimersByTimeAsync(0)
+
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 
   it('flushes events on interval', async () => {
