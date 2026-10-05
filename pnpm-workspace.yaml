@@ -4,6 +4,7 @@ strictPeerDependencies: false # default: false
 trustPolicy: 'no-downgrade' # default: off
 trustPolicyIgnoreAfter: 10080 # 7 days, default: undefined
 overrides:
+  '@atproto/lex-data': '0.1.8'
   '@react-native/babel-preset': '0.81.5'
   '@react-native/normalize-colors': '0.81.5'
   '@expo/image-utils': '0.8.12'

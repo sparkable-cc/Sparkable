@@ -204,6 +204,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
+  '@atproto/lex-data': 0.1.8
   '@react-native/babel-preset': 0.81.5
   '@react-native/normalize-colors': 0.81.5
   '@expo/image-utils': 0.8.12
@@ -981,14 +982,6 @@ packages:
 
   '@atproto/lex-client@0.3.7':
     resolution: {integrity: sha512-MpxlBFILOBRQelbljc/MgccJsgwPCpv1EU/Bt/yD5Yo6BM0jYdjk1Y1tyNY9TaiZoMoqDn7T2ghmqAyADFuIUw==}
-    engines: {node: '>=22'}
-
-  '@atproto/lex-data@0.1.6':
-    resolution: {integrity: sha512-rvovRrYWDEuerX+ZeQbdI5dKs0bYvuMjhwDOtT+pkOvdY4MkfN41DJCz/RAYVAQ7noPdaalB6pAX9euukheE/w==}
-    engines: {node: '>=22'}
-
-  '@atproto/lex-data@0.1.7':
-    resolution: {integrity: sha512-kW/dPLqo/WgCLV+XESR4JKwV6c1rZWJGOfuPupZGTjEDAKoBbKXdaEzX9/1vKQYbZ9U3j0DS/n7OFFK7wBugyQ==}
     engines: {node: '>=22'}
 
   '@atproto/lex-data@0.1.8':
@@ -9882,7 +9875,7 @@ snapshots:
 
   '@atproto/common-web@0.5.10':
     dependencies:
-      '@atproto/lex-data': 0.1.7
+      '@atproto/lex-data': 0.1.8
       '@atproto/lex-json': 0.1.6
       '@atproto/syntax': 0.7.5
       zod: 3.25.76
@@ -9896,14 +9889,14 @@ snapshots:
 
   '@atproto/common-web@0.5.7':
     dependencies:
-      '@atproto/lex-data': 0.1.6
+      '@atproto/lex-data': 0.1.8
       '@atproto/lex-json': 0.1.5
       '@atproto/syntax': 0.7.2
       zod: 3.25.76
 
   '@atproto/common-web@0.5.9':
     dependencies:
-      '@atproto/lex-data': 0.1.7
+      '@atproto/lex-data': 0.1.8
       '@atproto/lex-json': 0.1.6
       '@atproto/syntax': 0.7.4
       zod: 3.25.76
@@ -9967,18 +9960,6 @@ snapshots:
       '@atproto/lex-schema': 0.2.8
       tslib: 2.8.1
 
-  '@atproto/lex-data@0.1.6':
-    dependencies:
-      multiformats: 13.4.2
-      tslib: 2.8.1
-      unicode-segmenter: 0.14.5
-
-  '@atproto/lex-data@0.1.7':
-    dependencies:
-      multiformats: 13.4.2
-      tslib: 2.8.1
-      unicode-segmenter: 0.14.5
-
   '@atproto/lex-data@0.1.8':
     dependencies:
       multiformats: 13.4.2
@@ -10004,12 +9985,12 @@ snapshots:
 
   '@atproto/lex-json@0.1.5':
     dependencies:
-      '@atproto/lex-data': 0.1.6
+      '@atproto/lex-data': 0.1.8
       tslib: 2.8.1
 
   '@atproto/lex-json@0.1.6':
     dependencies:
-      '@atproto/lex-data': 0.1.7
+      '@atproto/lex-data': 0.1.8
       tslib: 2.8.1
 
   '@atproto/lex-json@0.1.7':
@@ -10040,7 +10021,7 @@ snapshots:
     dependencies:
       '@atproto/lex-builder': 0.1.17
       '@atproto/lex-client': 0.3.7
-      '@atproto/lex-data': 0.1.7
+      '@atproto/lex-data': 0.1.8
       '@atproto/lex-installer': 0.1.23
       '@atproto/lex-json': 0.1.6
       '@atproto/lex-schema': 0.2.8
