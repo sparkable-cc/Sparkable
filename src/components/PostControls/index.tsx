@@ -1,4 +1,4 @@
-import {memo, useEffect, useMemo, useState} from 'react'
+import {memo, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -27,7 +27,10 @@ import {
 } from '#/state/queries/post'
 import {
   prosocialMetadataQueryKey,
+  updateProsocialReactionCache,
   useProsocialPostMetadata,
+  useViewerProsocialReaction,
+  viewerProsocialReactionQueryKey,
 } from '#/state/queries/prosocial-metadata'
 import {useAgent, useRequireAuth} from '#/state/session'
 import {
@@ -119,9 +122,17 @@ let PostControls = ({
   const {gtPhone} = useBreakpoints()
   const formatPostStatCount = useFormatPostStatCount()
   const {data: prosocialMetadata} = useProsocialPostMetadata(post.uri)
+  const {data: viewerReaction, refetch: refetchViewerReaction} =
+    useViewerProsocialReaction(post.uri, Boolean(post.viewer?.like))
 
   const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] = useState(false)
-  const [sparkReaction, setSparkReaction] = useState<SparkReaction>()
+  const [reactionOverride, setReactionOverride] =
+    useState<SparkReaction | null>()
+  const sparkReaction = post.viewer?.like
+    ? reactionOverride !== undefined
+      ? (reactionOverride ?? undefined)
+      : (viewerReaction ?? undefined)
+    : undefined
   const [sparkPickerDismissKey, setSparkPickerDismissKey] = useState(0)
   const [sparkPickerOpenKey, setSparkPickerOpenKey] = useState(0)
   const [sparkPickerVisible, setSparkPickerVisible] = useState(false)
@@ -134,11 +145,22 @@ let PostControls = ({
           ? 'video-feed'
           : 'profile'
 
-  useEffect(() => {
-    if (prosocialMetadata?.viewerReaction) {
-      setSparkReaction(prosocialMetadata.viewerReaction)
+  const setOptimisticReaction = (
+    previous: SparkReaction | null,
+    next: SparkReaction | null,
+  ) => {
+    void queryClient.cancelQueries({
+      queryKey: prosocialMetadataQueryKey(post.uri),
+    })
+    setReactionOverride(next)
+    updateProsocialReactionCache(queryClient, post.uri, previous, next)
+    if (agent.did) {
+      queryClient.setQueryData(
+        viewerProsocialReactionQueryKey(agent.did, post.uri),
+        next,
+      )
     }
-  }, [prosocialMetadata?.viewerReaction])
+  }
 
   const refreshProsocialMetadata = () => {
     setTimeout(() => {
@@ -156,15 +178,28 @@ let PostControls = ({
       return
     }
 
-    if (post.viewer?.like && sparkReaction) {
+    // A Spark may render before its reaction lookup finishes. Resolve it before
+    // deciding whether to remove only the Spark or both repository records.
+    let activeReaction = sparkReaction
+    if (
+      post.viewer?.like &&
+      reactionOverride === undefined &&
+      viewerReaction === undefined
+    ) {
+      const lookup = await refetchViewerReaction()
+      if (lookup.error) throw lookup.error
+      activeReaction = lookup.data ?? undefined
+    }
+
+    if (post.viewer?.like && activeReaction) {
       if (!sparkPickerVisible) {
         setSparkPickerOpenKey(key => key + 1)
         return
       }
 
-      const removedReaction = sparkReaction
+      const removedReaction = activeReaction
       setSparkPickerDismissKey(key => key + 1)
-      setSparkReaction(undefined)
+      setOptimisticReaction(removedReaction, null)
       setHasLikeIconBeenToggled(true)
       const likeUri = post.viewer.like
       updatePostShadow(queryClient, post.uri, {likeUri: undefined})
@@ -181,7 +216,7 @@ let PostControls = ({
         })
       } catch (err) {
         updatePostShadow(queryClient, post.uri, {likeUri})
-        setSparkReaction(removedReaction)
+        setOptimisticReaction(null, removedReaction)
         ax.metric('spark:reaction:failed', {
           reaction: removedReaction,
           action: 'remove',
@@ -195,7 +230,7 @@ let PostControls = ({
     try {
       setHasLikeIconBeenToggled(true)
       if (!post.viewer?.like) {
-        setSparkReaction(undefined)
+        setReactionOverride(null)
         sendInteraction({
           item: post.uri,
           event: 'app.bsky.feed.defs#interactionLike',
@@ -207,9 +242,9 @@ let PostControls = ({
         setSparkPickerOpenKey(key => key + 1)
         await likePromise
       } else {
-        const removedReaction = sparkReaction
+        const removedReaction = activeReaction
         setSparkPickerDismissKey(key => key + 1)
-        setSparkReaction(undefined)
+        setReactionOverride(null)
         await queueUnlike()
         if (removedReaction) {
           ax.metric('spark:reaction:removed', {
@@ -234,12 +269,21 @@ let PostControls = ({
   }
 
   const onSelectSparkReaction = async (reaction: SparkReaction) => {
-    const previousReaction = sparkReaction
+    let previousReaction = sparkReaction
+    if (
+      post.viewer?.like &&
+      reactionOverride === undefined &&
+      viewerReaction === undefined
+    ) {
+      const lookup = await refetchViewerReaction()
+      if (lookup.error) throw lookup.error
+      previousReaction = lookup.data ?? undefined
+    }
 
     if (previousReaction === reaction) {
       const likeUri = post.viewer?.like
       if (!likeUri) return
-      setSparkReaction(undefined)
+      setOptimisticReaction(reaction, null)
       setHasLikeIconBeenToggled(true)
       updatePostShadow(queryClient, post.uri, {likeUri: undefined})
       try {
@@ -255,7 +299,7 @@ let PostControls = ({
         })
       } catch (err) {
         updatePostShadow(queryClient, post.uri, {likeUri})
-        setSparkReaction(previousReaction)
+        setOptimisticReaction(null, previousReaction)
         ax.metric('spark:reaction:failed', {
           reaction,
           action: 'remove',
@@ -266,7 +310,7 @@ let PostControls = ({
       return
     }
 
-    setSparkReaction(reaction)
+    setOptimisticReaction(previousReaction ?? null, reaction)
     try {
       if (!post.viewer?.like) {
         setHasLikeIconBeenToggled(true)
@@ -307,7 +351,7 @@ let PostControls = ({
         })
       }
     } catch (err) {
-      setSparkReaction(previousReaction)
+      setOptimisticReaction(reaction, previousReaction ?? null)
       if (!post.viewer?.like) {
         updatePostShadow(queryClient, post.uri, {likeUri: undefined})
       }
