@@ -205,7 +205,7 @@ export function SparkReactionPicker({
           ]}>
           {REACTIONS.map(reaction => {
             const selected = selectedReaction === reaction.id
-            const count = reactionCounts?.[reaction.id] ?? 0
+            const count = reactionCounts?.[reaction.id]
             return (
               <Pressable
                 key={reaction.id}
@@ -232,7 +232,7 @@ export function SparkReactionPicker({
                   {
                     width: itemWidth,
                     minWidth: 0,
-                    minHeight: compact ? 54 : 62,
+                    minHeight: compact ? 68 : 76,
                     borderRadius: 12,
                     borderWidth: 1,
                     borderColor: selected
@@ -254,25 +254,6 @@ export function SparkReactionPicker({
                     resizeMode: 'contain',
                   }}
                 />
-                {count > 0 && (
-                  <View
-                    style={{
-                      position: 'absolute',
-                      top: compact ? 1 : 3,
-                      right: compact ? 1 : 3,
-                      minWidth: 16,
-                      height: 16,
-                      paddingHorizontal: 3,
-                      borderRadius: 8,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: t.palette.primary_500,
-                    }}>
-                    <Text style={{fontSize: 9, color: t.palette.white}}>
-                      {count > 99 ? '99+' : count}
-                    </Text>
-                  </View>
-                )}
                 <Text
                   numberOfLines={1}
                   style={[
@@ -287,6 +268,18 @@ export function SparkReactionPicker({
                     },
                   ]}>
                   {reaction.label}
+                </Text>
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    color: selected
+                      ? t.palette.primary_700
+                      : t.palette.contrast_500,
+                    fontSize: compact ? 10 : 11,
+                    marginTop: 2,
+                    maxWidth: itemWidth - 2,
+                  }}>
+                  {count === undefined ? '–' : count.toLocaleString()}
                 </Text>
               </Pressable>
             )
