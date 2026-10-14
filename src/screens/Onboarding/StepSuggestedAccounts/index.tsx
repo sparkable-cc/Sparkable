@@ -17,6 +17,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
 import {
   OnboardingControls,
+  OnboardingDescriptionText,
   OnboardingPosition,
   OnboardingTitleText,
 } from '#/screens/Onboarding/Layout'
@@ -183,6 +184,11 @@ export function StepSuggestedAccounts() {
           Suggested for you
         </Trans>
       </OnboardingTitleText>
+      <OnboardingDescriptionText>
+        <Trans comment="Explains that the account suggestions come from Bluesky, not from Sparkable">
+          Suggested by Bluesky, not Sparkable.
+        </Trans>
+      </OnboardingDescriptionText>
 
       <View
         style={[
