@@ -7,6 +7,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useOnboardingSuggestedStarterPacksQuery} from '#/state/queries/useOnboardingSuggestedStarterPacksQuery'
 import {
   OnboardingControls,
+  OnboardingDescriptionText,
   OnboardingPosition,
   OnboardingTitleText,
 } from '#/screens/Onboarding/Layout'
@@ -44,6 +45,11 @@ export function StepSuggestedStarterpacks() {
           Find people to follow
         </Trans>
       </OnboardingTitleText>
+      <OnboardingDescriptionText>
+        <Trans comment="Explains that the starter pack suggestions come from Bluesky, not from Sparkable">
+          Suggested by Bluesky, not Sparkable.
+        </Trans>
+      </OnboardingDescriptionText>
 
       <View
         style={[
