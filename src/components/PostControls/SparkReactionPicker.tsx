@@ -1,5 +1,9 @@
 import {useEffect, useRef, useState} from 'react'
 import {Image, Pressable, useWindowDimensions, View} from 'react-native'
+import {
+  type ReactionCounts,
+  type ReactionType,
+} from '@sparkable/prosocial-contract'
 
 import {atoms as a, useTheme, web} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -16,13 +20,7 @@ import joyIcon from '../../../assets/images/reactions/joy.png'
 // @ts-ignore bundled image asset
 import respectIcon from '../../../assets/images/reactions/respect.png'
 
-export type SparkReaction =
-  | 'insight'
-  | 'compassion'
-  | 'joy'
-  | 'inspiration'
-  | 'hope'
-  | 'respect'
+export type SparkReaction = ReactionType
 
 const REACTIONS: {
   id: SparkReaction
@@ -47,6 +45,7 @@ export function SparkReactionPicker({
   openOnTouch: _openOnTouch,
   onOpen,
   onSelect,
+  reactionCounts,
   selectedReaction,
   onVisibilityChange,
 }: {
@@ -56,6 +55,7 @@ export function SparkReactionPicker({
   openOnTouch?: boolean
   onOpen?: () => void
   onSelect: (reaction: SparkReaction) => void
+  reactionCounts?: ReactionCounts
   selectedReaction?: SparkReaction
   onVisibilityChange?: (visible: boolean) => void
 }) {
@@ -122,6 +122,7 @@ export function SparkReactionPicker({
             style={[
               a.flex_row,
               a.align_center,
+              t.atoms.bg,
               {
                 width: menuWidth,
                 gap: 4,
@@ -130,7 +131,6 @@ export function SparkReactionPicker({
                 borderRadius: 18,
                 borderWidth: 1,
                 borderColor: t.palette.contrast_100,
-                backgroundColor: t.palette.white,
               },
               web({
                 boxShadow: '0 5px 20px rgba(0, 0, 0, 0.18)',
@@ -138,6 +138,7 @@ export function SparkReactionPicker({
             ]}>
             {REACTIONS.map(reaction => {
               const selected = selectedReaction === reaction.id
+              const count = reactionCounts?.[reaction.id] ?? 0
               return (
                 <Pressable
                   key={reaction.id}
@@ -170,12 +171,9 @@ export function SparkReactionPicker({
                       borderColor: selected
                         ? t.palette.primary_500
                         : 'transparent',
-                      backgroundColor: selected
-                        ? t.palette.primary_50
-                        : hovered
-                          ? t.palette.contrast_25
-                          : 'transparent',
                     },
+                    selected && t.atoms.bg_contrast_50,
+                    hovered && !selected && t.atoms.bg_contrast_25,
                   ]}>
                   <Image
                     source={reaction.icon}
@@ -186,6 +184,25 @@ export function SparkReactionPicker({
                       resizeMode: 'contain',
                     }}
                   />
+                  {count > 0 && (
+                    <View
+                      style={{
+                        position: 'absolute',
+                        top: compact ? 1 : 3,
+                        right: compact ? 1 : 3,
+                        minWidth: 16,
+                        height: 16,
+                        paddingHorizontal: 3,
+                        borderRadius: 8,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: t.palette.primary_500,
+                      }}>
+                      <Text style={{fontSize: 9, color: t.palette.white}}>
+                        {count > 99 ? '99+' : count}
+                      </Text>
+                    </View>
+                  )}
                   <Text
                     numberOfLines={1}
                     adjustsFontSizeToFit
@@ -193,10 +210,8 @@ export function SparkReactionPicker({
                     style={[
                       a.text_xs,
                       a.pt_2xs,
+                      t.atoms.text_contrast_high,
                       {
-                        color: selected
-                          ? t.palette.primary_700
-                          : t.palette.contrast_700,
                         fontSize: labelSize,
                         maxWidth: itemWidth - 2,
                       },

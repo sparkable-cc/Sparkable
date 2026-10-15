@@ -16,19 +16,23 @@ export class CustomFeedAPI implements FeedAPI {
   agent: AtpAgent
   params: GetCustomFeed.QueryParams
   userInterests?: string
+  failOnHttpError: boolean
 
   constructor({
     agent,
     feedParams,
     userInterests,
+    failOnHttpError = false,
   }: {
     agent: AtpAgent
     feedParams: GetCustomFeed.QueryParams
     userInterests?: string
+    failOnHttpError?: boolean
   }) {
     this.agent = agent
     this.params = feedParams
     this.userInterests = userInterests
+    this.failOnHttpError = failOnHttpError
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
@@ -70,7 +74,12 @@ export class CustomFeedAPI implements FeedAPI {
             },
           },
         )
-      : await loggedOutFetch({...this.params, cursor, limit})
+      : await loggedOutFetch({
+          ...this.params,
+          cursor,
+          limit,
+          failOnHttpError: this.failOnHttpError,
+        })
     if (res.success) {
       // NOTE
       // some custom feeds fail to enforce the pagination limit
@@ -101,10 +110,12 @@ async function loggedOutFetch({
   feed,
   limit,
   cursor,
+  failOnHttpError,
 }: {
   feed: string
   limit: number
   cursor?: string
+  failOnHttpError: boolean
 }) {
   let contentLangs = getAppLanguageAsContentLanguage()
 
@@ -153,6 +164,10 @@ async function loggedOutFetch({
       success: true,
       data,
     }
+  }
+
+  if (failOnHttpError && !res.ok) {
+    throw new Error(`Feed request failed (${res.status})`)
   }
 
   return {

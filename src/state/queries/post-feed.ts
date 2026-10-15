@@ -25,11 +25,12 @@ import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {LikesFeedAPI} from '#/lib/api/feed/likes'
 import {ListFeedAPI} from '#/lib/api/feed/list'
 import {MergeFeedAPI} from '#/lib/api/feed/merge'
+import {MySkyFeedAPI} from '#/lib/api/feed/mysky'
 import {PostListFeedAPI} from '#/lib/api/feed/posts'
 import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {FeedTuner, type FeedTunerFn} from '#/lib/api/feed-manip'
-import {DISCOVER_FEED_URI} from '#/lib/constants'
+import {DISCOVER_FEED_URI, MYSKY_FEED_URI} from '#/lib/constants'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
@@ -476,6 +477,9 @@ function createApi({
     return new LikesFeedAPI({agent, feedParams: {actor}})
   } else if (feedDesc.startsWith('feedgen')) {
     const [__, feed] = feedDesc.split('|')
+    if (feed === MYSKY_FEED_URI) {
+      return new MySkyFeedAPI({agent, userInterests})
+    }
     return new CustomFeedAPI({
       agent,
       feedParams: {feed},

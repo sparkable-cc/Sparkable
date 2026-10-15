@@ -8,17 +8,31 @@ import {
 } from '@atproto/api'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {
+  createReactionWithSpark,
+  deleteReactionWithSpark,
+  putReaction,
+} from '#/lib/prosocial-reactions'
+import {updatePostShadow} from '#/state/cache/post-shadow'
 import {type Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
   usePostLikeMutationQueue,
   usePostRepostMutationQueue,
 } from '#/state/queries/post'
-import {useRequireAuth} from '#/state/session'
+import {
+  prosocialMetadataQueryKey,
+  updateProsocialReactionCache,
+  useProsocialPostMetadata,
+  useViewerProsocialReaction,
+  viewerProsocialReactionQueryKey,
+} from '#/state/queries/prosocial-metadata'
+import {useAgent, useRequireAuth} from '#/state/session'
 import {
   ProgressGuideAction,
   useProgressGuideControls,
@@ -78,6 +92,8 @@ let PostControls = ({
   forceGoogleTranslate?: boolean
 }): React.ReactNode => {
   const ax = useAnalytics()
+  const agent = useAgent()
+  const queryClient = useQueryClient()
   const t = useTheme()
   const {t: l} = useLingui()
   const {openComposer} = useOpenComposer()
@@ -105,9 +121,18 @@ let PostControls = ({
   const replyDisabled = post.viewer?.replyDisabled
   const {gtPhone} = useBreakpoints()
   const formatPostStatCount = useFormatPostStatCount()
+  const {data: prosocialMetadata} = useProsocialPostMetadata(post.uri)
+  const {data: viewerReaction, refetch: refetchViewerReaction} =
+    useViewerProsocialReaction(post.uri, Boolean(post.viewer?.like))
 
   const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] = useState(false)
-  const [sparkReaction, setSparkReaction] = useState<SparkReaction>()
+  const [reactionOverride, setReactionOverride] =
+    useState<SparkReaction | null>()
+  const sparkReaction = post.viewer?.like
+    ? reactionOverride !== undefined
+      ? (reactionOverride ?? undefined)
+      : (viewerReaction ?? undefined)
+    : undefined
   const [sparkPickerDismissKey, setSparkPickerDismissKey] = useState(0)
   const [sparkPickerOpenKey, setSparkPickerOpenKey] = useState(0)
   const [sparkPickerVisible, setSparkPickerVisible] = useState(false)
@@ -120,6 +145,31 @@ let PostControls = ({
           ? 'video-feed'
           : 'profile'
 
+  const setOptimisticReaction = (
+    previous: SparkReaction | null,
+    next: SparkReaction | null,
+  ) => {
+    void queryClient.cancelQueries({
+      queryKey: prosocialMetadataQueryKey(post.uri),
+    })
+    setReactionOverride(next)
+    updateProsocialReactionCache(queryClient, post.uri, previous, next)
+    if (agent.did) {
+      queryClient.setQueryData(
+        viewerProsocialReactionQueryKey(agent.did, post.uri),
+        next,
+      )
+    }
+  }
+
+  const refreshProsocialMetadata = () => {
+    setTimeout(() => {
+      void queryClient.invalidateQueries({
+        queryKey: prosocialMetadataQueryKey(post.uri),
+      })
+    }, 1500)
+  }
+
   const onPressToggleLike = async () => {
     if (isBlocked) {
       Toast.show(l`Cannot interact with a blocked user`, {
@@ -128,24 +178,45 @@ let PostControls = ({
       return
     }
 
-    if (post.viewer?.like && sparkReaction) {
+    // A Spark may render before its reaction lookup finishes. Resolve it before
+    // deciding whether to remove only the Spark or both repository records.
+    let activeReaction = sparkReaction
+    if (
+      post.viewer?.like &&
+      reactionOverride === undefined &&
+      viewerReaction === undefined
+    ) {
+      const lookup = await refetchViewerReaction()
+      if (lookup.error) throw lookup.error
+      activeReaction = lookup.data ?? undefined
+    }
+
+    if (post.viewer?.like && activeReaction) {
       if (!sparkPickerVisible) {
         setSparkPickerOpenKey(key => key + 1)
         return
       }
 
-      const removedReaction = sparkReaction
+      const removedReaction = activeReaction
       setSparkPickerDismissKey(key => key + 1)
-      setSparkReaction(undefined)
+      setOptimisticReaction(removedReaction, null)
       setHasLikeIconBeenToggled(true)
+      const likeUri = post.viewer.like
+      updatePostShadow(queryClient, post.uri, {likeUri: undefined})
       try {
-        await queueUnlike()
+        await deleteReactionWithSpark({
+          agent,
+          subjectUri: post.uri,
+          likeUri,
+        })
+        refreshProsocialMetadata()
         ax.metric('spark:reaction:removed', {
           reaction: removedReaction,
           surface: sparkSurface,
         })
       } catch (err) {
-        setSparkReaction(removedReaction)
+        updatePostShadow(queryClient, post.uri, {likeUri})
+        setOptimisticReaction(null, removedReaction)
         ax.metric('spark:reaction:failed', {
           reaction: removedReaction,
           action: 'remove',
@@ -159,7 +230,7 @@ let PostControls = ({
     try {
       setHasLikeIconBeenToggled(true)
       if (!post.viewer?.like) {
-        setSparkReaction(undefined)
+        setReactionOverride(null)
         sendInteraction({
           item: post.uri,
           event: 'app.bsky.feed.defs#interactionLike',
@@ -171,9 +242,9 @@ let PostControls = ({
         setSparkPickerOpenKey(key => key + 1)
         await likePromise
       } else {
-        const removedReaction = sparkReaction
+        const removedReaction = activeReaction
         setSparkPickerDismissKey(key => key + 1)
-        setSparkReaction(undefined)
+        setReactionOverride(null)
         await queueUnlike()
         if (removedReaction) {
           ax.metric('spark:reaction:removed', {
@@ -198,19 +269,37 @@ let PostControls = ({
   }
 
   const onSelectSparkReaction = async (reaction: SparkReaction) => {
-    const previousReaction = sparkReaction
+    let previousReaction = sparkReaction
+    if (
+      post.viewer?.like &&
+      reactionOverride === undefined &&
+      viewerReaction === undefined
+    ) {
+      const lookup = await refetchViewerReaction()
+      if (lookup.error) throw lookup.error
+      previousReaction = lookup.data ?? undefined
+    }
 
     if (previousReaction === reaction) {
-      setSparkReaction(undefined)
+      const likeUri = post.viewer?.like
+      if (!likeUri) return
+      setOptimisticReaction(reaction, null)
       setHasLikeIconBeenToggled(true)
+      updatePostShadow(queryClient, post.uri, {likeUri: undefined})
       try {
-        await queueUnlike()
+        await deleteReactionWithSpark({
+          agent,
+          subjectUri: post.uri,
+          likeUri,
+        })
+        refreshProsocialMetadata()
         ax.metric('spark:reaction:removed', {
           reaction,
           surface: sparkSurface,
         })
       } catch (err) {
-        setSparkReaction(previousReaction)
+        updatePostShadow(queryClient, post.uri, {likeUri})
+        setOptimisticReaction(null, previousReaction)
         ax.metric('spark:reaction:failed', {
           reaction,
           action: 'remove',
@@ -221,11 +310,33 @@ let PostControls = ({
       return
     }
 
-    setSparkReaction(reaction)
+    setOptimisticReaction(previousReaction ?? null, reaction)
     try {
       if (!post.viewer?.like) {
-        await onPressToggleLike()
-        setSparkReaction(reaction)
+        setHasLikeIconBeenToggled(true)
+        updatePostShadow(queryClient, post.uri, {likeUri: 'pending'})
+        sendInteraction({
+          item: post.uri,
+          event: 'app.bsky.feed.defs#interactionLike',
+          feedContext,
+          reqId,
+        })
+        captureAction(ProgressGuideAction.Like)
+        const {likeUri} = await createReactionWithSpark({
+          agent,
+          subject: {uri: post.uri, cid: post.cid},
+          reactionType: reaction,
+          via: viaRepost,
+        })
+        updatePostShadow(queryClient, post.uri, {likeUri})
+        refreshProsocialMetadata()
+      } else {
+        await putReaction({
+          agent,
+          subject: {uri: post.uri, cid: post.cid},
+          reactionType: reaction,
+        })
+        refreshProsocialMetadata()
       }
       if (previousReaction && previousReaction !== reaction) {
         ax.metric('spark:reaction:changed', {
@@ -240,6 +351,10 @@ let PostControls = ({
         })
       }
     } catch (err) {
+      setOptimisticReaction(reaction, previousReaction ?? null)
+      if (!post.viewer?.like) {
+        updatePostShadow(queryClient, post.uri, {likeUri: undefined})
+      }
       ax.metric('spark:reaction:failed', {
         reaction,
         action: previousReaction ? 'change' : 'select',
@@ -342,6 +457,7 @@ let PostControls = ({
               requireAuth(() => onSelectSparkReaction(reaction))
             }
             onVisibilityChange={setSparkPickerVisible}
+            reactionCounts={prosocialMetadata?.reactionCounts}
             selectedReaction={sparkReaction}>
             <PostControlButton
               testID="likeBtn"
