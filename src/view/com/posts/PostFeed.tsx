@@ -30,6 +30,7 @@ import {
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {MySkyFeedAPI} from '#/lib/api/feed/mysky'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -74,6 +75,7 @@ import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
 import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {RichText} from '#/components/RichText'
+import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
@@ -101,6 +103,10 @@ type FeedRow =
     }
   | {
       type: 'error'
+      key: string
+    }
+  | {
+      type: 'myskyFallbackNotice'
       key: string
     }
   | {
@@ -716,6 +722,13 @@ let PostFeed = ({
       }
     }
 
+    if (
+      data?.pages[0]?.api instanceof MySkyFeedAPI &&
+      data.pages[0].api.usingDiscover
+    ) {
+      arr.unshift({type: 'myskyFallbackNotice', key: 'myskyFallbackNotice'})
+    }
+
     if (description?.text) {
       arr.unshift({
         key: 'description',
@@ -819,6 +832,14 @@ let PostFeed = ({
     ({item: row, index: rowIndex}: ListRenderItemInfo<FeedRow>) => {
       if (row.type === 'empty') {
         return renderEmptyState()
+      } else if (row.type === 'myskyFallbackNotice') {
+        return (
+          <View style={[a.p_md, t.atoms.bg_contrast_25]}>
+            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              {l`MySky is temporarily unavailable. Showing Discover instead.`}
+            </Text>
+          </View>
+        )
       } else if (row.type === 'error') {
         return (
           <PostFeedErrorMessage

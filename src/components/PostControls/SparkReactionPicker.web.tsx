@@ -191,6 +191,7 @@ export function SparkReactionPicker({
           style={[
             a.flex_row,
             a.align_center,
+            t.atoms.bg,
             {
               width: '100%',
               gap: compact ? 0 : 4,
@@ -199,7 +200,6 @@ export function SparkReactionPicker({
               borderRadius: 18,
               borderWidth: 1,
               borderColor: t.palette.contrast_100,
-              backgroundColor: t.palette.white,
             },
             web({boxShadow: '0 5px 20px rgba(0, 0, 0, 0.18)'}),
           ]}>
@@ -238,12 +238,9 @@ export function SparkReactionPicker({
                     borderColor: selected
                       ? t.palette.primary_500
                       : 'transparent',
-                    backgroundColor: selected
-                      ? t.palette.primary_50
-                      : hovered
-                        ? t.palette.contrast_25
-                        : 'transparent',
                   },
+                  selected && t.atoms.bg_contrast_50,
+                  hovered && !selected && t.atoms.bg_contrast_25,
                 ]}>
                 <Image
                   source={reaction.icon}
@@ -259,10 +256,8 @@ export function SparkReactionPicker({
                   style={[
                     a.text_xs,
                     a.pt_2xs,
+                    t.atoms.text_contrast_high,
                     {
-                      color: selected
-                        ? t.palette.primary_700
-                        : t.palette.contrast_700,
                       fontSize: labelSize,
                       maxWidth: itemWidth - 2,
                     },
@@ -271,14 +266,14 @@ export function SparkReactionPicker({
                 </Text>
                 <Text
                   numberOfLines={1}
-                  style={{
-                    color: selected
-                      ? t.palette.primary_700
-                      : t.palette.contrast_500,
-                    fontSize: compact ? 10 : 11,
-                    marginTop: 2,
-                    maxWidth: itemWidth - 2,
-                  }}>
+                  style={[
+                    t.atoms.text_contrast_medium,
+                    {
+                      fontSize: compact ? 10 : 11,
+                      marginTop: 2,
+                      maxWidth: itemWidth - 2,
+                    },
+                  ]}>
                   {count === undefined ? '–' : count.toLocaleString()}
                 </Text>
               </Pressable>
