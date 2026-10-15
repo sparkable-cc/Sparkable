@@ -162,14 +162,15 @@ export const DISCOVER_SAVED_FEED = {
   pinned: true,
 }
 /**
- * MySky is the feed we land people on by default, so it is pinned first
- * everywhere we write a set of starting feeds.
+ * The Sparkable feed, published by @sparkable.cc, is the feed we land people
+ * on by default, signed in or not, so it is pinned first everywhere we write a
+ * set of starting feeds.
  */
-export const MYSKY_FEED_URI =
-  'at://did:plc:wrmpulygwvuhjn2c3jbalgqj/app.bsky.feed.generator/your-feed'
-export const MYSKY_SAVED_FEED = {
+export const SPARKABLE_FEED_URI =
+  'at://did:plc:4dbspjbu242eo2xeou3ietg4/app.bsky.feed.generator/sparkable'
+export const SPARKABLE_SAVED_FEED = {
   type: 'feed',
-  value: MYSKY_FEED_URI,
+  value: SPARKABLE_FEED_URI,
   pinned: true,
 }
 export const TIMELINE_SAVED_FEED = {
@@ -186,7 +187,7 @@ export const VIDEO_SAVED_FEED = {
 export const RECOMMENDED_SAVED_FEEDS: Pick<
   AppBskyActorDefs.SavedFeed,
   'type' | 'value' | 'pinned'
->[] = [MYSKY_SAVED_FEED, DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED]
+>[] = [SPARKABLE_SAVED_FEED, DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED]
 
 export const KNOWN_SHUTDOWN_FEEDS = [
   'at://did:plc:wqowuobffl66jv3kpsvo7ak4/app.bsky.feed.generator/the-algorithm', // for you by skygaze

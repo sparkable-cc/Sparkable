@@ -19,7 +19,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {MYSKY_FEED_URI, MYSKY_SAVED_FEED} from '#/lib/constants'
+import {SPARKABLE_FEED_URI, SPARKABLE_SAVED_FEED} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {GCTIME, STALE} from '#/state/queries'
@@ -122,12 +122,9 @@ export function hydrateFeedGenerator(
       params: route[1],
     },
     avatar: view.avatar,
-    displayName:
-      view.uri === MYSKY_FEED_URI
-        ? 'MySky'
-        : view.displayName
-          ? sanitizeDisplayName(view.displayName)
-          : t`Feed by ${sanitizeHandle(view.creator.handle, '@')}`,
+    displayName: view.displayName
+      ? sanitizeDisplayName(view.displayName)
+      : t`Feed by ${sanitizeHandle(view.creator.handle, '@')}`,
     description,
     creatorDid: view.creator.did,
     creatorHandle: view.creator.handle,
@@ -405,9 +402,9 @@ export type SavedFeedSourceInfo = FeedSourceInfo & {
 
 const PWI_DEFAULT_FEED_STUB: SavedFeedSourceInfo = {
   type: 'feed',
-  displayName: 'MySky',
-  uri: MYSKY_FEED_URI,
-  feedDescriptor: `feedgen|${MYSKY_FEED_URI}`,
+  displayName: 'Sparkable',
+  uri: SPARKABLE_FEED_URI,
+  feedDescriptor: `feedgen|${SPARKABLE_FEED_URI}`,
   route: {
     href: '/',
     name: 'Home',
@@ -423,7 +420,7 @@ const PWI_DEFAULT_FEED_STUB: SavedFeedSourceInfo = {
   // ---
   savedFeed: {
     id: 'pwi-default',
-    ...MYSKY_SAVED_FEED,
+    ...SPARKABLE_SAVED_FEED,
   },
   contentMode: undefined,
 }
@@ -451,16 +448,16 @@ export function usePinnedFeedsInfos() {
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
   const savedPinnedItems =
     preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
-  const savedMySkyFeed = savedPinnedItems.find(
-    feed => feed.value === MYSKY_FEED_URI,
+  const savedDefaultFeed = savedPinnedItems.find(
+    feed => feed.value === SPARKABLE_FEED_URI,
   )
   const pinnedItems = hasSession
     ? [
-        savedMySkyFeed ?? {
-          id: 'mysky-default',
-          ...MYSKY_SAVED_FEED,
+        savedDefaultFeed ?? {
+          id: 'sparkable-default',
+          ...SPARKABLE_SAVED_FEED,
         },
-        ...savedPinnedItems.filter(feed => feed.value !== MYSKY_FEED_URI),
+        ...savedPinnedItems.filter(feed => feed.value !== SPARKABLE_FEED_URI),
       ]
     : savedPinnedItems
 

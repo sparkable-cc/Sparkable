@@ -17,8 +17,8 @@ import {
   BSKY_SERVICE,
   DISCOVER_SAVED_FEED,
   IS_PROD_SERVICE,
-  MYSKY_SAVED_FEED,
   PUBLIC_BSKY_SERVICE,
+  SPARKABLE_SAVED_FEED,
   TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
 import {restoreOAuthSession} from '#/lib/oauth/client'
@@ -220,7 +220,7 @@ export async function createAgentAndCreateAccount(
       networkRetry(1, () => {
         return agent.overwriteSavedFeeds([
           {
-            ...MYSKY_SAVED_FEED,
+            ...SPARKABLE_SAVED_FEED,
             id: TID.nextStr(),
           },
           {
