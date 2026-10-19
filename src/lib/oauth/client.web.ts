@@ -1,4 +1,4 @@
-import type {BrowserOAuthClient} from '@atproto/oauth-client-browser'
+import {type BrowserOAuthClient} from '@atproto/oauth-client-browser'
 
 import {BSKY_SERVICE, PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {logger} from '#/logger'
@@ -102,7 +102,27 @@ export async function startOAuthSignIn({handle}: {handle?: string} = {}) {
   const client = await getOAuthClient()
   const input = handle?.trim() || BSKY_SERVICE
   logger.debug('oauth: starting sign in', {hasHandle: Boolean(handle?.trim())})
-  await client.signInRedirect(input, {scope: OAUTH_SCOPE})
+  try {
+    await client.signInRedirect(input, {scope: OAUTH_SCOPE})
+  } catch (err) {
+    if (isNavigatedBackError(err)) return
+    throw err
+  }
+}
+
+/**
+ * `signInRedirect` never resolves. Its promise rejects with "User navigated
+ * back" when this page is still alive 5 seconds after the redirect started:
+ * the user pressed the browser's back button (the page comes back from the
+ * back-forward cache) or Bluesky's page was slow to load. Neither is a failed
+ * sign-in, so callers must not fall back to the in-app sign-up form, whose
+ * captcha step can't complete for a third-party client.
+ */
+export function isNavigatedBackError(err: unknown) {
+  const errors = err instanceof AggregateError ? err.errors : [err]
+  return errors.some(
+    e => e instanceof Error && e.message === 'User navigated back',
+  )
 }
 
 export async function restoreOAuthSession(did: string) {
