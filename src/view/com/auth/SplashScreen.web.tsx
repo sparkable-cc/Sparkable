@@ -18,6 +18,8 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
+import {BlueskySignupDialog} from '#/components/dialogs/BlueskySignupDialog'
 import {TimesLarge_Stroke2_Corner0_Rounded as TimesIcon} from '#/components/icons/Times'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
@@ -36,6 +38,7 @@ export const SplashScreen = ({
   const t = useTheme()
   const {isTabletOrMobile: IS_WEB_MOBILE} = useWebMediaQueries()
   const [showClipOverlay, setShowClipOverlay] = useState(false)
+  const signupDialogControl = useDialogControl()
 
   useEffect(() => {
     const getParams = new URLSearchParams(window.location.search)
@@ -56,11 +59,16 @@ export const SplashScreen = ({
    *
    * Falls back to the in-app signup flow if OAuth is unavailable or fails.
    */
-  const onPressCreateAccountViaOAuth = async () => {
+  const onPressCreateAccountButton = () => {
     if (!isOAuthSupported) {
       onPressCreateAccount()
       return
     }
+    // Explain the redirect first; the dialog calls the function below
+    signupDialogControl.open()
+  }
+
+  const onPressCreateAccountViaOAuth = async () => {
     try {
       await startOAuthSignIn()
     } catch (err) {
@@ -129,7 +137,7 @@ export const SplashScreen = ({
               style={[a.w_full, a.px_xl, a.gap_md, a.pb_2xl, {maxWidth: 320}]}>
               <Button
                 testID="createAccountButton"
-                onPress={() => void onPressCreateAccountViaOAuth()}
+                onPress={onPressCreateAccountButton}
                 label={_(msg`Create new account`)}
                 accessibilityHint={_(
                   msg`Opens flow to create your account with Bluesky`,
@@ -163,6 +171,10 @@ export const SplashScreen = ({
       <AppClipOverlay
         visible={showClipOverlay}
         setIsVisible={setShowClipOverlay}
+      />
+      <BlueskySignupDialog
+        control={signupDialogControl}
+        onContinue={() => void onPressCreateAccountViaOAuth()}
       />
     </>
   )
