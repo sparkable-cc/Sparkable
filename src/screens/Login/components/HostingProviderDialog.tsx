@@ -234,8 +234,9 @@ function DialogInner({
             nativeID="dialog-description"
             style={[t.atoms.text_contrast_medium, a.text_sm, a.leading_snug]}>
             <Trans>
-              Bluesky is an open network where you can choose your hosting
-              provider. If you're a developer, you can host your own server.
+              Sparkable runs on an open network where you can choose your
+              hosting provider. If you're a developer, you can host your own
+              server.
             </Trans>{' '}
             <InlineLinkText
               label={l`Learn more about self hosting your PDS.`}

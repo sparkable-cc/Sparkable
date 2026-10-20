@@ -5,8 +5,6 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {isOAuthSupported, startOAuthSignIn} from '#/lib/oauth/client'
-import {logger} from '#/logger'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
@@ -18,8 +16,6 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
-import {BlueskySignupDialog} from '#/components/dialogs/BlueskySignupDialog'
 import {TimesLarge_Stroke2_Corner0_Rounded as TimesIcon} from '#/components/icons/Times'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
@@ -38,7 +34,6 @@ export const SplashScreen = ({
   const t = useTheme()
   const {isTabletOrMobile: IS_WEB_MOBILE} = useWebMediaQueries()
   const [showClipOverlay, setShowClipOverlay] = useState(false)
-  const signupDialogControl = useDialogControl()
 
   useEffect(() => {
     const getParams = new URLSearchParams(window.location.search)
@@ -50,32 +45,6 @@ export const SplashScreen = ({
       })
     }
   }, [])
-
-  /*
-   * Send people to Bluesky's hosted authorization page to sign up. We pass the
-   * host rather than a handle so no `login_hint` is derived, which is what
-   * makes that page offer account creation - and lets Bluesky run the captcha
-   * instead of us reimplementing it.
-   *
-   * Falls back to the in-app signup flow if OAuth is unavailable or fails.
-   */
-  const onPressCreateAccountButton = () => {
-    if (!isOAuthSupported) {
-      onPressCreateAccount()
-      return
-    }
-    // Explain the redirect first; the dialog calls the function below
-    signupDialogControl.open()
-  }
-
-  const onPressCreateAccountViaOAuth = async () => {
-    try {
-      await startOAuthSignIn()
-    } catch (err) {
-      logger.error('oauth: failed to start sign up', {safeMessage: err})
-      onPressCreateAccount()
-    }
-  }
 
   const logoVariant = useLogoVariant()
   const kawaii = logoVariant === 'kawaii'
@@ -137,7 +106,8 @@ export const SplashScreen = ({
               style={[a.w_full, a.px_xl, a.gap_md, a.pb_2xl, {maxWidth: 320}]}>
               <Button
                 testID="createAccountButton"
-                onPress={onPressCreateAccountButton}
+                // LoggedOut turns this into the Bluesky sign-up dialog on web
+                onPress={onPressCreateAccount}
                 label={_(msg`Create new account`)}
                 accessibilityHint={_(
                   msg`Opens flow to create your account with Bluesky`,
@@ -171,10 +141,6 @@ export const SplashScreen = ({
       <AppClipOverlay
         visible={showClipOverlay}
         setIsVisible={setShowClipOverlay}
-      />
-      <BlueskySignupDialog
-        control={signupDialogControl}
-        onContinue={() => void onPressCreateAccountViaOAuth()}
       />
     </>
   )
