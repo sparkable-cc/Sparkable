@@ -10,7 +10,7 @@ import {AppState, type AppStateStatus} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import throttle from 'lodash.throttle'
 
-import {PROD_FEEDS, SPARKABLE_FEED_URI, STAGING_FEEDS} from '#/lib/constants'
+import {PROD_FEEDS, STAGING_FEEDS} from '#/lib/constants'
 import {
   type FeedSourceFeedInfo,
   type FeedSourceInfo,
@@ -41,27 +41,6 @@ export const THIRD_PARTY_ALLOWED_INTERACTIONS = new Set<
   // so it is fine to send. It is crucial for third party algorithmic feeds to receive these.
   'app.bsky.feed.defs#interactionSeen',
 ])
-
-/**
- * Private moderation actions from the post menu, used by Sparkable's feed as
- * negative signals. Bluesky never sends these to feeds, so they go to
- * Sparkable's own feed only, never to any other feed (Discover included).
- */
-export const SPARKABLE_FEED_INTERACTIONS = {
-  muteThread: 'cc.sparkable.feed.defs#muteThread',
-  muteWords: 'cc.sparkable.feed.defs#muteWords',
-  hidePost: 'cc.sparkable.feed.defs#hidePost',
-  muteAccount: 'cc.sparkable.feed.defs#muteAccount',
-  blockAccount: 'cc.sparkable.feed.defs#blockAccount',
-  reportPost: 'cc.sparkable.feed.defs#reportPost',
-} as const
-
-export type SparkableFeedInteraction =
-  (typeof SPARKABLE_FEED_INTERACTIONS)[keyof typeof SPARKABLE_FEED_INTERACTIONS]
-
-const SPARKABLE_ONLY_INTERACTIONS = new Set<
-  AppBskyFeedDefs.Interaction['event']
->(Object.values(SPARKABLE_FEED_INTERACTIONS))
 
 export type StateContext = {
   enabled: boolean
@@ -286,16 +265,13 @@ export function isDiscoverFeed(feed?: FeedDescriptor) {
   return !!feed && FEEDBACK_FEEDS.includes(feed)
 }
 
-export function isInteractionAllowed(
+function isInteractionAllowed(
   enabled: boolean,
   feed: FeedSourceFeedInfo | undefined,
   interaction: AppBskyFeedDefs.Interaction['event'],
 ) {
   if (!enabled || !feed) {
     return false
-  }
-  if (SPARKABLE_ONLY_INTERACTIONS.has(interaction)) {
-    return feed.uri === SPARKABLE_FEED_URI
   }
   const isDiscover = isDiscoverFeed(feed.feedDescriptor)
   return isDiscover ? true : THIRD_PARTY_ALLOWED_INTERACTIONS.has(interaction)

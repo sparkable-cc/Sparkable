@@ -35,18 +35,17 @@ import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {
+  disarmMutedWordSignal,
+  onMutedWordSaved,
+} from '#/features/feedSignals/signals'
 
 const ONE_DAY = 24 * 60 * 60 * 1000
 
 export function MutedWordsDialog() {
-  const {mutedWordsDialogControl: control, mutedWordsDialogOnAdd} =
-    useGlobalDialogsControlContext()
+  const {mutedWordsDialogControl: control} = useGlobalDialogsControlContext()
   return (
-    <Dialog.Outer
-      control={control}
-      onClose={() => {
-        mutedWordsDialogOnAdd.current = null
-      }}>
+    <Dialog.Outer control={control} onClose={disarmMutedWordSignal}>
       <Dialog.Handle />
       <MutedWordsInner />
     </Dialog.Outer>
@@ -57,7 +56,6 @@ function MutedWordsInner() {
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
-  const {mutedWordsDialogOnAdd} = useGlobalDialogsControlContext()
   const {
     isLoading: isPreferencesLoading,
     data: preferences,
@@ -107,22 +105,12 @@ function MutedWordsInner() {
         },
       ])
       setField('')
-      mutedWordsDialogOnAdd.current?.()
-      mutedWordsDialogOnAdd.current = null
+      onMutedWordSaved()
     } catch (e: any) {
       logger.error(`Failed to save muted word`, {message: e.message})
       setError(e.message)
     }
-  }, [
-    _,
-    field,
-    targets,
-    addMutedWord,
-    setField,
-    durations,
-    excludeFollowing,
-    mutedWordsDialogOnAdd,
-  ])
+  }, [_, field, targets, addMutedWord, setField, durations, excludeFollowing])
 
   return (
     <Dialog.ScrollableInner label={_(msg`Manage your muted words and tags`)}>
