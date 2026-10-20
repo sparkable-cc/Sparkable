@@ -35,13 +35,17 @@ import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {
+  disarmMutedWordSignal,
+  onMutedWordSaved,
+} from '#/features/feedSignals/signals'
 
 const ONE_DAY = 24 * 60 * 60 * 1000
 
 export function MutedWordsDialog() {
   const {mutedWordsDialogControl: control} = useGlobalDialogsControlContext()
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} onClose={disarmMutedWordSignal}>
       <Dialog.Handle />
       <MutedWordsInner />
     </Dialog.Outer>
@@ -101,6 +105,7 @@ function MutedWordsInner() {
         },
       ])
       setField('')
+      onMutedWordSaved()
     } catch (e: any) {
       logger.error(`Failed to save muted word`, {message: e.message})
       setError(e.message)

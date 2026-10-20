@@ -97,6 +97,11 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
+import {
+  armMutedWordSignal,
+  FEED_SIGNALS,
+  useSendFeedSignal,
+} from '#/features/feedSignals'
 
 let PostMenuItems = ({
   post,
@@ -135,6 +140,11 @@ let PostMenuItems = ({
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
+  const sendFeedSignal = useSendFeedSignal({
+    postUri: post.uri,
+    feedContext: postFeedContext,
+    reqId: postReqId,
+  })
   const openLink = useOpenLink()
   const {clearTranslation, translate, translationState} = useTranslate({
     key: post.uri,
@@ -237,6 +247,7 @@ let PostMenuItems = ({
         Toast.show(l`You will now receive notifications for this thread`)
       } else {
         void muteThread()
+        sendFeedSignal(FEED_SIGNALS.muteThread)
         ax.metric('post:mute', {
           uri: postUri,
           authorDid: postAuthor.did,
@@ -263,6 +274,7 @@ let PostMenuItems = ({
       logContext,
       feedDescriptor: feedFeedback.feedDescriptor,
     })
+    armMutedWordSignal(() => sendFeedSignal(FEED_SIGNALS.muteWords))
     mutedWordsDialogControl.open()
   }
 
@@ -285,6 +297,7 @@ let PostMenuItems = ({
 
   const onHidePost = () => {
     hidePost({uri: postUri})
+    sendFeedSignal(FEED_SIGNALS.hidePost)
     ax.metric('thread:click:hideReplyForMe', {})
   }
 
@@ -424,6 +437,7 @@ let PostMenuItems = ({
   const onBlockAuthor = async () => {
     try {
       await queueBlock()
+      sendFeedSignal(FEED_SIGNALS.blockAccount)
       Toast.show(l({message: 'Account blocked', context: 'toast'}))
     } catch (err) {
       const e = err as Error
@@ -467,6 +481,7 @@ let PostMenuItems = ({
     } else {
       try {
         await queueMute()
+        sendFeedSignal(FEED_SIGNALS.muteAccount)
         Toast.show(l({message: 'Account muted', context: 'toast'}))
       } catch (err) {
         const e = err as Error
@@ -842,6 +857,7 @@ let PostMenuItems = ({
           $type: 'app.bsky.feed.defs#postView',
         }}
         onAfterSubmit={() => {
+          sendFeedSignal(FEED_SIGNALS.reportPost)
           ax.metric('postMenu:reportPost', {
             uri: postUri,
             authorDid: postAuthor.did,
