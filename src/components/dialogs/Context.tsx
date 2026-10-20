@@ -1,4 +1,4 @@
-import {createContext, useContext, useMemo, useState} from 'react'
+import {createContext, useContext, useMemo, useRef, useState} from 'react'
 
 import {type AgeAssuranceRedirectDialogState} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import * as Dialog from '#/components/Dialog'
@@ -16,6 +16,11 @@ export type StatefulControl<T> = {
 
 type ControlsContext = {
   mutedWordsDialogControl: Control
+  /**
+   * Set by whoever opens the muted words dialog to learn when a word is
+   * actually saved. Called once after the first save; cleared on close.
+   */
+  mutedWordsDialogOnAdd: React.RefObject<(() => void) | null>
   signinDialogControl: Control
   inAppBrowserConsentControl: StatefulControl<string>
   emailDialogControl: StatefulControl<Screen>
@@ -43,6 +48,7 @@ export function useGlobalDialogsControlContext() {
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const mutedWordsDialogControl = Dialog.useDialogControl()
+  const mutedWordsDialogOnAdd = useRef<(() => void) | null>(null)
   const signinDialogControl = Dialog.useDialogControl()
   const inAppBrowserConsentControl = useStatefulDialogControl<string>()
   const emailDialogControl = useStatefulDialogControl<Screen>()
@@ -60,6 +66,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const ctx = useMemo<ControlsContext>(
     () => ({
       mutedWordsDialogControl,
+      mutedWordsDialogOnAdd,
       signinDialogControl,
       inAppBrowserConsentControl,
       emailDialogControl,

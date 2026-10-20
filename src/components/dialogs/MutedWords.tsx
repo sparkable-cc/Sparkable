@@ -39,9 +39,14 @@ import {IS_NATIVE} from '#/env'
 const ONE_DAY = 24 * 60 * 60 * 1000
 
 export function MutedWordsDialog() {
-  const {mutedWordsDialogControl: control} = useGlobalDialogsControlContext()
+  const {mutedWordsDialogControl: control, mutedWordsDialogOnAdd} =
+    useGlobalDialogsControlContext()
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer
+      control={control}
+      onClose={() => {
+        mutedWordsDialogOnAdd.current = null
+      }}>
       <Dialog.Handle />
       <MutedWordsInner />
     </Dialog.Outer>
@@ -52,6 +57,7 @@ function MutedWordsInner() {
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
+  const {mutedWordsDialogOnAdd} = useGlobalDialogsControlContext()
   const {
     isLoading: isPreferencesLoading,
     data: preferences,
@@ -101,11 +107,22 @@ function MutedWordsInner() {
         },
       ])
       setField('')
+      mutedWordsDialogOnAdd.current?.()
+      mutedWordsDialogOnAdd.current = null
     } catch (e: any) {
       logger.error(`Failed to save muted word`, {message: e.message})
       setError(e.message)
     }
-  }, [_, field, targets, addMutedWord, setField, durations, excludeFollowing])
+  }, [
+    _,
+    field,
+    targets,
+    addMutedWord,
+    setField,
+    durations,
+    excludeFollowing,
+    mutedWordsDialogOnAdd,
+  ])
 
   return (
     <Dialog.ScrollableInner label={_(msg`Manage your muted words and tags`)}>

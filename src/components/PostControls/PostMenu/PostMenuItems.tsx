@@ -32,7 +32,11 @@ import {getPostLanguageTags} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {
+  SPARKABLE_FEED_INTERACTIONS,
+  type SparkableFeedInteraction,
+  useFeedFeedbackContext,
+} from '#/state/feed-feedback'
 import {
   useHiddenPosts,
   useHiddenPostsApi,
@@ -141,7 +145,8 @@ let PostMenuItems = ({
     forceGoogleTranslate,
   })
   const navigation = useNavigation<NavigationProp>()
-  const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
+  const {mutedWordsDialogControl, mutedWordsDialogOnAdd} =
+    useGlobalDialogsControlContext()
   const blockPromptControl = useDialogControl()
   const reportDialogControl = useReportDialogControl()
   const deletePromptControl = useDialogControl()
@@ -194,6 +199,19 @@ let PostMenuItems = ({
     return makeProfileLink(postAuthor, 'post', urip.rkey)
   }, [postUri, postAuthor])
 
+  /**
+   * Tells the feed about a private moderation action on this post. The
+   * feed-feedback allowlist only lets these through to Sparkable's own feed.
+   */
+  const sendModerationSignal = (event: SparkableFeedInteraction) => {
+    feedFeedback.sendInteraction({
+      event,
+      item: postUri,
+      feedContext: postFeedContext,
+      reqId: postReqId,
+    })
+  }
+
   const onDeletePost = () => {
     deletePostMutate({uri: postUri}).then(
       () => {
@@ -237,6 +255,7 @@ let PostMenuItems = ({
         Toast.show(l`You will now receive notifications for this thread`)
       } else {
         void muteThread()
+        sendModerationSignal(SPARKABLE_FEED_INTERACTIONS.muteThread)
         ax.metric('post:mute', {
           uri: postUri,
           authorDid: postAuthor.did,
@@ -263,6 +282,9 @@ let PostMenuItems = ({
       logContext,
       feedDescriptor: feedFeedback.feedDescriptor,
     })
+    // Only counts if a word is actually saved, not if the dialog is canceled.
+    mutedWordsDialogOnAdd.current = () =>
+      sendModerationSignal(SPARKABLE_FEED_INTERACTIONS.muteWords)
     mutedWordsDialogControl.open()
   }
 
@@ -285,6 +307,7 @@ let PostMenuItems = ({
 
   const onHidePost = () => {
     hidePost({uri: postUri})
+    sendModerationSignal(SPARKABLE_FEED_INTERACTIONS.hidePost)
     ax.metric('thread:click:hideReplyForMe', {})
   }
 
@@ -424,6 +447,7 @@ let PostMenuItems = ({
   const onBlockAuthor = async () => {
     try {
       await queueBlock()
+      sendModerationSignal(SPARKABLE_FEED_INTERACTIONS.blockAccount)
       Toast.show(l({message: 'Account blocked', context: 'toast'}))
     } catch (err) {
       const e = err as Error
@@ -467,6 +491,7 @@ let PostMenuItems = ({
     } else {
       try {
         await queueMute()
+        sendModerationSignal(SPARKABLE_FEED_INTERACTIONS.muteAccount)
         Toast.show(l({message: 'Account muted', context: 'toast'}))
       } catch (err) {
         const e = err as Error
@@ -842,6 +867,7 @@ let PostMenuItems = ({
           $type: 'app.bsky.feed.defs#postView',
         }}
         onAfterSubmit={() => {
+          sendModerationSignal(SPARKABLE_FEED_INTERACTIONS.reportPost)
           ax.metric('postMenu:reportPost', {
             uri: postUri,
             authorDid: postAuthor.did,
