@@ -5,6 +5,8 @@ import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
+import {isOAuthSupported, startOAuthSignIn} from '#/lib/oauth/client'
+import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {profilesQueryKey} from '#/state/queries/profile'
 import {useAgent, useSession} from '#/state/session'
@@ -21,6 +23,8 @@ import {Signup} from '#/screens/Signup'
 import {LandingScreen} from '#/screens/StarterPack/StarterPackLandingScreen'
 import {atoms as a, native, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
+import {BlueskySignupDialog} from '#/components/dialogs/BlueskySignupDialog'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {useAnalytics} from '#/analytics'
 import {SplashScreen} from './SplashScreen'
@@ -60,6 +64,30 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const initialScreenState = getInitialScreenState(requestedAccountSwitchTo)
   const [screenState, setScreenState] =
     useState<ScreenState>(initialScreenState)
+  const signupDialogControl = useDialogControl()
+
+  /*
+   * Every "create account" step inside this view (splash, login form, starter
+   * pack and group chat invite) asks for S_CreateAccount. On web the in-app
+   * form can't finish, because the captcha only hands its code to bsky.app.
+   * So we explain the move to Bluesky and start OAuth sign-up instead. The
+   * in-app form stays the fallback when OAuth fails to start, and native
+   * (no OAuth) still uses it directly.
+   */
+  const goToScreen = (next: ScreenState) => {
+    if (next === ScreenState.S_CreateAccount && isOAuthSupported) {
+      signupDialogControl.open()
+      return
+    }
+    setScreenState(next)
+  }
+
+  const onContinueToBluesky = () => {
+    startOAuthSignIn().catch(err => {
+      logger.error('oauth: failed to start sign up', {safeMessage: err})
+      setScreenState(ScreenState.S_CreateAccount)
+    })
+  }
   const {clearRequestedAccount} = useLoggedOutViewControls()
   const setActiveLanding = useSetActiveLanding()
 
@@ -144,9 +172,9 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
         ) : null}
 
         {screenState === ScreenState.S_StarterPack ? (
-          <LandingScreen setScreenState={setScreenState} />
+          <LandingScreen setScreenState={goToScreen} />
         ) : screenState === ScreenState.S_GroupChatJoinRequest ? (
-          <JoinRequest setScreenState={setScreenState} />
+          <JoinRequest setScreenState={goToScreen} />
         ) : screenState === ScreenState.S_LoginOrCreateAccount ? (
           <SplashScreen
             onPressSignin={() => {
@@ -154,7 +182,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
               ax.metric('splash:signInPressed', {})
             }}
             onPressCreateAccount={() => {
-              setScreenState(ScreenState.S_CreateAccount)
+              goToScreen(ScreenState.S_CreateAccount)
               ax.metric('splash:createAccountPressed', {})
             }}
           />
@@ -163,7 +191,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
           <Login
             onPressBack={onPressBack}
             onPressCreateAccount={() => {
-              setScreenState(ScreenState.S_CreateAccount)
+              goToScreen(ScreenState.S_CreateAccount)
             }}
           />
         ) : undefined}
@@ -171,6 +199,12 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
           <Signup onPressBack={onPressBack} />
         ) : undefined}
       </ErrorBoundary>
+      {isOAuthSupported && (
+        <BlueskySignupDialog
+          control={signupDialogControl}
+          onContinue={onContinueToBluesky}
+        />
+      )}
     </View>
   )
 }
