@@ -31,6 +31,7 @@ ENV EXPO_PUBLIC_RELEASE_VERSION=$EXPO_PUBLIC_RELEASE_VERSION
 ARG EXPO_PUBLIC_BUNDLE_IDENTIFIER
 # If not set by GitHub workflows, we're probably in Render
 ENV EXPO_PUBLIC_BUNDLE_IDENTIFIER=${EXPO_PUBLIC_BUNDLE_IDENTIFIER:-$RENDER_GIT_COMMIT}
+ARG EXPO_PUBLIC_PROSOCIAL_METADATA_API_HOST
 
 #
 # Sentry
@@ -47,7 +48,8 @@ RUN echo "Using bundle identifier: $EXPO_PUBLIC_BUNDLE_IDENTIFIER" && \
   echo "EXPO_PUBLIC_RELEASE_VERSION=$EXPO_PUBLIC_RELEASE_VERSION" >> .env && \
   echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER" >> .env && \
   echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env && \
-  echo "EXPO_PUBLIC_SENTRY_DSN=$EXPO_PUBLIC_SENTRY_DSN" >> .env
+  echo "EXPO_PUBLIC_SENTRY_DSN=$EXPO_PUBLIC_SENTRY_DSN" >> .env && \
+  echo "EXPO_PUBLIC_PROSOCIAL_METADATA_API_HOST=$EXPO_PUBLIC_PROSOCIAL_METADATA_API_HOST" >> .env
 
 # NOTE: no BuildKit cache mount here. Railway requires cache-mount ids to be
 # prefixed with its own cache key, and a plain `id=pnpm` fails validation. The
