@@ -197,7 +197,10 @@
   <link rel="icon" type="image/png" sizes="16x16" href="{{ staticCDNHost }}/static/favicon-16x16.png">
   <link rel="mask-icon" href="{{ staticCDNHost }}/static/safari-pinned-tab.svg" color="#4153F5">
   <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#4153F5">
+  {# Light and default dark (dim) backgrounds. The app sets its exact theme color once it loads. #}
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#151D28">
+  <meta name="apple-mobile-web-app-title" content="Sparkable">
   <meta name="application-name" content="Sparkable">
   <meta name="generator" content="bskyweb">
   {% if noindex %}<meta name="robots" content="noindex{% if nofollow %}, nofollow{% endif %}">{% endif %}
