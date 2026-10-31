@@ -162,6 +162,14 @@
           });
         } catch (_) {}
       }
+      /*
+       * The app removes the static #splash as soon as it first paints. After
+       * that the app is running and handles its own errors, so a full-screen
+       * overlay would only block a working page.
+       */
+      function booted() {
+        return !document.getElementById("splash");
+      }
       window.addEventListener("error", function (e) {
         var stack = (e && e.error && e.error.stack) || "";
         /*
@@ -172,13 +180,21 @@
          */
         var f = String((e && e.filename) || "");
         if (f.indexOf("blob:") === 0) return;
-        show("Boot error:", (e && e.message) + NL + stack);
+        /*
+         * Errors with no file and no error object are the browser's redacted
+         * "Script error." from a script on another origin. Firefox on iOS
+         * raises one from its own injected scripts on every tap. Our bundle is
+         * served from this origin, so these are never ours and carry nothing
+         * to act on.
+         */
+        if (!(e && e.error) && !f) return;
+        if (!booted()) show("Boot error:", (e && e.message) + NL + stack);
         report("error", e && e.message, stack, e && e.filename, e && e.lineno, e && e.colno);
       });
       window.addEventListener("unhandledrejection", function (e) {
         var r = e && e.reason;
         var d = (r && (r.stack || r.message)) || String(r);
-        show("Unhandled rejection:", d);
+        if (!booted()) show("Unhandled rejection:", d);
         report("rejection", (r && r.message) || String(r), d, "", 0, 0);
       });
       window.__bootTrap = true;
