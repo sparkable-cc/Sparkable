@@ -52,6 +52,7 @@ import {
 import {PostMenuButton} from './PostMenu'
 import {RepostButton} from './RepostButton'
 import {ShareMenuButton} from './ShareMenu'
+import {SparkBurst} from './SparkBurst'
 import {
   type SparkReaction,
   SparkReactionIcon,
@@ -484,15 +485,20 @@ let PostControls = ({
                         'Accessibility label for the spark button when the post has not been sparked, verb form followed by number of sparks and noun form',
                     })
               }>
-              {sparkReaction && post.viewer?.like ? (
-                <SparkReactionIcon reaction={sparkReaction} />
-              ) : (
-                <AnimatedLikeIcon
-                  isLiked={Boolean(post.viewer?.like)}
-                  big={big}
-                  hasBeenToggled={hasLikeIconBeenToggled}
-                />
-              )}
+              <SparkBurst
+                sparked={Boolean(post.viewer?.like)}
+                reaction={reactionOverride}
+                hasBeenToggled={hasLikeIconBeenToggled}>
+                {sparkReaction && post.viewer?.like ? (
+                  <SparkReactionIcon reaction={sparkReaction} />
+                ) : (
+                  <AnimatedLikeIcon
+                    isLiked={Boolean(post.viewer?.like)}
+                    big={big}
+                    hasBeenToggled={hasLikeIconBeenToggled}
+                  />
+                )}
+              </SparkBurst>
               <CountWheel
                 count={post.likeCount ?? 0}
                 isToggled={Boolean(post.viewer?.like)}
