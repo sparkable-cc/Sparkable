@@ -133,44 +133,6 @@
       }
     </style>
     <script>
-      /*
-       * TEMPORARY boot-level error trap. Lives outside the app bundle so it
-       * also catches exceptions thrown while that bundle is evaluating, which
-       * otherwise render as a blank white page with nothing to explain why.
-       * Remove once OAuth sign-in is confirmed working.
-       */
-      (function () {
-        function show(label, detail) {
-          try {
-            var el = document.createElement('pre')
-            el.style.cssText =
-              'position:fixed;inset:0;z-index:99999;margin:0;padding:16px;' +
-              'background:#111;color:#f88;font:12px/1.4 monospace;' +
-              'white-space:pre-wrap;overflow:auto'
-            el.textContent = label + '
-
-' + detail
-            ;(document.body || document.documentElement).appendChild(el)
-          } catch (_) {}
-        }
-        window.addEventListener('error', function (e) {
-          show(
-            'Boot error:',
-            (e && e.message) + '
-' + ((e && e.error && e.error.stack) || ''),
-          )
-        })
-        window.addEventListener('unhandledrejection', function (e) {
-          var r = e && e.reason
-          show(
-            'Unhandled promise rejection:',
-            (r && (r.stack || r.message)) || String(r),
-          )
-        })
-      })()
-    </script>
-
-    <script>
       const theme = localStorage.getItem('ALF_THEME')
       if (theme) {
         document.documentElement.classList.add(`theme--${theme}`)
