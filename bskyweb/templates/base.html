@@ -159,6 +159,8 @@
               line: line || 0,
               col: col || 0,
             }),
+          }).catch(function () {
+            // A failed report must not trigger the unhandledrejection trap again.
           });
         } catch (_) {}
       }
