@@ -28,7 +28,6 @@ import {
 import {
   prosocialMetadataQueryKey,
   updateProsocialReactionCache,
-  useProsocialPostMetadata,
   useViewerProsocialReaction,
   viewerProsocialReactionQueryKey,
 } from '#/state/queries/prosocial-metadata'
@@ -121,7 +120,6 @@ let PostControls = ({
   const replyDisabled = post.viewer?.replyDisabled
   const {gtPhone} = useBreakpoints()
   const formatPostStatCount = useFormatPostStatCount()
-  const {data: prosocialMetadata} = useProsocialPostMetadata(post.uri)
   const {data: viewerReaction, refetch: refetchViewerReaction} =
     useViewerProsocialReaction(post.uri, Boolean(post.viewer?.like))
 
@@ -457,7 +455,6 @@ let PostControls = ({
               requireAuth(() => onSelectSparkReaction(reaction))
             }
             onVisibilityChange={setSparkPickerVisible}
-            reactionCounts={prosocialMetadata?.reactionCounts}
             selectedReaction={sparkReaction}>
             <PostControlButton
               testID="likeBtn"
