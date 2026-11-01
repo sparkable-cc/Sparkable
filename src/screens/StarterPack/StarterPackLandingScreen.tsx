@@ -4,7 +4,6 @@ import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {
   AppBskyGraphDefs,
   AppBskyGraphStarterpack,
-  AtUri,
   type ModerationOpts,
 } from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -13,7 +12,6 @@ import {Trans} from '@lingui/react/macro'
 
 import {JOINED_THIS_WEEK} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {createStarterPackGooglePlayUri} from '#/lib/strings/starter-pack'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useStarterPackQuery} from '#/state/queries/starter-packs'
 import {
@@ -25,7 +23,6 @@ import {formatCount} from '#/view/com/util/numeric/format'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
 import * as FeedCard from '#/components/FeedCard'
 import {useRichText} from '#/components/hooks/useRichText'
 import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
@@ -33,11 +30,9 @@ import * as Layout from '#/components/Layout'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
-import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_WEB, IS_WEB_MOBILE_ANDROID} from '#/env'
 import * as bsky from '#/types/bsky'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
@@ -125,7 +120,6 @@ function LandingScreenLoaded({
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
   const {isTabletOrDesktop} = useWebMediaQueries()
-  const androidDialogControl = useDialogControl()
   const [descriptionRt] = useRichText(record.description || '')
 
   const [appClipOverlayVisible, setAppClipOverlayVisible] = useState(false)
@@ -142,8 +136,6 @@ function LandingScreenLoaded({
       postAppClipMessage({
         action: 'present',
       })
-    } else if (IS_WEB_MOBILE_ANDROID) {
-      androidDialogControl.open()
     } else {
       onContinue()
     }
@@ -323,48 +315,6 @@ function LandingScreenLoaded({
         visible={appClipOverlayVisible}
         setIsVisible={setAppClipOverlayVisible}
       />
-      <Prompt.Outer control={androidDialogControl}>
-        <Prompt.Content>
-          <Prompt.TitleText>
-            <Trans>Download Bluesky</Trans>
-          </Prompt.TitleText>
-          <Prompt.DescriptionText>
-            <Trans>
-              The experience is better in the app. Download Bluesky now and
-              we'll pick back up where you left off.
-            </Trans>
-          </Prompt.DescriptionText>
-        </Prompt.Content>
-        <Prompt.Actions>
-          <Prompt.Action
-            cta="Download on Google Play"
-            color="primary"
-            onPress={() => {
-              const rkey = new AtUri(starterPack.uri).rkey
-              if (!rkey) return
-
-              const googlePlayUri = createStarterPackGooglePlayUri(
-                creator.handle,
-                rkey,
-              )
-              if (!googlePlayUri) return
-
-              window.location.href = googlePlayUri
-            }}
-          />
-          <Prompt.Action
-            cta="Continue on web"
-            color="secondary"
-            onPress={onContinue}
-          />
-        </Prompt.Actions>
-      </Prompt.Outer>
-      {IS_WEB && (
-        <meta
-          name="apple-itunes-app"
-          content="app-id=xyz.blueskyweb.app, app-clip-bundle-id=xyz.blueskyweb.app.AppClip, app-clip-display=card"
-        />
-      )}
     </View>
   )
 }

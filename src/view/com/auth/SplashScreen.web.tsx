@@ -5,8 +5,6 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {isOAuthSupported, startOAuthSignIn} from '#/lib/oauth/client'
-import {logger} from '#/logger'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
@@ -47,27 +45,6 @@ export const SplashScreen = ({
       })
     }
   }, [])
-
-  /*
-   * Send people to Bluesky's hosted authorization page to sign up. We pass the
-   * host rather than a handle so no `login_hint` is derived, which is what
-   * makes that page offer account creation - and lets Bluesky run the captcha
-   * instead of us reimplementing it.
-   *
-   * Falls back to the in-app signup flow if OAuth is unavailable or fails.
-   */
-  const onPressCreateAccountViaOAuth = async () => {
-    if (!isOAuthSupported) {
-      onPressCreateAccount()
-      return
-    }
-    try {
-      await startOAuthSignIn()
-    } catch (err) {
-      logger.error('oauth: failed to start sign up', {safeMessage: err})
-      onPressCreateAccount()
-    }
-  }
 
   const logoVariant = useLogoVariant()
   const kawaii = logoVariant === 'kawaii'
@@ -129,10 +106,11 @@ export const SplashScreen = ({
               style={[a.w_full, a.px_xl, a.gap_md, a.pb_2xl, {maxWidth: 320}]}>
               <Button
                 testID="createAccountButton"
-                onPress={() => void onPressCreateAccountViaOAuth()}
+                // LoggedOut turns this into the Bluesky sign-up dialog on web
+                onPress={onPressCreateAccount}
                 label={_(msg`Create new account`)}
                 accessibilityHint={_(
-                  msg`Opens flow to create a new Sparkable account`,
+                  msg`Opens flow to create your account with Bluesky`,
                 )}
                 size="large"
                 variant="solid"
@@ -146,7 +124,7 @@ export const SplashScreen = ({
                 onPress={onPressSignin}
                 label={_(msg`Sign in`)}
                 accessibilityHint={_(
-                  msg`Opens flow to sign in to your existing Sparkable account`,
+                  msg`Opens flow to sign in to your existing account`,
                 )}
                 size="large"
                 variant="solid"

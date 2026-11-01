@@ -4,6 +4,8 @@ import {isOAuthSupported, startOAuthSignIn} from '#/lib/oauth/client'
 import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {useActiveLanding} from '#/state/shell/landing'
+import {useDialogControl} from '#/components/Dialog'
+import {BlueskySignupDialog} from '#/components/dialogs/BlueskySignupDialog'
 import {IS_WEB} from '#/env'
 
 type State = {
@@ -84,6 +86,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     showLoggedOut: Boolean(requestedAccount),
     requestedAccountSwitchTo: requestedAccount,
   })
+  const signupDialogControl = useDialogControl()
 
   const controls = useMemo<Controls>(
     () => ({
@@ -105,15 +108,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
          * Sign-up goes through Bluesky's hosted OAuth page, which runs the
          * captcha we cannot implement ourselves. Every "create account" entry
          * point funnels through here, so intercepting once covers all of them.
+         * The dialog explains the redirect first; see `onContinueToBluesky`.
          *
-         * Falls back to the in-app flow when OAuth is unsupported (native) or
-         * fails to start.
+         * Native (no OAuth) goes straight to the in-app flow.
          */
         if (requestedAccount === 'new' && isOAuthSupported) {
-          startOAuthSignIn().catch(err => {
-            logger.error('oauth: failed to start sign up', {safeMessage: err})
-            showLoggedOutView()
-          })
+          signupDialogControl.open()
           return
         }
 
@@ -126,13 +126,31 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }))
       },
     }),
-    [setState],
+    [setState, signupDialogControl],
   )
+
+  // Falls back to the in-app flow if OAuth fails to start
+  const onContinueToBluesky = () => {
+    startOAuthSignIn().catch(err => {
+      logger.error('oauth: failed to start sign up', {safeMessage: err})
+      setState(s => ({
+        ...s,
+        showLoggedOut: true,
+        requestedAccountSwitchTo: 'new',
+      }))
+    })
+  }
 
   return (
     <StateContext.Provider value={state}>
       <ControlsContext.Provider value={controls}>
         {children}
+        {isOAuthSupported && (
+          <BlueskySignupDialog
+            control={signupDialogControl}
+            onContinue={onContinueToBluesky}
+          />
+        )}
       </ControlsContext.Provider>
     </StateContext.Provider>
   )

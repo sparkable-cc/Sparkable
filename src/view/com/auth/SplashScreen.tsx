@@ -88,7 +88,7 @@ export const SplashScreen = ({
             }}
             label={_(msg`Create new account`)}
             accessibilityHint={_(
-              msg`Opens flow to create a new Sparkable account`,
+              msg`Opens flow to create your account with Bluesky`,
             )}
             size="large"
             color={isDarkMode ? 'secondary_inverted' : 'secondary'}
@@ -117,7 +117,7 @@ export const SplashScreen = ({
             }}
             label={_(msg`Sign in`)}
             accessibilityHint={_(
-              msg`Opens flow to sign in to your existing Sparkable account`,
+              msg`Opens flow to sign in to your existing account`,
             )}
             size="large"
             hoverStyle={{opacity: 0.5}}>
