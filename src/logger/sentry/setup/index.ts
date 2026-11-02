@@ -21,6 +21,22 @@ init({
      */
     `Network request failed`,
   ],
+  beforeSend(event) {
+    // Firefox for iOS can raise this error from an injected script on an
+    // otherwise valid page. The report has no stack or app bundle location.
+    const error = event.exception?.values?.[0]
+    if (
+      typeof navigator !== 'undefined' &&
+      /\bFxiOS\//.test(navigator.userAgent) &&
+      error?.value?.includes(
+        'No identifiers allowed directly after numeric literal',
+      ) &&
+      !error.stacktrace?.frames?.length
+    ) {
+      return null
+    }
+    return event
+  },
   /**
    * Does not affect traces of error events or other logs, just disables
    * automatically attaching stack traces to events. This helps us group events

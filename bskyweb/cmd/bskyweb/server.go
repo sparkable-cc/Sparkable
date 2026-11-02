@@ -282,22 +282,6 @@ func serve(cctx *cli.Context) error {
 	 * deployments working without extra config.
 	 */
 	/*
-	 * TEMPORARY: receives client-side boot errors from the trap in base.html so
-	 * they can be read from the server log and resolved against source maps.
-	 * Remove alongside that trap.
-	 */
-	e.POST("/__boot-error", func(c echo.Context) error {
-		var payload map[string]interface{}
-		if err := c.Bind(&payload); err != nil {
-			return c.NoContent(http.StatusBadRequest)
-		}
-		log.Warnf("BOOT-ERROR %v | file=%v line=%v col=%v | stack=%v",
-			payload["message"], payload["file"], payload["line"],
-			payload["col"], payload["stack"])
-		return c.NoContent(http.StatusNoContent)
-	})
-
-	/*
 	 * PWA manifest. Served dynamically rather than as a static file so the
 	 * icon URLs stay absolute against whatever origin is serving the app.
 	 */

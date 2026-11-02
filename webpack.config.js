@@ -114,11 +114,14 @@ module.exports = async function (env, argv) {
       }),
     )
   }
-  if (process.env.SENTRY_AUTH_TOKEN) {
+  if (
+    process.env.SENTRY_AUTH_TOKEN &&
+    process.env.SENTRY_AUTH_TOKEN !== 'unknown'
+  ) {
     config.plugins.push(
       sentryWebpackPlugin({
-        org: 'blueskyweb',
-        project: 'app',
+        org: 'sparkable',
+        project: 'sparkable-web',
         authToken: process.env.SENTRY_AUTH_TOKEN,
         release: {
           // fallback needed for Render.com deployments
