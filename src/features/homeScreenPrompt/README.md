@@ -62,9 +62,13 @@ Kept small so merges from Bluesky's social-app stay easy:
   `apple-mobile-web-app-title`.
 - Icons come from `scripts/generateBrandIcons.mjs`.
 
-The card's position mirrors `FABInner` (the floating compose button), so it
-sits just above it. If Bluesky moves that button, adjust `bottom` in
-`index.web.tsx`.
+On phones the card sits directly on the bottom bar, and the floating compose
+button moves up to sit above it while the card shows. The card publishes how
+far to move through `composeButtonLift.ts`, and `FABInner` (Bluesky's file)
+applies it with one hook. The card mirrors `FABInner`'s position and its
+bottom-bar shift (`FAB_BAR_SHIFT`), so if Bluesky moves that button, adjust
+those in `index.web.tsx`. On tablets there is no bottom bar, so the card stays
+above the button.
 
 ## Things to recheck over time
 
