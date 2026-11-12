@@ -1,5 +1,54 @@
 # Testing instructions
 
+## Browser tests for prosocial reactions
+
+The Playwright suite tests the real web picker and persists an Insight reaction
+on a dedicated post before removing it. It runs in desktop Chromium, mobile
+Chromium, and iPhone-sized WebKit emulation. Use a disposable test account and post; the suite writes to
+the configured service. Keep the session file outside version control.
+
+1. Start the local web app (`pnpm web`) or choose a staging URL.
+2. Run `pnpm exec playwright codegen --save-storage=.playwright/auth.json
+   <app-origin>`, sign in manually in that window, then close it. The saved
+   file contains session credentials and is ignored by Git.
+3. Set `SPARKABLE_BROWSER_BASE_URL` to the app origin,
+   `SPARKABLE_BROWSER_POST_URL` to the dedicated post URL, and
+   `SPARKABLE_BROWSER_STORAGE_STATE` to the JSON file path.
+4. Run `pnpm test:browser`. Install the browsers first with
+   `pnpm exec playwright install chromium webkit` if needed.
+
+For staging, use `https://sparkable-staging.up.railway.app` as the app origin.
+Set `SPARKABLE_BROWSER_POST_URL` to a post owned by a dedicated test account,
+and run `pnpm test:browser --project=mobile-webkit` for the WebKit check alone.
+
+### Run from GitHub Actions
+
+The `Staging browser tests` workflow runs automatically after Railway reports a
+successful Sparkable staging deployment to GitHub. It checks out the deployed
+commit, so the tests correspond to the version that is live. It ignores
+production deployments and other deployment statuses.
+
+1. In the Sparkable GitHub repository, create an environment named
+   `staging-browser-tests` under **Settings → Environments**.
+2. Add environment variables `SPARKABLE_TEST_HANDLE` (the dedicated test
+   account handle) and `SPARKABLE_BROWSER_POST_URL` (the full URL of its
+   dedicated test post).
+3. Add an environment secret `SPARKABLE_TEST_PASSWORD` for that account. Enter
+   it in GitHub's secret form; never put it in the repository or a chat message.
+4. Merge the test code into `staging` and wait for Railway to deploy it. The
+   successful deployment triggers the workflow automatically; inspect the run
+   under **Actions → Staging browser tests**.
+
+The workflow signs in afresh, runs the browser suite sequentially, uploads
+failure screenshots, and removes the temporary session file. CI disables
+Playwright network traces because they can contain session tokens. It fails if a required
+variable or secret is missing. Keep the test post free of reactions from other
+accounts so the count assertions remain predictable.
+
+The suite skips when the post URL or session file is absent. Playwright WebKit
+emulation catches engine-specific regressions but does not replace testing
+Firefox or Safari on a physical iPhone.
+
 Make sure you've copied `.env.example` to `.env.test` and provided any required
 values.
 
