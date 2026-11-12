@@ -1,12 +1,18 @@
 import {useEffect, useState} from 'react'
 import {type LayoutChangeEvent, View} from 'react-native'
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
+import Animated, {
+  FadeIn,
+  FadeOut,
+  useAnimatedReaction,
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {scheduleOnRN} from 'react-native-worklets'
 import {useLingui} from '@lingui/react/macro'
 
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {clamp} from '#/lib/numbers'
 import {useSession} from '#/state/session'
+import {useShellLayout} from '#/state/shell/shell-layout'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useAlf, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -24,6 +30,7 @@ import {
   trackWhenReady,
   useCanInstall,
 } from './browser'
+import {setComposeButtonLift} from './composeButtonLift'
 import {
   getIosSteps,
   getPromptMethod,
@@ -44,6 +51,22 @@ import {
  */
 const SHOW_AFTER_MS = 30_000
 const TICK_MS = 1_000
+
+/**
+ * Space between the bottom bar and the card, and between the card and the
+ * compose button above it.
+ */
+const BAR_GAP = 8
+const FAB_GAP = 12
+/**
+ * How far FABInner's transform raises the button while the bottom bar shows.
+ * Mirrors useMinimalShellFabTransform.
+ */
+const FAB_BAR_SHIFT = 44
+/**
+ * Used until the bottom bar has measured itself.
+ */
+const MIN_BAR_HEIGHT = 44
 
 countVisit()
 if (IS_STANDALONE && claimOpenedTracking()) {
@@ -240,17 +263,34 @@ function PromptCard({
   const insets = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
   const fabTransform = useMinimalShellFabTransform()
+  const {footerHeight} = useShellLayout()
+  const [barHeight, setBarHeight] = useState(() => footerHeight.get())
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
 
+  useAnimatedReaction(
+    () => footerHeight.get(),
+    (next, prev) => {
+      if (next !== prev) scheduleOnRN(setBarHeight, next)
+    },
+  )
+
   /*
-   * Sits just above the floating compose button and moves with it when the
-   * bottom bar hides, mirroring FABInner's position. Material guidance puts
-   * snackbars above a FAB rather than over it.
+   * On phones the card sits directly on the bottom bar, and the compose button
+   * moves up to sit above the card. Both slide with the bar when it hides, so
+   * the card uses the same transform as FABInner, which shifts by
+   * FAB_BAR_SHIFT while the bar shows.
    */
-  const bottom = gtMobile
-    ? 50 + 70 + 12
-    : clamp(insets.bottom, 15, 60) + 15 + 56 + 12
+  const phoneBottom =
+    Math.max(barHeight, MIN_BAR_HEIGHT) + BAR_GAP - FAB_BAR_SHIFT
+  const fabBottom = clamp(insets.bottom, 15, 60) + 15
+  const bottom = gtMobile ? 50 + 70 + 12 : phoneBottom
+
+  useEffect(() => {
+    if (gtMobile || height === 0) return
+    setComposeButtonLift(phoneBottom + height + FAB_GAP - fabBottom)
+    return () => setComposeButtonLift(0)
+  }, [gtMobile, height, phoneBottom, fabBottom])
 
   /*
    * Lets the browser scroll focused elements clear of the card, so nothing
