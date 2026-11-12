@@ -36,7 +36,11 @@ const SPARKABLE_ACCENTS = {
 }
 
 const DEFAULT_THEMES = createThemes({
-  defaultPalette: {...DEFAULT_PALETTE, ...SPARKABLE_PRIMARY, ...SPARKABLE_ACCENTS},
+  defaultPalette: {
+    ...DEFAULT_PALETTE,
+    ...SPARKABLE_PRIMARY,
+    ...SPARKABLE_ACCENTS,
+  },
   subduedPalette: {
     ...DEFAULT_SUBDUED_PALETTE,
     ...SPARKABLE_PRIMARY,
