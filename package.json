@@ -345,6 +345,7 @@
       "__e2e__/.*",
       "bskylink/.*"
     ],
+    "testPathIgnorePatterns": ["<rootDir>/tests/browser/"],
     "coveragePathIgnorePatterns": [
       "<rootDir>/node_modules/",
       "<rootDir>/src/platform",
