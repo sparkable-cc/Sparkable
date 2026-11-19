@@ -34,11 +34,11 @@ export function setComposeButtonLift(value: number) {
 
 /**
  * Extra style for the floating compose button (FABInner) that lifts it clear
- * of the home screen card. Undefined while the card isn't showing.
+ * of the home screen card. Keep the transition when the lift returns to zero
+ * so the button slides back into place after the card closes.
  */
 export function useComposeButtonLiftStyle() {
   const value = useSyncExternalStore(subscribe, getLift, getLift)
-  if (value === 0) return undefined
   return [
     {marginBottom: value},
     web({transitionProperty: 'margin-bottom', transitionDuration: '250ms'}),
