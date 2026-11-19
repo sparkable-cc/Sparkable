@@ -46,8 +46,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   const [isAnimationComplete, setIsAnimationComplete] = useState(false)
   const [isLayoutReady, setIsLayoutReady] = useState(false)
   const [reduceMotion, setReduceMotion] = useState<boolean | undefined>(false)
-  const isReady =
-    props.isReady && isLayoutReady && reduceMotion !== undefined
+  const isReady = props.isReady && isLayoutReady && reduceMotion !== undefined
 
   const colorScheme = useColorScheme()
   const isDarkMode = colorScheme === 'dark'
@@ -158,9 +157,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
     <View style={{flex: 1}} onLayout={onLayout}>
       {!isAnimationComplete && (
         <View style={StyleSheet.absoluteFillObject}>
-          <View
-            style={[StyleSheet.absoluteFillObject, {backgroundColor}]}
-          />
+          <View style={[StyleSheet.absoluteFillObject, {backgroundColor}]} />
 
           <Animated.View
             style={[
