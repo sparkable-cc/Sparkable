@@ -125,6 +125,14 @@ const SAFE_PROPERTIES: Record<string, readonly string[]> = {
   'spark:reaction:failed': ['reaction', 'action', 'surface'],
   'chat:create': ['logContext'],
   'chat:open': ['logContext'],
+  // Sparkable home screen prompt (src/features/homeScreenPrompt)
+  'homeScreenPrompt:shown': ['method'],
+  'homeScreenPrompt:dismissed': ['method'],
+  'homeScreenPrompt:addPressed': ['method'],
+  'homeScreenPrompt:installChoice': ['outcome'],
+  'homeScreenPrompt:stepsDone': ['method'],
+  'homeScreenPrompt:installed': [],
+  'app:openedFromHomeScreen': ['platform'],
 }
 
 for (const event of EVENTS_WITHOUT_PROPERTIES) {

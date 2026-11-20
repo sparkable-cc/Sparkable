@@ -242,7 +242,7 @@ function renderSocialCard({width, height, fill, background, markHeight}) {
         const s1 = Math.min(width, xs[k + 1])
         for (let x = Math.floor(s0); x <= Math.ceil(s1) - 1; x++) {
           const c = Math.min(s1, x + 1) - Math.max(s0, x)
-          if (c > 0) coverage[y * width + x] += (c / sub)
+          if (c > 0) coverage[y * width + x] += c / sub
         }
       }
     }
@@ -318,6 +318,41 @@ const TARGETS = [
     fill: BRAND_BLUE,
     background: WHITE,
     scale: 0.66,
+  },
+  /*
+   * Web app manifest icons. Android Chrome only treats the site as an
+   * installable app with square 192px and 512px icons. The maskable versions
+   * keep the whole mark inside the central circle (80% of the width) that
+   * Android may crop to; the mark's points reach its corners, so its box must
+   * stay under about 0.56 of the canvas.
+   */
+  {
+    path: 'bskyweb/static/icon-192.png',
+    size: 192,
+    fill: BRAND_BLUE,
+    background: WHITE,
+    scale: 0.66,
+  },
+  {
+    path: 'bskyweb/static/icon-512.png',
+    size: 512,
+    fill: BRAND_BLUE,
+    background: WHITE,
+    scale: 0.66,
+  },
+  {
+    path: 'bskyweb/static/icon-maskable-192.png',
+    size: 192,
+    fill: BRAND_BLUE,
+    background: WHITE,
+    scale: 0.5,
+  },
+  {
+    path: 'bskyweb/static/icon-maskable-512.png',
+    size: 512,
+    fill: BRAND_BLUE,
+    background: WHITE,
+    scale: 0.5,
   },
 ]
 

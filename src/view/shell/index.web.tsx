@@ -31,6 +31,7 @@ import {useAgeAssurance} from '#/ageAssurance'
 import {NoAccessScreen} from '#/ageAssurance/components/NoAccessScreen'
 import {RedirectOverlay} from '#/ageAssurance/components/RedirectOverlay'
 import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
+import {HomeScreenPrompt} from '#/features/homeScreenPrompt'
 import {FlatNavigator, RoutesContainer} from '#/Navigation'
 import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
@@ -68,6 +69,7 @@ function ShellInner() {
       <LinkWarningDialog />
       <Lightbox />
       <NuxDialogs />
+      <HomeScreenPrompt />
       <GlobalReportDialog />
 
       {/* Until policy update has been completed by the user, don't render anything that is portaled */}

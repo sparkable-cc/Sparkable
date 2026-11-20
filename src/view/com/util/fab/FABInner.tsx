@@ -15,6 +15,7 @@ import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {clamp} from '#/lib/numbers'
 import {atoms as a, ios, useBreakpoints, useTheme} from '#/alf'
 import {IS_WEB} from '#/env'
+import {useComposeButtonLiftStyle} from '#/features/homeScreenPrompt/composeButtonLift'
 
 export interface FABProps extends ComponentProps<typeof Pressable> {
   testID?: string
@@ -28,6 +29,7 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
   const t = useTheme()
   const playHaptic = useHaptics()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
+  const homeScreenPromptLift = useComposeButtonLiftStyle()
 
   const size = gtMobile ? styles.sizeLarge : styles.sizeRegular
 
@@ -42,6 +44,7 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
         size,
         tabletSpacing,
         !gtMobile && fabMinimalShellTransform,
+        !gtMobile && homeScreenPromptLift,
       ]}>
       <PressableScale
         testID={testID}

@@ -1,9 +1,8 @@
 name: claude-mention
 
 # @claude mention handler on PR conversation comments, inline review
-# comments, and review bodies. See the header comment in
-# claude-review.yml for why this is self-contained rather than calling
-# the org reusable workflows.
+# comments, and review bodies. This uses the upstream action directly rather
+# than the org reusable workflows.
 #
 # Authorization note: this repo is public, and the load-bearing gate
 # against drive-by commenters is INSIDE claude-code-action — the action
