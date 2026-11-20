@@ -16,6 +16,9 @@ build/
 # Testing
 junit.xml
 coverage/
+playwright-report/
+test-results/
+.playwright/
 
 # Native
 .kotlin/
