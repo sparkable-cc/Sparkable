@@ -1,11 +1,14 @@
 import {memo, useCallback, useEffect, useMemo, useReducer, useRef} from 'react'
 import {View} from 'react-native'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {
-  type AppBskyActorDefs,
-  moderateProfile,
-  type ModerationOpts,
-} from '@atproto/api'
-import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
+  autoUpdate,
+  flip,
+  offset,
+  shift,
+  size,
+  useFloating,
+} from '@floating-ui/react-dom'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -40,8 +43,10 @@ import {ProfileBadges} from '#/components/ProfileBadges'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {IS_WEB_TOUCH_DEVICE} from '#/env'
+import {useFeedItemFeedback} from '#/features/feedFeedback'
 import {useActorStatus} from '#/features/liveNow'
 import {LiveStatus} from '#/features/liveNow/components/LiveStatusDialog'
+import {type app} from '#/lexicons'
 import {type ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [
@@ -111,10 +116,16 @@ const HIDE_DURATION = 200
 
 export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   const navigation = useNavigation<NavigationProp>()
-
-  const {refs, floatingStyles} = useFloating({
-    middleware: floatingMiddlewares,
-  })
+  /*
+   * The card renders in a portal, outside the feed item's context, so read the
+   * feed item here and pass the follow handler down. Only following the feed
+   * item's author counts, not e.g. a reposter or a quoted post's author.
+   */
+  const feedItem = useFeedItemFeedback()
+  const onFollow =
+    feedItem.item?.authorDid === props.did
+      ? () => feedItem.send('app.bsky.feed.defs#interactionFollow')
+      : undefined
 
   const [currentState, dispatch] = useReducer(
     // Tip: console.log(state, action) when debugging.
@@ -312,6 +323,12 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
     currentState.stage === 'might-hide' ||
     currentState.stage === 'hiding'
 
+  const {refs, floatingStyles, isPositioned} = useFloating({
+    open: isVisible,
+    middleware: floatingMiddlewares,
+    whileElementsMounted: autoUpdate,
+  })
+
   const animationStyle = {
     animation:
       currentState.stage === 'hiding'
@@ -321,11 +338,10 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 
   return (
     <View
-      // @ts-ignore View is being used as div
       ref={refs.setReference}
       onPointerMove={onPointerMoveTarget}
       onPointerLeave={onPointerLeaveTarget}
-      // @ts-ignore web only prop
+      // @ts-expect-error web only prop
       onMouseUp={onPress}
       style={[a.flex_shrink, props.inline && a.inline]}>
       {props.children}
@@ -333,11 +349,19 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
         <Portal>
           <div
             ref={refs.setFloating}
-            style={floatingStyles}
+            style={{
+              ...floatingStyles,
+              visibility: isPositioned ? 'visible' : 'hidden',
+            }}
             onPointerEnter={onPointerEnterCard}
             onPointerLeave={onPointerLeaveCard}>
             <div style={{willChange: 'transform', ...animationStyle}}>
-              <Card did={props.did} hide={onPress} navigation={navigation} />
+              <Card
+                did={props.did}
+                hide={onPress}
+                navigation={navigation}
+                onFollow={onFollow}
+              />
             </div>
           </div>
         </Portal>
@@ -350,10 +374,12 @@ let Card = ({
   did,
   hide,
   navigation,
+  onFollow,
 }: {
   did: string
   hide: () => void
   navigation: NavigationProp
+  onFollow?: () => void
 }): React.ReactNode => {
   const t = useTheme()
 
@@ -395,7 +421,12 @@ let Card = ({
             onPressOpenProfile={onPressOpenProfile}
           />
         ) : (
-          <Inner profile={data} moderationOpts={moderationOpts} hide={hide} />
+          <Inner
+            profile={data}
+            moderationOpts={moderationOpts}
+            hide={hide}
+            onFollow={onFollow}
+          />
         )
       ) : (
         <View
@@ -417,10 +448,12 @@ function Inner({
   profile,
   moderationOpts,
   hide,
+  onFollow,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   hide: () => void
+  onFollow?: () => void
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
@@ -434,6 +467,7 @@ function Inner({
   const {follow, unfollow} = useFollowMethods({
     profile: profileShadow,
     logContext: 'ProfileHoverCard',
+    onFollow,
   })
   const isBlockedUser =
     profile.viewer?.blocking ||
@@ -525,19 +559,14 @@ function Inner({
                 moderation.ui('displayName'),
               )}
             </Text>
-            <ProfileBadges
-              profile={profile}
-              size="md"
-              style={[
-                a.pl_xs,
-                {
-                  marginTop: -1,
-                },
-              ]}
-            />
+            <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
           </View>
 
-          <ProfileHeaderHandle profile={profileShadow} disableTaps />
+          <ProfileHeaderHandle
+            profile={profileShadow}
+            moderation={moderation}
+            disableTaps
+          />
         </View>
       </Link>
 

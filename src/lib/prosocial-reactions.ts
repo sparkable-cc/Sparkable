@@ -1,5 +1,5 @@
-import {type AtpAgent, AtUri} from '@atproto/api'
-import {type Agent, type AtUriString, l} from '@atproto/lex'
+import {type AtUriString, type Client, l} from '@atproto/lex'
+import {AtUri} from '@atproto/syntax'
 import {app} from '@bsky/sdk/lexicons'
 import {
   main as reactionRecord,
@@ -7,17 +7,7 @@ import {
   rkeyForSubjectUri,
 } from '@sparkable/prosocial-contract'
 
-import {createLexClient} from '#/lib/lexClient'
-
 type StrongRef = {uri: string; cid: string}
-
-function clientFor(agent: AtpAgent) {
-  const lexAgent: Agent = {
-    did: agent.did,
-    fetchHandler: (path, init) => agent.fetchHandler(path, init),
-  }
-  return createLexClient(lexAgent)
-}
 
 function reactionValue(subject: StrongRef, reactionType: ReactionType) {
   return {
@@ -50,17 +40,16 @@ function likeValue(subject: StrongRef, via?: StrongRef) {
 
 /** Creates the reaction and its required Spark in one repository commit. */
 export async function createReactionWithSpark({
-  agent,
+  client,
   subject,
   reactionType,
   via,
 }: {
-  agent: AtpAgent
+  client: Client
   subject: StrongRef
   reactionType: ReactionType
   via?: StrongRef
 }) {
-  const client = clientFor(agent)
   const response = await client.applyWrites(op => [
     op.create(reactionRecord, reactionValue(subject, reactionType), {
       rkey: rkeyForSubjectUri(subject.uri),
@@ -80,28 +69,26 @@ export async function createReactionWithSpark({
 
 /** Upserts the deterministic reaction record while preserving the Spark. */
 export async function putReaction({
-  agent,
+  client,
   subject,
   reactionType,
 }: {
-  agent: AtpAgent
+  client: Client
   subject: StrongRef
   reactionType: ReactionType
 }) {
-  return clientFor(agent).put(
-    reactionRecord,
-    reactionValue(subject, reactionType),
-    {rkey: rkeyForSubjectUri(subject.uri)},
-  )
+  return client.put(reactionRecord, reactionValue(subject, reactionType), {
+    rkey: rkeyForSubjectUri(subject.uri),
+  })
 }
 
 /** Deletes the reaction and its associated Spark in one repository commit. */
 export async function deleteReactionWithSpark({
-  agent,
+  client,
   subjectUri,
   likeUri,
 }: {
-  agent: AtpAgent
+  client: Client
   subjectUri: string
   likeUri: string
 }) {
@@ -110,7 +97,7 @@ export async function deleteReactionWithSpark({
     throw new Error('Cannot remove reaction: invalid Spark URI')
   }
 
-  return clientFor(agent).applyWrites(op => [
+  return client.applyWrites(op => [
     op.delete(reactionRecord, {rkey: rkeyForSubjectUri(subjectUri)}),
     op.delete(app.bsky.feed.like.main, {rkey: like.rkey}),
   ])

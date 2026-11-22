@@ -1,5 +1,7 @@
 import {envBool, envInt, envList, envStr} from '@atproto/common'
 
+import {parseAwsIamDbUrl} from './db/awsIamAuth.js'
+
 export type Config = {
   service: ServiceConfig
   db: DbConfig
@@ -7,6 +9,7 @@ export type Config = {
 
 export type ServiceConfig = {
   port: number
+  metricsPort: number
   version?: string
   hostnames: string[]
   hostnamesSet: Set<string>
@@ -23,6 +26,8 @@ export type DbConfig = {
   migrationUrl?: string
   pool: DbPoolConfig
   schema?: string
+  /** Authenticate with AWS RDS IAM tokens instead of a password. */
+  awsIamAuth: boolean
 }
 
 export type DbPoolConfig = {
@@ -33,6 +38,7 @@ export type DbPoolConfig = {
 
 export type Environment = {
   port?: number
+  metricsPort?: number
   version?: string
   hostnames: string[]
   appHostname?: string
@@ -42,6 +48,7 @@ export type Environment = {
   dbPostgresPoolSize?: number
   dbPostgresPoolMaxUses?: number
   dbPostgresPoolIdleTimeoutMs?: number
+  dbPostgresAwsIamAuth?: boolean
   safelinkEnabled?: boolean
   safelinkPdsUrl?: string
   safelinkAgentIdentifier?: string
@@ -52,6 +59,7 @@ export type Environment = {
 export const readEnv = (): Environment => {
   return {
     port: envInt('LINK_PORT'),
+    metricsPort: envInt('LINK_METRICS_PORT'),
     version: envStr('LINK_VERSION'),
     hostnames: envList('LINK_HOSTNAMES'),
     appHostname: envStr('LINK_APP_HOSTNAME'),
@@ -63,6 +71,7 @@ export const readEnv = (): Environment => {
     dbPostgresPoolIdleTimeoutMs: envInt(
       'LINK_DB_POSTGRES_POOL_IDLE_TIMEOUT_MS',
     ),
+    dbPostgresAwsIamAuth: envBool('LINK_DB_POSTGRES_AWS_IAM_AUTH'),
     safelinkEnabled: envBool('LINK_SAFELINK_ENABLED'),
     safelinkPdsUrl: envStr('LINK_SAFELINK_PDS_URL'),
     safelinkAgentIdentifier: envStr('LINK_SAFELINK_AGENT_IDENTIFIER'),
@@ -74,6 +83,7 @@ export const readEnv = (): Environment => {
 export const envToCfg = (env: Environment): Config => {
   const serviceCfg: ServiceConfig = {
     port: env.port ?? 3000,
+    metricsPort: env.metricsPort ?? 9090,
     version: env.version,
     hostnames: env.hostnames,
     hostnamesSet: new Set(env.hostnames),
@@ -96,6 +106,14 @@ export const envToCfg = (env: Environment): Config => {
       maxUses: env.dbPostgresPoolMaxUses ?? Infinity,
       size: env.dbPostgresPoolSize ?? 10,
     },
+    awsIamAuth: env.dbPostgresAwsIamAuth ?? false,
+  }
+  if (dbCfg.awsIamAuth) {
+    // Refuse a URL that would bypass IAM auth before anything connects
+    parseAwsIamDbUrl(dbCfg.url, 'LINK_DB_POSTGRES_URL')
+    if (dbCfg.migrationUrl) {
+      parseAwsIamDbUrl(dbCfg.migrationUrl, 'LINK_DB_POSTGRES_MIGRATION_URL')
+    }
   }
 
   return {

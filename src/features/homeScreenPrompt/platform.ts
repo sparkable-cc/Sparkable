@@ -6,13 +6,7 @@
 export type HomeScreenPlatform = {
   os: 'ios' | 'android' | 'other'
   browser:
-    | 'safari'
-    | 'chrome'
-    | 'firefox'
-    | 'samsung'
-    | 'edge'
-    | 'opera'
-    | 'other'
+    'safari' | 'chrome' | 'firefox' | 'samsung' | 'edge' | 'opera' | 'other'
   /**
    * Safari's major version on iPhone and iPad, from its `Version/` token. iOS
    * 26 froze the OS version in the user agent at 18, so this is the reliable

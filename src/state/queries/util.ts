@@ -1,18 +1,130 @@
-import {
-  type AppBskyActorDefs,
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  type AtUri,
-} from '@atproto/api'
+import {useEffect, useRef} from 'react'
+import {type AtUri} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
   type QueryKey,
 } from '@tanstack/react-query'
 
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+
+/**
+ * The appview does its own `fillPage`, and defaults to 10 pages. Previously
+ * the frontend tried up to 50 pages, thus the MAX_ATTEMPTS of 5 is a
+ * reasonable compromise to match pre-existing behavior and without blowing up
+ * our backend.
+ */
+const MAX_ATTEMPTS = 5
+
+/**
+ * Bound each attempt to fill a client-visible page, including its first
+ * request. Partial results do not restart the budget. A full page does, so
+ * ordinary pagination can continue for feeds with enough visible content.
+ */
+export function hasReachedPageFillLimit(
+  pages:
+    {cursor: string | undefined; slices: {items: unknown[]}[]}[] | undefined,
+  pageSize: number,
+) {
+  let requests = 0
+  let itemCount = 0
+  for (const page of pages || []) {
+    requests++
+    for (const slice of page.slices) {
+      itemCount += slice.items.length
+    }
+    if (itemCount >= pageSize) {
+      requests = 0
+      itemCount = 0
+    }
+  }
+  return requests >= MAX_ATTEMPTS && Boolean(pages?.at(-1)?.cursor)
+}
+
+type AutoPaginationQuery = {
+  data?: {pageParams: unknown[]}
+  isLoading: boolean
+  isRefetching: boolean
+  isFetchingNextPage: boolean
+  hasNextPage: boolean
+  fetchNextPage: () => Promise<unknown>
+}
+
+/**
+ * Fetches another page when filtering left a page with fewer than half of
+ * `pageSize` visible items, so a heavily filtered page isn't left nearly empty.
+ * A page that only lost a few items is left alone, since topping it up costs a
+ * whole extra request.
+ */
+export function useAutoPagination(
+  query: AutoPaginationQuery,
+  itemCount: number,
+  /** How many items each request asks for. */
+  pageSize: number,
+) {
+  const minItems = Math.ceil(pageSize / 2)
+  const lastItemCount = useRef(0)
+  const lastPageParams = useRef(query.data?.pageParams)
+  const wantedItemCount = useRef(minItems)
+  const attemptCount = useRef(0)
+
+  useEffect(() => {
+    const cursorOf = (param: unknown) =>
+      param && typeof param === 'object' && 'cursor' in param
+        ? param.cursor
+        : param
+    const pageParams = query.data?.pageParams
+    const previousPageParams = lastPageParams.current
+    const continuedPagination =
+      pageParams &&
+      previousPageParams &&
+      pageParams.length > previousPageParams.length &&
+      previousPageParams.every((param, index) =>
+        Object.is(cursorOf(param), cursorOf(pageParams[index])),
+      )
+    if (
+      pageParams !== previousPageParams &&
+      previousPageParams &&
+      !continuedPagination
+    ) {
+      wantedItemCount.current = minItems
+      attemptCount.current = 0
+    }
+    lastPageParams.current = pageParams
+
+    if (itemCount !== lastItemCount.current) {
+      attemptCount.current = 0
+      if (itemCount < lastItemCount.current) {
+        wantedItemCount.current = Math.max(itemCount, minItems)
+      }
+      lastItemCount.current = itemCount
+    }
+
+    if (query.isLoading || query.isRefetching) {
+      wantedItemCount.current = minItems
+      attemptCount.current = 0
+    } else if (query.isFetchingNextPage) {
+      if (itemCount > wantedItemCount.current) {
+        wantedItemCount.current = itemCount + minItems
+      }
+    } else if (query.hasNextPage) {
+      if (itemCount < wantedItemCount.current) {
+        const currentCursor = cursorOf(pageParams?.at(-1))
+        const repeatedCursor = pageParams
+          ?.slice(0, -1)
+          .some(param => Object.is(cursorOf(param), currentCursor))
+        if (repeatedCursor) return
+        attemptCount.current++
+        if (attemptCount.current < MAX_ATTEMPTS) {
+          void query.fetchNextPage()
+        }
+      } else {
+        attemptCount.current = 0
+      }
+    }
+  }, [itemCount, minItems, query])
+}
 
 export type StructuredQueryKey<T extends Record<string, unknown>> = readonly [
   string,
@@ -93,7 +205,7 @@ export async function truncateAndInvalidate<T = any>(
 // of the currentUri that is being checked.
 export function didOrHandleUriMatches(
   atUri: AtUri,
-  record: {uri: string; author: AppBskyActorDefs.ProfileViewBasic},
+  record: {uri: string; author: app.bsky.actor.defs.ProfileViewBasic},
 ) {
   if (atUri.host.startsWith('did:')) {
     return atUri.href === record.uri
@@ -104,26 +216,19 @@ export function didOrHandleUriMatches(
 
 export function getEmbeddedPost(
   v: unknown,
-): AppBskyEmbedRecord.ViewRecord | undefined {
-  if (
-    bsky.dangerousIsType<AppBskyEmbedRecord.View>(v, AppBskyEmbedRecord.isView)
-  ) {
+): app.bsky.embed.record.ViewRecord | undefined {
+  if (bsky.isType(app.bsky.embed.record.view, v)) {
     if (
-      AppBskyEmbedRecord.isViewRecord(v.record) &&
-      AppBskyFeedPost.isRecord(v.record.value)
+      bsky.isType(app.bsky.embed.record.viewRecord, v.record) &&
+      bsky.isType(app.bsky.feed.post, v.record.value)
     ) {
       return v.record
     }
   }
-  if (
-    bsky.dangerousIsType<AppBskyEmbedRecordWithMedia.View>(
-      v,
-      AppBskyEmbedRecordWithMedia.isView,
-    )
-  ) {
+  if (bsky.isType(app.bsky.embed.recordWithMedia.view, v)) {
     if (
-      AppBskyEmbedRecord.isViewRecord(v.record.record) &&
-      AppBskyFeedPost.isRecord(v.record.record.value)
+      bsky.isType(app.bsky.embed.record.viewRecord, v.record.record) &&
+      bsky.isType(app.bsky.feed.post, v.record.record.value)
     ) {
       return v.record.record
     }
@@ -131,8 +236,8 @@ export function getEmbeddedPost(
 }
 
 export function embedViewRecordToPostView(
-  v: AppBskyEmbedRecord.ViewRecord,
-): AppBskyFeedDefs.PostView {
+  v: app.bsky.embed.record.ViewRecord,
+): app.bsky.feed.defs.PostView {
   return {
     uri: v.uri,
     cid: v.cid,

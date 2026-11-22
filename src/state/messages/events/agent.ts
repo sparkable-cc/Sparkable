@@ -1,9 +1,8 @@
-import {type AtpAgent, type ChatBskyConvoGetLog} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 import {EventEmitter} from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {
   isErrorMaybeAppPasswordPermissions,
   isNetworkError,
@@ -12,6 +11,8 @@ import {Logger} from '#/logger'
 import {
   BACKGROUND_POLL_INTERVAL,
   DEFAULT_POLL_INTERVAL,
+  LOG_PAGE_SIZE,
+  MAX_CATCH_UP_PAGES,
 } from '#/state/messages/events/const'
 import {
   type MessagesEventBusDispatch,
@@ -21,13 +22,14 @@ import {
   type MessagesEventBusParams,
   MessagesEventBusStatus,
 } from '#/state/messages/events/types'
+import {chat} from '#/lexicons'
 
 const logger = Logger.create(Logger.Context.DMsAgent)
 
 export class MessagesEventBus {
   private id: string
 
-  private agent: AtpAgent
+  private chatClient: Client
   private emitter = new EventEmitter<{event: [MessagesEventBusEvent]}>()
 
   private status: MessagesEventBusStatus = MessagesEventBusStatus.Initializing
@@ -37,9 +39,18 @@ export class MessagesEventBus {
 
   constructor(params: MessagesEventBusParams) {
     this.id = nanoid(3)
-    this.agent = params.agent
+    this.chatClient = params.chatClient
 
     this.init()
+  }
+
+  /**
+   * Point the bus at a new chat client, for when the session bundle is
+   * replaced underneath it. The poll cursor and subscribers are unaffected: the
+   * same account is being served over a fresh session.
+   */
+  updateClient(chatClient: Client) {
+    this.chatClient = chatClient
   }
 
   requestPollInterval(interval: number) {
@@ -260,14 +271,11 @@ export class MessagesEventBus {
 
     try {
       const response = await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.getLog(
-          {},
-          {headers: DM_SERVICE_HEADERS},
-        )
+        return this.chatClient.call(chat.bsky.convo.getLog, {})
       })
       // throw new Error('UNCOMMENT TO TEST INIT FAILURE')
 
-      const {cursor} = response.data
+      const {cursor} = response
 
       // should always be defined
       if (cursor) {
@@ -354,40 +362,60 @@ export class MessagesEventBus {
     //   },
     // )
 
-    let needsEmit = false
-    let batch: ChatBskyConvoGetLog.OutputSchema['logs'] = []
+    const batch: chat.bsky.convo.getLog.$OutputBody['logs'] = []
+    let skippedBacklog = false
 
     try {
-      const response = await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.getLog(
-          {
+      /*
+       * A full page means there's more waiting, e.g. after coming back from
+       * the background, so keep paging instead of waiting for the next tick.
+       */
+      for (let page = 1; ; page++) {
+        const response = await networkRetry(2, () => {
+          return this.chatClient.call(chat.bsky.convo.getLog, {
             cursor: this.latestRev,
-          },
-          {headers: DM_SERVICE_HEADERS},
-        )
-      })
+          })
+        })
 
-      // throw new Error('UNCOMMENT TO TEST POLL FAILURE')
+        // throw new Error('UNCOMMENT TO TEST POLL FAILURE')
 
-      const {logs: events} = response.data
+        const {logs: events} = response
 
-      for (const ev of events) {
-        /*
-         * If there's a rev, we should handle it. If there's not a rev, we don't
-         * know what it is.
-         */
-        if ('rev' in ev && typeof ev.rev === 'string') {
+        for (const ev of events) {
           /*
-           * We only care about new events
+           * If there's a rev, we should handle it. If there's not a rev, we
+           * don't know what it is.
            */
-          if (ev.rev > (this.latestRev = this.latestRev || ev.rev)) {
+          if ('rev' in ev && typeof ev.rev === 'string') {
             /*
-             * Update rev regardless of if it's a ev type we care about or not
+             * We only care about new events
              */
-            this.latestRev = ev.rev
-            needsEmit = true
-            batch.push(ev)
+            if (ev.rev > (this.latestRev = this.latestRev || ev.rev)) {
+              /*
+               * Update rev regardless of if it's a ev type we care about or not
+               */
+              this.latestRev = ev.rev
+              batch.push(ev)
+            }
           }
+        }
+
+        if (events.length < LOG_PAGE_SIZE) break
+
+        if (page >= MAX_CATCH_UP_PAGES) {
+          /*
+           * Too far behind to replay, e.g. a web tab on a laptop that slept
+           * for a day. Skip ahead to the present and have subscribers refetch,
+           * rather than replaying the rest of the backlog a page at a time.
+           */
+          const {cursor} = await networkRetry(2, () => {
+            return this.chatClient.call(chat.bsky.convo.getLog, {})
+          })
+          if (cursor && (!this.latestRev || cursor > this.latestRev)) {
+            this.latestRev = cursor
+          }
+          skippedBacklog = true
+          break
         }
       }
     } catch (e: any) {
@@ -418,9 +446,12 @@ export class MessagesEventBus {
      * runs from setInterval, so we must not let the exception escape - log it
      * and move on without dispatching Error.
      */
-    if (needsEmit) {
+    if (skippedBacklog || batch.length > 0) {
       try {
-        this.emitter.emit('event', {type: 'logs', logs: batch})
+        this.emitter.emit(
+          'event',
+          skippedBacklog ? {type: 'gap'} : {type: 'logs', logs: batch},
+        )
       } catch (e) {
         logger.error(`subscriber error handling chat events`, {
           safeMessage: e instanceof Error ? e.message : String(e),

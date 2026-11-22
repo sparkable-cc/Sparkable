@@ -1,8 +1,7 @@
 import {useRef} from 'react'
-import {InteractionManager, View} from 'react-native'
+import {View} from 'react-native'
 import {type AnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
-import {AppBskyEmbedGallery, type AppBskyEmbedImages} from '@atproto/api'
 
 import {atoms as a, tokens} from '#/alf'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
@@ -16,6 +15,9 @@ import {type Dimensions} from '#/components/Lightbox/types'
 import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {useAnalytics} from '#/analytics'
+import {IS_ANDROID} from '#/env'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {type EmbedType} from '#/types/bsky/post'
 import {type CommonProps} from './types'
 
@@ -29,14 +31,16 @@ export function ImageEmbed({
 }) {
   const ax = useAnalytics()
   const {openLightbox} = useLightboxControls()
-  const images: AppBskyEmbedImages.ViewImage[] =
+  const images: app.bsky.embed.images.ViewImage[] =
     embed.type === 'gallery'
-      ? embed.view.items.filter(AppBskyEmbedGallery.isViewImage).map(item => ({
-          thumb: item.thumbnail,
-          fullsize: item.fullsize,
-          alt: item.alt,
-          aspectRatio: item.aspectRatio,
-        }))
+      ? embed.view.items
+          .filter(item => bsky.isType(app.bsky.embed.gallery.viewImage, item))
+          .map(item => ({
+            thumb: item.thumbnail,
+            fullsize: item.fullsize,
+            alt: item.alt,
+            aspectRatio: item.aspectRatio,
+          }))
       : embed.view.images
   const useExpandedLayout =
     embed.type === 'gallery'
@@ -73,6 +77,7 @@ export function ImageEmbed({
       index: number,
       refs: AnimatedRef[],
       fetchedDims: (Dimensions | null)[],
+      onIndexChange?: (index: number) => void,
     ) => {
       if (postContext) {
         ax.metric('post:photoEmbed:open', {
@@ -82,21 +87,34 @@ export function ImageEmbed({
           ...postContext,
         })
       }
+      /** Screen-reader galleries supply only the selected image's thumbnail. */
+      const selectedOnly = refs.length === 1 && images.length > 1
       openLightbox({
         images: items.map((item, i) => ({
           ...item,
           thumbRect: null,
-          thumbRef: refs[i] ?? null,
-          thumbDimensions: fetchedDims[i] ?? null,
+          thumbRef: selectedOnly
+            ? i === index
+              ? refs[0]
+              : null
+            : (refs[i] ?? null),
+          thumbDimensions: selectedOnly
+            ? i === index
+              ? (fetchedDims[0] ?? null)
+              : null
+            : (fetchedDims[i] ?? null),
           thumbBorderRadius: tokens.borderRadius.md,
           type: 'image',
         })),
         index,
         metricsContext,
+        onIndexChange,
       })
     }
     const onPressIn = (_: number) => {
-      InteractionManager.runAfterInteractions(() => {
+      // Glide can't reuse the prefetch for the lightbox, so it'd just download twice
+      if (IS_ANDROID) return
+      setImmediate(() => {
         void Image.prefetch(
           items.map(i => i.uri),
           'memory',

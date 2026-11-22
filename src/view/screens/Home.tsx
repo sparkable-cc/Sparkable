@@ -44,7 +44,7 @@ import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
 import * as Layout from '#/components/Layout'
 import {LoggedOutBannerSlot} from '#/components/LoggedOutBannerSlot'
 import {useAnalytics} from '#/analytics'
-import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
@@ -87,7 +87,7 @@ export function HomeScreen(props: Props) {
 
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
-      <Layout.Screen testID="HomeScreen" noInsetTop={IS_LIQUID_GLASS}>
+      <Layout.Screen testID="HomeScreen" noInsetTop={IS_NATIVE}>
         <HomeHeaderModeProvider>
           <HomeScreenReady
             {...props}
@@ -133,7 +133,7 @@ function HomeScreenReady({
   useOTAUpdates()
 
   useEffect(() => {
-    requestNotificationsPermission('Home')
+    void requestNotificationsPermission('Home')
   }, [requestNotificationsPermission])
 
   const pagerRef = useRef<PagerRef>(null)
@@ -151,7 +151,7 @@ function HomeScreenReady({
   const headerMode = useHomeHeaderMode()
   const showHeader = useCallback(() => {
     'worklet'
-    headerMode.set(() =>
+    headerMode.set(
       withSpring(0, {
         ...Reanimated3DefaultSpringConfig,
         overshootClamping: true,

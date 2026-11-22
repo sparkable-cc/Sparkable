@@ -1,4 +1,4 @@
-import {type AtpAgent} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 
 import {CustomFeedAPI} from './custom'
 import {MySkyFeedAPI} from './mysky'
@@ -8,13 +8,13 @@ jest.mock('#/state/preferences/languages', () => ({
   getContentLanguages: () => ['en'],
 }))
 
-const agent = {} as AtpAgent
+const client = {} as Client
 const request = {cursor: undefined, limit: 30}
 const mySkyPage = {feed: [], cursor: 'mysky-next'}
 const discoverPage = {feed: [], cursor: 'discover-next'}
 
 function makeApi() {
-  const api = new MySkyFeedAPI({agent})
+  const api = new MySkyFeedAPI({client})
   const mySkyFetch = jest.fn().mockResolvedValue(mySkyPage)
   const discoverFetch = jest.fn().mockResolvedValue(discoverPage)
   api.mySky.fetch = mySkyFetch
@@ -70,17 +70,20 @@ describe('MySky feed fallback', () => {
 describe('logged-out MySky requests', () => {
   it('surfaces HTTP failures so the fallback can run', async () => {
     const originalFetch = global.fetch
-    global.fetch = jest.fn().mockResolvedValue({ok: false, status: 502})
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      status: 502,
+      headers: {get: () => 'application/json'},
+      json: () => Promise.resolve({error: 'UpstreamFailure'}),
+    })
     try {
       const api = new CustomFeedAPI({
-        agent,
+        client,
         feedParams: {feed: 'at://did:plc:example/app.bsky.feed.generator/test'},
         failOnHttpError: true,
       })
-      await expect(api.fetch(request)).rejects.toThrow(
-        'Feed request failed (502)',
-      )
-      expect(global.fetch).toHaveBeenCalledTimes(2)
+      await expect(api.fetch(request)).rejects.toThrow()
+      expect(global.fetch).toHaveBeenCalledTimes(1)
     } finally {
       global.fetch = originalFetch
     }

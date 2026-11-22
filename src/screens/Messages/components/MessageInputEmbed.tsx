@@ -1,12 +1,8 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {LayoutAnimation, View} from 'react-native'
-import {
-  AppBskyFeedPost,
-  AppBskyRichtextFacet,
-  AtUri,
-  moderatePost,
-  RichText as RichTextAPI,
-} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {moderatePost} from '@bsky/sdk/moderation'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 
@@ -36,6 +32,7 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 /**
@@ -43,21 +40,42 @@ import * as bsky from '#/types/bsky'
  * embed: either a quoted post or a group chat invite link.
  */
 export type MessageEmbedState =
-  | {type: 'post'; uri: string}
+  | {
+      type: 'post'
+      uri: string
+      /**
+       * The post was attached by the share menu (it passed the post in when
+       * opening the chat), rather than pasted as a link.
+       */
+      fromShareMenu?: boolean
+      /** How the share menu picked the chat, for metrics. */
+      shareSource?: 'recentChat' | 'chatSearch'
+    }
   | {type: 'invite'; code: string}
 
 export function useMessageEmbed() {
   const route =
     useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>()
-  const navigation = useNavigation<NavigationProp>()
+  const navigation =
+    useNavigation<
+      NavigationProp<CommonNavigatorParams, 'MessagesConversation'>
+    >()
   const embedFromParams = route.params.embed
+  const embedFromParamsState: MessageEmbedState | undefined = embedFromParams
+    ? {
+        type: 'post',
+        uri: embedFromParams,
+        fromShareMenu: true,
+        shareSource: route.params.embedSource,
+      }
+    : undefined
 
   const [embed, setEmbed] = useState<MessageEmbedState | undefined>(
-    embedFromParams ? {type: 'post', uri: embedFromParams} : undefined,
+    embedFromParamsState,
   )
 
-  if (embedFromParams && embed?.type !== 'post') {
-    setEmbed({type: 'post', uri: embedFromParams})
+  if (embedFromParamsState && embed?.type !== 'post') {
+    setEmbed(embedFromParamsState)
   }
 
   return {
@@ -67,7 +85,7 @@ export function useMessageEmbed() {
         if (!embedUrl) {
           // Only the post embed is reflected in the route param (used by the
           // share-to-DM intent flow); invites are local-only.
-          navigation.setParams({embed: ''})
+          navigation.setParams({embed: '', embedSource: undefined})
           setEmbed(undefined)
           return
         }
@@ -106,7 +124,7 @@ export function useExtractEmbedFromFacets(
   for (const facet of rt.facets ?? []) {
     for (const feature of facet.features) {
       if (
-        AppBskyRichtextFacet.isLink(feature) &&
+        bsky.isType(app.bsky.richtext.facet.link, feature) &&
         (isBskyPostUrl(feature.uri) || isBskyChatInviteUrl(feature.uri))
       ) {
         uriFromFacet = feature.uri
@@ -166,13 +184,7 @@ function MessageInputPostEmbed({
   )
 
   const {rt, record} = useMemo(() => {
-    if (
-      post &&
-      bsky.dangerousIsType<AppBskyFeedPost.Record>(
-        post.record,
-        AppBskyFeedPost.isRecord,
-      )
-    ) {
+    if (post && bsky.isType(app.bsky.feed.post, post.record)) {
       return {
         rt: new RichTextAPI({
           text: post.record.text,

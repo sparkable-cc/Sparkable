@@ -31,6 +31,8 @@ android/build/
 .env
 .env.local
 .env.*.local
+.env.*
+!/.env.e2e
 
 # OS / editor
 .DS_Store
@@ -43,3 +45,41 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Performance results (Flashlight)
+.perf/
+
+# Oxlint
+.oxlintcache
+
+# i18n
+src/locale/locales/_build/
+src/locale/locales/**/messages.js
+src/locale/locales/**/messages.mjs
+src/locale/locales/**/messages.ts
+
+# generated lexicon schemas (pnpm lexicons:generate)
+src/lexicons/
+
+# local builds
+*.apk
+*.aab
+*.ipa
+
+# ogcard assets
+bskyogcard/src/assets/fonts/noto-*
+
+# bskyweb build output
+bskyweb/static/media/*.webp
+bskyweb/static/media/*.jpg
+bskyweb/static/media/*.png
+bskyweb/static/media/*.svg
+
+# superpowers plugin plans/specs — local-only workspace
+docs/superpowers/
+.claude/worktrees
+
+# pnpm
+.pnpm-store/
+
+.argent
