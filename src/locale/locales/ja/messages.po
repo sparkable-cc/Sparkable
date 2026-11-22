@@ -109,7 +109,7 @@ msgstr "（引用された投稿）"
 #. placeholder {2}: formatCount(i18n, view.subscriptionCount)
 #: src/components/atmosphere/SiteStandard/Publication.tsx:198
 msgid "{0, plural, one {{1} subscriber} other {{2} subscribers}}"
-msgstr "{0, plural, other {購読者{2}人}}"
+msgstr "{0, plural, one {購読者{1}人} other {購読者{2}人}}"
 
 #. placeholder {0}: labels.length
 #: src/components/moderation/LabelsOnMe.tsx:57

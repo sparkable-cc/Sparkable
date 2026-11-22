@@ -109,7 +109,7 @@ msgstr "(alıntılanan gönderi)"
 #. placeholder {2}: formatCount(i18n, view.subscriptionCount)
 #: src/components/atmosphere/SiteStandard/Publication.tsx:198
 msgid "{0, plural, one {{1} subscriber} other {{2} subscribers}}"
-msgstr "{0, plural, other {{2} abone}}"
+msgstr "{0, plural, one {{1} abone} other {{2} abone}}"
 
 #. placeholder {0}: labels.length
 #: src/components/moderation/LabelsOnMe.tsx:57

@@ -11,5 +11,4 @@ export type OAuthClient = BrowserOAuthClient
  * implementation - otherwise `undefined` narrows to `never` at the call sites.
  */
 export type OAuthInitResult =
-  | {session: OAuthSession; state?: string | null}
-  | undefined
+  {session: OAuthSession; state?: string | null} | undefined

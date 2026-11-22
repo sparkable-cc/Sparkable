@@ -26,11 +26,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: ⬇️ Fetch base branch
-        env:
-          BASE_REF: ${{ github.base_ref }}
-        run: git fetch origin $BASE_REF --depth=1
-
       - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
 
       - name: 🔧 Install node
@@ -38,21 +33,13 @@ jobs:
         with:
           node-version-file: package.json
 
-      - name: ⏪ Reset pnpm-lock.yaml to base
-        env:
-          BASE_REF: ${{ github.base_ref }}
-        run: git show "origin/$BASE_REF:pnpm-lock.yaml" > pnpm-lock.yaml
-
       - name: 📦 pnpm install
-        # Fine to skip scripts since we don't run any code
-        run: pnpm clean && pnpm install --ignore-scripts --no-frozen-lockfile
+        run: pnpm install --ignore-scripts --frozen-lockfile
 
       - name: 🔍 Verify pnpm-lock.yaml
         run: |
-          git diff --quiet --exit-code || {
-            echo '::error::`pnpm-lock.yaml` does not match what pnpm would generate given the base `pnpm-lock.yaml` and the head `package.json`.'
-            echo '::error:: - If this is intentional, you can ignore this check.'
-            echo '::error:: - If this is unintentional, apply the following diff:'
-            git --no-pager diff
+          git diff --quiet --exit-code -- pnpm-lock.yaml || {
+            echo '::error::`pnpm-lock.yaml` changed during a frozen install.'
+            git --no-pager diff -- pnpm-lock.yaml
             exit 1
           }

@@ -534,49 +534,24 @@ export type Events = {
   }
   'spark:reaction:selected': {
     reaction:
-      | 'insight'
-      | 'compassion'
-      | 'joy'
-      | 'inspiration'
-      | 'hope'
-      | 'respect'
+      'insight' | 'compassion' | 'joy' | 'inspiration' | 'hope' | 'respect'
     surface: 'feed' | 'thread' | 'profile' | 'video-feed'
   }
   'spark:reaction:changed': {
     reaction:
-      | 'insight'
-      | 'compassion'
-      | 'joy'
-      | 'inspiration'
-      | 'hope'
-      | 'respect'
+      'insight' | 'compassion' | 'joy' | 'inspiration' | 'hope' | 'respect'
     previousReaction:
-      | 'insight'
-      | 'compassion'
-      | 'joy'
-      | 'inspiration'
-      | 'hope'
-      | 'respect'
+      'insight' | 'compassion' | 'joy' | 'inspiration' | 'hope' | 'respect'
     surface: 'feed' | 'thread' | 'profile' | 'video-feed'
   }
   'spark:reaction:removed': {
     reaction:
-      | 'insight'
-      | 'compassion'
-      | 'joy'
-      | 'inspiration'
-      | 'hope'
-      | 'respect'
+      'insight' | 'compassion' | 'joy' | 'inspiration' | 'hope' | 'respect'
     surface: 'feed' | 'thread' | 'profile' | 'video-feed'
   }
   'spark:reaction:failed': {
     reaction:
-      | 'insight'
-      | 'compassion'
-      | 'joy'
-      | 'inspiration'
-      | 'hope'
-      | 'respect'
+      'insight' | 'compassion' | 'joy' | 'inspiration' | 'hope' | 'respect'
     action: 'select' | 'change' | 'remove'
     surface: 'feed' | 'thread' | 'profile' | 'video-feed'
   }

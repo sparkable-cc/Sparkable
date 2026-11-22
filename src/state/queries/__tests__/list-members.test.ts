@@ -1,6 +1,7 @@
 import {type Client} from '@atproto/lex'
 
 import {type app} from '#/lexicons'
+import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import {getAllListMembers} from '../list-members'
 
 jest.mock('#/state/queries', () => ({
@@ -50,7 +51,7 @@ describe('getAllListMembers', () => {
     expect(call).toHaveBeenCalledTimes(2)
   })
 
-  it('stops after 500 members', async () => {
+  it('stops at the starter pack limit', async () => {
     const call = jest.fn()
     for (let page = 0; page < 6; page++) {
       call.mockResolvedValueOnce({
@@ -67,7 +68,7 @@ describe('getAllListMembers', () => {
       'at://did:plc:test/app.bsky.graph.list/test',
     )
 
-    expect(items).toHaveLength(500)
-    expect(call).toHaveBeenCalledTimes(5)
+    expect(items).toHaveLength(STARTER_PACK_MAX_SIZE)
+    expect(call).toHaveBeenCalledTimes(Math.ceil(STARTER_PACK_MAX_SIZE / 100))
   })
 })
