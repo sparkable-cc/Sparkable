@@ -73,6 +73,9 @@ export function SparkReactionPicker({
   const t = useTheme()
   const {width: viewportWidth} = useWindowDimensions()
   const [visible, setVisible] = useState(false)
+  const [hoveredReaction, setHoveredReaction] = useState<SparkReaction | null>(
+    null,
+  )
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pressedPointerType = useRef<string | undefined>(undefined)
   const previousOpenKey = useRef(openKey)
@@ -215,12 +218,14 @@ export function SparkReactionPicker({
                     : 'Selects this reaction for the post'
                 }
                 accessibilityState={{selected}}
+                onHoverIn={() => setHoveredReaction(reaction.id)}
+                onHoverOut={() => setHoveredReaction(null)}
                 onPress={evt => {
                   evt.stopPropagation()
                   onSelect(reaction.id)
                   setVisible(false)
                 }}
-                style={({hovered}) => [
+                style={[
                   a.align_center,
                   a.justify_center,
                   {
@@ -234,7 +239,9 @@ export function SparkReactionPicker({
                       : 'transparent',
                   },
                   selected && t.atoms.bg_contrast_50,
-                  hovered && !selected && t.atoms.bg_contrast_25,
+                  hoveredReaction === reaction.id &&
+                    !selected &&
+                    t.atoms.bg_contrast_25,
                 ]}>
                 <Image
                   source={reaction.icon}

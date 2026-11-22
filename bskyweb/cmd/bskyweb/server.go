@@ -48,7 +48,8 @@ type Server struct {
 	chatXrpcc    *xrpc.Client
 	cfg          *Config
 
-	ipccClient http.Client
+	ipccClient   http.Client
+	featureGates *featureGateCache
 
 	// sitemapClient is used for fetching sitemaps from the appview. It has
 	// DisableCompression set to true so that gzipped responses are passed
@@ -158,6 +159,12 @@ func serve(cctx *cli.Context) error {
 			},
 		},
 	}
+	if cctx.Bool("feature-gate-bootstrap") {
+		server.featureGates = newFeatureGateCache(cctx.String("growthbook-api-host"), cctx.String("growthbook-client-key"))
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+		go server.featureGates.run(ctx)
+	}
 
 	// Create the HTTP server.
 	server.httpd = &http.Server{
@@ -243,17 +250,18 @@ func serve(cctx *cli.Context) error {
 	// configure routes
 	//
 	// static files
-	staticHandler := http.FileServer(func() http.FileSystem {
+	staticRoot := func() fs.FS {
 		if debug {
 			log.Debugf("serving static file from the local file system")
-			return http.FS(os.DirFS("static"))
+			return os.DirFS("static")
 		}
 		fsys, err := fs.Sub(bskyweb.StaticFS, "static")
 		if err != nil {
 			log.Fatal(err)
 		}
-		return http.FS(fsys)
-	}())
+		return fsys
+	}()
+	staticHandler := http.FileServer(http.FS(staticRoot))
 
 	// enable some special endpoints for the "canonical" deployment (bsky.app). not having these enabled should *not* impact regular operation
 	if canonicalInstance {
@@ -263,14 +271,14 @@ func serve(cctx *cli.Context) error {
 			return c.Redirect(http.StatusMovedPermanently, "/.well-known/security.txt")
 		})
 		e.GET("/.well-known/*", echo.WrapHandler(staticHandler))
+		// https://w3c.github.io/webappsec-change-password-url/
+		e.GET("/.well-known/change-password", func(c echo.Context) error {
+			return c.Redirect(http.StatusFound, "/settings/account")
+		})
 	}
 
 	// default to permissive, but Disallow all if flag set
-	if robotsDisallowAll {
-		e.File("/robots.txt", "static/robots-disallow-all.txt")
-	} else {
-		e.GET("/robots.txt", echo.WrapHandler(staticHandler))
-	}
+	e.GET("/robots.txt", robotsHandler(staticRoot, robotsDisallowAll))
 
 	/*
 	 * atproto OAuth client metadata.
@@ -367,8 +375,8 @@ func serve(cctx *cli.Context) error {
 				path := c.Request().URL.Path
 				maxAge := 1 * (60 * 60) // default is 1 hour
 
-				// all assets in /static/js, /static/css, /static/media are content-hashed and can be cached for a long time
-				if strings.HasPrefix(path, "/static/js/") || strings.HasPrefix(path, "/static/css/") || strings.HasPrefix(path, "/static/media/") {
+				// all assets in /static/_expo, /static/assets, /static/media are content-hashed and can be cached for a long time
+				if strings.HasPrefix(path, "/static/_expo/") || strings.HasPrefix(path, "/static/assets/") || strings.HasPrefix(path, "/static/media/") {
 					maxAge = 365 * (60 * 60 * 24) // 1 year
 				}
 
@@ -390,6 +398,8 @@ func serve(cctx *cli.Context) error {
 	e.GET("/oauth/callback", server.WebGenericNoindex)
 	e.GET("/search", server.WebGenericNoindex)
 	e.GET("/feeds", server.WebGenericNoindex)
+	e.GET("/atmosphere", server.WebGenericNoindex)
+	e.GET("/atmosphere/activity", server.WebGenericNoindex)
 	e.GET("/notifications", server.WebGenericNoindex)
 	e.GET("/notifications/settings", server.WebGenericNoindex)
 	e.GET("/notifications/activity", server.WebGenericNoindex)
@@ -585,7 +595,7 @@ func (srv *Server) siteOrigin(c echo.Context) string {
 // NewTemplateContext returns a new pongo2 context with some default values.
 func (srv *Server) NewTemplateContext(c echo.Context) pongo2.Context {
 	origin := srv.siteOrigin(c)
-	return pongo2.Context{
+	data := pongo2.Context{
 		"staticCDNHost": srv.cfg.staticCDNHost,
 		"favicon":       fmt.Sprintf("%s/static/favicon.png", srv.cfg.staticCDNHost),
 		"siteOrigin":    origin,
@@ -593,6 +603,10 @@ func (srv *Server) NewTemplateContext(c echo.Context) pongo2.Context {
 		"noindex":       false,
 		"nofollow":      false,
 	}
+	if srv.featureGates != nil {
+		data["featureGateBootstrap"] = srv.featureGates.snapshot()
+	}
+	return data
 }
 
 func (srv *Server) errorHandler(err error, c echo.Context) {
@@ -603,7 +617,13 @@ func (srv *Server) errorHandler(err error, c echo.Context) {
 	c.Logger().Error(err)
 	data := srv.NewTemplateContext(c)
 	data["statusCode"] = code
-	c.Render(code, "error.html", data)
+	if err := c.Render(code, "error.html", data); err != nil {
+		// error.html extends base.html, so it fails too when the app's fragments
+		// can't be loaded. Without a response, net/http would send an empty 200,
+		// which the probes on / would take as healthy.
+		c.Logger().Error(err)
+		c.String(code, http.StatusText(code))
+	}
 }
 
 // Handler for redirecting to the download page.
@@ -829,7 +849,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 		}
 	}
 
-	if jsonld, err := buildPostJSONLD(postView, threadView.Replies, jsonldURL, isPartOfURL, hideEmbedLabels, hideReplyLabels); err == nil {
+	if jsonld, err := buildPostJSONLD(postView, threadView, jsonldURL, isPartOfURL, hideEmbedLabels, hideReplyLabels); err == nil {
 		data["postJSONLD"] = jsonld
 	} else {
 		log.Warnf("failed to build post JSON-LD for %s: %v", uri, err)
@@ -871,6 +891,8 @@ func (srv *Server) WebStarterPack(c echo.Context) error {
 		return c.Render(http.StatusOK, "starterpack.html", data)
 	}
 	data["title"] = rec.Name
+	data["starterPackURI"] = spv.StarterPack.Uri
+
 	if srv.cfg.ogcardHost != "" {
 		data["imgThumbUrl"] = fmt.Sprintf("%s/start/%s/%s", srv.cfg.ogcardHost, identifier, rkey)
 	}
@@ -915,6 +937,37 @@ func (srv *Server) WebChatInvite(c echo.Context) error {
 	return c.Render(http.StatusOK, "chatinvite.html", data)
 }
 
+func bskyProfileCanonicalURL(handle, tab string) string {
+	canonicalURL := bskyProfileURL(handle)
+	if canonicalURL == "" {
+		return ""
+	}
+
+	switch tab {
+	case "replies", "media", "videos", "feeds", "starter-packs", "lists":
+		query := url.Values{}
+		query.Set("tab", tab)
+		return canonicalURL + "?" + query.Encode()
+	default:
+		return canonicalURL
+	}
+}
+
+func profileAuthorFeedFilter(tab string) (string, bool) {
+	switch tab {
+	case "replies":
+		return "posts_and_replies_only", true
+	case "media":
+		return "posts_with_media", true
+	case "videos":
+		return "posts_with_video", true
+	case "feeds", "starter-packs", "lists":
+		return "", false
+	default:
+		return "posts_no_replies", true
+	}
+}
+
 func (srv *Server) WebProfile(c echo.Context) error {
 	ctx := c.Request().Context()
 	data := srv.NewTemplateContext(c)
@@ -939,11 +992,11 @@ func (srv *Server) WebProfile(c echo.Context) error {
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 	data["requestHost"] = req.Host
 
-	// Prefer the handle-form URL so JSON-LD `url` and
-	// <link rel="canonical"> match. Template falls back to requestURI
-	// when the handle is unusable.
-	if url := bskyProfileURL(pv.Handle); url != "" {
-		data["canonicalURL"] = url
+	tab := c.QueryParam("tab")
+	// Keep non-default profile tabs distinct for crawlers. `posts`, blank, and
+	// unknown values all render the default Posts tab and share its canonical.
+	if canonicalURL := bskyProfileCanonicalURL(pv.Handle, tab); canonicalURL != "" {
+		data["canonicalURL"] = canonicalURL
 	}
 
 	// Fetch recent posts for ProfilePage.hasPart. Skipped for auth-required
@@ -954,21 +1007,23 @@ func (srv *Server) WebProfile(c echo.Context) error {
 	// caching per-profile if upstream load becomes a concern.
 	var recentPosts []*appbsky.FeedDefs_PostView
 	if unauthedViewingOkay {
-		af, err := appbsky.FeedGetAuthorFeed(ctx, srv.xrpcc, pv.Did, "", "posts_no_replies", false, authorFeedFetchLimit)
-		if err != nil {
-			log.Warnf("failed to fetch author feed for: %s\t%v", pv.Did, err)
-		} else {
-			for _, p := range af.Feed {
-				if p == nil || p.Post == nil {
-					continue
-				}
-				// Only the author's own posts (matches RSS handler).
-				if p.Post.Author == nil || p.Post.Author.Did != pv.Did {
-					continue
-				}
-				recentPosts = append(recentPosts, p.Post)
-				if len(recentPosts) >= maxRecentPosts {
-					break
+		if feedFilter, includeFeed := profileAuthorFeedFilter(tab); includeFeed {
+			af, err := appbsky.FeedGetAuthorFeed(ctx, srv.xrpcc, pv.Did, "", feedFilter, false, authorFeedFetchLimit)
+			if err != nil {
+				log.Warnf("failed to fetch author feed for: %s\t%v", pv.Did, err)
+			} else {
+				for _, p := range af.Feed {
+					if p == nil || p.Post == nil {
+						continue
+					}
+					// Only the author's own posts (matches RSS handler).
+					if p.Post.Author == nil || p.Post.Author.Did != pv.Did {
+						continue
+					}
+					recentPosts = append(recentPosts, p.Post)
+					if len(recentPosts) >= maxRecentPosts {
+						break
+					}
 				}
 			}
 		}
@@ -1136,4 +1191,12 @@ func (srv *Server) serveSitemapRequest(c echo.Context, url, sitemapType string) 
 	}
 
 	return nil
+}
+
+func robotsHandler(staticRoot fs.FS, disallowAll bool) echo.HandlerFunc {
+	filename := "robots.txt"
+	if disallowAll {
+		filename = "robots-disallow-all.txt"
+	}
+	return echo.StaticFileHandler(filename, staticRoot)
 }

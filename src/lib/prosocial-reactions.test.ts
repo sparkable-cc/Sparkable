@@ -1,8 +1,7 @@
-import {type AtpAgent} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 import {app} from '@bsky/sdk/lexicons'
 import {main as reactionRecord} from '@sparkable/prosocial-contract'
 
-import {createLexClient} from '#/lib/lexClient'
 import {
   createReactionWithSpark,
   deleteReactionWithSpark,
@@ -24,18 +23,12 @@ jest.mock(
   () => ({app: {bsky: {feed: {like: {main: {nsid: 'app.bsky.feed.like'}}}}}}),
   {virtual: true},
 )
-jest.mock('#/lib/lexClient', () => ({createLexClient: jest.fn()}))
 
 const subject = {
   uri: 'at://did:plc:author/app.bsky.feed.post/post1',
   cid: 'bafytestpost',
 }
 const likeUri = 'at://did:plc:viewer/app.bsky.feed.like/like1'
-const agent = {
-  did: 'did:plc:viewer',
-  fetchHandler: jest.fn(),
-} as unknown as AtpAgent
-
 function makeClient(results: unknown[] = []) {
   const create = jest.fn((lexicon, value, options) => ({
     kind: 'create',
@@ -56,12 +49,8 @@ function makeClient(results: unknown[] = []) {
       }),
   )
   const put = jest.fn(() => Promise.resolve(undefined))
-  jest
-    .mocked(createLexClient)
-    .mockReturnValue({applyWrites, put} as unknown as ReturnType<
-      typeof createLexClient
-    >)
-  return {applyWrites, create, del, put}
+  const client = {applyWrites, put} as unknown as Client
+  return {client, applyWrites, create, del, put}
 }
 
 beforeEach(() => jest.clearAllMocks())
@@ -71,7 +60,11 @@ describe('prosocial repository writes', () => {
     const client = makeClient([{uri: likeUri}])
 
     await expect(
-      createReactionWithSpark({agent, subject, reactionType: 'insight'}),
+      createReactionWithSpark({
+        client: client.client,
+        subject,
+        reactionType: 'insight',
+      }),
     ).resolves.toEqual({likeUri})
 
     expect(client.applyWrites).toHaveBeenCalledTimes(1)
@@ -91,7 +84,11 @@ describe('prosocial repository writes', () => {
   it('changes the deterministic reaction record without writing a Spark', async () => {
     const client = makeClient()
 
-    await putReaction({agent, subject, reactionType: 'compassion'})
+    await putReaction({
+      client: client.client,
+      subject,
+      reactionType: 'compassion',
+    })
 
     expect(client.put).toHaveBeenCalledWith(
       reactionRecord,
@@ -107,7 +104,11 @@ describe('prosocial repository writes', () => {
     ])
 
     await expect(
-      createReactionWithSpark({agent, subject, reactionType: 'insight'}),
+      createReactionWithSpark({
+        client: client.client,
+        subject,
+        reactionType: 'insight',
+      }),
     ).rejects.toThrow('Spark record was created but its URI was not returned')
     expect(client.applyWrites).toHaveBeenCalledTimes(1)
   })
@@ -115,7 +116,11 @@ describe('prosocial repository writes', () => {
   it('deletes the reaction and its Spark in one commit', async () => {
     const client = makeClient()
 
-    await deleteReactionWithSpark({agent, subjectUri: subject.uri, likeUri})
+    await deleteReactionWithSpark({
+      client: client.client,
+      subjectUri: subject.uri,
+      likeUri,
+    })
 
     expect(client.applyWrites).toHaveBeenCalledTimes(1)
     expect(client.del).toHaveBeenNthCalledWith(1, reactionRecord, {
@@ -131,7 +136,7 @@ describe('prosocial repository writes', () => {
 
     await expect(
       deleteReactionWithSpark({
-        agent,
+        client: client.client,
         subjectUri: subject.uri,
         likeUri: 'at://did:plc:viewer/app.bsky.feed.post/post1',
       }),

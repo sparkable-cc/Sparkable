@@ -1,11 +1,6 @@
 import {memo, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  type AppBskyFeedThreadgate,
-  type RichText as RichTextAPI,
-} from '@atproto/api'
+import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
@@ -20,7 +15,6 @@ import {
 } from '#/lib/prosocial-reactions'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {type Shadow} from '#/state/cache/types'
-import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
   usePostLikeMutationQueue,
   usePostRepostMutationQueue,
@@ -31,17 +25,19 @@ import {
   useViewerProsocialReaction,
   viewerProsocialReactionQueryKey,
 } from '#/state/queries/prosocial-metadata'
-import {useAgent, useRequireAuth} from '#/state/session'
+import {usePdsClient, useRequireAuth, useSession} from '#/state/session'
 import {
   ProgressGuideAction,
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Reply as Bubble} from '#/components/icons/Reply'
+import {Reply_Stroke2_Corner0_Rounded as Bubble} from '#/components/icons/Reply'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import * as Skele from '#/components/Skeleton'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {useFeedItemFeedback} from '#/features/feedFeedback'
+import {type app} from '#/lexicons'
 import {BookmarkButton} from './BookmarkButton'
 import {
   PostControlButton,
@@ -63,55 +59,50 @@ let PostControls = ({
   post,
   record,
   richText,
-  feedContext,
-  reqId,
   style,
   onPressReply,
   onPostReply,
   logContext,
   threadgateRecord,
   onShowLess,
-  viaRepost,
   variant,
   forceGoogleTranslate = false,
 }: {
   big?: boolean
-  post: Shadow<AppBskyFeedDefs.PostView>
-  record: AppBskyFeedPost.Record
+  post: Shadow<app.bsky.feed.defs.PostView>
+  record: app.bsky.feed.post.Main
   richText: RichTextAPI
-  feedContext?: string | undefined
-  reqId?: string | undefined
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
   onPostReply?: (postUri: string | undefined) => void
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
-  threadgateRecord?: AppBskyFeedThreadgate.Record
-  onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
-  viaRepost?: {uri: string; cid: string}
+  threadgateRecord?: app.bsky.feed.threadgate.Main
+  onShowLess?: (interaction: app.bsky.feed.defs.Interaction) => void
   variant?: 'compact' | 'normal' | 'large'
   forceGoogleTranslate?: boolean
 }): React.ReactNode => {
   const ax = useAnalytics()
-  const agent = useAgent()
+  const client = usePdsClient()
+  const did = useSession().currentAccount?.did
   const queryClient = useQueryClient()
   const t = useTheme()
   const {t: l} = useLingui()
   const {openComposer} = useOpenComposer()
-  const {feedDescriptor} = useFeedFeedbackContext()
+  const feedItem = useFeedItemFeedback()
+  const {feedDescriptor} = feedItem
   const [queueLike, queueUnlike] = usePostLikeMutationQueue(
     post,
-    viaRepost,
+    feedItem.item?.via,
     feedDescriptor,
     logContext,
   )
   const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
     post,
-    viaRepost,
+    feedItem.item?.via,
     feedDescriptor,
     logContext,
   )
   const requireAuth = useRequireAuth()
-  const {sendInteraction} = useFeedFeedbackContext()
   const {captureAction} = useProgressGuideControls()
   const isBlocked = Boolean(
     post.author.viewer?.blocking ||
@@ -153,9 +144,9 @@ let PostControls = ({
     })
     setReactionOverride(next)
     updateProsocialReactionCache(queryClient, post.uri, previous, next)
-    if (agent.did) {
+    if (did) {
       queryClient.setQueryData(
-        viewerProsocialReactionQueryKey(agent.did, post.uri),
+        viewerProsocialReactionQueryKey(did, post.uri),
         next,
       )
     }
@@ -204,7 +195,7 @@ let PostControls = ({
       updatePostShadow(queryClient, post.uri, {likeUri: undefined})
       try {
         await deleteReactionWithSpark({
-          agent,
+          client,
           subjectUri: post.uri,
           likeUri,
         })
@@ -230,12 +221,7 @@ let PostControls = ({
       setHasLikeIconBeenToggled(true)
       if (!post.viewer?.like) {
         setReactionOverride(null)
-        sendInteraction({
-          item: post.uri,
-          event: 'app.bsky.feed.defs#interactionLike',
-          feedContext,
-          reqId,
-        })
+        feedItem.send('app.bsky.feed.defs#interactionLike')
         captureAction(ProgressGuideAction.Like)
         const likePromise = queueLike()
         setSparkPickerOpenKey(key => key + 1)
@@ -287,7 +273,7 @@ let PostControls = ({
       updatePostShadow(queryClient, post.uri, {likeUri: undefined})
       try {
         await deleteReactionWithSpark({
-          agent,
+          client,
           subjectUri: post.uri,
           likeUri,
         })
@@ -314,24 +300,19 @@ let PostControls = ({
       if (!post.viewer?.like) {
         setHasLikeIconBeenToggled(true)
         updatePostShadow(queryClient, post.uri, {likeUri: 'pending'})
-        sendInteraction({
-          item: post.uri,
-          event: 'app.bsky.feed.defs#interactionLike',
-          feedContext,
-          reqId,
-        })
+        feedItem.send('app.bsky.feed.defs#interactionLike')
         captureAction(ProgressGuideAction.Like)
         const {likeUri} = await createReactionWithSpark({
-          agent,
+          client,
           subject: {uri: post.uri, cid: post.cid},
           reactionType: reaction,
-          via: viaRepost,
+          via: feedItem.item?.via,
         })
         updatePostShadow(queryClient, post.uri, {likeUri})
         refreshProsocialMetadata()
       } else {
         await putReaction({
-          agent,
+          client,
           subject: {uri: post.uri, cid: post.cid},
           reactionType: reaction,
         })
@@ -371,14 +352,10 @@ let PostControls = ({
       return
     }
 
+    const existingRepost = post.viewer?.repost
     try {
-      if (!post.viewer?.repost) {
-        sendInteraction({
-          item: post.uri,
-          event: 'app.bsky.feed.defs#interactionRepost',
-          feedContext,
-          reqId,
-        })
+      if (!existingRepost) {
+        feedItem.send('app.bsky.feed.defs#interactionRepost')
         await queueRepost()
       } else {
         await queueUnrepost()
@@ -399,12 +376,7 @@ let PostControls = ({
       return
     }
 
-    sendInteraction({
-      item: post.uri,
-      event: 'app.bsky.feed.defs#interactionQuote',
-      feedContext,
-      reqId,
-    })
+    feedItem.send('app.bsky.feed.defs#interactionQuote')
     ax.metric('post:clickQuotePost', {
       uri: post.uri,
       authorDid: post.author.did,
@@ -419,12 +391,7 @@ let PostControls = ({
   }
 
   const onShare = () => {
-    sendInteraction({
-      item: post.uri,
-      event: 'app.bsky.feed.defs#interactionShare',
-      feedContext,
-      reqId,
-    })
+    feedItem.send('app.bsky.feed.defs#interactionShare')
   }
 
   const secondaryControlSpacingStyles = useSecondaryControlSpacingStyles({
@@ -588,8 +555,6 @@ let PostControls = ({
         <PostMenuButton
           testID="postDropdownBtn"
           post={post}
-          postFeedContext={feedContext}
-          postReqId={reqId}
           big={big}
           record={record}
           richText={richText}

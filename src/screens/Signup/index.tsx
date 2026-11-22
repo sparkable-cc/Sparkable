@@ -3,7 +3,6 @@ import {AppState, type AppStateStatus, View} from 'react-native'
 import ReactNativeDeviceAttest from 'react-native-device-attest'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
-import {AppBskyGraphStarterpack} from '@atproto/api'
 import {tokens} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -32,6 +31,7 @@ import {ScreenTransition} from '#/components/ScreenTransition'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {GCP_PROJECT_ID, IS_ANDROID} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {
@@ -141,10 +141,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
             scrollable>
             <View testID="createAccount" style={a.flex_1}>
               {showStarterPackCard &&
-              bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-                starterPack.record,
-                AppBskyGraphStarterpack.isRecord,
-              ) ? (
+              bsky.isType(app.bsky.graph.starterpack, starterPack.record) ? (
                 <Animated.View
                   entering={!isFetchedAtMount ? FadeIn : undefined}>
                   <LinearGradientBackground
@@ -222,6 +219,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                         a.w_full,
                         a.py_lg,
                         a.flex_row,
+                        a.flex_wrap,
                         a.gap_md,
                         a.align_center,
                       ]}>
@@ -230,7 +228,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                         style={
                           gtMobile
                             ? [a.flex_1, a.flex, a.flex_row, a.justify_end]
-                            : []
+                            : [a.flex_shrink]
                         }>
                         <Text
                           style={[

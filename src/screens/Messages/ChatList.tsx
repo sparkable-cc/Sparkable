@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {type ChatBskyActorGetStatus, type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {
   useFocusEffect,
@@ -28,7 +27,7 @@ import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useUpdateAllRead} from '#/state/queries/messages/update-all-read'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
-import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {ChatListSkeleton} from '#/screens/Messages/components/ChatListSkeleton'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
@@ -57,17 +56,18 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {type chat} from '#/lexicons'
 import {ChatDisabled} from './components/ChatDisabled'
 import {ChatListItem} from './components/ChatListItem'
 import {InboxRequests} from './components/InboxRequests'
 import {useIsWithinSplitView} from './components/splitView/context'
 import {splitViewLeftScroll} from './components/splitView/leftColumnScroll'
 
-type ChatStatus = ChatBskyActorGetStatus.OutputSchema
+type ChatStatus = chat.bsky.actor.getStatus.$OutputBody
 
 type ListItem = {
   type: 'CONVERSATION'
-  conversation: ChatBskyConvoDefs.ConvoView
+  conversation: chat.bsky.convo.defs.ConvoView
   selected: boolean
 }
 
@@ -394,7 +394,7 @@ export function ChatList({
     return (
       <Layout.Center style={web({minHeight: '100%'})}>
         {isLoading ? (
-          <ChatListLoadingPlaceholder />
+          <ChatListSkeleton />
         ) : (
           <>
             {isError ? (

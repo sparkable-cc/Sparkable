@@ -1,7 +1,6 @@
 import {useMemo} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {type AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -20,6 +19,7 @@ import {Earth_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 import {ExternalGif} from './ExternalGif'
 import {ExternalPlayer} from './ExternalPlayer'
 import {GifEmbed} from './Gif'
@@ -27,17 +27,19 @@ import {GifEmbed} from './Gif'
 export const ExternalEmbed = ({
   link,
   onOpen,
+  post,
   style,
   hideAlt,
 }: {
-  link: AppBskyEmbedExternal.ViewExternal
+  link: app.bsky.embed.external.ViewExternal
   onOpen?: () => void
+  post?: app.bsky.feed.defs.PostView
   style?: StyleProp<ViewStyle>
   hideAlt?: boolean
 }) => {
   const {_} = useLingui()
   const t = useTheme()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
   const niceUrl = toNiceDomain(link.uri)
   const imageUri = link.thumb
@@ -52,14 +54,14 @@ export const ExternalEmbed = ({
   const hasMedia = Boolean(imageUri || embedPlayerParams)
 
   const onPress = () => {
-    playHaptic('Light')
+    haptics.tap()
     onOpen?.()
   }
 
   const onShareExternal = IS_NATIVE
     ? () => {
         if (link.uri) {
-          playHaptic('Heavy')
+          haptics.longPress()
           void shareUrl(link.uri)
         }
       }
@@ -120,7 +122,11 @@ export const ExternalEmbed = ({
           {embedPlayerParams?.isGif ? (
             <ExternalGif link={link} params={embedPlayerParams} />
           ) : embedPlayerParams ? (
-            <ExternalPlayer link={link} params={embedPlayerParams} />
+            <ExternalPlayer
+              link={link}
+              params={embedPlayerParams}
+              post={post}
+            />
           ) : undefined}
 
           <View

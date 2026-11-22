@@ -153,7 +153,7 @@ export function SparkReactionPicker({
                     onSelect(reaction.id)
                     setVisible(false)
                   }}
-                  style={({hovered}) => [
+                  style={({pressed}) => [
                     a.align_center,
                     a.justify_center,
                     {
@@ -167,7 +167,7 @@ export function SparkReactionPicker({
                         : 'transparent',
                     },
                     selected && t.atoms.bg_contrast_50,
-                    hovered && !selected && t.atoms.bg_contrast_25,
+                    pressed && !selected && t.atoms.bg_contrast_25,
                   ]}>
                   <Image
                     source={reaction.icon}

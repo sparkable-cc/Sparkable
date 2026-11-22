@@ -7,8 +7,9 @@ import {
 } from '@sparkable/prosocial-contract'
 import {type QueryClient, useQuery} from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
+import {usePdsClient, useSession} from '#/state/session'
 import {PROSOCIAL_METADATA_API_HOST} from '#/env'
+import {com} from '#/lexicons'
 
 const RQKEY_ROOT = 'prosocial-post-metadata'
 export const prosocialMetadataQueryKey = (uri: string) => [RQKEY_ROOT, uri]
@@ -121,8 +122,8 @@ export function useProsocialPostMetadata(uri: string) {
 
 /** Read the viewer's own record from their PDS; the count service is anonymous. */
 export function useViewerProsocialReaction(uri: string, liked: boolean) {
-  const agent = useAgent()
-  const did = agent.did
+  const client = usePdsClient()
+  const did = useSession().currentAccount?.did
   return useQuery<ReactionType | null>({
     queryKey: viewerProsocialReactionQueryKey(did ?? '', uri),
     enabled: Boolean(did && liked),
@@ -130,7 +131,7 @@ export function useViewerProsocialReaction(uri: string, liked: boolean) {
     queryFn: async () => {
       if (!did) return null
       try {
-        const {data} = await agent.api.com.atproto.repo.getRecord({
+        const data = await client.call(com.atproto.repo.getRecord, {
           repo: did,
           collection: 'cc.sparkable.feed.reaction',
           rkey: rkeyForSubjectUri(uri),
