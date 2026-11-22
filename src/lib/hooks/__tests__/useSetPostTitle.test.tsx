@@ -60,7 +60,7 @@ describe('useSetPostTitle', () => {
   it("titles the post with its author's handle", () => {
     const navigation = renderPostScreen(authorWith('ironeconomist.bsky.social'))
     expect(navigation.getCurrentOptions()).toMatchObject({
-      title: 'Post by @ironeconomist.bsky.social — Bluesky',
+      title: 'Post by @ironeconomist.bsky.social — Sparkable',
     })
   })
 

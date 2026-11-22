@@ -1,7 +1,7 @@
 import {type Client} from '@atproto/lex'
 
-import {type app} from '#/lexicons'
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
+import {type app} from '#/lexicons'
 import {getAllListMembers} from '../list-members'
 
 jest.mock('#/state/queries', () => ({
