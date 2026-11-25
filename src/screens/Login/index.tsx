@@ -4,6 +4,7 @@ import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import {useLingui} from '@lingui/react/macro'
 
 import {DEFAULT_SERVICE} from '#/lib/constants'
+import {isOAuthSupported} from '#/lib/oauth/client'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
 import {type SessionAccount, useSession} from '#/state/session'
@@ -141,7 +142,9 @@ export const Login = ({
   switch (currentForm) {
     case Forms.Login:
       title = l`Sign in`
-      description = l`Enter your username and password`
+      description = isOAuthSupported
+        ? l`Sign in with your provider or password`
+        : l`Enter your username and password`
       goBack = () =>
         accounts.length ? gotoForm(Forms.ChooseAccount) : handlePressBack()
       content = (

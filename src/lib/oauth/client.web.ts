@@ -88,7 +88,8 @@ export function initOAuth() {
 }
 
 /**
- * Sends the user to Bluesky to authorize us.
+ * Sends the user to their account's authorization server. A handle resolves
+ * its PDS; without one, the Bluesky host starts the existing sign-up flow.
  *
  * Passing the *host* rather than a handle is deliberate and load bearing: the
  * client derives `login_hint` from whatever identity it can resolve out of this
