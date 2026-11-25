@@ -41,6 +41,8 @@ ARG EXPO_PUBLIC_PROSOCIAL_METADATA_API_HOST
 # Sentry
 #
 ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
 ARG EXPO_PUBLIC_SENTRY_DSN
 ENV EXPO_PUBLIC_SENTRY_DSN=$EXPO_PUBLIC_SENTRY_DSN
 
@@ -64,6 +66,8 @@ RUN pnpm intl:build 2>&1 | tee i18n.log && \
   if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compile errors!\n\n"; fi
 
 RUN SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN \
+    SENTRY_ORG=$SENTRY_ORG \
+    SENTRY_PROJECT=$SENTRY_PROJECT \
     SENTRY_RELEASE=$EXPO_PUBLIC_RELEASE_VERSION \
     SENTRY_DIST=$EXPO_PUBLIC_BUNDLE_IDENTIFIER \
     pnpm build-web
