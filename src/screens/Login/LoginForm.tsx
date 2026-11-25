@@ -5,6 +5,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {DEFAULT_SERVICE, HITSLOP_10} from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
+import {isOAuthSupported, startOAuthSignIn} from '#/lib/oauth/client'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {checkAndFormatResetCode} from '#/lib/strings/password'
@@ -67,6 +68,7 @@ export const LoginForm = ({
 }) => {
   const t = useTheme()
   const [isProcessing, setIsProcessing] = useState(false)
+  const [isOAuthProcessing, setIsOAuthProcessing] = useState(false)
   const [errorField, setErrorField] = useState<
     'none' | 'identifier' | 'password' | '2fa'
   >('none')
@@ -267,6 +269,33 @@ export const LoginForm = ({
     await attemptLogin(service, fullIdent)
   }
 
+  const onPressOAuth = async () => {
+    if (isOAuthProcessing) return
+    const handle = identifier.trim().replace(/^@/, '')
+    if (!handle || handle.includes('@')) {
+      setError(l`Enter your AT Protocol handle to continue with your provider.`)
+      setErrorField('identifier')
+      return
+    }
+
+    Keyboard.dismiss()
+    setError('')
+    setErrorField('none')
+    setIsOAuthProcessing(true)
+    try {
+      await startOAuthSignIn({handle})
+    } catch (err) {
+      logger.warn('Failed to start provider OAuth sign in', {
+        error: String(err),
+      })
+      setError(
+        l`Could not connect to your provider. Check your handle and try again.`,
+      )
+    } finally {
+      setIsOAuthProcessing(false)
+    }
+  }
+
   return (
     <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
       <HostingProviderDialog
@@ -355,6 +384,30 @@ export const LoginForm = ({
           </Text>
         )}
       </View>
+
+      {isOAuthSupported && (
+        <View style={[a.gap_xs]}>
+          <Button
+            testID="loginOAuthButton"
+            label={l`Continue with your PDS`}
+            accessibilityHint={l`Sign in through your hosting provider without entering your password in Sparkable`}
+            color="secondary"
+            size="large"
+            disabled={isOAuthProcessing}
+            onPress={() => void onPressOAuth()}>
+            <ButtonText>
+              <Trans>Continue with your PDS</Trans>
+            </ButtonText>
+            {isOAuthProcessing && <ButtonIcon icon={Loader} />}
+          </Button>
+          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+            <Trans>
+              Your provider will ask you to approve Sparkable. You won't enter
+              your password here.
+            </Trans>
+          </Text>
+        </View>
+      )}
 
       <View>
         <TextField.LabelText>
