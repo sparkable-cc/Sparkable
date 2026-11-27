@@ -1,6 +1,6 @@
 import {type AtUriString, type Client, l} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
-import {app} from '@bsky/sdk/lexicons'
+import {app, com} from '@bsky/sdk/lexicons'
 import {
   main as reactionRecord,
   type ReactionType,
@@ -97,8 +97,26 @@ export async function deleteReactionWithSpark({
     throw new Error('Cannot remove reaction: invalid Spark URI')
   }
 
-  return client.applyWrites(op => [
-    op.delete(reactionRecord, {rkey: rkeyForSubjectUri(subjectUri)}),
-    op.delete(app.bsky.feed.like.main, {rkey: like.rkey}),
-  ])
+  // @atproto/lex-client 0.3.7's operation builder can lose its generated
+  // `delete` schema in the production bundle. Send the two typed operations
+  // directly so the PDS still applies them atomically.
+  return client.xrpc(com.atproto.repo.applyWrites.main, {
+    service: null,
+    labelers: null,
+    body: {
+      repo: client.assertDid,
+      writes: [
+        {
+          $type: 'com.atproto.repo.applyWrites#delete',
+          collection: 'cc.sparkable.feed.reaction',
+          rkey: rkeyForSubjectUri(subjectUri),
+        },
+        {
+          $type: 'com.atproto.repo.applyWrites#delete',
+          collection: 'app.bsky.feed.like',
+          rkey: like.rkey,
+        },
+      ],
+    },
+  })
 }

@@ -1,5 +1,5 @@
 import {type Client} from '@atproto/lex'
-import {app} from '@bsky/sdk/lexicons'
+import {app, com} from '@bsky/sdk/lexicons'
 import {main as reactionRecord} from '@sparkable/prosocial-contract'
 
 import {
@@ -20,7 +20,10 @@ jest.mock(
 )
 jest.mock(
   '@bsky/sdk/lexicons',
-  () => ({app: {bsky: {feed: {like: {main: {nsid: 'app.bsky.feed.like'}}}}}}),
+  () => ({
+    app: {bsky: {feed: {like: {main: {nsid: 'app.bsky.feed.like'}}}}},
+    com: {atproto: {repo: {applyWrites: {main: {nsid: 'applyWrites'}}}}},
+  }),
   {virtual: true},
 )
 
@@ -49,8 +52,14 @@ function makeClient(results: unknown[] = []) {
       }),
   )
   const put = jest.fn(() => Promise.resolve(undefined))
-  const client = {applyWrites, put} as unknown as Client
-  return {client, applyWrites, create, del, put}
+  const xrpc = jest.fn(() => Promise.resolve({body: {results}}))
+  const client = {
+    applyWrites,
+    put,
+    xrpc,
+    assertDid: 'did:plc:viewer',
+  } as unknown as Client
+  return {client, applyWrites, create, del, put, xrpc}
 }
 
 beforeEach(() => jest.clearAllMocks())
@@ -122,13 +131,29 @@ describe('prosocial repository writes', () => {
       likeUri,
     })
 
-    expect(client.applyWrites).toHaveBeenCalledTimes(1)
-    expect(client.del).toHaveBeenNthCalledWith(1, reactionRecord, {
-      rkey: 'reaction-key',
-    })
-    expect(client.del).toHaveBeenNthCalledWith(2, app.bsky.feed.like.main, {
-      rkey: 'like1',
-    })
+    expect(client.applyWrites).not.toHaveBeenCalled()
+    expect(client.xrpc).toHaveBeenCalledWith(
+      com.atproto.repo.applyWrites.main,
+      {
+        service: null,
+        labelers: null,
+        body: {
+          repo: 'did:plc:viewer',
+          writes: [
+            {
+              $type: 'com.atproto.repo.applyWrites#delete',
+              collection: 'cc.sparkable.feed.reaction',
+              rkey: 'reaction-key',
+            },
+            {
+              $type: 'com.atproto.repo.applyWrites#delete',
+              collection: 'app.bsky.feed.like',
+              rkey: 'like1',
+            },
+          ],
+        },
+      },
+    )
   })
 
   it('rejects a non-Spark URI before sending any write', async () => {
@@ -142,5 +167,6 @@ describe('prosocial repository writes', () => {
       }),
     ).rejects.toThrow('invalid Spark URI')
     expect(client.applyWrites).not.toHaveBeenCalled()
+    expect(client.xrpc).not.toHaveBeenCalled()
   })
 })
