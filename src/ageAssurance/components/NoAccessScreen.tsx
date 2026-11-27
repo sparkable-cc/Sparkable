@@ -1,10 +1,9 @@
 import {useCallback, useEffect, useEffectEvent} from 'react'
-import {Linking, ScrollView, View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {BottomSheetOutlet} from '@bsky.app/bottom-sheet'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {BSKY_BIRTHDATE_SETTINGS_URL} from '#/lib/constants'
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {formatDateTime} from '#/lib/strings/time'
 import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
@@ -68,10 +67,9 @@ export function NoAccessScreen() {
 
   /*
    * OAuth users set their birthdate using their account in another tab, so
-   * nothing in this app knows it changed. The query holding `declaredAge` is cached in a
-   * persisted client and would not refetch on its own. Re-check whenever the
-   * user comes back to the tab, so returning from Bluesky clears the gate
-   * without a manual reload.
+   * nothing in this app knows it changed. The query holding `declaredAge` is
+   * cached in a persisted client and would not refetch on its own. Re-check
+   * whenever the user comes back to the tab.
    */
   useEffect(() => {
     if (!IS_WEB || !isOAuthAccount) return
@@ -316,41 +314,31 @@ export function NoAccessScreen() {
                       data will be kept private.
                     </Trans>
                   </Text>
-                  <Text style={[textStyles]}>
-                    <Trans>
-                      Set your birthdate below and we'll get you back to posting
-                      and exploring in no time!
-                    </Trans>
-                  </Text>
+                  {!isOAuthAccount && (
+                    <Text style={[textStyles]}>
+                      <Trans>
+                        Set your birthdate below and we'll get you back to
+                        posting and exploring in no time!
+                      </Trans>
+                    </Text>
+                  )}
                   {isOAuthAccount ? (
                     /*
                      * OAuth sessions run on the `transition:generic` scope,
                      * which the PDS treats like an app password - it refuses
                      * writes to personalDetailsPref. So the birthdate has to
-                     * be set with a full account session. Bluesky's account
-                     * settings can do this even when another PDS hosts it.
+                     * be set with a full account session. A password session
+                     * can use the birthdate dialog with any supported PDS.
                      */
                     <>
                       <Text style={[textStyles]}>
                         <Trans>
                           Sparkable cannot update your birthdate through this
-                          sign-in session. Open Bluesky with this same AT
-                          Protocol account, select your hosting provider if
-                          asked, and add your birthdate in account settings.
-                          Then come back and refresh this page.
+                          sign-in session. Sign out, then sign in with your AT
+                          Protocol handle and main account password. You can add
+                          your birthdate here after signing in.
                         </Trans>
                       </Text>
-                      <Button
-                        color="primary"
-                        size="large"
-                        label={l`Open account settings in Bluesky to add your birthdate`}
-                        onPress={() => {
-                          void Linking.openURL(BSKY_BIRTHDATE_SETTINGS_URL)
-                        }}>
-                        <ButtonText>
-                          <Trans>Open account settings in Bluesky</Trans>
-                        </ButtonText>
-                      </Button>
                     </>
                   ) : (
                     <Button
