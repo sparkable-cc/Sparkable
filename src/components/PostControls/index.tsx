@@ -1,5 +1,6 @@
-import {memo, useMemo, useState} from 'react'
+import {memo, useMemo, useRef, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {type AtUriString} from '@atproto/syntax'
 import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
@@ -116,6 +117,8 @@ let PostControls = ({
     useViewerProsocialReaction(post.uri, Boolean(post.viewer?.like))
 
   const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] = useState(false)
+  const pendingLikeUri = useRef<Promise<string | undefined> | null>(null)
+  const lastCreatedLikeUri = useRef<string | undefined>(undefined)
   const [reactionOverride, setReactionOverride] =
     useState<SparkReaction | null>()
   const sparkReaction = post.viewer?.like
@@ -160,6 +163,17 @@ let PostControls = ({
     }, 1500)
   }
 
+  const resolveLikeUri = async (likeUri: string): Promise<AtUriString> => {
+    if (likeUri !== 'pending') return likeUri as AtUriString
+    // The picker can be used while the first Spark write is still in flight.
+    // Its optimistic URI cannot be parsed as an AT URI or sent to applyWrites.
+    const resolved = pendingLikeUri.current
+      ? await pendingLikeUri.current
+      : lastCreatedLikeUri.current
+    if (!resolved) throw new Error('Spark is still being saved. Try again.')
+    return resolved as AtUriString
+  }
+
   const onPressToggleLike = async () => {
     if (isBlocked) {
       Toast.show(l`Cannot interact with a blocked user`, {
@@ -188,10 +202,10 @@ let PostControls = ({
       }
 
       const removedReaction = activeReaction
+      const likeUri = await resolveLikeUri(post.viewer.like)
       setSparkPickerDismissKey(key => key + 1)
       setOptimisticReaction(removedReaction, null)
       setHasLikeIconBeenToggled(true)
-      const likeUri = post.viewer.like
       updatePostShadow(queryClient, post.uri, {likeUri: undefined})
       try {
         await deleteReactionWithSpark({
@@ -199,6 +213,7 @@ let PostControls = ({
           subjectUri: post.uri,
           likeUri,
         })
+        lastCreatedLikeUri.current = undefined
         refreshProsocialMetadata()
         ax.metric('spark:reaction:removed', {
           reaction: removedReaction,
@@ -224,13 +239,16 @@ let PostControls = ({
         feedItem.send('app.bsky.feed.defs#interactionLike')
         captureAction(ProgressGuideAction.Like)
         const likePromise = queueLike()
+        lastCreatedLikeUri.current = undefined
+        pendingLikeUri.current = likePromise
         setSparkPickerOpenKey(key => key + 1)
-        await likePromise
+        lastCreatedLikeUri.current = await likePromise
       } else {
         const removedReaction = activeReaction
         setSparkPickerDismissKey(key => key + 1)
         setReactionOverride(null)
         await queueUnlike()
+        lastCreatedLikeUri.current = undefined
         if (removedReaction) {
           ax.metric('spark:reaction:removed', {
             reaction: removedReaction,
@@ -266,8 +284,9 @@ let PostControls = ({
     }
 
     if (previousReaction === reaction) {
-      const likeUri = post.viewer?.like
-      if (!likeUri) return
+      const pendingUri = post.viewer?.like
+      if (!pendingUri) return
+      const likeUri = await resolveLikeUri(pendingUri)
       setOptimisticReaction(reaction, null)
       setHasLikeIconBeenToggled(true)
       updatePostShadow(queryClient, post.uri, {likeUri: undefined})
@@ -277,6 +296,7 @@ let PostControls = ({
           subjectUri: post.uri,
           likeUri,
         })
+        lastCreatedLikeUri.current = undefined
         refreshProsocialMetadata()
         ax.metric('spark:reaction:removed', {
           reaction,
@@ -308,6 +328,7 @@ let PostControls = ({
           reactionType: reaction,
           via: feedItem.item?.via,
         })
+        lastCreatedLikeUri.current = likeUri
         updatePostShadow(queryClient, post.uri, {likeUri})
         refreshProsocialMetadata()
       } else {
