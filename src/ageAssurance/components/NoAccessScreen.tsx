@@ -67,8 +67,8 @@ export function NoAccessScreen() {
   const otherRequiredData = useOtherRequiredDataQuery()
 
   /*
-   * OAuth users set their birthdate on Bluesky in another tab, so nothing in
-   * this app knows it changed. The query holding `declaredAge` is cached in a
+   * OAuth users set their birthdate using their account in another tab, so
+   * nothing in this app knows it changed. The query holding `declaredAge` is cached in a
    * persisted client and would not refetch on its own. Re-check whenever the
    * user comes back to the tab, so returning from Bluesky clears the gate
    * without a manual reload.
@@ -327,26 +327,28 @@ export function NoAccessScreen() {
                      * OAuth sessions run on the `transition:generic` scope,
                      * which the PDS treats like an app password - it refuses
                      * writes to personalDetailsPref. So the birthdate has to
-                     * be set on Bluesky, where the account lives, and we read
-                     * it back afterwards.
+                     * be set with a full account session. Bluesky's account
+                     * settings can do this even when another PDS hosts it.
                      */
                     <>
                       <Text style={[textStyles]}>
                         <Trans>
-                          Because you signed in with Bluesky, your birthdate is
-                          set on your Bluesky account. Add it there, then come
-                          back and refresh this page.
+                          Sparkable cannot update your birthdate through this
+                          sign-in session. Open Bluesky with this same AT
+                          Protocol account, select your hosting provider if
+                          asked, and add your birthdate in account settings.
+                          Then come back and refresh this page.
                         </Trans>
                       </Text>
                       <Button
                         color="primary"
                         size="large"
-                        label={l`Open Bluesky settings to add your birthdate`}
+                        label={l`Open account settings in Bluesky to add your birthdate`}
                         onPress={() => {
                           void Linking.openURL(BSKY_BIRTHDATE_SETTINGS_URL)
                         }}>
                         <ButtonText>
-                          <Trans>Add your birthdate on Bluesky</Trans>
+                          <Trans>Open account settings in Bluesky</Trans>
                         </ButtonText>
                       </Button>
                     </>
