@@ -1,10 +1,12 @@
 import {useCallback, useEffect, useEffectEvent} from 'react'
-import {ScrollView, View} from 'react-native'
+import {Linking, ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {BottomSheetOutlet} from '@bsky.app/bottom-sheet'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {BSKY_BIRTHDATE_SETTINGS_URL} from '#/lib/constants'
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
+import {toNiceHostingUrl} from '#/lib/strings/url-helpers'
 import {formatDateTime} from '#/lib/strings/time'
 import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
 import {useSession, useSessionApi} from '#/state/session'
@@ -63,6 +65,9 @@ export function NoAccessScreen() {
   const {logoutCurrentAccount} = useSessionApi()
   const {currentAccount} = useSession()
   const isOAuthAccount = currentAccount?.authMethod === 'oauth'
+  const accountProvider = currentAccount?.pdsUrl
+    ? toNiceHostingUrl(currentAccount.pdsUrl)
+    : 'your account provider'
   const otherRequiredData = useOtherRequiredDataQuery()
 
   /*
@@ -327,18 +332,32 @@ export function NoAccessScreen() {
                      * OAuth sessions run on the `transition:generic` scope,
                      * which the PDS treats like an app password - it refuses
                      * writes to personalDetailsPref. So the birthdate has to
-                     * be set with a full account session. A password session
-                     * can use the birthdate dialog with any supported PDS.
+                     * be set with a full account session. Bluesky's account
+                     * settings provide that flow, including for custom PDSes.
                      */
                     <>
                       <Text style={[textStyles]}>
                         <Trans>
-                          Sparkable cannot update your birthdate through this
-                          sign-in session. Sign out, then sign in with your AT
-                          Protocol handle and main account password. You can add
-                          your birthdate here after signing in.
+                          Your account is hosted by {accountProvider}. Sparkable
+                          cannot update your birthdate through this sign-in
+                          session. Open Bluesky with this same AT Protocol
+                          account, choose {accountProvider} as the hosting
+                          provider if asked, and add your birthdate in account
+                          settings. Then return to Sparkable and refresh this
+                          page.
                         </Trans>
                       </Text>
+                      <Button
+                        color="primary"
+                        size="large"
+                        label={l`Open Bluesky account settings to add your birthdate`}
+                        onPress={() => {
+                          void Linking.openURL(BSKY_BIRTHDATE_SETTINGS_URL)
+                        }}>
+                        <ButtonText>
+                          <Trans>Open Bluesky account settings</Trans>
+                        </ButtonText>
+                      </Button>
                     </>
                   ) : (
                     <Button
