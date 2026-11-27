@@ -98,6 +98,11 @@ export const LoginForm = ({
     identifier,
     defaultService: serviceUrl,
   })
+  const oauthProviderName =
+    hostingProvider.state.status === 'detected' ||
+    hostingProvider.state.status === 'overridden'
+      ? toNiceHostingUrl(hostingProvider.state.pdsUrl)
+      : 'your provider'
   const {gtMobile} = useBreakpoints()
 
   /*
@@ -385,30 +390,6 @@ export const LoginForm = ({
         )}
       </View>
 
-      {isOAuthSupported && (
-        <View style={[a.gap_xs]}>
-          <Button
-            testID="loginOAuthButton"
-            label={l`Continue with your PDS`}
-            accessibilityHint={l`Sign in through your hosting provider without entering your password in Sparkable`}
-            color="secondary"
-            size="large"
-            disabled={isOAuthProcessing}
-            onPress={() => void onPressOAuth()}>
-            <ButtonText>
-              <Trans>Continue with your PDS</Trans>
-            </ButtonText>
-            {isOAuthProcessing && <ButtonIcon icon={Loader} />}
-          </Button>
-          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            <Trans>
-              Your provider will ask you to approve Sparkable. You won't enter
-              your password here.
-            </Trans>
-          </Text>
-        </View>
-      )}
-
       <View>
         <TextField.LabelText>
           <Trans>Password</Trans>
@@ -593,6 +574,46 @@ export const LoginForm = ({
           </Button>
         )}
       </View>
+
+      {isOAuthSupported &&
+        !isAuthFactorTokenNeeded &&
+        hostingProvider.state.status !== 'email' && (
+          <View style={[a.pt_lg, a.gap_md]}>
+            <View style={[a.flex_row, a.align_center, a.gap_md]}>
+              <View
+                style={[a.flex_1, a.border_t, t.atoms.border_contrast_low]}
+              />
+              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                <Trans>or</Trans>
+              </Text>
+              <View
+                style={[a.flex_1, a.border_t, t.atoms.border_contrast_low]}
+              />
+            </View>
+            <View style={[a.gap_xs]}>
+              <Button
+                testID="loginOAuthButton"
+                label={l`Continue with ${oauthProviderName}`}
+                accessibilityHint={l`Sign in through your hosting provider without entering your password in Sparkable`}
+                color="secondary"
+                size="large"
+                style={a.w_full}
+                disabled={isOAuthProcessing || isProcessing}
+                onPress={() => void onPressOAuth()}>
+                <ButtonText>
+                  <Trans>Continue with {oauthProviderName}</Trans>
+                </ButtonText>
+                {isOAuthProcessing && <ButtonIcon icon={Loader} />}
+              </Button>
+              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                <Trans>
+                  Use the handle above. Your provider will ask you to approve
+                  Sparkable; your password stays with them.
+                </Trans>
+              </Text>
+            </View>
+          </View>
+        )}
 
       {IS_NATIVE && (
         <Text style={[a.text_md, native([a.text_center, a.mx_auto]), a.mt_sm]}>
